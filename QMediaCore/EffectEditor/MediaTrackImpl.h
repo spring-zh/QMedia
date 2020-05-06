@@ -9,6 +9,8 @@
 #ifndef EFFECTEDITOR_MEDIATRACKIMPL_H
 #define EFFECTEDITOR_MEDIATRACKIMPL_H
 
+#include <memory>
+#include "Utils/rw_lock.h"
 #include "MediaTrack.h"
 
 class MediaTrackImpl : public MediaTrack {

@@ -10,8 +10,6 @@
 #define EFFECTEDITOR_MEDIATRACK_H
 
 #include <stdint.h>
-#include <memory>
-#include "Utils/rw_lock.h"
 #include "MediaSource.h"
 #include "MediaGraphicChannel.h"
 #include "MediaAudioChannel.h"
