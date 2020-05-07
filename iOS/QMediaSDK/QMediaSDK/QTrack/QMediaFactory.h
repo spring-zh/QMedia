@@ -11,7 +11,8 @@
 
 @interface QMediaFactory : NSObject
 
-//+ (instancetype)sharedInstance;
+@property (nonatomic, readonly) id<QVideoTarget> videoTarget;
+@property (nonatomic, readonly) id<QAudioTarget> audioTarget;
 
 - (QMediaTrack*)createVideoTrack:(NSString *)filePath;
 - (QMediaTrack*)createCaptureTrack:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position;

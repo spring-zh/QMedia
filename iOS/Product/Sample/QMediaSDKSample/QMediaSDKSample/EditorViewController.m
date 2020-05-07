@@ -101,7 +101,7 @@
         return;
     NSArray<QMediaTrack*>* subObjects = self.player.subObjects;
     CGFloat currentTime = [cgfTime floatValue];
-    NSRange timeRange = _player.getMediaTimeRange;
+    NSRange timeRange = _player.mediaTimeRange;
     self.sliderBarCtrl.progress = (float)_player.position/timeRange.length;
 //    if (objectToPlay.layoutedEndTime-objectToPlay.timeLayout.startTime > 0) {
 //        self.sliderBarCtrl.progress = (currentTime-objectToPlay.timeLayout.startTime)/(objectToPlay.layoutedEndTime-objectToPlay.timeLayout.startTime);
@@ -128,7 +128,7 @@
 
 - (void)onPreviewSliderBarControllerProgressChanged:(PreviewSliderBarController*)sliderBarCtrl
 {
-    float seekTime = self.sliderBarCtrl.progress * [self.player getMediaTimeRange].length;
+    float seekTime = self.sliderBarCtrl.progress * self.player.mediaTimeRange.length;
     [self.player seekTo:seekTime :0];
 //    [self.player seekTo:self.sliderBarCtrl.progress*((self.player.objectToPlay.layoutedEndTime-self.player.objectToPlay.timeLayout.startTime))+self.player.objectToPlay.timeLayout.startTime :0];
 
@@ -136,7 +136,7 @@
 
 - (void)onPreviewSliderBarControllerProgressRelease:(PreviewSliderBarController*)sliderBarCtrl
 {
-    float seekTime = self.sliderBarCtrl.progress * [self.player getMediaTimeRange].length;
+    float seekTime = self.sliderBarCtrl.progress * self.player.mediaTimeRange.length;
     [self.player seekTo:seekTime :1];
 //    [self.player seekTo:self.sliderBarCtrl.progress*((self.player.objectToPlay.layoutedEndTime-self.player.objectToPlay.timeLayout.startTime))+self.player.objectToPlay.timeLayout.startTime :1];
     _isDraging = FALSE;

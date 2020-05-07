@@ -20,6 +20,24 @@
     std::shared_ptr<AudioTarget> _audioTargetAdapter;
 }
 
+- (id<QVideoTarget>)videoTarget {
+    return _videoTarget;
+}
+
+- (void)setVideoTarget:(id<QVideoTarget>)videoTarget {
+    _videoTarget = videoTarget;
+    _videoTargetAdapter = std::shared_ptr<VideoTargetAdapter>(new VideoTargetAdapter(_videoTarget));
+}
+
+- (id<QAudioTarget>)audioTarget {
+    return _audioTarget;
+}
+
+- (void)setAudioTarget:(id<QAudioTarget>)audioTarget {
+    _audioTarget = audioTarget;
+    _audioTargetAdapter = std::shared_ptr<AudioTargetAdapter>(new AudioTargetAdapter(_audioTarget));
+}
+
 - (VideoTarget*)nativeVideoTarget
 {
     return _videoTargetAdapter.get();
@@ -39,16 +57,16 @@
 //    return instance;
 //}
 
-- (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audio:(id<QAudioTarget>)audioTarget
-{
-    if ((self = [super init]) != nil) {
-        _videoTarget = videoTarget;
-        _audioTarget = audioTarget;
-        _videoTargetAdapter = std::shared_ptr<VideoTargetAdapter>(new VideoTargetAdapter(_videoTarget));
-        _audioTargetAdapter = std::shared_ptr<AudioTargetAdapter>(new AudioTargetAdapter(_audioTarget));
-    }
-    return self;
-}
+//- (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audio:(id<QAudioTarget>)audioTarget
+//{
+//    if ((self = [super init]) != nil) {
+//        _videoTarget = videoTarget;
+//        _audioTarget = audioTarget;
+//        _videoTargetAdapter = std::shared_ptr<VideoTargetAdapter>(new VideoTargetAdapter(_videoTarget));
+//        _audioTargetAdapter = std::shared_ptr<AudioTargetAdapter>(new AudioTargetAdapter(_audioTarget));
+//    }
+//    return self;
+//}
 
 - (QMediaTrack*)createVideoTrack:(NSString *)filePath
 {

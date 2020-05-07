@@ -6,9 +6,7 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import "QGraphicNode.h"
-#import "QMediaFactory.h"
+#import "QCombiner.h"
 
 @class QEditorPlayer;
 @class QObserverHoster;
@@ -33,9 +31,9 @@ typedef NS_ENUM(NSInteger, QEditorPlayerState) {
 - (void)onCompleted;
 @end
 
-@interface QEditorPlayer : NSObject <QVideoRender ,QAudioRender>
+
+@interface QEditorPlayer : QCombiner <QVideoRender ,QAudioRender>
 - (instancetype)initWithQueue:(dispatch_queue_t)cbQueue;
-@property (nonatomic, readonly) NSArray<QMediaTrack*>* subObjects;
 
 @property (nonatomic, readonly) QEditorPlayerState state;
 @property (nonatomic, readonly) int64_t position;
@@ -43,24 +41,14 @@ typedef NS_ENUM(NSInteger, QEditorPlayerState) {
 @property (nonatomic) BOOL loopPlay;
 @property (nonatomic, strong) id<QVideoTarget> playerView;
 
-@property (nonatomic, readonly) QGraphicNode* rootNode;
-
-//mediaFactory effective after set playerView
-@property (nonatomic, readonly) QMediaFactory* mediaFactory;
-
 - (void)addObserver:(id<QEditorPlayerObserver>)observer;
 - (void)removeObserver:(id<QEditorPlayerObserver>)observer;
 - (void)removeAllObservers;
-
-- (void)addMediaTrack:(QMediaTrack*)track;
-- (void)removeMediaTrack:(QMediaTrack*)track;
 
 - (BOOL)start;
 - (BOOL)play;
 - (BOOL)pause;
 - (BOOL)stop;
 - (BOOL)seekTo:(CGFloat)timePoint :(int)flags;
-
-- (NSRange)getMediaTimeRange;
 
 @end

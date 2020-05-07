@@ -13,7 +13,11 @@
 #include "MediaCore/output/AudioTarget.h"
 
 @interface QMediaFactory(internal)
-- (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audio:(id<QAudioTarget>)audioTarget;
+//- (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audio:(id<QAudioTarget>)audioTarget;
+
+- (void)setVideoTarget:(id<QVideoTarget>)videoTarget;
+- (void)setAudioTarget:(id<QAudioTarget>)audioTarget;
+
 @property (nonatomic, readonly) VideoTarget* nativeVideoTarget;
 @property (nonatomic, readonly) AudioTarget* nativeAudioTarget;
 @end

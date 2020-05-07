@@ -15,6 +15,7 @@
 #import "QGraphicNode_internal.h"
 #import "QMediaTrack_internal.h"
 #import "QMediaFactory_internal.h"
+#import "QCombiner_internal.h"
 #include "EffectEditor/EditorPlayer.h"
 
 @interface QEditorPlayer ()
@@ -124,14 +125,9 @@ private:
 #pragma mark - implementation XMEEPlayer
 
 @implementation QEditorPlayer {
-    NSMutableArray<QMediaTrack*>* _subObjectArray;
     std::unique_ptr<EditorPlayer> _pPlayer;
     std::unique_ptr<CallBackImpl> _playerCallback;
     dispatch_queue_t _cbQueue;
-    id<QVideoTarget> _videoTarget;
-    id<QAudioTarget> _audioTarget;
-    QGraphicNode* _rootNode;
-    QMediaFactory *_mediaFactory;
 }
 
 @synthesize observerHoster = _observerHoster;
@@ -145,18 +141,16 @@ private:
 
 - (instancetype)initWithQueue:(dispatch_queue_t)cbQueue
 {
-    if ((self = [super init]) != nil) {
+    _pPlayer = std::unique_ptr<EditorPlayer>(new EditorPlayer());
+    
+    if ((self = [super initWithNative:_pPlayer.get()]) != nil) {
         _observerHoster = [[QObserverHoster alloc] init];
-        _pPlayer = std::unique_ptr<EditorPlayer>(new EditorPlayer());
         _playerCallback = std::unique_ptr<CallBackImpl>(new CallBackImpl(self));
         _pPlayer->setCallBack(_playerCallback.get());
-        _mediaFactory = nil;
         //set audio target
-        _audioTarget = [[QAudioPlayer alloc] init];
-        [_audioTarget setAudioRender:self];
-        
-        _subObjectArray = [NSMutableArray new];
-        _rootNode = [[QGraphicNode alloc] initWithNode:_pPlayer->getRootNode()];
+        id<QAudioTarget> audioTarget = [[QAudioPlayer alloc] init];
+        [audioTarget setAudioRender:self];
+        super.audioTarget = audioTarget;
         _cbQueue = cbQueue;
     }
     return self;
@@ -164,27 +158,17 @@ private:
 
 - (void)dealloc
 {
-    _videoTarget = nil;
-    _audioTarget = nil;
+//    _videoTarget = nil;
+//    _audioTarget = nil;
 }
 
 - (id<QVideoTarget>)playerView {
-    return _videoTarget;
+    return [super.mediaFactory videoTarget];
 }
 
 - (void)setPlayerView:(id<QVideoTarget>)playerView{
-//    _videoView = [[XMVideoTarget alloc] initWithTarget:playerView];
-//    _pPlayer->setVideoTarget(_videoView.native);
-    _videoTarget = playerView;
-    [_videoTarget setVideoRender:self];
-    _mediaFactory = [[QMediaFactory alloc] initWithTarget:_videoTarget audio:_audioTarget];
-    _pPlayer->setVideoTarget(_mediaFactory.nativeVideoTarget);
-    _pPlayer->setAudioTarget(_mediaFactory.nativeAudioTarget);
-}
-
-- (NSArray<QMediaTrack*>*)subObjects
-{
-    return _subObjectArray;
+    [playerView setVideoRender:self];
+    super.videoTarget = playerView;
 }
 
 - (QEditorPlayerState)state
@@ -224,18 +208,7 @@ private:
     [_observerHoster removeAllObservers];
 }
 
-#pragma mark - Player Control
-- (void)addMediaTrack:(QMediaTrack*)track
-{
-    _pPlayer->addMediaTrack(track.native);
-    [_subObjectArray addObject:track];
-}
-- (void)removeMediaTrack:(QMediaTrack*)track
-{
-    _pPlayer->removeMediaTrack(track.native);
-    [_subObjectArray removeObject:track];
-}
-
+#pragma mark Player Control
 - (BOOL)start
 {
     _pPlayer->prepare();
@@ -269,33 +242,6 @@ private:
 - (BOOL)isPaused
 {
     return _pPlayer->getUserPaused();
-}
-
-- (NSRange)getMediaTimeRange
-{
-    NSRange nsRange;
-    Range<int64_t> tRange = _pPlayer->getMediaTimeRange();
-    nsRange.location = tRange._start;
-    nsRange.length = tRange.getLength();
-    return nsRange;
-}
-
-- (QGraphicNode*)rootNode {
-    return _rootNode;
-}
-
-- (QMediaFactory*)mediaFactory {
-//    static XMMediaFactory* instance = nil;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        instance = [[XMMediaFactory alloc] initWithTarget:_videoTarget audio:_audioTarget];
-//    });
-//    return instance;
-    return _mediaFactory;
-}
-
-- (EffectCombiner*)native{
-    return _pPlayer.get();
 }
 
 - (bool)onVideoCreate {
