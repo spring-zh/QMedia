@@ -34,7 +34,7 @@ void Layer::draw(GraphicCore::Scene* scene, const Mat4 & transform, uint32_t fla
 void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32_t parentFlags)
 {
     Range<int64_t> dispRange = getRange();
-    if (scene->getDelta() < dispRange._start || scene->getDelta() > dispRange._end)
+    if ( dispRange.isValid() && (scene->getDelta() < dispRange._start || scene->getDelta() > dispRange._end))
         return; //isn't in display time range
     
     if (!_bVisible)
