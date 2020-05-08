@@ -11,7 +11,7 @@
 
 #include <functional>
 #include <memory>
-#include <list>
+#include <set>
 #include "Utils/Comm.h"
 #include "GcNode.h"
 
@@ -89,29 +89,44 @@ public:
         Vec4 _v4;
     };
     
-    AnimaNode();
-    virtual ~AnimaNode();
-    
-    void addAnimator(const std::string& property, Range<int> timeRang, AnimatorData beginData, AnimatorData endData, EaseFunctionType functionType = EaseFunctionType::Linear, const std::string& name = "");
-    
-    virtual void updateAnimations(int timeStamp);
-    
-protected:
-    
     class Animator {
     public:
-        Animator():_ease_function(NULL),_update(nullptr) {}
+        Animator():_repleat(false), _ease_function(NULL),_update(nullptr) {}
+        Animator(const std::string& property, Range<int> timeRang, AnimatorData beginValue, AnimatorData endValue, EaseFunctionType functionType = EaseFunctionType::Linear, bool repleat = false ,const std::string& name = ""){
+            _property = property;
+            _name = name;
+            _beginValue = beginValue;
+            _endValue = endValue;
+            _timeRang = timeRang;
+            _repleat = repleat;
+            _functionType = functionType;
+        }
         std::string _name;
         std::string _property;
-        AnimatorData _beginData;
-        AnimatorData _endData;
+        AnimatorData _beginValue;
+        AnimatorData _endValue;
         Range<int> _timeRang;
+        EaseFunctionType _functionType;
+        bool _repleat;
+    private:
+        friend class AnimaNode;
         ease_function _ease_function;
         std::function<void(Animator*, float)> _update;
     };
     using AnimatorRef = std::shared_ptr<Animator>;
     
-    std::list<AnimatorRef> _animatorList;
+    AnimaNode();
+    virtual ~AnimaNode();
+    
+    bool addAnimator(Animator* animator);
+    bool removeAnimator(Animator* animator);
+    
+    //update self and sub nodes 's animations
+    virtual void updateAnimations(int timeStamp);
+    
+protected:
+    
+    std::set<Animator*> _animatorList;
     
     void updateNodeProperty(int timeStamp);
     

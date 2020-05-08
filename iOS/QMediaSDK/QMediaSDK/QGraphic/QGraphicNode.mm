@@ -16,6 +16,47 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return color4;
 }
 
+AnimaNode::AnimatorRef QNodeAnimatorToCPP(QNodeAnimator* animator){
+    
+    Range<int> range = {static_cast<int>(animator.timeRang.location), static_cast<int>(animator.timeRang.length + animator.timeRang.length)};
+    AnimaNode::AnimatorData bData(GraphicCore::Vec4(animator.beginPoint.v0,animator.beginPoint.v1,animator.beginPoint.v2,animator.beginPoint.v3));
+    AnimaNode::AnimatorData eData(GraphicCore::Vec4(animator.endPoint.v0,animator.endPoint.v1,animator.endPoint.v2,animator.endPoint.v3));
+    return AnimaNode::AnimatorRef(new AnimaNode::Animator([animator.property UTF8String], range, bData, eData, (GraphicCore::EaseFunctionType)animator.functionType, animator.repleat ,[animator.name UTF8String]));
+}
+
+@interface QNodeAnimator(internal)
+@property (nonatomic, readonly) AnimaNode::Animator* native;
+@end
+
+@implementation QNodeAnimator {
+    AnimaNode::AnimatorRef _animator;
+}
+
+- (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat
+{
+    return [self initWith:property range:timeRang begin:beginPoint end:endPoint functype:functionType repleat:repleat name:@""];
+}
+- (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat name:(NSString*)name
+{
+    if ((self = [super init]) != nil) {
+        _property = property;
+        _timeRang = timeRang;
+        _beginPoint = beginPoint;
+        _endPoint = endPoint;
+        _functionType = functionType;
+        _repleat = repleat;
+        _name = name;
+        _animator = QNodeAnimatorToCPP(self);
+    }
+    return self;
+}
+
+- (AnimaNode::Animator *)native {
+    return _animator.get();
+}
+
+@end
+
 
 NSString* property_positionxyz = @"positionxyz";
 NSString* property_scalex = @"scalex";
@@ -32,6 +73,7 @@ NSString* property_mixcolor = @"mixcolor";
     NSString *_nodeName;
     GraphicCore::RenderNodeRef _graphicNode;
     NSMutableArray* _childrens;
+    NSMutableArray* _animators;
 }
 
 - (instancetype)initWithName:(NSString*)name
@@ -42,6 +84,7 @@ NSString* property_mixcolor = @"mixcolor";
         std::string s_name = std::string([name UTF8String]);
         _graphicNode->setName(s_name);
         _childrens = [[NSMutableArray alloc] init];
+        _animators = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -56,6 +99,7 @@ NSString* property_mixcolor = @"mixcolor";
         }
         _nodeName = [NSString stringWithUTF8String:graphicNode->getName().c_str()];
         _childrens = [[NSMutableArray alloc] init];
+        _animators = [[NSMutableArray alloc] init];
     }
     return self;
 }
@@ -104,17 +148,37 @@ NSString* property_mixcolor = @"mixcolor";
     [_childrens removeAllObjects];
 }
 
+- (NSArray*)animators{
+    return _animators;
+}
+
+- (bool)addAnimator:(QNodeAnimator*)animator {
+    if([_animators containsObject:animator])
+        return true;
+    [_animators addObject:animator];
+    _graphicNode->addAnimator(animator.native);
+
+    return false;
+}
+- (bool)removeAnimator:(QNodeAnimator*)animator {
+    if([_animators containsObject:animator])
+    {
+        _graphicNode->removeAnimator(animator.native);
+        [_animators removeObject:animator];
+        return true;
+    }
+    return false;
+}
+- (void)clearAllAnimators {
+    for (QNodeAnimator* animator in _animators) {
+        _graphicNode->removeAnimator(animator.native);
+    }
+    [_animators removeAllObjects];
+}
+
 - (NSString*)name{
 //    return [NSString stringWithUTF8String:_graphicNode->getName().c_str()];
     return _nodeName;
-}
-
-- (void)addAnimator:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginData end:(QVector)endData functype:(QEaseFunction)functionType name:(NSString*)name
-{
-    Range<int> range = {static_cast<int>(timeRang.location), static_cast<int>(timeRang.length + timeRang.length)};
-    AnimaNode::AnimatorData bData(GraphicCore::Vec4(beginData.v0,beginData.v1,beginData.v2,beginData.v3));
-    AnimaNode::AnimatorData eData(GraphicCore::Vec4(endData.v0,endData.v1,endData.v2,endData.v3));
-    _graphicNode->addAnimator([property UTF8String], range, bData, eData, (GraphicCore::EaseFunctionType)functionType ,[name UTF8String]);
 }
 
 - (NSRange)renderRange {

@@ -92,7 +92,8 @@
     NSRange a_range;
     a_range.length = 10000;
     a_range.location = 0;
-    [duplicatenode addAnimator:property_scalexy range:a_range begin:QVectorV2(0.5,0.5) end:QVectorV2(1,1) functype:Quint_EaseOut name:@""];
+    QNodeAnimator* animator = [[QNodeAnimator alloc] initWith:property_scalexy range:a_range begin:QVectorV2(0.5,0.5) end:QVectorV2(1,1) functype:Quint_EaseOut repleat:false];
+    [duplicatenode addAnimator:animator];
     duplicatenode.renderRange = NSMakeRange(1000, 15000);
     [self.player.rootNode addChildNode:duplicatenode];
     

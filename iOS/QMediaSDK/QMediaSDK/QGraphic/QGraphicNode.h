@@ -6,8 +6,6 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
-#import <Foundation/Foundation.h>
-#import <CoreGraphics/CoreGraphics.h>
 #import "QCommon.h"
 
 #ifdef __cplusplus
@@ -87,6 +85,19 @@ extern NSString* property_contentsize;//v2
 extern NSString* property_alpha;//v1
 extern NSString* property_mixcolor;//v4
 
+
+@interface QNodeAnimator : NSObject
+- (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat;
+- (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat name:(NSString*)name;
+@property (nonatomic, assign) NSString* property;
+@property (nonatomic, assign) NSRange timeRang;
+@property (nonatomic, assign) QVector beginPoint;
+@property (nonatomic, assign) QVector endPoint;
+@property (nonatomic, assign) QEaseFunction functionType;
+@property (nonatomic, assign) NSString* name;
+@property (nonatomic, assign) bool repleat;
+@end
+
 @interface QGraphicNode : NSObject
 
 - (instancetype)initWithName:(NSString*)name;
@@ -98,7 +109,11 @@ extern NSString* property_mixcolor;//v4
 - (bool)removeChildNode:(QGraphicNode*)childNode;
 - (void)clearAllChildrens;
 
-- (void)addAnimator:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginData end:(QVector)endData functype:(QEaseFunction)functionType name:(NSString*)name;
+//for animator
+@property (nonatomic, readonly) NSArray<QNodeAnimator*>* animators;
+- (bool)addAnimator:(QNodeAnimator*)animator;
+- (bool)removeAnimator:(QNodeAnimator*)animator;
+- (void)clearAllAnimators;
 
 @property (nonatomic) NSRange renderRange;
 

@@ -496,23 +496,18 @@ AnimaNode::~AnimaNode(){
     
 }
 
-void AnimaNode::addAnimator(const std::string& property, Range<int> timeRang, AnimatorData beginData, AnimatorData endData, EaseFunctionType functionType, const std::string& name)
+bool AnimaNode::addAnimator(Animator* animator)
 {
-#define CHECK_AND_SET_PROPERTY_FUNCTION(proprety_compare) \
-if (property.compare(#proprety_compare) == 0) { \
-    animator->_update = std::bind(&AnimaNode::updateAnimator_##proprety_compare,this,\
-                    std::placeholders::_1,std::placeholders::_2);\
-    break;\
-}
+    if (_animatorList.find(animator) != _animatorList.end())
+        return false;
     
-    AnimatorRef animator = AnimatorRef(new Animator());
-    animator->_name = name;
-    animator->_timeRang = timeRang;
-    animator->_beginData = beginData;
-    animator->_endData = endData;
-    animator->_property = property;
-    animator->_ease_function = getTweenFunctionByType(functionType);
-    
+    #define CHECK_AND_SET_PROPERTY_FUNCTION(proprety_compare) \
+    if (animator->_property.compare(#proprety_compare) == 0) { \
+        animator->_update = std::bind(&AnimaNode::updateAnimator_##proprety_compare,this,\
+                        std::placeholders::_1,std::placeholders::_2);\
+        break;\
+    }
+        
     do {
         
         CHECK_AND_SET_PROPERTY_FUNCTION(positionxyz)
@@ -532,9 +527,22 @@ if (property.compare(#proprety_compare) == 0) { \
         CHECK_AND_SET_PROPERTY_FUNCTION(mixcolor)
     }while (0);
     
-    if (animator->_update != nullptr) {
-        _animatorList.push_back(animator);
+    animator->_ease_function = getTweenFunctionByType(animator->_functionType);
+    
+    if (animator->_update != nullptr && animator->_ease_function != NULL) {
+        _animatorList.insert(animator);
+        return true;
     }
+    return false;
+}
+bool AnimaNode::removeAnimator(Animator* animator)
+{
+    auto iter = _animatorList.find(animator);
+    if( iter != _animatorList.end()) {
+        _animatorList.erase(iter);
+        return true;
+    }
+    return false;
 }
 
 void AnimaNode::updateAnimations(int timeStamp)
@@ -560,53 +568,53 @@ void AnimaNode::updateNodeProperty(int timeStamp)
             float t = (float)(timeStamp - timeRang._start)/(timeRang._end - timeRang._start);
             if(t > 1.0f) t = 1.0f;
             else if(t < 0.0f) t = 0.0f;
-            (animator->_update)(animator.get(),t);
+            (animator->_update)(animator,t);
         }
     }
 }
 
 void AnimaNode::updateAnimator_positionxyz(Animator* animator, float t)
 {
-    Vec3 value = calculateTweenValue(animator->_beginData._v3,animator->_endData._v3,t,animator->_ease_function);
+    Vec3 value = calculateTweenValue(animator->_beginValue._v3,animator->_endValue._v3,t,animator->_ease_function);
     
     setPosition3D(value);
 }
 
 void AnimaNode::updateAnimator_rotationxyz(Animator* animator, float t)
 {
-    Vec3 value = calculateTweenValue(animator->_beginData._v3,animator->_endData._v3,t,animator->_ease_function);
+    Vec3 value = calculateTweenValue(animator->_beginValue._v3,animator->_endValue._v3,t,animator->_ease_function);
     
     setRotation3D(value);
 }
 
 void AnimaNode::updateAnimator_scalex(Animator* animator, float t)
 {
-    float value = calculateTweenValue(animator->_beginData._v1,animator->_endData._v1,t,animator->_ease_function);
+    float value = calculateTweenValue(animator->_beginValue._v1,animator->_endValue._v1,t,animator->_ease_function);
     
     setScaleX(value);
 }
 void AnimaNode::updateAnimator_scaley(Animator* animator, float t)
 {
-    float value = calculateTweenValue(animator->_beginData._v1,animator->_endData._v1,t,animator->_ease_function);
+    float value = calculateTweenValue(animator->_beginValue._v1,animator->_endValue._v1,t,animator->_ease_function);
     
     setScaleY(value);
 }
 void AnimaNode::updateAnimator_scalez(Animator* animator, float t)
 {
-    float value = calculateTweenValue(animator->_beginData._v1,animator->_endData._v1,t,animator->_ease_function);
+    float value = calculateTweenValue(animator->_beginValue._v1,animator->_endValue._v1,t,animator->_ease_function);
     
     setScaleZ(value);
 }
 void AnimaNode::updateAnimator_scalexy(Animator* animator, float t)
 {
-    Vec2 value = calculateTweenValue(animator->_beginData._v2,animator->_endData._v2,t,animator->_ease_function);
+    Vec2 value = calculateTweenValue(animator->_beginValue._v2,animator->_endValue._v2,t,animator->_ease_function);
     
     setScaleX(value.x);
     setScaleY(value.y);
 }
 void AnimaNode::updateAnimator_scalexyz(Animator* animator, float t)
 {
-    Vec3 value = calculateTweenValue(animator->_beginData._v3,animator->_endData._v3,t,animator->_ease_function);
+    Vec3 value = calculateTweenValue(animator->_beginValue._v3,animator->_endValue._v3,t,animator->_ease_function);
     
     setScaleX(value.x);
     setScaleY(value.y);
@@ -615,33 +623,33 @@ void AnimaNode::updateAnimator_scalexyz(Animator* animator, float t)
 
 void AnimaNode::updateAnimator_contentsizew(Animator* animator, float t)
 {
-    float value = calculateTweenValue(animator->_beginData._v1,animator->_endData._v1,t,animator->_ease_function);
+    float value = calculateTweenValue(animator->_beginValue._v1,animator->_endValue._v1,t,animator->_ease_function);
     const Size& csize = getContentSize();
     setContentSize(Size(value, csize.height));
 }
 void AnimaNode::updateAnimator_contentsizeh(Animator* animator, float t)
 {
-    float value = calculateTweenValue(animator->_beginData._v1,animator->_endData._v1,t,animator->_ease_function);
+    float value = calculateTweenValue(animator->_beginValue._v1,animator->_endValue._v1,t,animator->_ease_function);
     const Size& csize = getContentSize();
     setContentSize(Size(csize.width, value));
 }
 void AnimaNode::updateAnimator_contentsize(Animator* animator, float t)
 {
-    Vec2 value = calculateTweenValue(animator->_beginData._v2,animator->_endData._v2,t,animator->_ease_function);
+    Vec2 value = calculateTweenValue(animator->_beginValue._v2,animator->_endValue._v2,t,animator->_ease_function);
     
     setContentSize(Size(value));
 }
 
 void AnimaNode::updateAnimator_alpha(Animator* animator, float t)
 {
-    float value = calculateTweenValue(animator->_beginData._v1,animator->_endData._v1,t,animator->_ease_function);
+    float value = calculateTweenValue(animator->_beginValue._v1,animator->_endValue._v1,t,animator->_ease_function);
     
     const Color4F& color4 = getColor();
     setColor(Color4F(color4.r,color4.g,color4.b,value));
 }
 void AnimaNode::updateAnimator_mixcolor(Animator* animator, float t)
 {
-    Vec4 value = calculateTweenValue(animator->_beginData._v4,animator->_endData._v4,t,animator->_ease_function);
+    Vec4 value = calculateTweenValue(animator->_beginValue._v4,animator->_endValue._v4,t,animator->_ease_function);
     
     setColor(Color4F(value.x,value.y,value.z,value.w));
 }
