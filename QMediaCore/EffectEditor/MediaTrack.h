@@ -11,7 +11,6 @@
 
 #include <stdint.h>
 #include "MediaSource.h"
-#include "MediaGraphicChannel.h"
 #include "MediaAudioChannel.h"
 
 class MediaTrack {
@@ -48,7 +47,6 @@ public:
     virtual int64_t getMediaDuration() const = 0;
     
     virtual MediaAudioChannelRef getMediaAudioChannel() = 0;
-    virtual MediaGraphicChannelRef getMediaGraphicChannel() = 0;
     virtual const VideoDescribe *const getVideoDescribe() const = 0;
     virtual const AudioDescribe *const getAudioDescribe() const = 0;
 

@@ -12,6 +12,7 @@
 #include <set>
 #include <vector>
 #include "MediaTrack.h"
+#include "MediaGraphicChannel.h"
 
 class MediaSupervisor {
 public:

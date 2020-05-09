@@ -47,56 +47,14 @@
     QAudioDescribe* adesc = [[QAudioDescribe alloc] initWithParamenters:QAudioCodecAAC rawFormat:QRawAudioFormatS16 samplerate:44100 nchannel:2 bitrate:128000];
     QFileExporterTarget* exporterTarget = [[QFileExporterTarget alloc] initWithPath:self.filePath];
 
-//    exporterTarget.videoDesc = vdesc;
-//    exporterTarget.audioDesc = adesc;
     self.exporter = [[QExporter alloc] initWithTarget:exporterTarget audioTarget:exporterTarget];
     [self.exporter addObserver:self];
     [self.exporter setAudioConfig:adesc];
     [self.exporter setVideoConfig:vdesc];
-//    self.formater = [XMFormater sharedInstance];
-//    self.formater.delegate = self;
-//    self.formater.objectToFormat = [GlobalXMObject sharedInstance];
-//    self.formater.bitRate = 8*1024*1024;
-//    self.formater.frameRate = 36;
-//    self.formater.pixelSize = [GlobalXMObject sharedInstance].pixelSize;
-//
-//    self.filePath = [NSString stringWithFormat:@"%@/ExportedVideo.mp4", [CommonKits tmpPath]];
-//    [self.formater exportToVideoFileWithPath:self.filePath];
     
-     QLayer *layer = [[QLayer alloc] initWithSize:CGSizeMake(750,618) name:@"haha"];
-        layer.color4 = QColorMaker(1, 1, 1, 1);
-        layer.bkColor = QColorMaker(1, 0, 1, 1);
-        layer.position = CGPointMake(100, 50);
-        layer.anchorPoint = CGPointMake(0.5, 0.5);
-        layer.contentSize = CGSizeMake(750, 618);
-//        layer.rotation = -30.0f;
-        
-        self.exporter.rootNode.color4 = QColorMaker(0, 0, 1, 1);
-    //    self.player.graphicLayer.color4 = XMColorMaker(1, 0.5, 0.5, 0.5);
-    //    self.player.rootNode.rotation = 30;
-    //    self.player.rootNode.position = CGPointMake(-100, -100);
-    //    self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
-        NSString* testVideoFile2 = [self getFileFromMainbundleAbsolutePath:@"video/test.mp4"];
-        
-    QMediaTrack* videoTrack = [self.exporter.mediaFactory createVideoTrack:testVideoFile2];
-//        XMVideoTrack* videoTrack = [[XMMediaFactory sharedInstance] createVideoTrackE:self.exporter filePath:testVideoFile2];
-        videoTrack.graphic.position = CGPointMake(50, 100);
-        videoTrack.graphic.contentSize = CGSizeMake(750, 618);//self.player.layerSize;
-    //    videoTrack.graphic.color4 = XMColorMaker(1, 1, 1, 0.5);
-        videoTrack.graphic.anchorPoint = CGPointMake(0.5, 0.5);
-        videoTrack.graphic.rotation = -30.0f;
-        [layer addChildNode:videoTrack.graphic];
-    
-        [self.exporter.rootNode addChildNode:layer];
-        
-        if ([videoTrack prepare]) {
-//            XMVideoDescribe* vdesc = videoTrack.source.videoDesc;
-//            videoTrack.graphic.contentSize = CGSizeMake(vdesc.width, vdesc.height);
-//            XMAudioDescribe* adesc = videoTrack.source.audioDesc;
-            [self.exporter addMediaTrack:videoTrack];
-        }
-    
-        [self.exporter start];
+    [self.exporter loadSerializeSettings:[[GlobalXMObject sharedInstance].player serialize]];
+
+    [self.exporter start];
 }
 
 - (void)didReceiveMemoryWarning {

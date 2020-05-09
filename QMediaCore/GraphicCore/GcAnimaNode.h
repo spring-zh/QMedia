@@ -92,7 +92,7 @@ public:
     class Animator {
     public:
         Animator():_repleat(false), _ease_function(NULL),_update(nullptr) {}
-        Animator(const std::string& property, Range<int> timeRang, AnimatorData beginValue, AnimatorData endValue, EaseFunctionType functionType = EaseFunctionType::Linear, bool repleat = false ,const std::string& name = ""){
+        Animator(const std::string& property, Range<int64_t> timeRang, AnimatorData beginValue, AnimatorData endValue, EaseFunctionType functionType = EaseFunctionType::Linear, bool repleat = false ,const std::string& name = ""){
             _property = property;
             _name = name;
             _beginValue = beginValue;
@@ -105,7 +105,7 @@ public:
         std::string _property;
         AnimatorData _beginValue;
         AnimatorData _endValue;
-        Range<int> _timeRang;
+        Range<int64_t> _timeRang;
         EaseFunctionType _functionType;
         bool _repleat;
     private:
@@ -122,13 +122,13 @@ public:
     bool removeAnimator(Animator* animator);
     
     //update self and sub nodes 's animations
-    virtual void updateAnimations(int timeStamp);
+    virtual void updateAnimations(int64_t timeStamp);
     
 protected:
     
     std::set<Animator*> _animatorList;
     
-    void updateNodeProperty(int timeStamp);
+    void updateNodeProperty(int64_t timeStamp);
     
 private:
     void updateAnimator_positionxyz(Animator* animator, float t);

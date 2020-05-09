@@ -21,7 +21,7 @@
 @implementation QMediaTrack {
     std::shared_ptr<MediaTrack> _mediaTrackNative;
     id<QMediaSource> _mediaSource;
-    QGraphicNode* _graphic;
+//    QGraphicNode* _graphic;
     QAudioNode* _audio;
 }
 
@@ -31,7 +31,7 @@
         _mediaSource = mediaSource;
         _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(MediaSourceRef(new MeidaSourceAdapter(mediaSource))));
         if(_mediaTrackNative->prepare()){
-            _graphic = [[QGraphicNode alloc] initWithNode:_mediaTrackNative->getMediaGraphicChannel()];
+//            _graphic = [[QGraphicNode alloc] initWithNode:_mediaTrackNative->getMediaGraphicChannel()];
             _audio = [[QAudioNode alloc] initWithAudioChannel:_mediaTrackNative->getMediaAudioChannel()];
         }else
             self = nil;
@@ -44,7 +44,7 @@
     if ((self = [super init]) != nil) {
         _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(mediaSource));
         if(_mediaTrackNative->prepare()){
-            _graphic = [[QGraphicNode alloc] initWithNode:_mediaTrackNative->getMediaGraphicChannel()];
+//            _graphic = [[QGraphicNode alloc] initWithNode:_mediaTrackNative->getMediaGraphicChannel()];
             _audio = [[QAudioNode alloc] initWithAudioChannel:_mediaTrackNative->getMediaAudioChannel()];
         }else
             self = nil;
@@ -92,6 +92,15 @@
     Range<int64_t> absoluteRange((int64_t)range.location,(int64_t)(range.location + range.length));
     _mediaTrackNative->setDisplayTrackRange(absoluteRange);
 }
+
+- (NSRange)sourceRange{
+    auto range = _mediaTrackNative->getSourceRange();
+    NSRange nsRange;
+    nsRange.location = (NSUInteger)range._start;
+    nsRange.length = (NSUInteger)range.getLength();
+    return nsRange;
+}
+
 - (void)setSourceRange:(NSRange)range{
     Range<int64_t> selectSourceRange((int64_t)range.location,(int64_t)(range.location + range.length));
     _mediaTrackNative->setSourceRange(selectSourceRange);
@@ -114,9 +123,9 @@
     return _mediaSource;
 }
 
-- (QGraphicNode*)graphic{
-    return _graphic;
-}
+//- (QGraphicNode*)graphic{
+//    return _graphic;
+//}
 
 - (QAudioNode*)audio{
     return _audio;
@@ -125,6 +134,31 @@
 - (MediaTrackRef)native
 {
     return _mediaTrackNative;
+}
+
+- (NSDictionary*)serialize {
+    NSDictionary* dic = [[NSMutableDictionary alloc] init];
+    [dic setValue:NSStringFromClass(self.class) forKey:@"objectType"];
+    [dic setValue:@([self timeScale]) forKey:@"timeScale"];
+    [dic setValue:@([self repeatTimes]) forKey:@"repeatTimes"];
+    {
+        NSRange sRange = [self sourceRange];
+        NSDictionary* dic_sourceRange = [[NSMutableDictionary alloc] init];
+        [dic_sourceRange setValue:@(sRange.location) forKey:@"location"];
+        [dic_sourceRange setValue:@(sRange.length) forKey:@"length"];
+        [dic setValue:dic_sourceRange forKey:@"sourceRange"];
+    }
+    {
+        NSRange dRange = [self getDisplayTrackRange];
+        NSDictionary* dic_displayTrackRange = [[NSMutableDictionary alloc] init];
+        [dic_displayTrackRange setValue:@(dRange.location) forKey:@"location"];
+        [dic_displayTrackRange setValue:@(dRange.length) forKey:@"length"];
+        [dic setValue:dic_displayTrackRange forKey:@"displayTrackRange"];
+    }
+       
+    [dic setValue:[_mediaSource serialize] forKey:@"mediaSource"];
+
+    return dic;
 }
 
 @end

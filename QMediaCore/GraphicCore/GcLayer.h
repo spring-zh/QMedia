@@ -29,6 +29,8 @@ public:
     virtual Texture2D* getDuplicateTexture() const { return _texture2d ;}
     virtual void duplicateDraw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* /*diaplayNode*/) override;
     
+    Size getLayerSize() const { return _layerSize; }
+    
     const Color4F& getBKColor() const { return _bkColor; }
     void setBKColor(const Color4F& color) { _bkColor = color; }
     

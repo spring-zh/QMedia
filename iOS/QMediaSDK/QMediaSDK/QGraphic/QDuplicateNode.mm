@@ -11,12 +11,18 @@
 
 @implementation QDuplicateNode {
     GraphicCore::DuplicateNodeRef _duplicateNode;
+    __weak QGraphicNode* _nodeFrom;
 }
 
 - (instancetype)initFromNode:(QGraphicNode*)nodeFrom
 {
+    _nodeFrom = nodeFrom;
     _duplicateNode = GraphicCore::DuplicateNodeRef(new GraphicCore::DuplicateNode(nodeFrom.native.get()));
     return (self = [super initWithNode:_duplicateNode]);
+}
+
+- (QGraphicNode*)nodeFrom {
+    return _nodeFrom;
 }
 
 - (QColor4)bkColor{

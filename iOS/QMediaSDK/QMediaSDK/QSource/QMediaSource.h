@@ -7,6 +7,7 @@
 //
 
 #import <AVFoundation/AVFoundation.h>
+#import "QCommon.h"
 #import "QMediaDescribe.h"
 #import "QVideoTarget.h"
 #import "QAudioTarget.h"
@@ -25,7 +26,7 @@ typedef struct SampleBufferFrame {
 }
 #endif
 
-@protocol QMediaSource <NSObject>
+@protocol QMediaSource <NSObject, Serializable>
 @required
 //output target
 @property (nonatomic, weak) id<QVideoTarget> videoTarget;

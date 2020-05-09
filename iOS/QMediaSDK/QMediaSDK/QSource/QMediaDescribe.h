@@ -8,10 +8,10 @@
 
 #import <Foundation/Foundation.h>
 
-typedef NS_ENUM(NSInteger, QMeidaType) {
-    QMeidaTypeVideo = 1,
-    QMeidaTypeAudio = 2,
-    QMeidaTypeSubtitle = 4
+typedef NS_ENUM(NSInteger, QMediaType) {
+    QMediaTypeVideo = 1,
+    QMediaTypeAudio = 2,
+    QMediaTypeSubtitle = 4
 };
 
 // Audio codec types
@@ -101,7 +101,7 @@ typedef NS_ENUM(NSInteger, QVideoRotation) {
 @end
 
 @interface QMediaDescribe : NSObject
-@property (nonatomic, assign) QMeidaType mediaType;
+@property (nonatomic, assign) QMediaType mediaType;
 @property (nonatomic) QAudioDescribe* audioDescribe;
 @property (nonatomic) QVideoDescribe* videoDescribe;
 @end

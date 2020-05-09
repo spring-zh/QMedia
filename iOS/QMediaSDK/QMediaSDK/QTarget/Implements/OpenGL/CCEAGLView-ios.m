@@ -217,11 +217,18 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
 - (void) dealloc
 {
     NSLog(@"CCEAGLView %@", [NSThread currentThread]);
+    EAGLContext* prevContext = nil;
+    if (context_ != [EAGLContext currentContext]) {
+        prevContext = [EAGLContext currentContext];
+        [EAGLContext setCurrentContext:context_];
+    }
     if(mRenderer)
         [mRenderer onRelease]; //提前释放gl申请相关资源
 
     [mDirectorCaller stopMainLoop];
     mDirectorCaller = nil;
+    
+    [EAGLContext setCurrentContext:prevContext];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self]; // remove keyboard notification
     renderer_ = nil;

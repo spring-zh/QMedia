@@ -9,10 +9,10 @@
 #import "QCombiner.h"
 
 typedef NS_ENUM(NSInteger, QExporterRetCode) {
-    ExporterRetCode_unknow = -100,
-    ExporterRetCode_e_state = -2,
-    ExporterRetCode_e_system = -1,
-    ExporterRetCode_ok = 0
+    Exporter_unknow = -100,
+    Exporter_e_state = -2,
+    Exporter_e_system = -1,
+    Exporter_ok = 0
 };
 
 @protocol QExporterObserver <NSObject>
@@ -24,6 +24,9 @@ typedef NS_ENUM(NSInteger, QExporterRetCode) {
 - (void)onExporterCompleted;
 @end
 
+/** export the media edite status to a output target .
+ *  only support QFileExporterTarget to set QVideoTarget and QAudioTarget  now.
+ */
 @interface QExporter : QCombiner <QVideoRender ,QAudioRender>
 
 - (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audioTarget:(id<QAudioTarget>)audioTarget;

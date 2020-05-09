@@ -9,13 +9,14 @@
 #include "MediaGraphicChannel.h"
 #include "MediaTrack.h"
 
-MediaGraphicChannel::MediaGraphicChannel(MediaTrack *mediaTrack):_mediaTrack(mediaTrack)
+MediaGraphicChannel::MediaGraphicChannel(MediaTrackRef mediaTrack):_mediaTrack(mediaTrack)
 {
     _drawer = std::unique_ptr<VideoFrameDrawer>(mediaTrack->createVideoFrameDrawer());
 }
 MediaGraphicChannel::~MediaGraphicChannel()
 {
     _drawer.reset();
+    _mediaTrack.reset();
 }
 
 void MediaGraphicChannel::draw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, uint32_t flags)

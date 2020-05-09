@@ -46,4 +46,8 @@ NSString * QGetMediaSDKVersion();
 
 @end
 
+@protocol Serializable <NSObject>
+- (NSDictionary*)serialize;
+@end
+
 #endif /* QCOMMON_H */

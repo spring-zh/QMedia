@@ -264,4 +264,15 @@
     }
 }
 
+- (NSDictionary*)serialize {
+    NSDictionary* dic = [[NSMutableDictionary alloc] init];
+    [dic setValue:NSStringFromClass(self.class) forKey:@"objectType"];
+    [dic setValue:@(_videoFormat) forKey:@"videoFormat"];
+    [dic setValue:_cameraPreset forKey:@"cameraPreset"];
+    [dic setValue:@(_cameraPosition) forKey:@"cameraPosition"];
+    [dic setValue:@(_enableVideo) forKey:@"enableVideo"];
+    [dic setValue:@(_enableAudio) forKey:@"enableAudio"];
+    return dic;
+}
+
 @end

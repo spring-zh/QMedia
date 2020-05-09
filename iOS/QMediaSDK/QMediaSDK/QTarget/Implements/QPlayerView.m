@@ -32,7 +32,7 @@
 
 - (void)internalInit
 {
-    NSLog(@"XMPlayerView internalInit %@", [NSThread currentThread]);
+    NSLog(@"QPlayerView internalInit %@", [NSThread currentThread]);
     
     CCEAGLView* subView = [CCEAGLView viewWithFrame: self.bounds
                                         pixelFormat: kEAGLColorFormatRGBA8
@@ -72,11 +72,8 @@
 
 - (void)dealloc
 {
-    [self onRelease];
     [_objView setRenderer:nil];
-//    delete _video_target;
-
-    NSLog(@"XMPlayerView dealloc %@", [NSThread currentThread]);
+    NSLog(@"QPlayerView dealloc %@", [NSThread currentThread]);
     
 }
 
@@ -87,7 +84,7 @@
 
 - (void)onDrawFrame
 {
-    //NSLog(@"XMPlayerView onDrawFrame %@", [NSThread currentThread]);
+//    NSLog(@"QPlayerView onDrawFrame %@", [NSThread currentThread]);
     if (_bStart) {
         if (_iosTexture) {
             [IOSFastTextureDrawable savePrevStatus];
@@ -158,7 +155,7 @@
     return true;
 }
 - (void)pauseVideo:(bool)isPause{
-//    _bStart = !isPause;
+    _bStart = !isPause;
 }
 - (void)flushVideo{
     

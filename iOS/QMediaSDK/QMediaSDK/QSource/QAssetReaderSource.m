@@ -31,7 +31,7 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
         }else if (subType == kCMVideoCodecType_HEVC) {
             videoDescribe.codec = QVideoCodecH265;
         }
-        mediadescribe.mediaType = QMeidaTypeVideo;
+        mediadescribe.mediaType = QMediaTypeVideo;
         videoDescribe.width = dimensions.width;
         videoDescribe.height = dimensions.height;
         videoDescribe.framerate = avTrack.nominalFrameRate;
@@ -46,7 +46,7 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
         if ([subType containsString:@"aac"]) {
             audioDescribe.codec = QAudioCodecAAC;
         }
-        mediadescribe.mediaType = QMeidaTypeAudio;
+        mediadescribe.mediaType = QMediaTypeAudio;
         audioDescribe.samplerate = audioStreamDescription->mSampleRate;
         audioDescribe.nchannel = audioStreamDescription->mChannelsPerFrame;
         int bitwidth = audioStreamDescription->mBitsPerChannel;
@@ -86,6 +86,7 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
     QAudioDescribe* _adesc;
     QVideoDescribe* _vdesc;
     
+    NSString * _path;
     NSURL *_url;
     AVURLAsset *_inputAsset;
     AVAssetReader *_assetReader;
@@ -104,6 +105,7 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
 {
     self = [super init];
     if (self) {
+        _path = [filePath copy];
         _url = [NSURL fileURLWithPath:filePath];
         if ([[filePath lowercaseString] hasPrefix:@"file:"]) {
             _url = [NSURL URLWithString:filePath];
@@ -344,6 +346,14 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
         [_assetReader cancelReading];
         _assetReader = nil;
     }
+}
+
+
+- (NSDictionary*)serialize {
+    NSDictionary* dic = [[NSMutableDictionary alloc] init];
+    [dic setValue:NSStringFromClass(self.class) forKey:@"objectType"];
+    [dic setValue:_path forKey:@"path"];
+    return dic;
 }
 
 @end

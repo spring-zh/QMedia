@@ -58,7 +58,6 @@ public:
     virtual int64_t getMediaDuration() const override { return _sourceRef->getMediaDuration(); }
     
     virtual MediaAudioChannelRef getMediaAudioChannel() override { return _audioChannel; }
-    virtual MediaGraphicChannelRef getMediaGraphicChannel() override { return _videoChannel; }
     
     virtual const VideoDescribe *const getVideoDescribe() const override;
     virtual const AudioDescribe *const getAudioDescribe() const override;
@@ -94,7 +93,6 @@ protected:
     int _video_stream_idx;
     int _audio_stream_idx;
     MediaAudioChannelRef _audioChannel;
-    MediaGraphicChannelRef _videoChannel;
 };
 
 #endif /* EFFECTEDITOR_MEDIATRACKIMPL_H */

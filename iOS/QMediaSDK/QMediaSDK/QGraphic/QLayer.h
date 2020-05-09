@@ -15,6 +15,7 @@
 @interface QLayer : QGraphicNode
 
 - (instancetype)initWithSize:(CGSize)size name:(NSString*)name;
+@property (nonatomic, readonly) CGSize layerSize;
 @property (nonatomic) QColor4 bkColor;
 
 @end

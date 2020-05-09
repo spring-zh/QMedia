@@ -11,12 +11,11 @@
 
 #include "VideoFrameDrawer.h"
 #include "GraphicCore/GcRenderNode.h"
-
-class MediaTrack;
+#include "MediaTrack.h"
 
 class MediaGraphicChannel : public GraphicCore::RenderNode {
 public:
-    MediaGraphicChannel(MediaTrack *mediaTrack);
+    MediaGraphicChannel(MediaTrackRef mediaTrack);
     virtual ~MediaGraphicChannel();
     
     virtual void draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/) override;
@@ -29,7 +28,7 @@ public:
     
 private:
     
-    MediaTrack *_mediaTrack;
+    MediaTrackRef _mediaTrack;
     std::unique_ptr<VideoFrameDrawer> _drawer;
 };
 

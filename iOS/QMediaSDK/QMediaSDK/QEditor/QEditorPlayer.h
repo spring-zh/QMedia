@@ -8,9 +8,6 @@
 
 #import "QCombiner.h"
 
-@class QEditorPlayer;
-@class QObserverHoster;
-
 typedef NS_ENUM(NSInteger, QEditorPlayerState) {
     XMPlayerState_Idle = 0,
     XMPlayerState_Ready,

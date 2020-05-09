@@ -105,7 +105,8 @@ static id s_sharedDirectorCaller;
 {
         // Director::setAnimationInterval() is called, we should invalidate it first
     [self stopMainLoop];
-    
+    //TODO: change display framerate here. 1->60 , 2->30
+    self.interval = 2;
     sem = dispatch_semaphore_create(0);
     renderQueue = dispatch_queue_create("com.glrender",DISPATCH_QUEUE_SERIAL);
     dispatch_async(renderQueue, ^(){

@@ -9,7 +9,7 @@
 #import "PreviewViewController.h"
 #import "GlobalXMObject.h"
 #import <QMediaSDK/QMediaSDK.h>
-//#import <XLMediaSDK/XMKeyVideoReverser.h>
+
 @interface PreviewViewController () <QEditorPlayerObserver/*,XMKeyVideoReverserDelegate*/>
 @property (nonatomic) IBOutlet QPlayerView *renderView;
 @property (nonatomic) IBOutlet UIView *controlLayer;
@@ -46,6 +46,7 @@
     [super viewDidLoad];
     
     QLayer *layer = [[QLayer alloc] initWithSize:CGSizeMake(640, 480) name:@"haha"];
+    [self.player addGraphicNode:layer];
     layer.color4 = QColorMaker(1, 1, 1, 0.8);
     layer.bkColor = QColorMaker(1, 0, 1, 1);
     layer.position = CGPointMake(100, 50);
@@ -67,12 +68,13 @@
     QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2];
 //    XMVideoTrack* videoTrack = [self.player.mediaFactory createOldVideoTrack:testVideoFile2];
 
-
-        videoTrack.graphic.position = CGPointMake(50, 100);
-            videoTrack.graphic.contentSize = CGSizeMake(640, 480);//self.player.layerSize;
+    QVideoTrackNode *videoNode = [[QVideoTrackNode alloc] initFromTrack:videoTrack];
+    [self.player addGraphicNode:videoNode];
+        videoNode.position = CGPointMake(50, 100);
+        videoNode.contentSize = CGSizeMake(640, 480);//self.player.layerSize;
         //    videoTrack.graphic.color4 = XMColorMaker(1, 1, 1, 0.5);
-            videoTrack.graphic.anchorPoint = CGPointMake(0.5, 0.5);
-            videoTrack.graphic.rotation = -30.0f;
+        videoNode.anchorPoint = CGPointMake(0.5, 0.5);
+        videoNode.rotation = -30.0f;
     //    videoTrack.graphic.scaleX = 0.4f;
     //    videoTrack.graphic.scaleY = 0.4f;
     
@@ -80,12 +82,14 @@
 //    [captureTrack setDisplayTrackRange:NSMakeRange(0, 20000)];
 //    captureTrack.graphic.contentSize = CGSizeMake(320, 240);
     
-    
-    [layer addChildNode:videoTrack.graphic];
-    [self.player.rootNode addChildNode:layer];
+    [self.player attachRenderNode:videoNode parent:layer];
+    [self.player attachRenderNode:layer parent:self.player.rootNode];
+//    [layer addChildNode:videoNode];
+//    [self.player.rootNode addChildNode:layer];
 //    [self.player.rootNode addChildNode:captureTrack.graphic];
     
     QDuplicateNode* duplicatenode = [[QDuplicateNode alloc] initFromNode:layer];
+    [self.player addGraphicNode:duplicatenode];
     duplicatenode.contentSize = CGSizeMake(320, 240);
     duplicatenode.position = CGPointMake(50, 50);
     duplicatenode.anchorPoint = CGPointMake(0.5, 0.5);
@@ -95,23 +99,26 @@
     QNodeAnimator* animator = [[QNodeAnimator alloc] initWith:property_scalexy range:a_range begin:QVectorV2(0.5,0.5) end:QVectorV2(1,1) functype:Quint_EaseOut repleat:false];
     [duplicatenode addAnimator:animator];
     duplicatenode.renderRange = NSMakeRange(1000, 15000);
-    [self.player.rootNode addChildNode:duplicatenode];
+//    [self.player.rootNode addChildNode:duplicatenode];
+    [self.player attachRenderNode:duplicatenode parent:self.player.rootNode];
     
     
-    QDuplicateNode* duplicatenodeV = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
+    QDuplicateNode* duplicatenodeV = [[QDuplicateNode alloc] initFromNode:videoNode];
+    [self.player addGraphicNode:duplicatenodeV];
     duplicatenodeV.contentSize = CGSizeMake(200, 200);
     duplicatenodeV.position = CGPointMake(0, 0);
     duplicatenodeV.rotation = 30.0f;
-    [self.player.rootNode addChildNode:duplicatenodeV];
-    
-    
-//        XMVideoDescribe* vdesc = videoTrack.source.videoDesc;
-//        videoTrack.graphic.contentSize = CGSizeMake(vdesc.width, vdesc.height);
-//        XMAudioDescribe* adesc = videoTrack.source.audioDesc;
+//    [self.player.rootNode addChildNode:duplicatenodeV];
+    [self.player attachRenderNode:duplicatenodeV parent:self.player.rootNode];
  
     
 //    [self.player addMediaTrack:captureTrack];
     [self.player addMediaTrack:videoTrack];
+    
+//    NSDictionary* serialize_settings = [self.player serialize];
+//    NSError * error = [NSError new];
+//    NSData  *jsonData = [NSJSONSerialization dataWithJSONObject:serialize_settings options:NSJSONWritingPrettyPrinted error:&error];
+//    NSString* json_str = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
     [self.player start];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];

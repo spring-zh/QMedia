@@ -545,7 +545,7 @@ bool AnimaNode::removeAnimator(Animator* animator)
     return false;
 }
 
-void AnimaNode::updateAnimations(int timeStamp)
+void AnimaNode::updateAnimations(int64_t timeStamp)
 {
     if(!_children.empty()){
         for (auto& node : _children) {
@@ -558,11 +558,11 @@ void AnimaNode::updateAnimations(int timeStamp)
     updateNodeProperty(timeStamp);
 }
 
-void AnimaNode::updateNodeProperty(int timeStamp)
+void AnimaNode::updateNodeProperty(int64_t timeStamp)
 {
     const int diff = 50;
     for (auto& animator : _animatorList) {
-        Range<int>& timeRang = animator->_timeRang;
+        Range<int64_t>& timeRang = animator->_timeRang;
         if ((timeStamp >= timeRang._start - diff) &&
             (timeStamp <= timeRang._end + diff)) {
             float t = (float)(timeStamp - timeRang._start)/(timeRang._end - timeRang._start);

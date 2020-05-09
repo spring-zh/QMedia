@@ -147,8 +147,8 @@ public:
     //media manage
     void addMediaTrack(MediaTrackRef mediaTrack);
     void removeMediaTrack(MediaTrackRef mediaTrack);
-    inline void attachRenderNode(GraphicCore::RenderNodeRef& child, GraphicCore::RenderNodeRef& parent);
-    inline void detachRenderNode(GraphicCore::RenderNodeRef& current);
+    void attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent);
+    void detachRenderNode(GraphicCore::RenderNodeRef current);
     
 protected:
     class RenderLayer : public GraphicCore::RenderNode {

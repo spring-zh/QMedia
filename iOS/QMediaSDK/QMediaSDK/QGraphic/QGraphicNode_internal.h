@@ -9,8 +9,13 @@
 #import "QGraphicNode.h"
 #include "GraphicCore/GcRenderNode.h"
 #include "GraphicCore/GcDuplicateNode.h"
+#include "EffectEditor/MediaGraphicChannel.h"
 
 @interface QGraphicNode(internal)
 - (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode;
 @property (nonatomic, readonly) GraphicCore::RenderNodeRef native;
+
+- (bool)addChildNodeDirect:(QGraphicNode*)childNode;
+
+- (bool)removeChildNodeDirect:(QGraphicNode*)childNode;
 @end

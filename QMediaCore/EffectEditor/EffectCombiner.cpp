@@ -39,7 +39,7 @@ bool EffectCombiner::RenderLayer::beginRender()
         createRes();
         _isInit = true;
     }
-    
+    //draw background color
     _gle.setClearColor(_realColor);
     _gle.clearByColor();
     return true;
@@ -210,8 +210,8 @@ EffectCombiner::RetCode EffectCombiner::_addMediaTrack(MediaTrackRef mediaTrack)
 //            mediaTrack->setVideoTarget(_videoTarget);
 //            mediaTrack->setAudioTarget(_audioTarget);
             _mediaTracks.insert(mediaTrack);
-            postRenderTask(&EffectCombiner::_addMediaGraphicChannel,this,
-                           mediaTrack->getMediaGraphicChannel());
+//            postRenderTask(&EffectCombiner::_addMediaGraphicChannel,this,
+//                           mediaTrack->getMediaGraphicChannel());
             postAudioTask(&EffectCombiner::_addMediaAudioChannel,this,
                           mediaTrack->getMediaAudioChannel());
         }else
@@ -226,8 +226,8 @@ EffectCombiner::RetCode EffectCombiner::_removeMediaTrack(MediaTrackRef mediaTra
     if( iter != _mediaTracks.end())
     {
         _mediaTracks.erase(iter);
-        postRenderTask(&EffectCombiner::_removeMediaGraphicChannel,this,
-                       mediaTrack->getMediaGraphicChannel());
+//        postRenderTask(&EffectCombiner::_removeMediaGraphicChannel,this,
+//                       mediaTrack->getMediaGraphicChannel());
         postAudioTask(&EffectCombiner::_removeMediaAudioChannel,this,
                       mediaTrack->getMediaAudioChannel());
     }
@@ -267,6 +267,9 @@ void EffectCombiner::_attachRenderNode(GraphicCore::RenderNodeRef child, Graphic
     child->removeFromParent();
     child->setParent(nullptr);
     parent->addChildren(child.get());
+    if (_displayLayer->_isInit) {
+        child->createRes();
+    }
     //TODO: if need ??
 //    _graphicChannels.push_back(child);
 }
@@ -274,17 +277,12 @@ void EffectCombiner::_attachRenderNode(GraphicCore::RenderNodeRef child, Graphic
 void EffectCombiner::_detachRenderNode(GraphicCore::RenderNodeRef current)
 {
     current->removeFromParent();
+    current->releaseRes();
 }
 
 bool EffectCombiner::onRenderCreate()
 {
-//    return _displayLayer.createRes();
-//    int video_width = _videoTarget->getWidth();
-//    int video_height = _videoTarget->getHeight();
-//    LOGI("onRenderCreate videoTarget width:%d height:%d",video_width,video_height);
-//    _displayLayer->beginRender();
-//    _displayLayer->updateViewPort(video_width, video_height);
-//    _bRenderCreated = true;
+    //TODO: init render resource
     return true;
 }
 
@@ -300,8 +298,6 @@ bool EffectCombiner::onVideoRender(int64_t wantTimeMs)
     
     int64_t position = wantTimeMs;
     
-    //FIXME: what's completed status of player?
-    //    bool audio_condition = _hasAudio && (_audioClock.getClock(_audioTarget)>= _playerTimeRange._end);
     if (position >= _playerTimeRange._end)
     {
         if( !_bVideoCompleted) {
@@ -437,12 +433,12 @@ void EffectCombiner::removeMediaTrack(MediaTrackRef mediaTrack)
     _threadTask.postTask((int)CMD_REMOVETRACK, &EffectCombiner::_removeMediaTrack, this, mediaTrack);
 }
 
-void EffectCombiner::attachRenderNode(GraphicCore::RenderNodeRef& child, GraphicCore::RenderNodeRef& parent)
+void EffectCombiner::attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent)
 {
     postRenderTask(&EffectCombiner::_attachRenderNode, this, child, parent);
 }
 
-void EffectCombiner::detachRenderNode(GraphicCore::RenderNodeRef& current)
+void EffectCombiner::detachRenderNode(GraphicCore::RenderNodeRef current)
 {
     postRenderTask(&EffectCombiner::_detachRenderNode, this, current);
 }
