@@ -39,9 +39,6 @@ bool EffectCombiner::RenderLayer::beginRender()
         createRes();
         _isInit = true;
     }
-    //draw background color
-    _gle.setClearColor(_realColor);
-    _gle.clearByColor();
     return true;
 }
 
@@ -50,6 +47,14 @@ void EffectCombiner::RenderLayer::render(int64_t timeStamp){
     
     AnimaNode::updateAnimations(timeStamp);
     RenderNode::visit(&_playerScene, _playerScene.getMatrix(MATRIX_STACK_MODELVIEW), 0);
+}
+
+void EffectCombiner::RenderLayer::draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/){
+    //draw background color
+    //FIXME: ?????
+    _gle.getCurrentFrameBuffer()->use();
+    _gle.setClearColor(_realColor);
+    _gle.clearByColor();
 }
 
 EffectCombiner::EffectCombiner():

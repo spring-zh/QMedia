@@ -12,8 +12,9 @@
 #include <map>
 #include <string>
 #include <list>
+#include <stack>
 
-#include "../base/ColorTypes.h"
+#include "GraphicCore/base/ColorTypes.h"
 #include "FrameBuffer.h"
 #include "Texture2D.h"
 
@@ -62,9 +63,9 @@ public:
 
 protected:
     
-    Rect _prevViewPort;
-    Color4F _prevColor;
-    FrameBuffer* _prevFB;
+    std::stack<Rect> _viewPortStack;
+    std::stack<Color4F> _colorStack;
+    std::stack<FrameBuffer*> _framebufferStack;
 
     std::map<std::string, Texture2D*> _imagTextures;
     std::list<Texture2D*> _cacheTextures;

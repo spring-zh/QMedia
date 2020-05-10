@@ -159,12 +159,11 @@ protected:
         const Range<int64_t> getRange() override;
         
         void releaseRes() override;
-    
-//        void updateViewPort(int width, int height);
         
         bool beginRender();
         
         void render(int64_t timeStamp);
+        void draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/) override;
         
         EffectCombiner *_combiner;
         GraphicCore::Scene _playerScene;

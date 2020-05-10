@@ -42,13 +42,12 @@ void Node::visit(Scene *scene, const Mat4& parentTransform, uint32_t parentFlags
     
     scene->pushMatrix(MATRIX_STACK_MODELVIEW);
     scene->loadMatrix(MATRIX_STACK_MODELVIEW, _modelViewTransform);
+    
+    this->draw(scene, _modelViewTransform, parentFlags);
     if(!_children.empty()){
         for (auto& node : _children) {
             node->visit(scene, _modelViewTransform, parentFlags);
         }
-        this->draw(scene, _modelViewTransform, parentFlags);
-    }else {
-        this->draw(scene, _modelViewTransform, parentFlags);
     }
     scene->popMatrix(MATRIX_STACK_MODELVIEW);
 }

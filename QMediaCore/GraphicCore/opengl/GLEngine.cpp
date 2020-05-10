@@ -65,15 +65,20 @@ void GLEngine::enableDepthTest(bool enable)
 
 void GLEngine::saveStatus()
 {
-    _prevColor = getClearColor();
-    getViewPort(_prevViewPort);
-    _prevFB = getCurrentFrameBuffer();
+    _colorStack.push(getClearColor());
+    Rect viewPort;
+    getViewPort(viewPort);
+    _viewPortStack.push(viewPort);
+    _framebufferStack.push(getCurrentFrameBuffer());
 }
 void GLEngine::recoverStatus()
 {
-    setClearColor(_prevColor);
-    setViewPort(_prevViewPort);
-    setCurrentFrameBuffer(_prevFB);
+    setClearColor(_colorStack.top());
+    _colorStack.pop();
+    setViewPort(_viewPortStack.top());
+    _viewPortStack.pop();
+    setCurrentFrameBuffer(_framebufferStack.top());
+    _framebufferStack.pop();
 }
 
 FrameBuffer* GLEngine::getCurrentFrameBuffer() {

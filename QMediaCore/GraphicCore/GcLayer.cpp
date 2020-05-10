@@ -50,28 +50,27 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
 
     scene->pushMatrix(MATRIX_STACK_MODELVIEW);
     scene->loadMatrix(MATRIX_STACK_MODELVIEW, _modelViewTransform);
+
+    GLEngine *gle = scene->getGLEngine();
+    gle->saveStatus();
+    // draw layer
+    gle->setCurrentFrameBuffer(_framebuffer);
+    Rect layerViewPort(0, 0,_texture2d->width(),_texture2d->height()) , prevViewPort;
+    gle->setViewPort(layerViewPort);
+    gle->setClearColor(_bkColor);
+    gle->clearByColor();
     
     if(!_children.empty()){
         //update timestamp
         _scene.setDelta(scene->getDelta());
         _scene.setGLEngine(scene->getGLEngine());
         //draw children with self's scene
-        Rect layerViewPort(0, 0,_texture2d->width(),_texture2d->height()) , prevViewPort;
-        GLEngine *gle = _scene.getGLEngine();
-
-        gle->saveStatus();
-        gle->setCurrentFrameBuffer(_framebuffer);
-        gle->setViewPort(layerViewPort);
-        
         Mat4 layerTransform;
-        gle->setClearColor(_bkColor);
-        gle->clearByColor();
         for (auto& node : _children) {
             node->visit(&_scene, layerTransform, parentFlags);
         }
-
-        gle->recoverStatus();
     }
+    gle->recoverStatus();
 
     this->draw(scene, _modelViewTransform, parentFlags);
     
