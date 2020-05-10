@@ -44,14 +44,11 @@ public:
         return true;
     }
     //set thre base source range, this is useful for split source data
-    virtual bool setSourceRange(Range<int64_t> selectSourceRange) override {
-        _sourceRange = selectSourceRange;
-        return true;
-    }
+    virtual bool setSourceRange(Range<int64_t> selectSourceRange) override ;
     virtual const Range<int64_t> getSourceRange() const override { return _sourceRange;}
     
     //map the track time to media source time
-    virtual bool mapTimeToMediaSource(int64_t mSec, int& outmSec) const;
+    virtual bool mapTimeToMediaSource(int64_t mSec, int64_t& outmSec) const;
     
     virtual bool isPrepare() const override { return _isPrepare; }
     

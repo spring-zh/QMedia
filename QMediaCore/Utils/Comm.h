@@ -53,6 +53,8 @@ public:
     }
 
     bool isValid() const {return getLength() > 0; }
+    
+    bool isContain(T val) { return ((val >= _start) && (val <= _end)) ;}
 
 	T _start, _end;
 };
