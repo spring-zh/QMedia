@@ -158,6 +158,7 @@ private:
 
 - (void)dealloc
 {
+    NSLog(@"%@ dealloc ", self);
 //    _videoTarget = nil;
 //    _audioTarget = nil;
 }

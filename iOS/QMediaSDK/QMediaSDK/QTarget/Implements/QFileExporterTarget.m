@@ -617,6 +617,7 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
         else
             bRet = true;
 
+        CFRelease(blockBuffer);
         CMSampleBufferInvalidate(sampleBuffer);
         CFRelease(sampleBuffer);
     }

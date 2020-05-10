@@ -181,6 +181,7 @@ RetCode EditorPlayer::_seek(int64_t mSec, int flag)
         _userPaused = true;
     }
     if (!_userPaused) {
+        _videoTarget->pause(false);
         _audioTarget->pause(false);
         _playerClock.setPaused(false);
     }

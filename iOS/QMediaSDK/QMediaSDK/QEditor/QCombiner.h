@@ -30,7 +30,8 @@
 - (void)addMediaTrack:(QMediaTrack*)track;
 - (void)removeMediaTrack:(QMediaTrack*)track;
 
-// will update graphicNodes for resource index
+// will update graphicNodes resource index .
+// for serialize settings
 - (void)addGraphicNode:(QGraphicNode*)node;
 - (void)removeGraphicNode:(QGraphicNode*)node;
 

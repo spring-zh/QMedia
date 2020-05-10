@@ -120,6 +120,7 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
 
 - (void)dealloc
 {
+    NSLog(@"%@ dealloc ", self);
 }
 
 -(QVideoDescribe*)videoDesc

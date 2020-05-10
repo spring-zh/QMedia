@@ -25,6 +25,7 @@ const Range<int64_t> EffectCombiner::RenderLayer::getRange()
 void EffectCombiner::RenderLayer::releaseRes()
 {
     _gle.releaseAll();
+    RenderNode::releaseRes();
 }
 
 bool EffectCombiner::RenderLayer::beginRender()

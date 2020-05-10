@@ -45,6 +45,7 @@
 
 - (void)dealloc
 {
+    NSLog(@"%@ dealloc ", self);
     [self releaseTexture];
 }
 

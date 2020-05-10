@@ -7,10 +7,10 @@
 //
 
 #import "QGraphicNode.h"
-#import "QMediaTrack.h"
 
+@class QMediaTrack;
 /**
-* a graphic node form media track
+ * a graphic node form media track.  tips: this node will be all by QMediaTrack
 */
 @interface QVideoTrackNode : QGraphicNode
 

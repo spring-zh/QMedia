@@ -7,8 +7,8 @@
 //
 
 #import "QMediaSource.h"
-#import "QGraphicNode.h"
-#import "QAudioNode.h"
+#import "QVideoTrackNode.h"
+#import "QAudioTrackNode.h"
 
 @interface QMediaTrack : NSObject <Serializable>
 
@@ -23,13 +23,12 @@
 
 - (NSRange)getDisplayTrackRange;
 - (void)setDisplayTrackRange:(NSRange)range;
-//- (void)setSourceRange:(NSRange)range;
 @property (nonatomic) NSRange sourceRange;
 @property (nonatomic) float timeScale;
 @property (nonatomic) int repeatTimes;
 @property (nonatomic, readonly) id<QMediaSource> source;
-//@property (nonatomic, readonly) QGraphicNode* graphic;
-@property (nonatomic, readonly) QAudioNode* audio;
+@property (nonatomic, readonly) QVideoTrackNode* graphic;
+@property (nonatomic, readonly) QAudioTrackNode* audio;
 
 //serialize media track settings
 - (NSDictionary*)serialize;

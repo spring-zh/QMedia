@@ -19,7 +19,7 @@
     if (! mediaTrack.native->getVideoDescribe()) //media source doesn't contain video channel
         return nil;
     _mediaTrack = mediaTrack;
-    _mediaGraphicNode = MediaGraphicChannelRef(new MediaGraphicChannel(mediaTrack.native));
+    _mediaGraphicNode = MediaGraphicChannelRef(new MediaGraphicChannel(mediaTrack.native.get()));
     return (self = [super initWithNode:_mediaGraphicNode]);
 }
 
@@ -28,7 +28,7 @@
 }
 
 - (void)dealloc {
-    NSLog(@"QVideoTrackNode dealloc");
+    NSLog(@"%@ dealloc", self);
 }
 
 @end

@@ -8,7 +8,15 @@
 
 #import <Foundation/Foundation.h>
 
-@interface QAudioNode : NSObject
+@class QMediaTrack;
+
+/**
+ *  tips: this node will be all by QMediaTrack
+ */
+@interface QAudioTrackNode : NSObject
+
+- (instancetype)initFromTrack:(QMediaTrack*)mediaTrack;
+@property (nonatomic, readonly) QMediaTrack* mediaTrack;
 
 @property (nonatomic) bool enable;
 @property (nonatomic) float volume;

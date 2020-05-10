@@ -32,9 +32,9 @@
 		6F5117C8240D50540013BC9E /* QGraphicNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5117C6240D50540013BC9E /* QGraphicNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F5117CC240E74E20013BC9E /* QVideoFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5117CA240E74E20013BC9E /* QVideoFrame.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F5117CD240E74E20013BC9E /* QVideoFrame.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117CB240E74E20013BC9E /* QVideoFrame.mm */; };
-		6F5117D3240E756F0013BC9E /* QAudioNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5117CF240E756E0013BC9E /* QAudioNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F5117D3240E756F0013BC9E /* QAudioTrackNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5117CF240E756E0013BC9E /* QAudioTrackNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F5117D4240E756F0013BC9E /* QAudioFrame.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5117D0240E756E0013BC9E /* QAudioFrame.h */; };
-		6F5117D5240E756F0013BC9E /* QAudioNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117D1240E756F0013BC9E /* QAudioNode.mm */; };
+		6F5117D5240E756F0013BC9E /* QAudioTrackNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117D1240E756F0013BC9E /* QAudioTrackNode.mm */; };
 		6F5117D6240E756F0013BC9E /* QAudioFrame.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117D2240E756F0013BC9E /* QAudioFrame.mm */; };
 		6F52F331240155040030B238 /* QMediaTrack.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F52F32F240155030030B238 /* QMediaTrack.mm */; };
 		6F52F332240155040030B238 /* QMediaTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F52F330240155030030B238 /* QMediaTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -163,9 +163,9 @@
 		6F5117C6240D50540013BC9E /* QGraphicNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QGraphicNode.h; sourceTree = "<group>"; };
 		6F5117CA240E74E20013BC9E /* QVideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QVideoFrame.h; sourceTree = "<group>"; };
 		6F5117CB240E74E20013BC9E /* QVideoFrame.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QVideoFrame.mm; sourceTree = "<group>"; };
-		6F5117CF240E756E0013BC9E /* QAudioNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QAudioNode.h; sourceTree = "<group>"; };
+		6F5117CF240E756E0013BC9E /* QAudioTrackNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QAudioTrackNode.h; sourceTree = "<group>"; };
 		6F5117D0240E756E0013BC9E /* QAudioFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QAudioFrame.h; sourceTree = "<group>"; };
-		6F5117D1240E756F0013BC9E /* QAudioNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QAudioNode.mm; sourceTree = "<group>"; };
+		6F5117D1240E756F0013BC9E /* QAudioTrackNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QAudioTrackNode.mm; sourceTree = "<group>"; };
 		6F5117D2240E756F0013BC9E /* QAudioFrame.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QAudioFrame.mm; sourceTree = "<group>"; };
 		6F52F32F240155030030B238 /* QMediaTrack.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QMediaTrack.mm; sourceTree = "<group>"; };
 		6F52F330240155030030B238 /* QMediaTrack.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMediaTrack.h; sourceTree = "<group>"; };
@@ -377,8 +377,8 @@
 			children = (
 				6F5117D0240E756E0013BC9E /* QAudioFrame.h */,
 				6F5117D2240E756F0013BC9E /* QAudioFrame.mm */,
-				6F5117CF240E756E0013BC9E /* QAudioNode.h */,
-				6F5117D1240E756F0013BC9E /* QAudioNode.mm */,
+				6F5117CF240E756E0013BC9E /* QAudioTrackNode.h */,
+				6F5117D1240E756F0013BC9E /* QAudioTrackNode.mm */,
 			);
 			path = QAudio;
 			sourceTree = "<group>";
@@ -483,7 +483,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FBD026124552F0F00372404 /* IOSFastTextureDrawable.h in Headers */,
-				6F5117D3240E756F0013BC9E /* QAudioNode.h in Headers */,
+				6F5117D3240E756F0013BC9E /* QAudioTrackNode.h in Headers */,
 				6F5117CC240E74E20013BC9E /* QVideoFrame.h in Headers */,
 				6FBD027A245926CF00372404 /* QMediaFactory_internal.h in Headers */,
 				6F5117A92409F94F0013BC9E /* QVideoTarget.h in Headers */,
@@ -694,7 +694,7 @@
 				6FBD026024552F0F00372404 /* IOSFastTextureDrawable.mm in Sources */,
 				6F049354244C2A2600F8B73B /* QMediaDescribe.mm in Sources */,
 				6FACC43C2462564A008F1B41 /* QFileUtils.m in Sources */,
-				6F5117D5240E756F0013BC9E /* QAudioNode.mm in Sources */,
+				6F5117D5240E756F0013BC9E /* QAudioTrackNode.mm in Sources */,
 				6FACC43B2462564A008F1B41 /* QObserverHoster.m in Sources */,
 				6FACC44824625983008F1B41 /* QFileExporterTarget.m in Sources */,
 				6FACC4392462564A008F1B41 /* QCommon.m in Sources */,

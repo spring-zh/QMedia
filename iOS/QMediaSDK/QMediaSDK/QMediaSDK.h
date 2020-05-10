@@ -22,10 +22,10 @@ FOUNDATION_EXPORT const unsigned char QMediaSDKVersionString[];
 #import <QMediaSDK/QAudioTarget.h>
 #import <QMediaSDK/QVideoTarget.h>
 #import <QMediaSDK/QNodeAnimator.h>
-#import <QMediaSDK/QAudioNode.h>
 #import <QMediaSDK/QGraphicNode.h>
 #import <QMediaSDK/QDuplicateNode.h>
 #import <QMediaSDK/QVideoTrackNode.h>
+#import <QMediaSDK/QAudioTrackNode.h>
 #import <QMediaSDK/QMediaTrack.h>
 #import <QMediaSDK/QLayer.h>
 

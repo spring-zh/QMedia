@@ -109,6 +109,10 @@ private:
     return self;
 }
 
+- (void)dealloc {
+    NSLog(@"%@ dealloc ", self);
+}
+
 #pragma mark - Observer Logic
 - (void)addObserver:(id<QExporterObserver>)observer
 {

@@ -20,6 +20,10 @@
     std::shared_ptr<AudioTarget> _audioTargetAdapter;
 }
 
+- (void)dealloc {
+    NSLog(@"%@ dealloc ", self);
+}
+
 - (id<QVideoTarget>)videoTarget {
     return _videoTarget;
 }

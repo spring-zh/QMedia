@@ -88,6 +88,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 }
 - (void)removeMediaTrack:(QMediaTrack*)track
 {
+    [self detachRenderNode:track.graphic];
     _combiner->removeMediaTrack(track.native);
     [_subObjectArray removeObject:track];
 }
@@ -207,7 +208,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
         NSUInteger mediaTrackIdx = [[objDic valueForKey:@"mediaTrackIdx"] integerValue];
         QMediaTrack *mediaTrack = [_subObjectArray objectAtIndex:mediaTrackIdx];
         if (mediaTrack) {
-            retNode = [[QVideoTrackNode alloc] initFromTrack:mediaTrack];
+            retNode = mediaTrack.graphic;//[[QVideoTrackNode alloc] initFromTrack:mediaTrack];
         }
     }else if ([nodeClass isEqual:QDuplicateNode.class]) {
         NSUInteger graphicNodeIdx = [[objDic valueForKey:@"graphicNodeIdx"] integerValue];

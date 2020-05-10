@@ -14,15 +14,11 @@
 
 #include "EffectEditor/MediaTrackImpl.h"
 
-@interface QAudioNode(init)
-- (instancetype)initWithAudioChannel:(MediaAudioChannelRef)audioNode;
-@end
-
 @implementation QMediaTrack {
     std::shared_ptr<MediaTrack> _mediaTrackNative;
     id<QMediaSource> _mediaSource;
-//    QGraphicNode* _graphic;
-    QAudioNode* _audio;
+    QVideoTrackNode* _graphic;
+    QAudioTrackNode* _audio;
 }
 
 - (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource
@@ -31,8 +27,8 @@
         _mediaSource = mediaSource;
         _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(MediaSourceRef(new MeidaSourceAdapter(mediaSource))));
         if(_mediaTrackNative->prepare()){
-//            _graphic = [[QGraphicNode alloc] initWithNode:_mediaTrackNative->getMediaGraphicChannel()];
-            _audio = [[QAudioNode alloc] initWithAudioChannel:_mediaTrackNative->getMediaAudioChannel()];
+            _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
+            _audio = [[QAudioTrackNode alloc] initFromTrack:self];
         }else
             self = nil;
     }
@@ -44,8 +40,8 @@
     if ((self = [super init]) != nil) {
         _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(mediaSource));
         if(_mediaTrackNative->prepare()){
-//            _graphic = [[QGraphicNode alloc] initWithNode:_mediaTrackNative->getMediaGraphicChannel()];
-            _audio = [[QAudioNode alloc] initWithAudioChannel:_mediaTrackNative->getMediaAudioChannel()];
+            _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
+            _audio = [[QAudioTrackNode alloc] initFromTrack:self];
         }else
             self = nil;
     }
@@ -54,6 +50,7 @@
 
 - (void)dealloc
 {
+    NSLog(@"%@ dealloc ", self);
     _mediaTrackNative.reset();
     _mediaSource = nil;
 }
@@ -127,7 +124,7 @@
 //    return _graphic;
 //}
 
-- (QAudioNode*)audio{
+- (QAudioTrackNode*)audio{
     return _audio;
 }
 

@@ -68,13 +68,13 @@
     QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2];
 //    XMVideoTrack* videoTrack = [self.player.mediaFactory createOldVideoTrack:testVideoFile2];
 
-    QVideoTrackNode *videoNode = [[QVideoTrackNode alloc] initFromTrack:videoTrack];
-    [self.player addGraphicNode:videoNode];
-        videoNode.position = CGPointMake(50, 100);
-        videoNode.contentSize = CGSizeMake(640, 480);//self.player.layerSize;
+//    QVideoTrackNode *videoNode = [[QVideoTrackNode alloc] initFromTrack:videoTrack];
+    [self.player addGraphicNode:videoTrack.graphic];
+        videoTrack.graphic.position = CGPointMake(50, 100);
+        videoTrack.graphic.contentSize = CGSizeMake(640, 480);//self.player.layerSize;
         //    videoTrack.graphic.color4 = XMColorMaker(1, 1, 1, 0.5);
-        videoNode.anchorPoint = CGPointMake(0.5, 0.5);
-        videoNode.rotation = -30.0f;
+        videoTrack.graphic.anchorPoint = CGPointMake(0.5, 0.5);
+        videoTrack.graphic.rotation = -30.0f;
     //    videoTrack.graphic.scaleX = 0.4f;
     //    videoTrack.graphic.scaleY = 0.4f;
     
@@ -82,7 +82,7 @@
 //    [captureTrack setDisplayTrackRange:NSMakeRange(0, 20000)];
 //    captureTrack.graphic.contentSize = CGSizeMake(320, 240);
     
-    [self.player attachRenderNode:videoNode parent:layer];
+    [self.player attachRenderNode:videoTrack.graphic parent:layer];
     [self.player attachRenderNode:layer parent:self.player.rootNode];
 //    [layer addChildNode:videoNode];
 //    [self.player.rootNode addChildNode:layer];
@@ -103,7 +103,7 @@
     [self.player attachRenderNode:duplicatenode parent:self.player.rootNode];
     
     
-    QDuplicateNode* duplicatenodeV = [[QDuplicateNode alloc] initFromNode:videoNode];
+    QDuplicateNode* duplicatenodeV = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
     [self.player addGraphicNode:duplicatenodeV];
     duplicatenodeV.contentSize = CGSizeMake(200, 200);
     duplicatenodeV.position = CGPointMake(0, 0);

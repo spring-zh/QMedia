@@ -100,6 +100,9 @@
     self.playerCtrl.videoGravity = AVLayerVideoGravityResizeAspect;
     self.playerCtrl.view.frame = self.playerViewContainer.bounds;
     [self.playerViewContainer addSubview:self.playerCtrl.view];
+    
+    [self.exporter removeAllObservers];
+    self.exporter = nil;
 }
 
 

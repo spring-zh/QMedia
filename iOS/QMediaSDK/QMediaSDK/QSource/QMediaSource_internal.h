@@ -10,7 +10,6 @@
 #import "QVideoTarget_internal.h"
 #import "QAudioTarget_internal.h"
 
-//#include <objc/runtime.h>
 #include <memory>
 #include "QVideoFrame.h"
 #include "QAudioFrame.h"
@@ -19,7 +18,7 @@
 extern const struct VideoDescribe XMToVideoDescribe(QVideoDescribe* xmdesc);
 extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 
-#pragma mark XMMediaSource(object-c) to MediaSource(c++)
+#pragma mark QMediaSource(object-c) to MediaSource(c++)
 class MeidaSourceAdapter : public MediaSource {
 public:
     explicit MeidaSourceAdapter(id<QMediaSource> source):_source(source){
@@ -82,7 +81,6 @@ public:
     }
     virtual bool seekTo(int64_t mSec) override {
         return [_source seekTo:mSec];
-//        return [_source performSelector:@selector(seekTo:) withObject:@(mSec)];
     }
     virtual bool isEOF() override {
         return [_source isEOF];

@@ -15,7 +15,7 @@
 
 class MediaGraphicChannel : public GraphicCore::RenderNode {
 public:
-    MediaGraphicChannel(MediaTrackRef mediaTrack);
+    MediaGraphicChannel(MediaTrack* mediaTrack);
     virtual ~MediaGraphicChannel();
     
     virtual void draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/) override;
@@ -28,7 +28,7 @@ public:
     
 private:
     
-    MediaTrackRef _mediaTrack;
+    MediaTrack* _mediaTrack;
     std::unique_ptr<VideoFrameDrawer> _drawer;
 };
 
