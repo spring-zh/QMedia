@@ -24,6 +24,7 @@ public:
     
     static float RECTANGLE_COORDS[8];
     static float RECTANGLE_TEX_COORDS[8];
+    static float RECTANGLE_TEX_COORDS_FLIPH[8];
     static float RECTANGLE_TEX_COORDS_FLIPV[8];
 
     static float MtxFlipH[16];

@@ -35,6 +35,14 @@ float Drawable2D::RECTANGLE_TEX_COORDS[8]            =
         1.0f, 1.0f      // 3 top right
 };
 
+float Drawable2D::RECTANGLE_TEX_COORDS_FLIPH[8]
+{
+    1.0f, 0.0f,     // 0 bottom left
+    0.0f, 0.0f,     // 1 bottom right
+    1.0f, 1.0f,     // 2 top left
+    0.0f, 1.0f      // 3 top right
+};
+
 float Drawable2D::RECTANGLE_TEX_COORDS_FLIPV[8]
 {
     0.0f, 1.0f,     // 0 bottom left

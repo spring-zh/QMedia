@@ -85,7 +85,7 @@ void EditorPlayer::onPrepared(RetCode code)
     _userPaused = true;
     _playerClock.setPaused(true);
     _playerClock.setClock(_playerTimeRange._start);
-    _videoTarget->start();
+    _videoTarget->flush();
     _callback->onPrepare(code);
 }
 void EditorPlayer::onStarted(RetCode code)
@@ -171,6 +171,7 @@ RetCode EditorPlayer::_seek(int64_t mSec, int flag)
 //    _videoTarget->pause(true);
     _audioTarget->pause(true);
     _audioTarget->flush();
+    _videoTarget->flush();
     
     _playerClock.setClock(mSec);
     _audioClock.setClock(mSec);
@@ -187,6 +188,6 @@ RetCode EditorPlayer::_seek(int64_t mSec, int flag)
     if (_seekIdx.load() == flag) { //clear seeking state
         _bSeeking.store(false);
     }
-//    if(flag == 1) _bSeeking.store(false);
+
     return RetCode::ok;
 }

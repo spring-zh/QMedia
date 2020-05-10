@@ -21,6 +21,7 @@
     CCEAGLView *_objView;
     QVideoDescribe* _describe;
     bool _bStart;
+    bool _updateView;
     CGSize _viewSize;
     IOSFastTexture *_iosTexture;
     IOSFastTextureDrawable *_textureDrawable;
@@ -85,7 +86,7 @@
 - (void)onDrawFrame
 {
 //    NSLog(@"QPlayerView onDrawFrame %@", [NSThread currentThread]);
-    if (_bStart) {
+    if (_bStart || _updateView) {
         if (_iosTexture) {
             [IOSFastTextureDrawable savePrevStatus];
             if(!_textureDrawable)
@@ -94,10 +95,11 @@
             [_videoRender onVideoRender:-1];
             [IOSFastTextureDrawable loadPrevStatus];
             glFinish();
-            [_textureDrawable draw];
+            [_textureDrawable draw: QFilpModeV];
         }
         else
             [_videoRender onVideoRender:-1];
+        _updateView = false;
     }
     
     if (_bTakePicture) {
@@ -158,7 +160,7 @@
     _bStart = !isPause;
 }
 - (void)flushVideo{
-    
+    _updateView = true;
 }
 
 - (void)layoutSubviews{
@@ -169,6 +171,7 @@
 {
     _iosTexture = [[IOSFastTexture alloc] initWithContext:_objView.context size:CGSizeMake(describe.width, describe.height)];
     _describe = describe;
+    _updateView = true;
     return true;
 }
 - (int)getWidth

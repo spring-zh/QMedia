@@ -130,10 +130,16 @@ static GLint prev_fbo;
     return _glFbId;
 }
 
-- (bool)draw{
+- (bool)draw:(QFilpMode)filpMode{
     _shaderProgram.setUniformValue("inputImageTexture", (int)_iosTexture.glTexid);
     _shaderProgram.setVertexAttribValue("position", 8, Drawable2D::RECTANGLE_COORDS);
-    _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS_FLIPV);
+    if (filpMode == QFilpModeH) {
+        _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS_FLIPH);
+    }else if (filpMode == QFilpModeV)
+        _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS_FLIPV);
+    else
+        _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS);
+    
     return _shaderProgram.drawRect() == 0;
 }
 
