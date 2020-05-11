@@ -6,12 +6,13 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
+
 #import "QEditorPlayer.h"
+#import "QCommon.h"
+#import "QObserverHoster.h"
+#import "QAudioPlayer.h"
 #import "QAudioTarget_internal.h"
 #import "QVideoTarget_internal.h"
-#import "QAudioPlayer.h"
-#import "QObserverHoster.h"
-#import "QCommon.h"
 #import "QGraphicNode_internal.h"
 #import "QMediaTrack_internal.h"
 #import "QMediaFactory_internal.h"
@@ -135,8 +136,7 @@ private:
 
 - (instancetype)init
 {
-    _cbQueue = dispatch_get_main_queue();
-    return [self initWithQueue:_cbQueue];
+    return [self initWithQueue:dispatch_get_main_queue()];
 }
 
 - (instancetype)initWithQueue:(dispatch_queue_t)cbQueue
@@ -159,8 +159,6 @@ private:
 - (void)dealloc
 {
     NSLog(@"%@ dealloc ", self);
-//    _videoTarget = nil;
-//    _audioTarget = nil;
 }
 
 - (id<QVideoTarget>)playerView {

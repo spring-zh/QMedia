@@ -128,13 +128,17 @@ const Range<int64_t> MediaTrackImpl::getDisplayTrackRange() const
 
 VideoFrame MediaTrackImpl::getVideoFrame(int64_t mSec , bool& isEnd)
 {
+    VideoFrame retFrame(nullptr,0);
+    int64_t remap_time = 0;
+    if (! mapTimeToMediaSource(mSec, remap_time)) {
+        return retFrame;
+    }
+    
     rdlock_guard rdlock(_rwlock);
     isEnd = false;
     int skip_count = 0;
-    VideoFrame retFrame(nullptr,0);
     if ( _sourceRef->isStarted()) {
-        int64_t remap_time = 0;
-        mapTimeToMediaSource(mSec, remap_time);
+        
         while (remap_time > _last_video_ms) {
             int errRet;
             VideoFrame readframe = _sourceRef->readNextVideoFrame(errRet);
@@ -150,7 +154,6 @@ VideoFrame MediaTrackImpl::getVideoFrame(int64_t mSec , bool& isEnd)
                 break;
             }
         }
-        return retFrame;
     }else
         isEnd = true;
     
@@ -160,13 +163,17 @@ VideoFrame MediaTrackImpl::getVideoFrame(int64_t mSec , bool& isEnd)
 }
 AudioFrame MediaTrackImpl::getAudioFrame(int64_t mSec , bool& isEnd)
 {
+    AudioFrame retFrame(nullptr,0,0);
+    int64_t remap_time = 0;
+    if (! mapTimeToMediaSource(mSec, remap_time)) {
+        return retFrame;
+    }
+    
     rdlock_guard rdlock(_rwlock);
     isEnd = false;
     int skip_count = 0;
-    AudioFrame retFrame(nullptr,0,0);
     if ( _sourceRef->isStarted()) {
-        int64_t remap_time = 0;
-        mapTimeToMediaSource(mSec, remap_time);
+        
         while (remap_time > _last_audio_ms) {
             int errRet;
             AudioFrame readframe = _sourceRef->readNextAudioFrame(errRet);

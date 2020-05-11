@@ -77,10 +77,18 @@
         videoTrack.graphic.rotation = -30.0f;
     //    videoTrack.graphic.scaleX = 0.4f;
     //    videoTrack.graphic.scaleY = 0.4f;
+//    videoTrack.sourceRange = NSMakeRange(5000, 10000);
     
-//    XMMediaTrack* captureTrack = [self.player.mediaFactory createCaptureTrack:AVCaptureSessionPreset640x480 position:AVCaptureDevicePositionBack];
-//    [captureTrack setDisplayTrackRange:NSMakeRange(0, 20000)];
-//    captureTrack.graphic.contentSize = CGSizeMake(320, 240);
+#if 0 //don't use CaptureTrack in edit mode
+    QMediaTrack* captureTrack = [self.player.mediaFactory createCaptureTrack:AVCaptureSessionPreset640x480 position:AVCaptureDevicePositionBack video:true audio:false];
+    [self.player addMediaTrack:captureTrack];
+    [self.player addGraphicNode:captureTrack.graphic];
+    [captureTrack setDisplayTrackRange:NSMakeRange(0, 20000)];
+    captureTrack.sourceRange = NSMakeRange(0, 20000);
+    captureTrack.graphic.contentSize = CGSizeMake(320, 240);
+    captureTrack.graphic.position = CGPointMake(400, 0);
+    [self.player attachRenderNode:captureTrack.graphic parent:self.player.rootNode];
+#endif
     
     [self.player attachRenderNode:videoTrack.graphic parent:layer];
     [self.player attachRenderNode:layer parent:self.player.rootNode];
@@ -93,10 +101,7 @@
     duplicatenode.contentSize = CGSizeMake(320, 240);
     duplicatenode.position = CGPointMake(50, 50);
     duplicatenode.anchorPoint = CGPointMake(0.5, 0.5);
-    NSRange a_range;
-    a_range.length = 10000;
-    a_range.location = 0;
-    QNodeAnimator* animator = [[QNodeAnimator alloc] initWith:property_scalexy range:a_range begin:QVectorV2(0.5,0.5) end:QVectorV2(1,1) functype:Quint_EaseOut repleat:false];
+    QNodeAnimator* animator = [[QNodeAnimator alloc] initWith:property_scalexy range:NSMakeRange(0, 5000) begin:QVectorV2(0.5,0.5) end:QVectorV2(1,1) functype:Quint_EaseOut repleat:false];
     [duplicatenode addAnimator:animator];
     duplicatenode.renderRange = NSMakeRange(1000, 15000);
 //    [self.player.rootNode addChildNode:duplicatenode];
@@ -111,8 +116,6 @@
 //    [self.player.rootNode addChildNode:duplicatenodeV];
     [self.player attachRenderNode:duplicatenodeV parent:self.player.rootNode];
  
-    
-//    [self.player addMediaTrack:captureTrack];
     [self.player addMediaTrack:videoTrack];
     
 //    NSDictionary* serialize_settings = [self.player serialize];

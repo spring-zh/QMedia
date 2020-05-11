@@ -81,12 +81,13 @@
     return [[QMediaTrack alloc] initWithMediaSource:readerSource];
 }
 
-- (QMediaTrack*)createCaptureTrack:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position;
+- (QMediaTrack*)createCaptureTrack:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position video:(bool)enableVideo audio:(bool)enableAudio;
 {
     QCaptureSource* captureSource = [[QCaptureSource alloc] initWithPreset:preset position:position];
     captureSource.videoTarget = _videoTarget;
     captureSource.audioTarget = _audioTarget;
-    captureSource.enableVideo = true;
+    captureSource.enableVideo = enableVideo;
+    captureSource.enableAudio = enableAudio;
     return [[QMediaTrack alloc] initWithMediaSource:captureSource];
 }
 

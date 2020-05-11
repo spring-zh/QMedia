@@ -326,11 +326,30 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 //        int videoFormat = [[dic valueForKey:@"videoFormat"] intValue];
         NSString* cameraPreset = [dic valueForKey:@"cameraPreset"];
         AVCaptureDevicePosition cameraPosition = (AVCaptureDevicePosition)[[dic valueForKey:@"cameraPosition"] integerValue];
-//        bool enableVideo = [[dic valueForKey:@"enableVideo"] boolValue];
-//        bool enableAudio = [[dic valueForKey:@"enableAudio"] boolValue];
-        mediaTrack = [_mediaFactory createCaptureTrack:cameraPreset position:cameraPosition];
+        bool enableVideo = [[dic valueForKey:@"enableVideo"] boolValue];
+        bool enableAudio = [[dic valueForKey:@"enableAudio"] boolValue];
+        mediaTrack = [_mediaFactory createCaptureTrack:cameraPreset position:cameraPosition video:enableVideo audio:enableAudio];
     }
-    
+    if (mediaTrack) {
+        {
+            NSDictionary* dic_sub = [dic valueForKey:@"sourceRange"];
+            NSRange range;
+            range.location = [[dic_sub valueForKey:@"location"] intValue];
+            range.length = [[dic_sub valueForKey:@"length"] intValue];
+            mediaTrack.sourceRange = range;
+        }
+        {
+            NSDictionary* dic_sub = [dic valueForKey:@"displayTrackRange"];
+            NSRange range;
+            range.location = [[dic_sub valueForKey:@"location"] intValue];
+            range.length = [[dic_sub valueForKey:@"length"] intValue];
+            [mediaTrack setDisplayTrackRange:range];
+        }
+
+        mediaTrack.timeScale = [[dic valueForKey:@"timeScale"] floatValue];
+        mediaTrack.repeatTimes = [[dic valueForKey:@"repeatTimes"] floatValue];
+
+    }
     return mediaTrack;
 }
 - (void)deSerialize_graphicTree:(NSDictionary*)dic_root root:(QGraphicNode*)rootNode{
