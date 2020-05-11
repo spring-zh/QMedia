@@ -108,6 +108,10 @@ static void speex_free (void *ptr) {free(ptr);}
 #include "resample_sse.h"
 #endif
 
+#ifdef __ARM_NEON
+#define _USE_NEON
+#endif
+
 #ifdef _USE_NEON
 #include "resample_neon.h"
 #endif

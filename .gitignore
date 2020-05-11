@@ -1,0 +1,10 @@
+**/.DS_Store
+iOS/QMediaSDK/QMediaCore/QMediaCore.xcodeproj/xcuserdata/*
+iOS/QMediaSDK/QMediaSDK.xcodeproj/xcuserdata/*
+iOS/QMediaSDK/QMediaSDK.xcworkspace/xcshareddata/*
+iOS/QMediaSDK/QMediaSDK.xcworkspace/xcuserdata/*
+iOS/SDKBuild/Debug-Product/*
+iOS/SDKBuild/Debug-iphoneos/*
+iOS/SDKBuild/Debug-iphonesimulator/*
+iOS/Product/Sample/QMediaSDKSample/QMediaSDKSample.xcodeproj/project.xcworkspace/*
+iOS/Product/Sample/QMediaSDKSample/QMediaSDKSample.xcodeproj/xcuserdata/*
