@@ -9,10 +9,13 @@
 #include "ResamplerSpeex.h"
 #include <stdlib.h>
 #include <string.h>
+
 #include "speex_resampler/speex_resampler.h"
 
-#define GET_FORMAT_BYTES(format) \
-    ((format == FT_FLOAT)?4:2)
+static int FormatBytes[] = {2, 1, 4, 0};
+
+//#define GET_FORMAT_BYTES(format) \
+//    ((format == FT_FLOAT)?4:2)
 
 ResamplerSpeex::ResamplerSpeex():
         _isinit(false),
@@ -20,7 +23,7 @@ ResamplerSpeex::ResamplerSpeex():
         _inChannels(0),_outChannels(0),
         _inSamplerate(0),_outSamplerate(0)
 {
-    _output_buff.resize(1024 * 8);
+    _tmpBuffer.resize(1024 * 8);
 }
 ResamplerSpeex::~ResamplerSpeex()
 {
@@ -71,35 +74,35 @@ void ResamplerSpeex::release()
     _isinit = false;
 }
 
-int ResamplerSpeex::getPredictedOutputByte(int inbytes)
+int64_t ResamplerSpeex::getPredictedOutputByte(int64_t inbytes)
 {
     if (_isinit && _resampler){
         unsigned int in_rate,out_rate;
         speex_resampler_get_rate(_resampler,&in_rate,&out_rate);
-        int needbytes = inbytes *_outChannels * GET_FORMAT_BYTES(_outFormat) * in_rate /
-                (out_rate *(GET_FORMAT_BYTES(_inFormat) * _inChannels));
+        int64_t needbytes = inbytes *_outChannels * FormatBytes[_outFormat] * out_rate /
+                (in_rate *(FormatBytes[_inFormat] * _inChannels));
 
         //stride by 16, then + 32
-        return (needbytes & 0xfff0) + 0x0020;
+        return (needbytes & 0xfffffff0) + 0x0020;
     }
     return 0;
 }
-
+#if 0
 int ResamplerSpeex::processAutoWithBytes(void *indata, unsigned int inBytes, void *outdata, unsigned int outMaxBytes)
 {
     if (!_isinit){
         return 0;
     }
-    int inSamples = inBytes / (GET_FORMAT_BYTES(_inFormat) * _inChannels);
-    int outMaxSamples = outMaxBytes / (GET_FORMAT_BYTES(_outFormat) * _outChannels);
+    int inSamples = inBytes / (FormatBytes[_inFormat] * _inChannels);
+    int outMaxSamples = outMaxBytes / (FormatBytes[_outFormat] * _outChannels);
     int outSamples = processAuto(indata,inSamples,outdata,outMaxSamples);
-    return outSamples * (GET_FORMAT_BYTES(_outFormat) * _outChannels);
+    return outSamples * (FormatBytes[_outFormat] * _outChannels);
 }
 
 int ResamplerSpeex::processAuto(void *indata, unsigned int inSamples, void *outdata, unsigned int outMaxSamples)
 {
     int iRet = -1;
-
+#if 0
     void * new_data = indata;
     int new_inSamples = inSamples;
 
@@ -108,19 +111,19 @@ int ResamplerSpeex::processAuto(void *indata, unsigned int inSamples, void *outd
     if (in_rate != out_rate){//rate change
 
         if (_inFormat == _outFormat && _inChannels == _outChannels){
-            return process(indata,inSamples,outdata,outMaxSamples);
+            return resample(indata,inSamples,outdata,outMaxSamples);
         } else{
             int expectation_samples = inSamples * in_rate / out_rate + 32;
             int out_buffer_len = GET_FORMAT_BYTES(_outFormat) * _inChannels* expectation_samples;
             if (out_buffer_len > _output_buff.size()){
                 _output_buff.resize(out_buffer_len);
             }
-            iRet = process(indata,inSamples,_output_buff.data(),expectation_samples);
+            iRet = resample(indata,inSamples,_output_buff.data(),expectation_samples);
             new_inSamples = iRet;
             new_data = _output_buff.data();
         }
     }
-
+#endif
 //    int min_smaples = (new_inSamples < outMaxSamples)?new_inSamples:outMaxSamples;
 //    if (_inFormat == FT_FLOAT){
 //        if (_outFormat == FT_FLOAT)
@@ -137,40 +140,66 @@ int ResamplerSpeex::processAuto(void *indata, unsigned int inSamples, void *outd
 
     return iRet;
 }
+#endif
+int ResamplerSpeex::process(void *indata, unsigned int inBytes, std::vector<uint8_t>& outPut)
+{
+    int maxOutBytes = getPredictedOutputByte(inBytes);
+    if (_tmpBuffer.size() < maxOutBytes) {
+        _tmpBuffer.resize(maxOutBytes);
+    }
+    int inSamples = inBytes / (FormatBytes[_inFormat] * _inChannels);
+    int maxSamples = maxOutBytes / (FormatBytes[_outFormat] * _outChannels);
+    int outSamples = resample(indata, inSamples, _tmpBuffer.data(), maxSamples);
+    int outBytes = outSamples * _outChannels * FormatBytes[_outFormat];
+    if (_inChannels != _outChannels) {
+        if (_outChannels == 1) {
+            mergeChannel<int16_t>(_tmpBuffer, outPut, outSamples);
+        }else if(_outChannels == 2)
+            expandChannel<int16_t>(_tmpBuffer, outPut, outSamples);
+    }else {
+        outPut.assign(_tmpBuffer.begin(), _tmpBuffer.begin() + outBytes);
+    }
+    return outBytes;
+}
 
-int ResamplerSpeex::process(void *indata, unsigned int inSamples, void *outdata, unsigned int outMaxSamples)
+int ResamplerSpeex::resample(void *indata, unsigned int inSamples, void *outdata, unsigned int outMaxSamples)
 {
     int nRet = -1;
     if (!_isinit)
         return -1;
 
-    spx_uint32_t outputSamples = 0;
+    spx_uint32_t inputSamples = inSamples;
+    spx_uint32_t outputSamples = outMaxSamples;
     if (_inChannels == 1){
         switch (_inFormat){
             case FT_FLOAT:
-                nRet = speex_resampler_process_float(_resampler,1,(float*)indata,&inSamples, (float*)outdata,&outputSamples);
+                nRet = speex_resampler_process_float(_resampler,1,(float*)indata,&inputSamples, (float*)outdata,&outputSamples);
                 break;
             case FT_INT16:
-                nRet = speex_resampler_process_int(_resampler,1,(int16_t *)indata,&inSamples, (int16_t *)outdata,&outputSamples);
+                nRet = speex_resampler_process_int(_resampler,1,(int16_t *)indata,&inputSamples, (int16_t *)outdata,&outputSamples);
                 break;
         }
     } else if (_inChannels == 2){
         switch (_inFormat) {
             case FT_FLOAT:
-                nRet = speex_resampler_process_interleaved_float(_resampler,(float*)indata,&inSamples, (float*)outdata,&outputSamples);
+                nRet = speex_resampler_process_interleaved_float(_resampler,(float*)indata,&inputSamples, (float*)outdata,&outputSamples);
                 break;
             case FT_INT16:
-                nRet = speex_resampler_process_interleaved_int(_resampler,(int16_t *)indata,&inSamples, (int16_t *)outdata,&outputSamples);
+                nRet = speex_resampler_process_interleaved_int(_resampler,(int16_t *)indata,&inputSamples, (int16_t *)outdata,&outputSamples);
                 break;
         }
     }
 
     if (nRet == 0) {
+        if (inSamples != inputSamples) {
+            printf("inSamples %d != inputSamples %d \n", inSamples, inputSamples);
+        }
         if (outputSamples > outMaxSamples){
 //            LOGW("speex resampler outputSamples > outMaxSamples ");
         }
-        return outMaxSamples;
+        return outputSamples;
     }
     else
         return 0;
 }
+

@@ -32,7 +32,7 @@ public:
     void stop() override;
     void cancel();
     
-    int64_t getPosition() const;
+    int64_t getPosition() const override;
     
 protected:
     bool onVideoRender(int64_t wantTimeMs) override;

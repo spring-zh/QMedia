@@ -75,19 +75,3 @@ private:
 	mutable int _offset;
 	bool _readEnd;
 };
-
-inline static int getBytesFromPcmFormat(RawAudioFormat audioFormat) {
-    switch (audioFormat) {
-        case RawAudioFormat::kU8:
-            return 1;
-        case RawAudioFormat::kS16:
-        case RawAudioFormat::kU16:
-            return 2;
-        case RawAudioFormat::kS32:
-        case RawAudioFormat::kU32:
-        case RawAudioFormat::kFLOAT:
-            return 4;
-        default:
-            return 2;
-    }
-}

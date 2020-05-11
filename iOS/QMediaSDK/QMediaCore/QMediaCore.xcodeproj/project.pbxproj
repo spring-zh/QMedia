@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		6F049348244B1BDC00F8B73B /* EditorExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F049347244B1BDC00F8B73B /* EditorExporter.cpp */; };
+		6F3720702469896800356951 /* speex_resampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F37206F2469896800356951 /* speex_resampler.c */; };
 		6F45922A2461ADE800FABEAF /* QPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4592292461ADE800FABEAF /* QPlayer.cpp */; };
 		6F511872240F9BD50013BC9E /* TDStretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117D9240F9BD40013BC9E /* TDStretch.cpp */; };
 		6F511873240F9BD50013BC9E /* RateTransposer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117DB240F9BD40013BC9E /* RateTransposer.cpp */; };
@@ -23,7 +24,6 @@
 		6F51187D240F9BD50013BC9E /* PeakFinder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117EF240F9BD40013BC9E /* PeakFinder.cpp */; };
 		6F51187E240F9BD50013BC9E /* AAFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117F4240F9BD40013BC9E /* AAFilter.cpp */; };
 		6F51187F240F9BD50013BC9E /* SoundTouch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117F5240F9BD40013BC9E /* SoundTouch.cpp */; };
-		6F511880240F9BD50013BC9E /* speex_resampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117F8240F9BD40013BC9E /* speex_resampler.c */; };
 		6F5118C1240F9CCB0013BC9E /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5118BF240F9CCB0013BC9E /* Logger.cpp */; };
 		6F6214552446A84900AF70A0 /* GcRenderNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6214542446A84900AF70A0 /* GcRenderNode.cpp */; };
 		6F637EC523D0477A0004E053 /* GcNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E6323D047790004E053 /* GcNode.cpp */; };
@@ -76,6 +76,11 @@
 		10A9FE1E1EA4A06B0051BDFC /* libQMediaCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libQMediaCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F049346244B1BDC00F8B73B /* EditorExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorExporter.h; sourceTree = "<group>"; };
 		6F049347244B1BDC00F8B73B /* EditorExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorExporter.cpp; sourceTree = "<group>"; };
+		6F372062246934B400356951 /* AudioClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioClock.h; sourceTree = "<group>"; };
+		6F37206C2469896800356951 /* speex_stack_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_stack_alloc.h; sourceTree = "<group>"; };
+		6F37206D2469896800356951 /* speex_arch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_arch.h; sourceTree = "<group>"; };
+		6F37206E2469896800356951 /* speex_resampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_resampler.h; sourceTree = "<group>"; };
+		6F37206F2469896800356951 /* speex_resampler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = speex_resampler.c; sourceTree = "<group>"; };
 		6F4592282461ADE800FABEAF /* QPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPlayer.h; sourceTree = "<group>"; };
 		6F4592292461ADE800FABEAF /* QPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QPlayer.cpp; sourceTree = "<group>"; };
 		6F5117BF240B65600013BC9E /* VideoFrameDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFrameDrawer.h; sourceTree = "<group>"; };
@@ -108,10 +113,6 @@
 		6F5117F3240F9BD40013BC9E /* InterpolateCubic.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InterpolateCubic.h; sourceTree = "<group>"; };
 		6F5117F4240F9BD40013BC9E /* AAFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AAFilter.cpp; sourceTree = "<group>"; };
 		6F5117F5240F9BD40013BC9E /* SoundTouch.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoundTouch.cpp; sourceTree = "<group>"; };
-		6F5117F7240F9BD40013BC9E /* speex_resampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_resampler.h; sourceTree = "<group>"; };
-		6F5117F8240F9BD40013BC9E /* speex_resampler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = speex_resampler.c; sourceTree = "<group>"; };
-		6F5117F9240F9BD40013BC9E /* speex_arch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_arch.h; sourceTree = "<group>"; };
-		6F5117FA240F9BD40013BC9E /* speex_stack_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_stack_alloc.h; sourceTree = "<group>"; };
 		6F5117FC240F9BD40013BC9E /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
 		6F5117FD240F9BD40013BC9E /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
 		6F5118BF240F9CCB0013BC9E /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
@@ -338,10 +339,10 @@
 		6F5117F6240F9BD40013BC9E /* speex_resampler */ = {
 			isa = PBXGroup;
 			children = (
-				6F5117F7240F9BD40013BC9E /* speex_resampler.h */,
-				6F5117F8240F9BD40013BC9E /* speex_resampler.c */,
-				6F5117F9240F9BD40013BC9E /* speex_arch.h */,
-				6F5117FA240F9BD40013BC9E /* speex_stack_alloc.h */,
+				6F37206D2469896800356951 /* speex_arch.h */,
+				6F37206F2469896800356951 /* speex_resampler.c */,
+				6F37206E2469896800356951 /* speex_resampler.h */,
+				6F37206C2469896800356951 /* speex_stack_alloc.h */,
 			);
 			path = speex_resampler;
 			sourceTree = "<group>";
@@ -503,6 +504,7 @@
 				6FF0290F221BFEE40011E6CB /* mediadef */,
 				6FF02917221BFEE40011E6CB /* decoder */,
 				6FF0291A221BFEE40011E6CB /* output */,
+				6F372062246934B400356951 /* AudioClock.h */,
 				6F4592292461ADE800FABEAF /* QPlayer.cpp */,
 				6F4592282461ADE800FABEAF /* QPlayer.h */,
 			);
@@ -662,7 +664,6 @@
 				6F511874240F9BD50013BC9E /* InterpolateShannon.cpp in Sources */,
 				6F637ED023D0477A0004E053 /* GcLayer.cpp in Sources */,
 				6F5118C1240F9CCB0013BC9E /* Logger.cpp in Sources */,
-				6F511880240F9BD50013BC9E /* speex_resampler.c in Sources */,
 				6F637ED223D0477A0004E053 /* ColorTypes.cpp in Sources */,
 				6F637ECB23D0477A0004E053 /* Vec2.cpp in Sources */,
 				6F637EC823D0477A0004E053 /* Mat4.cpp in Sources */,
@@ -688,6 +689,7 @@
 				6FA69F95244D5DAA00BC3294 /* EffectCombiner.cpp in Sources */,
 				6F51187B240F9BD50013BC9E /* sse_optimized.cpp in Sources */,
 				6F637ED523D0477A0004E053 /* GLEngine.cpp in Sources */,
+				6F3720702469896800356951 /* speex_resampler.c in Sources */,
 				6F637EC523D0477A0004E053 /* GcNode.cpp in Sources */,
 				6F511876240F9BD50013BC9E /* mmx_optimized.cpp in Sources */,
 				6F637ED823D0477A0004E053 /* Texture2D.cpp in Sources */,
@@ -808,6 +810,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				ENABLE_BITCODE = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
@@ -821,6 +824,7 @@
 				CLANG_ENABLE_OBJC_ARC = YES;
 				CLANG_ENABLE_OBJC_WEAK = NO;
 				ENABLE_BITCODE = NO;
+				GCC_PREPROCESSOR_DEFINITIONS = "";
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;

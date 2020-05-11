@@ -43,6 +43,10 @@ public:
         _callback._function = std::bind(func, args..., std::placeholders::_1,std::placeholders::_2);
     }
     
+    bool isCurrent() const {
+        return (_thread.get_id() == std::this_thread::get_id());
+    }
+    
     template <class func_ptr,class... Args>
     inline void postTask(func_ptr func, Args&&... args){
         _postTask(std::bind(func, args...),-1);

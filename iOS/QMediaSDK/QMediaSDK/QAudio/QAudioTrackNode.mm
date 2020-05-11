@@ -6,9 +6,8 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
-#import "QAudioTrackNode.h"
+#import "QAudioTrackNode_internal.h"
 #import "QMediaTrack_internal.h"
-#include "EffectEditor/MediaAudioChannel.h"
 
 
 @implementation QAudioTrackNode {
@@ -19,9 +18,18 @@
 - (instancetype)initFromTrack:(QMediaTrack*)mediaTrack {
     if (! mediaTrack.native->getAudioDescribe()) //media source doesn't contain audio channel
         return nil;
+    
+    return [self initWithNode:MediaAudioChannelRef(new MediaAudioChannel(mediaTrack.native.get()))];
+}
+
+#pragma mark - private function
+- (instancetype)initWithNode:(MediaAudioChannelRef)audioNode;
+{
     if ((self = [super init]) != nil) {
-        _mediaTrack = mediaTrack;
-        _audioNode = MediaAudioChannelRef(new MediaAudioChannel(mediaTrack.native.get()));
+        _audioNode = audioNode;
+        if (_audioNode == nullptr) {
+            return nil;
+        }
     }
     return self;
 }
@@ -37,6 +45,15 @@
 }
 - (void)setVolume:(float)volume{
     _audioNode->setVolume(volume);
+}
+
+#pragma mark private
+- (MediaAudioChannelRef)native {
+    return _audioNode;
+}
+
+- (void)setMediaTrack:(QMediaTrack*)mediaTrack {
+    _mediaTrack = mediaTrack;
 }
 
 @end

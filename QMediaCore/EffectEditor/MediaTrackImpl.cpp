@@ -16,7 +16,6 @@ _isPrepare(false),
 _timeScale(1.0f),
 _repeatTimes(1),
 _absoluteTrackRange(0,0),
-_audioChannel(nullptr),/*_videoChannel(nullptr),*/
 _video_stream_idx(-1),_audio_stream_idx(-1)
 {
     _last_video_ms = -1;
@@ -74,7 +73,7 @@ bool MediaTrackImpl::prepare()
             }else if (_sourceRef->getMediaDescribe()[index].mediatype_ == MediaType::Audio &&
                 (_audio_stream_idx < 0)) {
                 _audio_stream_idx = index;
-                _audioChannel = MediaAudioChannelRef(new MediaAudioChannel(this));
+//                _audioChannel = MediaAudioChannelRef(new MediaAudioChannel(this));
             }
         }
     }

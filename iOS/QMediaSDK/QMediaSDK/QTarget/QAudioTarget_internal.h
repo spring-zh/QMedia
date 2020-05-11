@@ -11,7 +11,7 @@
 
 extern QAudioDescribe* audioDescribeToXM(struct AudioDescribe desc);
 
-#pragma mark XMAudioTarget(object-c) to AudioTarget(c++)
+#pragma mark QAudioTarget(object-c) to AudioTarget(c++)
 class AudioTargetAdapter : public AudioTarget {
 public:
     explicit AudioTargetAdapter(id<QAudioTarget> audioTarget):
@@ -69,7 +69,7 @@ private:
 };
 
 
-#pragma mark XMAudioTarget is deprecated
+#pragma mark QAudioTarget is deprecated
 @interface QAudioTarget : NSObject <QAudioRender>
 
 -(instancetype)initWithTarget:(id<QAudioTarget>)target;

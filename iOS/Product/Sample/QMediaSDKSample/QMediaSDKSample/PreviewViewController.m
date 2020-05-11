@@ -78,6 +78,7 @@
     //    videoTrack.graphic.scaleX = 0.4f;
     //    videoTrack.graphic.scaleY = 0.4f;
 //    videoTrack.sourceRange = NSMakeRange(5000, 10000);
+    videoTrack.timeScale = 1.5f;
     
 #if 0 //don't use CaptureTrack in edit mode
     QMediaTrack* captureTrack = [self.player.mediaFactory createCaptureTrack:AVCaptureSessionPreset640x480 position:AVCaptureDevicePositionBack video:true audio:false];

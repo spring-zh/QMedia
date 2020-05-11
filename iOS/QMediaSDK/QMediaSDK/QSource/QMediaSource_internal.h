@@ -19,12 +19,12 @@ extern const struct VideoDescribe XMToVideoDescribe(QVideoDescribe* xmdesc);
 extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 
 #pragma mark QMediaSource(object-c) to MediaSource(c++)
-class MeidaSourceAdapter : public MediaSource {
+class MediaSourceAdapter : public MediaSource {
 public:
-    explicit MeidaSourceAdapter(id<QMediaSource> source):_source(source){
+    explicit MediaSourceAdapter(id<QMediaSource> source):_source(source){
         
     }
-    ~MeidaSourceAdapter() {
+    ~MediaSourceAdapter() {
     }
     
     virtual void setVideoTarget(const VideoTarget* videoTarget) override {}

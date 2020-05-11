@@ -36,9 +36,6 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
     int _sizebyte;
     int _bytePreSamplePoint;
     float _volume;
-//    int _sampleRate;
-//    int _channels;
-//    XMRawAudioFormat _pcmFormat;
     QAudioDescribe* _describe;
 }
 
@@ -73,9 +70,6 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
     }
     
     _describe = describe;
-//    _sampleRate = sample_rate;
-//    _channels = channels;
-//    _pcmFormat = pcm_format;
     
     _describe.rawFormat = QRawAudioFormatS16;
 

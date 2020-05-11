@@ -10,25 +10,27 @@
 #include "Utils/Logger.h"
 #include "MediaCore/core/AudioProcess.h"
 
+#define STATE_ISRUNING(state) (state == CombinerState::Prepared || state == CombinerState::Started || state == CombinerState::Paused )
+
 USING_GRAPHICCORE
 
-EffectCombiner::RenderLayer::RenderLayer(EffectCombiner *combiner):_combiner(combiner){
+RenderLayer::RenderLayer(EffectCombiner *combiner):_combiner(combiner){
     _playerScene.setGLEngine(&_gle);
     _isInit = false;
 }
 
-const Range<int64_t> EffectCombiner::RenderLayer::getRange()
+const Range<int64_t> RenderLayer::getRange()
 {
     return _combiner->getMediaTimeRange();
 }
 
-void EffectCombiner::RenderLayer::releaseRes()
+void RenderLayer::releaseRes()
 {
     _gle.releaseAll();
     RenderNode::releaseRes();
 }
 
-bool EffectCombiner::RenderLayer::beginRender()
+bool RenderLayer::beginRender()
 {
     _gle.useAsDefaultFrameBuffer();
     
@@ -43,14 +45,14 @@ bool EffectCombiner::RenderLayer::beginRender()
     return true;
 }
 
-void EffectCombiner::RenderLayer::render(int64_t timeStamp){
+void RenderLayer::render(int64_t timeStamp){
     _playerScene.setDelta(timeStamp);
     
     AnimaNode::updateAnimations(timeStamp);
     RenderNode::visit(&_playerScene, _playerScene.getMatrix(MATRIX_STACK_MODELVIEW), 0);
 }
 
-void EffectCombiner::RenderLayer::draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/){
+void RenderLayer::draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/){
     //draw background color
     //FIXME: ?????
     _gle.getCurrentFrameBuffer()->use();
@@ -148,7 +150,7 @@ EffectCombiner::RetCode EffectCombiner::_prepare()
     if (_audioTarget) _audioTarget->init(_audioConfig);
     _audioClock.init(_audioTarget);
     
-    //TODO: start all meida tracks
+    //TODO: start all media tracks
     _bAudioCompleted = _bVideoCompleted = false;
     _playerTimeRange = getMediaTimeRange();
     MediaSupervisor::start();
@@ -190,7 +192,7 @@ EffectCombiner::RetCode EffectCombiner::_stop()
     
     if (_videoTarget) _videoTarget->stop();
     if (_audioTarget) _audioTarget->stop();
-    //stop all meida tracks
+    //stop all media tracks
     MediaSupervisor::stop();
     
     _state = CombinerState::Stopped;
@@ -213,13 +215,11 @@ EffectCombiner::RetCode EffectCombiner::_addMediaTrack(MediaTrackRef mediaTrack)
     
     if ( !hasMediaTrack(mediaTrack) ) {
         if(mediaTrack->isPrepare()){
-//            mediaTrack->setVideoTarget(_videoTarget);
-//            mediaTrack->setAudioTarget(_audioTarget);
             _mediaTracks.insert(mediaTrack);
-//            postRenderTask(&EffectCombiner::_addMediaGraphicChannel,this,
-//                           mediaTrack->getMediaGraphicChannel());
-            postAudioTask(&EffectCombiner::_addMediaAudioChannel,this,
-                          mediaTrack->getMediaAudioChannel());
+
+            if (STATE_ISRUNING(_state)) {
+                mediaTrack->setPositionTo(getPosition());
+            }
         }else
             return RetCode::e_state;
     }
@@ -234,8 +234,8 @@ EffectCombiner::RetCode EffectCombiner::_removeMediaTrack(MediaTrackRef mediaTra
         _mediaTracks.erase(iter);
 //        postRenderTask(&EffectCombiner::_removeMediaGraphicChannel,this,
 //                       mediaTrack->getMediaGraphicChannel());
-        postAudioTask(&EffectCombiner::_removeMediaAudioChannel,this,
-                      mediaTrack->getMediaAudioChannel());
+//        postAudioTask(&EffectCombiner::_removeMediaAudioChannel,this,
+//                      mediaTrack->getMediaAudioChannel());
     }
     return RetCode::ok;
 }
@@ -284,6 +284,15 @@ void EffectCombiner::_detachRenderNode(GraphicCore::RenderNodeRef current)
 {
     current->removeFromParent();
     current->releaseRes();
+}
+
+void EffectCombiner::_attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent)
+{
+    _addMediaAudioChannel(child);
+}
+void EffectCombiner::_detachAudioNode(MediaAudioChannelRef current)
+{
+    _removeMediaAudioChannel(current);
 }
 
 bool EffectCombiner::onRenderCreate()
@@ -447,6 +456,12 @@ void EffectCombiner::attachRenderNode(GraphicCore::RenderNodeRef child, GraphicC
 void EffectCombiner::detachRenderNode(GraphicCore::RenderNodeRef current)
 {
     postRenderTask(&EffectCombiner::_detachRenderNode, this, current);
+}
+void EffectCombiner::attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent) {
+    postAudioTask(&EffectCombiner::_attachAudioNode, this, child, parent);
+}
+void EffectCombiner::detachAudioNode(MediaAudioChannelRef current) {
+    postAudioTask(&EffectCombiner::_detachAudioNode, this, current);
 }
 
 void EffectCombiner::runRenderCmd()

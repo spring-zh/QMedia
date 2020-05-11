@@ -40,8 +40,14 @@ const AudioSampleCache* MediaAudioChannel::getAudioSample(int64_t mSec) {
         int cacheLen = 0;
         if (!isEnd) {
             if (nativebuffer) { //has audio buffer
+                
+                int out_samplerate = _audioTarget->getSampleRate();
+                if(! FLOAT_ISEQUAL(_mediaTrack->getTimeScale() , 1.0f) && _mediaTrack->getTimeScale() > 0.f) {
+                    out_samplerate = _audioTarget->getSampleRate() * _mediaTrack->getTimeScale();
+                }
+                
                 if ((audioframe.channels() != _audioTarget->getChannels()) ||
-                    (audioframe.samplerate() != _audioTarget->getSampleRate()) ||
+                    (audioframe.samplerate() != out_samplerate) ||
                     (audioframe.get_audio_format() != _audioTarget->getFormat())) {
                     //TODO: need resample
                     if (_resampler == nullptr) {
@@ -51,16 +57,10 @@ const AudioSampleCache* MediaAudioChannel::getAudioSample(int64_t mSec) {
                                                                 nativebuffer->SampleRate(),
                                          audioToResamplerFormat(_audioTarget->getFormat()),
                                                                 _audioTarget->getChannels(),
-                                                                _audioTarget->getSampleRate());
+                                                                out_samplerate);
                     }
                     
-                    int predictedlen = _resampler->getPredictedOutputByte(nativebuffer->Size());
-                    if (_cacheBuffer.size() < predictedlen) {
-                        _cacheBuffer.resize(predictedlen);
-                    }
-                    
-                    cacheLen = _resampler->processAutoWithBytes((void*)nativebuffer->Data(),nativebuffer->Size(),
-                                                     _cacheBuffer.data(),predictedlen);
+                    cacheLen = _resampler->process((void*)nativebuffer->Data(), nativebuffer->Size(), _cacheBuffer);
                     
                 }else {
                     cacheLen = nativebuffer->Size();

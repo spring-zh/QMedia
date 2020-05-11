@@ -13,6 +13,7 @@
 #include <vector>
 #include "MediaTrack.h"
 #include "MediaGraphicChannel.h"
+#include "MediaAudioChannel.h"
 
 class MediaSupervisor {
 public:

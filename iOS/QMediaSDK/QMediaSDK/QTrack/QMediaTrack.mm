@@ -25,7 +25,7 @@
 {
     if ((self = [super init]) != nil) {
         _mediaSource = mediaSource;
-        _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(MediaSourceRef(new MeidaSourceAdapter(mediaSource))));
+        _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(MediaSourceRef(new MediaSourceAdapter(mediaSource))));
         if(_mediaTrackNative->prepare()){
             _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
             _audio = [[QAudioTrackNode alloc] initFromTrack:self];

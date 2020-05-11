@@ -14,7 +14,7 @@
 #import "QGraphicNode_internal.h"
 #import "QMediaTrack_internal.h"
 #import "QMediaFactory_internal.h"
-
+#import "QAudioTrackNode_internal.h"
 #import "QVideoTrackNode.h"
 #import "QDuplicateNode.h"
 #import "QLayer.h"
@@ -84,15 +84,16 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 - (void)addMediaTrack:(QMediaTrack*)track
 {
     _combiner->addMediaTrack(track.native);
+    _combiner->attachAudioNode(track.audio.native, nullptr);
     [_subObjectArray addObject:track];
 }
 - (void)removeMediaTrack:(QMediaTrack*)track
 {
     [self detachRenderNode:track.graphic];
+    _combiner->detachAudioNode(track.audio.native);
     _combiner->removeMediaTrack(track.native);
     [_subObjectArray removeObject:track];
 }
-
 
 - (void)addGraphicNode:(QGraphicNode*)node {
     if ([_graphicNodesArray containsObject:node])
@@ -347,7 +348,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
         }
 
         mediaTrack.timeScale = [[dic valueForKey:@"timeScale"] floatValue];
-        mediaTrack.repeatTimes = [[dic valueForKey:@"repeatTimes"] floatValue];
+        mediaTrack.repeatTimes = [[dic valueForKey:@"repeatTimes"] intValue];
 
     }
     return mediaTrack;

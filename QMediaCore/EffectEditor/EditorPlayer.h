@@ -34,7 +34,7 @@ public:
     void start() override;
     void pause(bool bPause = true);
     void seek(int64_t mSec, int flag);
-    int64_t getPosition() const { return _playerPosition; }
+    int64_t getPosition() const override { return _playerPosition; }
     PlayerState getPlayerState() const {return _state; }
     
     bool getUserPaused() const { return _userPaused; }

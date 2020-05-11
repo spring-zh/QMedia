@@ -12,55 +12,31 @@
 #include "Utils/ThreadTask.h"
 #include "GraphicCore/GcLayer.h"
 #include "MediaCore/core/SteadyClock.h"
-#include "MediaCore/core/AudioProcess.h"
+#include "MediaCore/AudioClock.h"
 #include "MediaCore/output/VideoTarget.h"
 #include "MediaCore/output/AudioTarget.h"
 #include "MediaSupervisor.h"
 
-class AudioClock {
-public:
-    AudioClock():_audioPosition(0),_writeAudioBytes(0) {}
-    ~AudioClock() {}
-    
-    void init(AudioTarget *at) {
-        _sampleRate = at->getSampleRate();
-        _channels = at->getChannels();
-        _sampleWidthBytes = getBytesFromPcmFormat(at->getFormat());
-        _audoDelay = at->getAudioDelayBytes();
-    }
-    
-    void increaseAudioData(unsigned int size) {
-        t_lock_guard<spin_mutex> lck(_spin);
-        _writeAudioBytes += size;
-    }
-    
-    void setClock(int64_t clock) {
-        t_lock_guard<spin_mutex> lck(_spin);
-        _audioPosition = clock;
-        _writeAudioBytes = 0;
-    }
-    int64_t getClock() const {
-        int64_t play_duration = AudioProcess::calculateAudioDurationByBytes(_sampleRate,_channels,_sampleWidthBytes, _writeAudioBytes);
-        return _audioPosition + play_duration;
-    }
-    
-    int64_t getPlayingClock() const {
-        int64_t posBytes = MAX(0, _writeAudioBytes - _audoDelay);
-        int64_t play_duration = AudioProcess::calculateAudioDurationByBytes(_sampleRate,_channels,_sampleWidthBytes, posBytes);
-        return _audioPosition + play_duration;
-    }
-    
-private:
-    mutable spin_mutex _spin;
-    int64_t _audioPosition;
-    int64_t _writeAudioBytes;
-//    bool _bUpdate;
-    int _sampleRate;
-    int _channels;
-    int _sampleWidthBytes;
-    int _audoDelay;
-};
+class EffectCombiner;
 
+class RenderLayer : public GraphicCore::RenderNode {
+public:
+    RenderLayer(EffectCombiner *combiner);
+    ~RenderLayer(){}
+    
+    const Range<int64_t> getRange() override;
+    
+    void releaseRes() override;
+    
+    bool beginRender();
+    void render(int64_t timeStamp);
+    void draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/) override;
+    
+    EffectCombiner *_combiner;
+    GraphicCore::Scene _playerScene;
+    GraphicCore::GLEngine _gle;
+    bool _isInit;
+};
 
 #define MP_RET_IF_FAILED(ret) \
 do { \
@@ -144,32 +120,18 @@ public:
     virtual void start();
     virtual void stop();
     
+    virtual int64_t getPosition() const = 0;
+    
     //media manage
     void addMediaTrack(MediaTrackRef mediaTrack);
     void removeMediaTrack(MediaTrackRef mediaTrack);
     void attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent);
     void detachRenderNode(GraphicCore::RenderNodeRef current);
     
+    void attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent);
+    void detachAudioNode(MediaAudioChannelRef current);
+    
 protected:
-    class RenderLayer : public GraphicCore::RenderNode {
-    public:
-        RenderLayer(EffectCombiner *combiner);
-        ~RenderLayer(){}
-        
-        const Range<int64_t> getRange() override;
-        
-        void releaseRes() override;
-        
-        bool beginRender();
-        
-        void render(int64_t timeStamp);
-        void draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/) override;
-        
-        EffectCombiner *_combiner;
-        GraphicCore::Scene _playerScene;
-        GraphicCore::GLEngine _gle;
-        bool _isInit;
-    };
     
     virtual bool onRenderCreate() override;
     virtual bool onVideoRender(int64_t wantTimeMs) override;
@@ -195,6 +157,8 @@ protected:
     
     void _attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent);
     void _detachRenderNode(GraphicCore::RenderNodeRef current);
+    void _attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent);
+    void _detachAudioNode(MediaAudioChannelRef current);
         
     void cmdCallback(RetCode,int);
     
@@ -204,7 +168,6 @@ protected:
     VideoTarget* _videoTarget;
     AudioTarget* _audioTarget;
     std::shared_ptr<RenderLayer> _displayLayer;
-//    VideoTarget::Resolution _videoResolution;
     
     bool _bVideoCompleted;
     bool _bAudioCompleted;

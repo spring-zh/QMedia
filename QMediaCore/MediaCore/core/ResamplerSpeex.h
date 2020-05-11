@@ -17,9 +17,9 @@ struct SpeexResamplerState_;
 class ResamplerSpeex {
 public:
     enum Foramt{
-        FT_FLOAT,
-        FT_INT16,
-        FT_UINT8
+        FT_INT16 = 0,
+        FT_UINT8 = 1,
+        FT_FLOAT = 2
     };
     ResamplerSpeex();
     ~ResamplerSpeex();
@@ -29,21 +29,53 @@ public:
 
     bool init(Foramt inForamt, int inChannels, unsigned int inSamplerate, Foramt outForamt, int outChannels, unsigned int outSamplerate);
     void release();
+#if 0
     /**
      * @return out samples -1:error
      */
     int processAuto(void *indata, unsigned int inSamples, void *outdata, unsigned int outMaxSamples);
 
     int processAutoWithBytes(void *indata, unsigned int inBytes, void *outdata, unsigned int outMaxBytes);
-
-    //process the same channels and format
-    int process(void *indata, unsigned int inSamples, void *outdata, unsigned int outMaxSamples);
+#endif
+    
+    /**
+     *process resample
+     *return: output bytes
+     */
+    int process(void *indata, unsigned int inBytes, std::vector<uint8_t>& outPut);
+    //only resample
+    int resample(void *indata, unsigned int inSamples, void *outdata, unsigned int outMaxSamples);
 
     bool isInit(){ return _isinit; }
 
-    int getPredictedOutputByte(int inbytes);
+    int64_t getPredictedOutputByte(int64_t inbytes);
 private:
-//    int changeBufferFormat(void *indata, unsigned int inSamples, void *outdata, unsigned int outMaxSamples);
+    //merge channel 2 to 1
+    template <typename T>
+    void mergeChannel(const std::vector<uint8_t>& inPut, std::vector<uint8_t>& outPut, int samples) {
+        outPut.resize(samples * sizeof(T));
+        T* inPtr = (T*)inPut.data();
+        T* outPtr = (T*)outPut.data();
+        for (int i = 0; i < samples; i ++) {
+            *outPtr = (*inPtr) / 2;
+            *outPtr += (*(++inPtr)) / 2;
+            ++outPtr;
+            ++inPtr;
+        }
+    }
+    //expand channel 1 to 2
+    template <typename T>
+    void expandChannel(const std::vector<uint8_t>& inPut, std::vector<uint8_t>& outPut, int samples) {
+        outPut.resize(samples * sizeof(T) * 2);
+        T* inPtr = (T*)inPut.data();
+        T* outPtr = (T*)outPut.data();
+        for (int i = 0; i < samples; i ++) {
+            *outPtr = (*inPtr);
+            *(++outPtr) += (*inPtr);
+            ++outPtr;
+            ++inPtr;
+        }
+    }
 #if 0
     template <typename Ti, typename To>
     int convertBufferFormat(const Ti *indata, To *outdata, unsigned int samples)
@@ -128,7 +160,7 @@ private:
     enum Foramt _inFormat,_outFormat;
 
     //
-    std::vector<uint8_t> _output_buff;
+    std::vector<uint8_t> _tmpBuffer;
 };
 
 #endif //RESAMPLER_SPEEX_H

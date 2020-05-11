@@ -51,7 +51,7 @@ public:
 };
 
 
-#pragma mark XMVideoTarget is deprecated
+#pragma mark QVideoTarget is deprecated
 @interface QVideoTarget : NSObject <QVideoRender>
 
 -(instancetype)initWithTarget:(id<QVideoTarget>)target;
