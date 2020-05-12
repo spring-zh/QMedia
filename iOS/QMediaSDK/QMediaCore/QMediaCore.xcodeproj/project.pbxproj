@@ -81,6 +81,7 @@
 		6F37206D2469896800356951 /* speex_arch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_arch.h; sourceTree = "<group>"; };
 		6F37206E2469896800356951 /* speex_resampler.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_resampler.h; sourceTree = "<group>"; };
 		6F37206F2469896800356951 /* speex_resampler.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = speex_resampler.c; sourceTree = "<group>"; };
+		6F372072246A3E4000356951 /* resample_neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resample_neon.h; sourceTree = "<group>"; };
 		6F4592282461ADE800FABEAF /* QPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPlayer.h; sourceTree = "<group>"; };
 		6F4592292461ADE800FABEAF /* QPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QPlayer.cpp; sourceTree = "<group>"; };
 		6F5117BF240B65600013BC9E /* VideoFrameDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFrameDrawer.h; sourceTree = "<group>"; };
@@ -339,6 +340,7 @@
 		6F5117F6240F9BD40013BC9E /* speex_resampler */ = {
 			isa = PBXGroup;
 			children = (
+				6F372072246A3E4000356951 /* resample_neon.h */,
 				6F37206D2469896800356951 /* speex_arch.h */,
 				6F37206F2469896800356951 /* speex_resampler.c */,
 				6F37206E2469896800356951 /* speex_resampler.h */,
