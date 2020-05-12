@@ -21,118 +21,6 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 }
 
 #pragma mark QGraphicNode
-@implementation QGraphicNode_Serialize
-- (instancetype)init{
-    if ((self = [super init]) != nil) {
-        _origin_renderRange = NSMakeRange(0, 0);
-        _origin_visible = false;
-        _origin_rotation = 0;
-        _origin_scaleX = 1.0f;
-        _origin_scaleY = 1.0f;
-        _origin_scaleZ = 1.0f;
-        _origin_contentSize = CGSizeMake(0, 0);
-        _origin_position = CGPointMake(0, 0);
-        _origin_positionZ = 0;
-        _origin_anchorPoint = CGPointMake(0, 0);
-        _origin_color4 = QColorMaker(1, 1, 1, 1);
-        _origin_alpha = 1.0f;
-        _origin_visible = true;
-    }
-    return self;
-}
-- (NSDictionary*)serialize {
-    NSDictionary* dic = [NSMutableDictionary new];
-//    [dic setValue:@"QGraphicNode" forKey:@"objectType"];
-    {
-        NSDictionary* dic_renderRange = [[NSMutableDictionary alloc] init];
-        [dic_renderRange setValue:@(_origin_renderRange.location) forKey:@"location"];
-        [dic_renderRange setValue:@(_origin_renderRange.length) forKey:@"length"];
-        [dic setValue:dic_renderRange forKey:@"renderRange"];
-    }
-    {
-        NSDictionary* dic_contentSize = [[NSMutableDictionary alloc] init];
-        [dic_contentSize setValue:@((float)_origin_contentSize.width) forKey:@"width"];
-        [dic_contentSize setValue:@((float)_origin_contentSize.height) forKey:@"height"];
-        [dic setValue:dic_contentSize forKey:@"contentSize"];
-    }
-    {
-        NSDictionary* dic_position = [[NSMutableDictionary alloc] init];
-        [dic_position setValue:@((float)_origin_position.x) forKey:@"x"];
-        [dic_position setValue:@((float)_origin_position.y) forKey:@"y"];
-        [dic setValue:dic_position forKey:@"position"];
-    }
-    {
-        NSDictionary* dic_anchorPoint = [[NSMutableDictionary alloc] init];
-        [dic_anchorPoint setValue:@((float)_origin_anchorPoint.x) forKey:@"x"];
-        [dic_anchorPoint setValue:@((float)_origin_anchorPoint.y) forKey:@"y"];
-        [dic setValue:dic_anchorPoint forKey:@"anchorPoint"];
-    }
-    {
-        NSDictionary* dic_color4 = [[NSMutableDictionary alloc] init];
-        [dic_color4 setValue:@(_origin_color4.r) forKey:@"r"];
-        [dic_color4 setValue:@(_origin_color4.g) forKey:@"g"];
-        [dic_color4 setValue:@(_origin_color4.b) forKey:@"b"];
-        [dic_color4 setValue:@(_origin_color4.a) forKey:@"a"];
-        [dic setValue:dic_color4 forKey:@"color4"];
-    }
-    [dic setValue:@(_origin_visible) forKey:@"visible"];
-    [dic setValue:@(_origin_rotation) forKey:@"rotation"];
-    [dic setValue:@(_origin_scaleX) forKey:@"scaleX"];
-    [dic setValue:@(_origin_scaleY) forKey:@"scaleY"];
-    [dic setValue:@(_origin_scaleZ) forKey:@"scaleZ"];
-    [dic setValue:@(_origin_positionZ) forKey:@"positionZ"];
-    [dic setValue:@(_origin_alpha) forKey:@"alpha"];
-    return dic;
-}
-
-+ (void)deSerialize:(NSDictionary*)objDic output:(QGraphicNode*)outObj {
-    {
-        NSRange renderRange;
-        NSDictionary* sub_dic = [objDic valueForKey:@"renderRange"];
-        renderRange.location = [[sub_dic valueForKey:@"location"] intValue];
-        renderRange.length = [[sub_dic valueForKey:@"length"] intValue];
-        outObj.renderRange = renderRange;
-    }
-    {
-        CGSize contentSize;
-        NSDictionary* sub_dic = [objDic valueForKey:@"contentSize"];
-        contentSize.width = [[sub_dic valueForKey:@"width"] floatValue];
-        contentSize.height = [[sub_dic valueForKey:@"height"] floatValue];
-        outObj.contentSize = contentSize;
-    }
-    {
-        CGPoint position;
-        NSDictionary* sub_dic = [objDic valueForKey:@"position"];
-        position.x = [[sub_dic valueForKey:@"x"] floatValue];
-        position.y = [[sub_dic valueForKey:@"y"] floatValue];
-        outObj.position = position;
-    }
-    {
-        CGPoint anchorPoint;
-        NSDictionary* sub_dic = [objDic valueForKey:@"anchorPoint"];
-        anchorPoint.x = [[sub_dic valueForKey:@"x"] floatValue];
-        anchorPoint.y = [[sub_dic valueForKey:@"y"] floatValue];
-        outObj.anchorPoint = anchorPoint;
-    }
-    {
-        QColor4 color4;
-        NSDictionary* sub_dic = [objDic valueForKey:@"color4"];
-        color4.r = [[sub_dic valueForKey:@"r"] floatValue];
-        color4.g = [[sub_dic valueForKey:@"g"] floatValue];
-        color4.b = [[sub_dic valueForKey:@"b"] floatValue];
-        color4.a = [[sub_dic valueForKey:@"a"] floatValue];
-        outObj.color4 = color4;
-    }
-    outObj.visible = [[objDic valueForKey:@"visible"] boolValue];
-    outObj.rotation = [[objDic valueForKey:@"rotation"] floatValue];
-    outObj.scaleX = [[objDic valueForKey:@"scaleX"] floatValue];
-    outObj.scaleY = [[objDic valueForKey:@"scaleY"] floatValue];
-    outObj.scaleZ = [[objDic valueForKey:@"scaleZ"] floatValue];
-    outObj.positionZ = [[objDic valueForKey:@"positionZ"] floatValue];
-//    outObj.alpha = [[objDic valueForKey:@"alpha"] floatValue];
-}
-
-@end
 
 @implementation QGraphicNode {
     NSString *_nodeName;
@@ -143,9 +31,28 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 
 @synthesize parent = _parent;
 
+- (instancetype)init{
+    if ((self = [super init]) != nil) {
+        _origin_renderRange = NSMakeRange(0, 0);
+        self.origin_visible = false;
+        self.origin_rotation = 0;
+        self.origin_scaleX = 1.0f;
+        self.origin_scaleY = 1.0f;
+        self.origin_scaleZ = 1.0f;
+        self.origin_contentSize = CGSizeMake(0, 0);
+        self.origin_position = CGPointMake(0, 0);
+        self.origin_positionZ = 0;
+        self.origin_anchorPoint = CGPointMake(0, 0);
+        self.origin_color4 = QColorMaker(1, 1, 1, 1);
+        self.origin_alpha = 1.0f;
+        self.origin_visible = true;
+    }
+    return self;
+}
+
 - (instancetype)initWithName:(NSString*)name
 {
-    if ((self = [super init]) != nil) {
+    if ((self = [self init]) != nil) {
         _graphicNode = GraphicCore::RenderNodeRef(new GraphicCore::RenderNode());
         _nodeName = [name copy];
         std::string s_name = std::string([name UTF8String]);
@@ -160,7 +67,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 #pragma mark - private function
 - (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode
 {
-    if ((self = [super init]) != nil) {
+    if ((self = [self init]) != nil) {
         _graphicNode = graphicNode;
         if (_graphicNode == nullptr) {
             return nil;
@@ -281,7 +188,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 }
 
 - (void)setRenderRange:(NSRange)renderRange {
-    super.origin_renderRange = renderRange;
+    self.origin_renderRange = renderRange;
     _graphicNode->setRange(Range<int64_t>(renderRange.location, renderRange.location + renderRange.length));
 }
 
@@ -289,35 +196,35 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return _graphicNode->isVisible();
 }
 - (void)setVisible:(bool)visible{
-    super.origin_visible = visible;
+    self.origin_visible = visible;
     _graphicNode->setVisible(visible);
 }
 - (float)rotation{
     return _graphicNode->getRotation();
 }
 - (void)setRotation:(float)rotation{
-    super.origin_rotation = rotation;
+    self.origin_rotation = rotation;
     _graphicNode->setRotation(rotation);
 }
 - (float)scaleX{
     return _graphicNode->getScaleX();
 }
 - (void)setScaleX:(float)scaleX{
-    super.origin_scaleX = scaleX;
+    self.origin_scaleX = scaleX;
     _graphicNode->setScaleX(scaleX);
 }
 - (float)scaleY{
     return _graphicNode->getScaleY();
 }
 - (void)setScaleY:(float)scaleY{
-    super.origin_scaleY = scaleY;
+    self.origin_scaleY = scaleY;
     _graphicNode->setScaleY(scaleY);
 }
 - (float)scaleZ{
     return _graphicNode->getScaleZ();
 }
 - (void)setScaleZ:(float)scaleZ{
-    super.origin_scaleZ = scaleZ;
+    self.origin_scaleZ = scaleZ;
     _graphicNode->setScaleZ(scaleZ);
 }
 
@@ -326,7 +233,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return CGSizeMake(sz.width,sz.height);
 }
 - (void)setContentSize:(CGSize)contentSize{
-    super.origin_contentSize = contentSize;
+    self.origin_contentSize = contentSize;
     GraphicCore::Size sz(contentSize.width,contentSize.height);
     _graphicNode->setContentSize(sz);
 }
@@ -336,7 +243,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return CGPointMake(pos.x, pos.y);
 }
 - (void)setPosition:(CGPoint)position{
-    super.origin_position = position;
+    self.origin_position = position;
     GraphicCore::Vec2 pos(position.x,position.y);
     _graphicNode->setPosition(pos);
 }
@@ -344,7 +251,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return _graphicNode->getPositionZ();
 }
 - (void)setPositionZ:(float)positionZ{
-    super.origin_positionZ = positionZ;
+    self.origin_positionZ = positionZ;
     _graphicNode->setPositionZ(positionZ);
 }
 
@@ -353,7 +260,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return CGPointMake(anchor.x, anchor.y);
 }
 - (void)setAnchorPoint:(CGPoint)anchorPoint{
-    super.origin_anchorPoint = anchorPoint;
+    self.origin_anchorPoint = anchorPoint;
     GraphicCore::Vec2 anchor(anchorPoint.x,anchorPoint.y);
     _graphicNode->setAnchorPoint(anchor);
 }
@@ -363,7 +270,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return QColorMaker(color.r, color.g, color.b, color.a);
 }
 - (void)setColor4:(QColor4)color4{
-    super.origin_color4 = color4;
+    self.origin_color4 = color4;
     GraphicCore::Color4F color(color4.r,color4.g,color4.b,color4.a);
     _graphicNode->setColor(color);
 }
@@ -373,7 +280,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return color.a;
 }
 - (void)setAlpha:(float)alpha{
-    super.origin_alpha = alpha;
+    self.origin_alpha = alpha;
     GraphicCore::Color4F color = _graphicNode->getColor();
     color.a = alpha;
     _graphicNode->setColor(color);

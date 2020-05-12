@@ -10,7 +10,7 @@
 #import "QVideoTrackNode.h"
 #import "QAudioTrackNode.h"
 
-@interface QMediaTrack : NSObject <Serializable>
+@interface QMediaTrack : NSObject
 
 - (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource;
 - (bool) prepare;
@@ -30,6 +30,4 @@
 @property (nonatomic, readonly) QVideoTrackNode* graphic;
 @property (nonatomic, readonly) QAudioTrackNode* audio;
 
-//serialize media track settings
-- (NSDictionary*)serialize;
 @end

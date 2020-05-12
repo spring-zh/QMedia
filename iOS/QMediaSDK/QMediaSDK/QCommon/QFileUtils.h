@@ -253,7 +253,7 @@
 @end
 
 @interface QFileUtils (XMIO)
-
++ (NSString*) getFileFromMainbundleAbsolutePath:(NSString*) fileCompent;
 @end
 
 @interface QFileUtils (XMPath)

@@ -24,33 +24,8 @@ QColor4 QColorMaker(float r, float g, float b, float a);
 }
 #endif
 
-@class QGraphicNode;
-
-/**
- * the QGraphicNode 's Serialize propretys
- */
-@interface QGraphicNode_Serialize : NSObject <Serializable>
-@property (nonatomic, assign) NSRange origin_renderRange;
-@property (nonatomic, assign) bool origin_visible;
-@property (nonatomic, assign) float origin_rotation;
-@property (nonatomic, assign) float origin_scaleX;
-@property (nonatomic, assign) float origin_scaleY;
-@property (nonatomic, assign) float origin_scaleZ;
-
-@property (nonatomic, assign) CGSize origin_contentSize;
-@property (nonatomic, assign) CGPoint origin_position;
-@property (nonatomic, assign) float origin_positionZ;
-@property (nonatomic, assign) CGPoint origin_anchorPoint;
-@property (nonatomic, assign) QColor4 origin_color4;
-@property (nonatomic, assign) float origin_alpha;
-
-- (NSDictionary*)serialize;
-+ (void)deSerialize:(NSDictionary*)objDic output:(QGraphicNode*)outObj;
-
-@end
-
 // QGraphicNode
-@interface QGraphicNode : QGraphicNode_Serialize
+@interface QGraphicNode : NSObject
 
 - (instancetype)initWithName:(NSString*)name;
 @property (nonatomic, readonly) NSString* name;

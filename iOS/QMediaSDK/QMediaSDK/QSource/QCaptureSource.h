@@ -8,11 +8,12 @@
 
 #import <AVFoundation/AVFoundation.h>
 #import "QMediaSource.h"
+#import "VideoCaptureSession.h"
 
 @interface QCaptureSource : NSObject<QMediaSource>
 
 - (instancetype)initWithPreset:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position;
-//@property (nonatomic, readonly) VideoCaptureSession* captureSession;
+@property (nonatomic, readonly) VideoCaptureSession* captureSession;
 
 /**output target
  * MediaSource can adaptive by output target

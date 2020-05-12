@@ -205,8 +205,8 @@ const VideoDescribe *const MediaTrackImpl::getVideoDescribe() const
 }
 const AudioDescribe *const MediaTrackImpl::getAudioDescribe() const
 {
-    if (_video_stream_idx >= 0) {
-        return &_sourceRef->getMediaDescribe()[_video_stream_idx]._audiodesc;
+    if (_audio_stream_idx >= 0) {
+        return &_sourceRef->getMediaDescribe()[_audio_stream_idx]._audiodesc;
     }
     return nullptr;
 }

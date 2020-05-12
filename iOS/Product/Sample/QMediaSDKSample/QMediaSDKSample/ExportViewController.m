@@ -147,9 +147,4 @@
     [self presentViewController:alert animated:YES completion:nil];
 }
 
-- (NSString*) getFileFromMainbundleAbsolutePath:(NSString*) fileCompent
-{
-    return [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] resourcePath], fileCompent];
-}
-
 @end

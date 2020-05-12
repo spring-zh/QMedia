@@ -123,6 +123,10 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
     NSLog(@"%@ dealloc ", self);
 }
 
+- (NSString*)filePath {
+    return _path;
+}
+
 -(QVideoDescribe*)videoDesc
 {
     return _vdesc;
@@ -347,14 +351,6 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
         [_assetReader cancelReading];
         _assetReader = nil;
     }
-}
-
-
-- (NSDictionary*)serialize {
-    NSDictionary* dic = [[NSMutableDictionary alloc] init];
-    [dic setValue:NSStringFromClass(self.class) forKey:@"objectType"];
-    [dic setValue:_path forKey:@"path"];
-    return dic;
 }
 
 @end

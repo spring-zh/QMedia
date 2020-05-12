@@ -297,7 +297,10 @@
 @end
 
 @implementation QFileUtils (XMIO)
-
++ (NSString*) getFileFromMainbundleAbsolutePath:(NSString*) fileCompent
+{
+    return [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] resourcePath], fileCompent];
+}
 @end
 
 @implementation QFileUtils (XMPath)

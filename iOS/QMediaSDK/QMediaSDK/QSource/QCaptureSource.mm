@@ -274,11 +274,11 @@ protected:
     audiobufferframe.error = 1;
     audiobufferframe.invalid_pts = true;
     CMSampleBufferRef readbuffer = NULL;
-    @synchronized (_video_buffer_queue) {
-        if (_video_buffer_queue.count > 0) {
-            readbuffer = (__bridge_retained CMSampleBufferRef)[_video_buffer_queue objectAtIndex:(_video_buffer_queue.count-1)];
+    @synchronized (_audio_buffer_queue) {
+        if (_audio_buffer_queue.count > 0) {
+            readbuffer = (__bridge_retained CMSampleBufferRef)[_audio_buffer_queue objectAtIndex:(_audio_buffer_queue.count-1)];
         }
-        [_video_buffer_queue removeAllObjects];
+        [_audio_buffer_queue removeAllObjects];
     };
     
     if(readbuffer){
@@ -328,19 +328,9 @@ protected:
 - (void)clearBuffers
 {
     @synchronized (_video_buffer_queue) {
-//        for (id bufferId : _video_buffer_queue) {
-//            CMSampleBufferRef releaseBufferRef = (__bridge_retained CMSampleBufferRef)bufferId;
-//            CMSampleBufferInvalidate(releaseBufferRef);
-//            CFRelease(releaseBufferRef);
-//        }
         [_video_buffer_queue removeAllObjects];
     }
     @synchronized (_audio_buffer_queue) {
-//        for (id bufferId : _audio_buffer_queue) {
-//            CMSampleBufferRef releaseBufferRef = (__bridge_retained CMSampleBufferRef)bufferId;
-//            CMSampleBufferInvalidate(releaseBufferRef);
-//            CFRelease(releaseBufferRef);
-//        }
         [_audio_buffer_queue removeAllObjects];
     }
 }
@@ -350,9 +340,6 @@ protected:
     @synchronized (_video_buffer_queue) {
         if (_video_buffer_queue.count >= 15) {
             while (_video_buffer_queue.count >= 4) {
-//                CMSampleBufferRef releaseBufferRef = (__bridge_retained CMSampleBufferRef)[_video_buffer_queue objectAtIndex:0];
-//                CMSampleBufferInvalidate(releaseBufferRef);
-//                CFRelease(releaseBufferRef);
                 [_video_buffer_queue removeObjectAtIndex:0];
             }
         }
@@ -362,11 +349,8 @@ protected:
 - (void)processAudioSampleBuffer:(CMSampleBufferRef)sampleBuffer
 {
     @synchronized (_audio_buffer_queue) {
-        if (_video_buffer_queue.count >= 15) {
+        if (_audio_buffer_queue.count >= 15) {
             while (_audio_buffer_queue.count >= 4) {
-//                CMSampleBufferRef releaseBufferRef = (__bridge_retained CMSampleBufferRef)[_video_buffer_queue objectAtIndex:0];
-//                CMSampleBufferInvalidate(releaseBufferRef);
-//                CFRelease(releaseBufferRef);
                 [_audio_buffer_queue removeObjectAtIndex:0];
             }
         }

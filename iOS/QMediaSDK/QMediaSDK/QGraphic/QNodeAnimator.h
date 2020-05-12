@@ -78,7 +78,7 @@ extern NSString* property_contentsize;//v2
 extern NSString* property_alpha;//v1
 extern NSString* property_mixcolor;//v4
 
-@interface QNodeAnimator : NSObject <Serializable>
+@interface QNodeAnimator : NSObject
 - (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat;
 - (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat name:(NSString*)name;
 @property (nonatomic, assign) NSString* property;
@@ -88,8 +88,5 @@ extern NSString* property_mixcolor;//v4
 @property (nonatomic, assign) QEaseFunction functionType;
 @property (nonatomic, assign) NSString* name;
 @property (nonatomic, assign) bool repleat;
-
-- (NSDictionary*)serialize;
-+ (QNodeAnimator*)deSerialize:(NSDictionary*)objDic;
 
 @end

@@ -26,7 +26,7 @@ typedef struct SampleBufferFrame {
 }
 #endif
 
-@protocol QMediaSource <NSObject, Serializable>
+@protocol QMediaSource <NSObject>
 @required
 //output target
 @property (nonatomic, weak) id<QVideoTarget> videoTarget;

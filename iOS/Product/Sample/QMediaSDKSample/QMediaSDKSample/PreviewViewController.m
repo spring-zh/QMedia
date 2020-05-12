@@ -63,7 +63,7 @@
 //    self.player.rootNode.rotation = 30;
 //    self.player.rootNode.position = CGPointMake(-100, -100);
 //    self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
-    NSString* testVideoFile2 = [self getFileFromMainbundleAbsolutePath:@"video/test.mp4"];
+    NSString* testVideoFile2 = [QFileUtils getFileFromMainbundleAbsolutePath:@"video/test.mp4"];
     
     QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2];
 //    XMVideoTrack* videoTrack = [self.player.mediaFactory createOldVideoTrack:testVideoFile2];
@@ -284,11 +284,6 @@
 //    XMKeyVideoReverser* reverser = [XMKeyVideoReverser sharedInstance];
 //    [reverser cancel];
 //    [reverser reverse:src dst:dstVideo beginMs:0 endMs:70000 isCopyAudio:TRUE delegate:self];
-}
-
-- (NSString*) getFileFromMainbundleAbsolutePath:(NSString*) fileCompent
-{
-    return [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] resourcePath], fileCompent];
 }
 
 @end

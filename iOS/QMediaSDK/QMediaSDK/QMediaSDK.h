@@ -38,5 +38,6 @@ FOUNDATION_EXPORT const unsigned char QMediaSDKVersionString[];
 
 #import <QMediaSDK/QCommon.h>
 #import <QMediaSDK/QGLContext.h>
+#import <QMediaSDK/QFileUtils.h>
 
 
