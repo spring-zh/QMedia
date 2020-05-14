@@ -110,6 +110,7 @@ varying vec2 v_texCoord;
 uniform sampler2D SamplerY;
 uniform sampler2D SamplerUV;
 uniform mat3 colorConversionMatrix;
+uniform highp vec4 uColor;
 
 void main()
 {
@@ -120,7 +121,7 @@ void main()
     yuv.x = (texture2D(SamplerY, v_texCoord).r - (16.0 / 255.0));
     yuv.yz = (texture2D(SamplerUV, v_texCoord).rg - vec2(0.5, 0.5));
     rgb = colorConversionMatrix * yuv;
-    gl_FragColor = vec4(rgb, 1);
+    gl_FragColor = vec4(rgb, uColor.a);
 }
 )";
 
@@ -300,7 +301,7 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
                 _program->addUniformOption("uMVPMatrix",Uniform::MATRIX4);
                 _program->addUniformOption("uTexMatrix",Uniform::MATRIX4);
                 _program->addUniformOption("colorConversionMatrix",Uniform::MATRIX3);
-//                _program->setProgramLocations();
+                _program->addUniformOption("uColor", Uniform::FLOAT4);
                
             }
         }
@@ -309,15 +310,15 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
     return true;
 }
 
-void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Rect& dstRegion)
+void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
 {
     if (_program && _program->use()) {
         //FIXME: translation of position already contain in transform matrix
         GLfloat posArray[] = {
             0, 0, 0,
-            dstRegion.size.width, 0, 0,
-            0, dstRegion.size.height, 0,
-            dstRegion.size.width, dstRegion.size.height, 0
+            node->getContentSize().width, 0, 0,
+            0, node->getContentSize().height, 0,
+            node->getContentSize().width, node->getContentSize().height, 0
         };
         
         _program->setVertexAttribValue("a_texCoord", GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS), Drawable2D::RECTANGLE_TEX_COORDS);
@@ -330,6 +331,19 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
         _program->setUniformValue("uTexMatrix", 16, texMatrix.m/*Drawable2D::MtxFlipV*/);
         _program->setUniformValue("uMVPMatrix", 16, mvpMatrix.m);
         _program->setUniformValue("colorConversionMatrix", 16, _colorConversionMatrix);
+        
+        Uniform::Value colorVal;
+        colorVal._floatOrmatrix_array = {
+            node->getColor().r,
+            node->getColor().g,
+            node->getColor().b,
+            node->getColor().a};
+        _program->setUniformValue("uColor", colorVal);
+        if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)) {
+            _program->enableBlend(true);
+        }
+        else
+            _program->enableBlend(false);
         
         _program->drawRect();
     }
@@ -469,15 +483,15 @@ bool PixelFrameBGRADrawer::setFrame(const VideoFrame& videoFrame)
     return true;
 }
 
-void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Rect& dstRegion)
+void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
 {
     if (_program && _program->use()) {
         //FIXME: translation of position already contain in transform matrix
         GLfloat posArray[] = {
             0, 0, 0,
-            dstRegion.size.width, 0, 0,
-            0, dstRegion.size.height, 0,
-            dstRegion.size.width, dstRegion.size.height, 0
+            node->getContentSize().width, 0, 0,
+            0, node->getContentSize().height, 0,
+            node->getContentSize().width, node->getContentSize().height, 0
         };
         
         _program->setVertexAttribValue("a_texCoord", GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS), Drawable2D::RECTANGLE_TEX_COORDS);
@@ -490,8 +504,17 @@ void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const Grap
         _program->setUniformValue("uMVPMatrix", 16, mvpMatrix.m);
         
         Uniform::Value colorVal;
-        colorVal._floatOrmatrix_array = {1,1,1,1};
+        colorVal._floatOrmatrix_array = {
+            node->getColor().r,
+            node->getColor().g,
+            node->getColor().b,
+            node->getColor().a};
         _program->setUniformValue("uColor", colorVal);
+        if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)) {
+            _program->enableBlend(true);
+        }
+        else
+            _program->enableBlend(false);
         
         _program->drawRect();
     }

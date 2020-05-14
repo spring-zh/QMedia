@@ -30,8 +30,8 @@ void MediaGraphicChannel::duplicateDraw(GraphicCore::Scene* scene, const Graphic
     if (!bReadEnd && video_frame.video_frame_buffer()) {
         _drawer->setFrame(video_frame);
     }
-    GraphicCore::Rect region(diaplayNode->getPosition(),diaplayNode->getContentSize());
-    _drawer->drawFrame(scene,transform,region);
+    
+    _drawer->drawFrame(scene,transform, diaplayNode);
 }
 
 const Range<int64_t> MediaGraphicChannel::getRange()

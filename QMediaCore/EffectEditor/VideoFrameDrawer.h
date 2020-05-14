@@ -11,7 +11,7 @@
 
 #include "Utils/Comm.h"
 #include "GraphicCore/opengl/Texture2D.h"
-#include "GraphicCore/GcScene.h"
+#include "GraphicCore/GcNode.h"
 #include "MediaCore/mediadef/VideoFrame.h"
 #include "MediaCore/output/VideoTarget.h"
 
@@ -21,7 +21,7 @@ public:
     virtual ~VideoFrameDrawer(){}
 
     virtual bool setFrame(const VideoFrame& videoFrame) = 0;
-    virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Rect& dstRegion) = 0;
+    virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) = 0;
 //    virtual GraphicCore::Texture2D* getDuplicateTexture() { return nullptr; }
     virtual void release() = 0;
     
