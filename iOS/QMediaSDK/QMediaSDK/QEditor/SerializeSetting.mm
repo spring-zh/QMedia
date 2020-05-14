@@ -117,7 +117,13 @@
         [dic setValue:dic_color4 forKey:@"color4"];
     }
     [dic setValue:@(self.origin_visible) forKey:@"visible"];
-    [dic setValue:@(self.origin_rotation) forKey:@"rotation"];
+    {
+        NSDictionary* dic_sub = [[NSMutableDictionary alloc] init];
+        [dic_sub setValue:@(self.origin_rotation3d.v0) forKey:@"x"];
+        [dic_sub setValue:@(self.origin_rotation3d.v1) forKey:@"y"];
+        [dic_sub setValue:@(self.origin_rotation3d.v2) forKey:@"z"];
+        [dic setValue:dic_sub forKey:@"rotation3d"];
+    }
     [dic setValue:@(self.origin_scaleX) forKey:@"scaleX"];
     [dic setValue:@(self.origin_scaleY) forKey:@"scaleY"];
     [dic setValue:@(self.origin_scaleZ) forKey:@"scaleZ"];
@@ -164,8 +170,16 @@
         color4.a = [[sub_dic valueForKey:@"a"] floatValue];
         outObj.color4 = color4;
     }
+    {
+        QVector rotation3d;
+        NSDictionary* sub_dic = [objDic valueForKey:@"rotation3d"];
+        rotation3d.v0 = [[sub_dic valueForKey:@"x"] floatValue];
+        rotation3d.v1 = [[sub_dic valueForKey:@"y"] floatValue];
+        rotation3d.v2 = [[sub_dic valueForKey:@"z"] floatValue];
+        outObj.rotation3d = rotation3d;
+    }
     outObj.visible = [[objDic valueForKey:@"visible"] boolValue];
-    outObj.rotation = [[objDic valueForKey:@"rotation"] floatValue];
+//    outObj.rotation = [[objDic valueForKey:@"rotation"] floatValue];
     outObj.scaleX = [[objDic valueForKey:@"scaleX"] floatValue];
     outObj.scaleY = [[objDic valueForKey:@"scaleY"] floatValue];
     outObj.scaleZ = [[objDic valueForKey:@"scaleZ"] floatValue];

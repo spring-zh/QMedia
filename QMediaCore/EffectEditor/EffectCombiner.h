@@ -35,6 +35,7 @@ public:
     EffectCombiner *_combiner;
     GraphicCore::Scene _playerScene;
     GraphicCore::GLEngine _gle;
+    GraphicCore::Texture2D *_depthTexture;
     bool _isInit;
 };
 

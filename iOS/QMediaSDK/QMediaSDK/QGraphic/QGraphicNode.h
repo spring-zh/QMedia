@@ -51,6 +51,7 @@ QColor4 QColorMaker(float r, float g, float b, float a);
 //transform propertys setting
 @property (nonatomic) bool visible;
 @property (nonatomic) float rotation;
+@property (nonatomic) QVector rotation3d;
 @property (nonatomic) float scaleX;
 @property (nonatomic) float scaleY;
 @property (nonatomic) float scaleZ;

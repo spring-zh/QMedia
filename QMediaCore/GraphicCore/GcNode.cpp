@@ -10,6 +10,11 @@
 
 GRAPHICCORE_BEGIN
 
+enum ParentFlags : int {
+    Flags_None = 0,
+    Flags_Update = 1
+};
+
 Node::Node():
 _rotationX(0),
 _rotationY(0),
@@ -33,9 +38,10 @@ void Node::visit(Scene *scene, const Mat4& parentTransform, uint32_t parentFlags
     {
         return;
     }
-    
-    if (_transformDirty || _contentSizeDirty) {
+    uint32_t selfFlags = Flags_None;
+    if (_transformDirty || _contentSizeDirty || (parentFlags & Flags_Update)) {
         _modelViewTransform = this->transform(parentTransform);
+        selfFlags = Flags_Update;
     }
     _transformUpdated = false;
     _contentSizeDirty = false;
@@ -43,10 +49,10 @@ void Node::visit(Scene *scene, const Mat4& parentTransform, uint32_t parentFlags
     scene->pushMatrix(MATRIX_STACK_MODELVIEW);
     scene->loadMatrix(MATRIX_STACK_MODELVIEW, _modelViewTransform);
     
-    this->draw(scene, _modelViewTransform, parentFlags);
+    this->draw(scene, _modelViewTransform, selfFlags);
     if(!_children.empty()){
         for (auto& node : _children) {
-            node->visit(scene, _modelViewTransform, parentFlags);
+            node->visit(scene, _modelViewTransform, selfFlags);
         }
     }
     scene->popMatrix(MATRIX_STACK_MODELVIEW);

@@ -33,9 +33,10 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 
 - (instancetype)init{
     if ((self = [super init]) != nil) {
-        _origin_renderRange = NSMakeRange(0, 0);
+        self.origin_renderRange = NSMakeRange(0, 0);
         self.origin_visible = false;
-        self.origin_rotation = 0;
+//        self.origin_rotation = 0;
+        self.origin_rotation3d = QVectorV3(0, 0, 0);
         self.origin_scaleX = 1.0f;
         self.origin_scaleY = 1.0f;
         self.origin_scaleZ = 1.0f;
@@ -203,8 +204,18 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return _graphicNode->getRotation();
 }
 - (void)setRotation:(float)rotation{
-    self.origin_rotation = rotation;
+    QVector vertor3 = self.origin_rotation3d;
+    vertor3.v2 = rotation;
+    self.origin_rotation3d = vertor3;
     _graphicNode->setRotation(rotation);
+}
+- (QVector)rotation3d {
+    auto rotation3d = _graphicNode->getRotation3D();
+    return QVectorV3(rotation3d.x, rotation3d.y, rotation3d.z);
+}
+- (void)setRotation3d:(QVector)rotation3d {
+    self.origin_rotation3d = rotation3d;
+    _graphicNode->setRotation3D(GraphicCore::Vec3(rotation3d.v0, rotation3d.v1, rotation3d.v2));
 }
 - (float)scaleX{
     return _graphicNode->getScaleX();

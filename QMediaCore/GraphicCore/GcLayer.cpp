@@ -112,7 +112,7 @@ void Layer::addFilter(FilterRef filter){
 bool Layer::createRes()
 {
     bool bRet = false;
-    _texture2d = GeneralTexture2D::createTexture(Image::RGBA, _layerSize.width,_layerSize.height);
+    _texture2d = GeneralTexture2D::createTexture(Texture2D::RGBA, _layerSize.width,_layerSize.height);
     Rect svp = Rect(0,0,_texture2d->width(),_texture2d->height());
     _scene.setViewPort(svp);
     _scene.setProjection(Projection::_3D);

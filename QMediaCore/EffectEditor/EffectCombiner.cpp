@@ -14,7 +14,9 @@
 
 USING_GRAPHICCORE
 
-RenderLayer::RenderLayer(EffectCombiner *combiner):_combiner(combiner){
+RenderLayer::RenderLayer(EffectCombiner *combiner):
+_combiner(combiner),
+_depthTexture(nullptr){
     _playerScene.setGLEngine(&_gle);
     _isInit = false;
 }
@@ -27,6 +29,10 @@ const Range<int64_t> RenderLayer::getRange()
 void RenderLayer::releaseRes()
 {
     _gle.releaseAll();
+    if (_depthTexture) {
+        delete _depthTexture;
+        _depthTexture = nullptr;
+    }
     RenderNode::releaseRes();
 }
 
@@ -38,7 +44,7 @@ bool RenderLayer::beginRender()
         GraphicCore::Rect vp(0, 0, _combiner->getVideoTarget()->getWidth(), _combiner->getVideoTarget()->getHeight());
         _playerScene.setViewPort(vp);
         _playerScene.setProjection(Projection::_3D);
-        
+        _depthTexture = GeneralTexture2D::createTexture(Texture2D::DEPTH, _combiner->getVideoTarget()->getWidth(), _combiner->getVideoTarget()->getHeight());
         createRes();
         _isInit = true;
     }
@@ -56,6 +62,8 @@ void RenderLayer::draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & 
     //draw background color
     //FIXME: ?????
     _gle.getCurrentFrameBuffer()->use();
+    _gle.getCurrentFrameBuffer()->attachTexture2D(FrameBuffer::DEPTH, _depthTexture);
+    _gle.enableDepthTest(true);
     _gle.setClearColor(_realColor);
     _gle.clearByColor();
 }

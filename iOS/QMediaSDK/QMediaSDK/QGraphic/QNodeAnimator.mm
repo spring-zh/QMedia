@@ -13,7 +13,7 @@ using GraphicCore::AnimaNode;
 
 AnimaNode::AnimatorRef QNodeAnimatorToCPP(QNodeAnimator* animator){
     
-    Range<int64_t> range = {static_cast<int64_t>(animator.timeRang.location), static_cast<int64_t>(animator.timeRang.length + animator.timeRang.length)};
+    Range<int64_t> range = {static_cast<int64_t>(animator.timeRang.location), static_cast<int64_t>(animator.timeRang.location + animator.timeRang.length)};
     AnimaNode::AnimatorData bData(GraphicCore::Vec4(animator.beginPoint.v0,animator.beginPoint.v1,animator.beginPoint.v2,animator.beginPoint.v3));
     AnimaNode::AnimatorData eData(GraphicCore::Vec4(animator.endPoint.v0,animator.endPoint.v1,animator.endPoint.v2,animator.endPoint.v3));
     return AnimaNode::AnimatorRef(new AnimaNode::Animator([animator.property UTF8String], range, bData, eData, (GraphicCore::EaseFunctionType)animator.functionType, animator.repleat ,[animator.name UTF8String]));
@@ -21,6 +21,7 @@ AnimaNode::AnimatorRef QNodeAnimatorToCPP(QNodeAnimator* animator){
 
 #pragma mark QNodeAnimator
 NSString* property_positionxyz = @"positionxyz";
+NSString* property_rotationxyz = @"rotationxyz";
 NSString* property_scalex = @"scalex";
 NSString* property_scalez = @"scalez";
 NSString* property_scalexy = @"scalexy";

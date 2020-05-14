@@ -14,7 +14,8 @@
 @interface QGraphicNode()
 @property (nonatomic, assign) NSRange origin_renderRange;
 @property (nonatomic, assign) bool origin_visible;
-@property (nonatomic, assign) float origin_rotation;
+//@property (nonatomic, assign) float origin_rotation;
+@property (nonatomic, assign) QVector origin_rotation3d;
 @property (nonatomic, assign) float origin_scaleX;
 @property (nonatomic, assign) float origin_scaleY;
 @property (nonatomic, assign) float origin_scaleZ;

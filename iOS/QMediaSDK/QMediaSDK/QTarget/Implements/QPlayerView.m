@@ -95,6 +95,7 @@
             [_videoRender onVideoRender:-1];
             [IOSFastTextureDrawable loadPrevStatus];
             glFinish();
+            glDisable(GL_DEPTH_TEST);
             [_textureDrawable draw: QFilpModeV];
         }
         else

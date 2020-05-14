@@ -45,17 +45,20 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    QLayer *layer = [[QLayer alloc] initWithSize:CGSizeMake(640, 480) name:@"haha"];
-    [self.player addGraphicNode:layer];
-    layer.color4 = QColorMaker(1, 1, 1, 0.8);
-    layer.bkColor = QColorMaker(1, 0, 1, 1);
-    layer.position = CGPointMake(100, 50);
-    layer.anchorPoint = CGPointMake(0.5, 0.5);
-    layer.contentSize = CGSizeMake(640, 480);
-    layer.scaleX = 0.6f;
-    layer.scaleY = 0.6f;
-    layer.rotation = 30.0f;
-    layer.renderRange = NSMakeRange(0, 10000);
+    const int targetW = 640;
+    const int targetH = 480;
+    
+//    QLayer *layer = [[QLayer alloc] initWithSize:CGSizeMake(640, 480) name:@"haha"];
+//    [self.player addGraphicNode:layer];
+//    layer.color4 = QColorMaker(1, 1, 1, 0.8);
+//    layer.bkColor = QColorMaker(1, 0, 1, 1);
+//    layer.position = CGPointMake(100, 50);
+//    layer.anchorPoint = CGPointMake(0.5, 0.5);
+//    layer.contentSize = CGSizeMake(640, 480);
+//    layer.scaleX = 0.6f;
+//    layer.scaleY = 0.6f;
+//    layer.rotation = 30.0f;
+//    layer.renderRange = NSMakeRange(0, 10000);
     
     self.player.playerView = _renderView;
     self.player.rootNode.color4 = QColorMaker(0, 0, 1, 1);
@@ -70,15 +73,15 @@
 
 //    QVideoTrackNode *videoNode = [[QVideoTrackNode alloc] initFromTrack:videoTrack];
     [self.player addGraphicNode:videoTrack.graphic];
-        videoTrack.graphic.position = CGPointMake(50, 100);
-        videoTrack.graphic.contentSize = CGSizeMake(640, 480);//self.player.layerSize;
+        videoTrack.graphic.position = CGPointMake(targetW/4, targetH/4);
+        videoTrack.graphic.contentSize = CGSizeMake(targetW/2, targetH/2);//self.player.layerSize;
         //    videoTrack.graphic.color4 = XMColorMaker(1, 1, 1, 0.5);
         videoTrack.graphic.anchorPoint = CGPointMake(0.5, 0.5);
-        videoTrack.graphic.rotation = -30.0f;
+//        videoTrack.graphic.rotation = -30.0f;
     //    videoTrack.graphic.scaleX = 0.4f;
     //    videoTrack.graphic.scaleY = 0.4f;
 //    videoTrack.sourceRange = NSMakeRange(5000, 10000);
-    videoTrack.timeScale = 1.5f;
+//    videoTrack.timeScale = 1.2f;
     
 #if 0 //don't use CaptureTrack in edit mode
     QMediaTrack* captureTrack = [self.player.mediaFactory createCaptureTrack:AVCaptureSessionPreset640x480 position:AVCaptureDevicePositionBack video:true audio:false];
@@ -91,13 +94,13 @@
     [self.player attachRenderNode:captureTrack.graphic parent:self.player.rootNode];
 #endif
     
-    [self.player attachRenderNode:videoTrack.graphic parent:layer];
-    [self.player attachRenderNode:layer parent:self.player.rootNode];
+//    [self.player attachRenderNode:videoTrack.graphic parent:layer];
+    
 //    [layer addChildNode:videoNode];
 //    [self.player.rootNode addChildNode:layer];
 //    [self.player.rootNode addChildNode:captureTrack.graphic];
-    
-    QDuplicateNode* duplicatenode = [[QDuplicateNode alloc] initFromNode:layer];
+#if 0
+    QDuplicateNode* duplicatenode = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
     [self.player addGraphicNode:duplicatenode];
     duplicatenode.contentSize = CGSizeMake(320, 240);
     duplicatenode.position = CGPointMake(50, 50);
@@ -105,24 +108,45 @@
     QNodeAnimator* animator = [[QNodeAnimator alloc] initWith:property_scalexy range:NSMakeRange(0, 5000) begin:QVectorV2(0.5,0.5) end:QVectorV2(1,1) functype:Quint_EaseOut repleat:false];
     [duplicatenode addAnimator:animator];
     duplicatenode.renderRange = NSMakeRange(1000, 15000);
+//    duplicatenode.color4 = QColorMaker(0, 1, 0.5, 1);
 //    [self.player.rootNode addChildNode:duplicatenode];
     [self.player attachRenderNode:duplicatenode parent:self.player.rootNode];
+#endif
     
     
-    QDuplicateNode* duplicatenodeV = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
-    [self.player addGraphicNode:duplicatenodeV];
-    duplicatenodeV.contentSize = CGSizeMake(200, 200);
-    duplicatenodeV.position = CGPointMake(0, 0);
-    duplicatenodeV.rotation = 30.0f;
-//    [self.player.rootNode addChildNode:duplicatenodeV];
-    [self.player attachRenderNode:duplicatenodeV parent:self.player.rootNode];
+    QDuplicateNode* duplicatenodeL = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
+    [self.player addGraphicNode:duplicatenodeL];
+    duplicatenodeL.contentSize = CGSizeMake(targetW/2, targetH/2);
+    duplicatenodeL.position = CGPointMake(0, targetH/4);
+    duplicatenodeL.anchorPoint = CGPointMake(0.5, 0.5);
+    duplicatenodeL.rotation3d = QVectorV3(0, 90, 0);
+
+    QDuplicateNode* duplicatenodeR = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
+    [self.player addGraphicNode:duplicatenodeR];
+    duplicatenodeR.contentSize = CGSizeMake(targetW/2, targetH/2);
+    duplicatenodeR.position = CGPointMake(targetW/2, targetH/4);
+    duplicatenodeR.anchorPoint = CGPointMake(0.5, 0.5);
+    duplicatenodeR.rotation3d = QVectorV3(0, -90, 0);
+    
  
     [self.player addMediaTrack:videoTrack];
     
-//    NSDictionary* serialize_settings = [self.player serialize];
-//    NSError * error = [NSError new];
-//    NSData  *jsonData = [NSJSONSerialization dataWithJSONObject:serialize_settings options:NSJSONWritingPrettyPrinted error:&error];
-//    NSString* json_str = [[NSString alloc] initWithData:jsonData encoding:NSUTF8StringEncoding];
+    QGraphicNode* composeNode = [[QGraphicNode alloc] initWithName:@"composeNode"];
+    [self.player addGraphicNode:composeNode];
+    composeNode.contentSize = CGSizeMake(640, 480);
+    composeNode.anchorPoint = CGPointMake(0.5, 0.5);
+    QNodeAnimator * an1 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:NSMakeRange(0, 5000) begin:QVectorV3(0, 0, 0) end:QVectorV3(-180, 180, 180) functype:Linear repleat:false];
+    [composeNode addAnimator:an1];
+    QNodeAnimator * an2 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:NSMakeRange(5000, 5000) begin:QVectorV3(-180, 180, 180) end:QVectorV3(-360, 360, 360) functype:Linear repleat:false];
+    [composeNode addAnimator:an2];
+    [self.player attachRenderNode:videoTrack.graphic parent:composeNode];
+    [self.player attachRenderNode:duplicatenodeL parent:composeNode];
+    [self.player attachRenderNode:duplicatenodeR parent:composeNode];
+    
+    [self.player attachRenderNode:composeNode parent:self.player.rootNode];
+    
+    self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
+    
     [self.player start];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
