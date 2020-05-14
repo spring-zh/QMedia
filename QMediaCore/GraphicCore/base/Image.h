@@ -17,11 +17,11 @@ GRAPHICCORE_BEGIN
 class Image {
 public:
     enum Format : int{
+        UNKNOW = -1,
         RGBA = 0,
         RGB,
         LUMINANCE,
-        LUMINANCE_ALPHA,
-        UNKNOW
+        LUMINANCE_ALPHA
     };
     
     static Image* createFromFile(FILE *filep);

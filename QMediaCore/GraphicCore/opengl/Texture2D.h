@@ -17,14 +17,14 @@ GRAPHICCORE_BEGIN
 
 class Texture2D {
 public:
-//    enum Format : int{
-//        RGBA = 0,
-//        RGB,
-//        LUMINANCE,
-//        LUMINANCE_ALPHA,
-//        UNKNOW
-//    };
-    using Format = Image::Format;
+    enum Format : int{
+        UNKNOW = Image::UNKNOW,
+        RGBA = Image::RGBA,
+        RGB = Image::RGB,
+        LUMINANCE = Image::LUMINANCE,
+        LUMINANCE_ALPHA = Image::LUMINANCE_ALPHA,
+        DEPTH = 100,
+    };
     
     virtual ~Texture2D() {}
     
@@ -36,7 +36,7 @@ public:
     virtual void release() = 0;
     
 protected:
-    Texture2D():_textureid(0), _width(0),_height(0),_format(Image::RGBA),_gl_format(GL_RGBA) {}
+    Texture2D():_textureid(0), _width(0),_height(0),_format(RGBA),_gl_format(GL_RGBA) {}
     Texture2D(GLuint textureid, Format format, int width, int height):
     _textureid(textureid),_format(format),_width(width),_height(height) {}
     GLuint _textureid;
@@ -62,7 +62,7 @@ protected:
 
 class DuplicateTexture2D : public Texture2D {
 public:
-    DuplicateTexture2D():_textureid(0),_format(Image::UNKNOW),_width(0),_height(0) {}
+    DuplicateTexture2D():_textureid(0),_format(UNKNOW),_width(0),_height(0) {}
     DuplicateTexture2D(GLuint textureid, Format format, int width, int height):
     Texture2D(textureid, format, width, height) {}
     

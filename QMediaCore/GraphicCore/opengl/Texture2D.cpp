@@ -17,7 +17,7 @@ Texture2D* GeneralTexture2D::createFromImage(const Image* image)
     texture->_width = image->width();
     texture->_height = image->height();
     GLuint gl_format = GL_RGBA;
-    texture->_format = image->getFormat();
+    texture->_format = (Format)image->getFormat();
     switch (image->getFormat()) {
         case Image::LUMINANCE:
             gl_format = GL_LUMINANCE;
@@ -48,17 +48,20 @@ Texture2D* GeneralTexture2D::createTexture(Format format, int width, int height)
 {
     GLuint gl_format = GL_RGBA;
     switch (format){
-        case Image::LUMINANCE:
+        case LUMINANCE:
             gl_format = GL_LUMINANCE;
             break;
-        case Image::LUMINANCE_ALPHA:
+        case LUMINANCE_ALPHA:
             gl_format = GL_LUMINANCE_ALPHA;
             break;
-        case Image::RGB:
+        case RGB:
             gl_format = GL_RGB;
             break;
-        case Image::RGBA:
+        case RGBA:
             gl_format = GL_RGBA;
+            break;
+        case DEPTH:
+            gl_format = GL_DEPTH_COMPONENT;
             break;
         default:
             break;
@@ -72,7 +75,10 @@ Texture2D* GeneralTexture2D::createTexture(Format format, int width, int height)
 
     glGenTextures(1, &texture->_textureid);
     glBindTexture(GL_TEXTURE_2D, texture->_textureid);
-    glTexImage2D(GL_TEXTURE_2D, 0 ,gl_format, width , height , 0, gl_format, GL_UNSIGNED_BYTE, NULL);
+    if (gl_format == GL_DEPTH_COMPONENT) {
+        glTexImage2D(GL_TEXTURE_2D, 0 ,gl_format, width , height , 0, gl_format, GL_UNSIGNED_INT, NULL);
+    }else
+        glTexImage2D(GL_TEXTURE_2D, 0 ,gl_format, width , height , 0, gl_format, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
@@ -83,7 +89,7 @@ Texture2D* GeneralTexture2D::createTexture(Format format, int width, int height)
 
 bool GeneralTexture2D::updateFromImage(const Image* image)
 {
-    if (image->getFormat() != _format) {
+    if ((Format)image->getFormat() != _format) {
         return false;
     }
     

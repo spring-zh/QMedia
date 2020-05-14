@@ -57,6 +57,11 @@ void GLEngine::clearByColor()
 }
 void GLEngine::enableDepthTest(bool enable)
 {
+    glDepthFunc(GL_LEQUAL);
+    glDepthRangef(0, 1);
+    glClearDepthf(1.0f);
+//    glEnable(GL_CULL_FACE);
+//    glCullFace(GL_BACK);
     if (enable)
         glEnable(GL_DEPTH_TEST);
     else
