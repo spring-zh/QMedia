@@ -126,9 +126,91 @@ public:
     
 protected:
     
-    std::set<Animator*> _animatorList;
+    class PropretyGroup {
+    public:
+        PropretyGroup(std::string name): _propertyName(name), _lastTimeStamp(-1) {}
+        ~PropretyGroup() = default;
+        
+        bool addAnimator(Animator* animator)
+        {
+            if (_animatorList.find(animator) != _animatorList.end())
+                return false;
+            //update timeRange
+            if (_timeRange._start > animator->_timeRang._start) {
+                _timeRange._start = animator->_timeRang._start;
+            }else if (_timeRange._end < animator->_timeRang._end) {
+                _timeRange._end = animator->_timeRang._end;
+            }
+            _animatorList.insert(animator);
+            return true;
+        }
+        
+        bool removeAnimator(Animator* animator) {
+            auto iter = _animatorList.find(animator);
+            if( iter != _animatorList.end()) {
+                _animatorList.erase(iter);
+                
+                //calcualte new timeRange
+                Range<int64_t> timeRange(std::numeric_limits<int64_t>::max(), std::numeric_limits<int64_t>::min());//{INT_MAX,-INT_MAX};
+                for (auto &iter : _animatorList){
+                    Range<int64_t>& tRange = iter->_timeRang;
+                    if (timeRange._start > tRange._start) {
+                        timeRange._start = tRange._start;
+                    }
+                    if (timeRange._end < tRange._end) {
+                        timeRange._end = tRange._end;
+                    }
+                }
+                if (timeRange._start > timeRange._end) {
+                    timeRange = {0,0};
+                }
+                _timeRange = timeRange;
+                return true;
+            }
+            return false;
+        }
+        
+        void updateProperty(int64_t timeStamp) {
+            if (!_timeRange.isValid()) {
+                return;
+            }
+            
+            if (timeStamp >= _timeRange._start) {
+                if (timeStamp > _timeRange._end) {
+                    timeStamp = _timeRange._end;
+                }
+                
+                if (timeStamp != _lastTimeStamp) {
+                    _updateProperty(timeStamp);
+                    _lastTimeStamp = timeStamp;
+                }
+            }
+        }
+    private:
+        void _updateProperty(int64_t timeStamp)
+        {
+            for (auto& animator : _animatorList) {
+                Range<int64_t>& timeRang = animator->_timeRang;
+                if ((timeStamp >= timeRang._start) &&
+                    (timeStamp <= timeRang._end)) {
+                    float t = (float)(timeStamp - timeRang._start)/(timeRang._end - timeRang._start);
+                    (animator->_update)(animator,t);
+                }
+            }
+        }
+        
+        std::string _propertyName;
+        std::set<Animator*> _animatorList;
+        Range<int64_t> _timeRange;
+        
+        int64_t _lastTimeStamp;
+    };
     
-    void updateNodeProperty(int64_t timeStamp);
+    std::map<std::string, std::shared_ptr<PropretyGroup>> _animatorsGroup;
+    
+//    std::set<Animator*> _animatorList;
+    
+//    void updateNodeProperty(int64_t timeStamp);
     
 private:
     void updateAnimator_positionxyz(Animator* animator, float t);
@@ -147,6 +229,8 @@ private:
     
     void updateAnimator_alpha(Animator* animator, float t);
     void updateAnimator_mixcolor(Animator* animator, float t);
+    
+    bool checkAndSetAnimator(Animator* animator);
 };
     
 GRAPHICCORE_END

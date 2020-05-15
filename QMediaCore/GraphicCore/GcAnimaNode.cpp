@@ -487,9 +487,14 @@ T calculateTweenValue(const T& start,const T& end, float t, float (*tweenfunctio
 
 #pragma mark - AnimaNode
 
+static std::vector<std::string> propertys = {"positionxyz" , "rotationxyz", "scalex",
+    "scaley", "scalexy", "scalexyz", "contentsize", "alpha", "mixcolor" };
+
 AnimaNode::AnimaNode()
 {
-    
+//    for (auto& property : propertys) {
+//        _animatorsGroup[property] = std::shared_ptr<PropretyGroup>(new PropretyGroup(property));
+//    }
 }
 
 AnimaNode::~AnimaNode(){
@@ -498,49 +503,20 @@ AnimaNode::~AnimaNode(){
 
 bool AnimaNode::addAnimator(Animator* animator)
 {
-    if (_animatorList.find(animator) != _animatorList.end())
-        return false;
-    
-    #define CHECK_AND_SET_PROPERTY_FUNCTION(proprety_compare) \
-    if (animator->_property.compare(#proprety_compare) == 0) { \
-        animator->_update = std::bind(&AnimaNode::updateAnimator_##proprety_compare,this,\
-                        std::placeholders::_1,std::placeholders::_2);\
-        break;\
-    }
-        
-    do {
-        
-        CHECK_AND_SET_PROPERTY_FUNCTION(positionxyz)
-        
-        CHECK_AND_SET_PROPERTY_FUNCTION(rotationxyz)
-        
-        CHECK_AND_SET_PROPERTY_FUNCTION(scalex)
-        CHECK_AND_SET_PROPERTY_FUNCTION(scaley)
-        CHECK_AND_SET_PROPERTY_FUNCTION(scalexy)
-        CHECK_AND_SET_PROPERTY_FUNCTION(scalexyz)
-        
-        CHECK_AND_SET_PROPERTY_FUNCTION(contentsize)
-        CHECK_AND_SET_PROPERTY_FUNCTION(contentsizew)
-        CHECK_AND_SET_PROPERTY_FUNCTION(contentsizeh)
-        
-        CHECK_AND_SET_PROPERTY_FUNCTION(alpha)
-        CHECK_AND_SET_PROPERTY_FUNCTION(mixcolor)
-    }while (0);
-    
-    animator->_ease_function = getTweenFunctionByType(animator->_functionType);
-    
-    if (animator->_update != nullptr && animator->_ease_function != NULL) {
-        _animatorList.insert(animator);
-        return true;
+    if (checkAndSetAnimator(animator)) {
+        auto group = _animatorsGroup.find(animator->_property);
+        if (group == _animatorsGroup.end()) {
+            _animatorsGroup[animator->_property] = std::shared_ptr<PropretyGroup>(new PropretyGroup(animator->_property));
+        }
+        return _animatorsGroup[animator->_property]->addAnimator(animator);
     }
     return false;
 }
 bool AnimaNode::removeAnimator(Animator* animator)
 {
-    auto iter = _animatorList.find(animator);
-    if( iter != _animatorList.end()) {
-        _animatorList.erase(iter);
-        return true;
+    auto group = _animatorsGroup.find(animator->_property);
+    if (group != _animatorsGroup.end()) {
+        return _animatorsGroup[animator->_property]->removeAnimator(animator);
     }
     return false;
 }
@@ -551,27 +527,30 @@ void AnimaNode::updateAnimations(int64_t timeStamp)
         for (auto& node : _children) {
             AnimaNode* animaNode = dynamic_cast<AnimaNode*>(node);
             if (animaNode) {
-                animaNode->updateNodeProperty(timeStamp);
+                animaNode->updateAnimations(timeStamp);
             }
         }
     }
-    updateNodeProperty(timeStamp);
-}
-
-void AnimaNode::updateNodeProperty(int64_t timeStamp)
-{
-    const int diff = 50;
-    for (auto& animator : _animatorList) {
-        Range<int64_t>& timeRang = animator->_timeRang;
-        if ((timeStamp >= timeRang._start - diff) &&
-            (timeStamp <= timeRang._end + diff)) {
-            float t = (float)(timeStamp - timeRang._start)/(timeRang._end - timeRang._start);
-            if(t > 1.0f) t = 1.0f;
-            else if(t < 0.0f) t = 0.0f;
-            (animator->_update)(animator,t);
-        }
+//    updateNodeProperty(timeStamp);
+    for (auto& group : _animatorsGroup) {
+        group.second->updateProperty(timeStamp);
     }
 }
+
+//void AnimaNode::updateNodeProperty(int64_t timeStamp)
+//{
+//    const int diff = 50;
+//    for (auto& animator : _animatorList) {
+//        Range<int64_t>& timeRang = animator->_timeRang;
+//        if ((timeStamp >= timeRang._start - diff) &&
+//            (timeStamp <= timeRang._end + diff)) {
+//            float t = (float)(timeStamp - timeRang._start)/(timeRang._end - timeRang._start);
+//            if(t > 1.0f) t = 1.0f;
+//            else if(t < 0.0f) t = 0.0f;
+//            (animator->_update)(animator,t);
+//        }
+//    }
+//}
 
 void AnimaNode::updateAnimator_positionxyz(Animator* animator, float t)
 {
@@ -652,6 +631,42 @@ void AnimaNode::updateAnimator_mixcolor(Animator* animator, float t)
     Vec4 value = calculateTweenValue(animator->_beginValue._v4,animator->_endValue._v4,t,animator->_ease_function);
     
     setColor(Color4F(value.x,value.y,value.z,value.w));
+}
+
+bool AnimaNode::checkAndSetAnimator(Animator* animator) {
+    #define CHECK_AND_SET_PROPERTY_FUNCTION(proprety_compare) \
+    if (animator->_property.compare(#proprety_compare) == 0) { \
+        animator->_update = std::bind(&AnimaNode::updateAnimator_##proprety_compare,this,\
+                        std::placeholders::_1,std::placeholders::_2);\
+        break;\
+    }
+        
+    do {
+        
+        CHECK_AND_SET_PROPERTY_FUNCTION(positionxyz)
+        
+        CHECK_AND_SET_PROPERTY_FUNCTION(rotationxyz)
+        
+        CHECK_AND_SET_PROPERTY_FUNCTION(scalex)
+        CHECK_AND_SET_PROPERTY_FUNCTION(scaley)
+        CHECK_AND_SET_PROPERTY_FUNCTION(scalexy)
+        CHECK_AND_SET_PROPERTY_FUNCTION(scalexyz)
+        
+        CHECK_AND_SET_PROPERTY_FUNCTION(contentsize)
+        CHECK_AND_SET_PROPERTY_FUNCTION(contentsizew)
+        CHECK_AND_SET_PROPERTY_FUNCTION(contentsizeh)
+        
+        CHECK_AND_SET_PROPERTY_FUNCTION(alpha)
+        CHECK_AND_SET_PROPERTY_FUNCTION(mixcolor)
+    }while (0);
+    
+    animator->_ease_function = getTweenFunctionByType(animator->_functionType);
+    
+    if (animator->_update != nullptr && animator->_ease_function != NULL) {
+        return true;
+    }
+    
+    return false;
 }
 
 GRAPHICCORE_END
