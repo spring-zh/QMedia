@@ -14,8 +14,10 @@
 #import "IOSFastTexture.h"
 #import "IOSFastTextureDrawable.h"
 
-@interface QPlayerView () <GLRenderer>{
+@interface QPlayerView () <GLRenderer>
+@end
 
+@implementation QPlayerView {
     NSString *_outpath;
     bool _bTakePicture;
     CCEAGLView *_objView;
@@ -26,10 +28,6 @@
     IOSFastTexture *_iosTexture;
     IOSFastTextureDrawable *_textureDrawable;
 }
-
-@end
-
-@implementation QPlayerView
 
 - (void)internalInit
 {
@@ -87,6 +85,8 @@
 {
 //    NSLog(@"QPlayerView onDrawFrame %@", [NSThread currentThread]);
     if (_bStart || _updateView) {
+        _updateView = false;
+        
         if (_iosTexture) {
             [IOSFastTextureDrawable savePrevStatus];
             if(!_textureDrawable)
@@ -100,7 +100,6 @@
         }
         else
             [_videoRender onVideoRender:-1];
-        _updateView = false;
     }
     
     if (_bTakePicture) {
@@ -166,6 +165,7 @@
 
 - (void)layoutSubviews{
 //    _viewSize = [self bounds].size;
+    _updateView = true;
 }
 
 - (bool)initVideo:(QVideoDescribe*)describe

@@ -61,6 +61,7 @@ void EditorPlayer::seek(int64_t mSec, int flag)
 
 bool EditorPlayer::onVideoRender(int64_t wantTimeMs)
 {
+    std::unique_lock<std::mutex> clk(_render_mutex);
     int64_t current_video_time = _playerClock.getClock();
     if (! _bSeeking.load() ) {
         _playerPosition = current_video_time;
@@ -70,6 +71,7 @@ bool EditorPlayer::onVideoRender(int64_t wantTimeMs)
             _lastRenderTime = currentRenderTime;
         }
     }
+
     return EffectCombiner::onVideoRender(current_video_time);
 }
 
@@ -154,6 +156,7 @@ RetCode EditorPlayer::_pause(bool bPause)
 }
 RetCode EditorPlayer::_seek(int64_t mSec, int flag)
 {
+    std::unique_lock<std::mutex> clk(_render_mutex);
     MPST_RET_IF_EQ(_state, PlayerState::Idle);
     MPST_RET_IF_EQ(_state, PlayerState::Initialized);
     MPST_RET_IF_EQ(_state, PlayerState::AsyncPreparing);

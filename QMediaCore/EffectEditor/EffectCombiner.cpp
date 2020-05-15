@@ -150,10 +150,6 @@ EffectCombiner::RetCode EffectCombiner::_prepare()
     MPST_RET_IF_EQ(_state, CombinerState::Ended);
     
     //FIXME: defualt dispaylayer's contentsize will set by target' size
-//    _videoConfig._width = _displayLayer->getContentSize().width;
-//    _videoConfig._height = _displayLayer->getContentSize().height;
-//    videoResolution.width = _videoConfig._width;
-//    videoResolution.height = _videoConfig._height;
     if (_videoTarget) _videoTarget->init(_videoConfig);
     if (_audioTarget) _audioTarget->init(_audioConfig);
     _audioClock.init(_audioTarget);

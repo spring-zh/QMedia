@@ -69,6 +69,8 @@ private:
     PlayerState _state;
 
     SteadyClock<int64_t, scale_milliseconds> _playerClock;
+    
+    std::mutex _render_mutex;
 };
 
 #endif /* EFFECTEDITOR_EDITORPLAYER_H */
