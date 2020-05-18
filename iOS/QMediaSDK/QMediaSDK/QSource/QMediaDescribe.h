@@ -91,10 +91,10 @@ typedef NS_ENUM(NSInteger, QVideoRotation) {
 
 @interface QAudioDescribe : NSObject
 - (instancetype)initWithParamenters:(QAudioCodec)codec rawFormat:(QRawAudioFormat)rawFormat
-                    samplerate:(float)samplerate nchannel:(int)nchannel bitrate:(int)bitrate;
+                    samplerate:(int)samplerate nchannel:(int)nchannel bitrate:(int)bitrate;
 @property (nonatomic, assign) QAudioCodec codec;
 @property (nonatomic, assign) QRawAudioFormat rawFormat;
-@property (nonatomic, assign) float samplerate;
+@property (nonatomic, assign) int samplerate;
 @property (nonatomic, assign) int nchannel;
 @property (nonatomic, assign) float bitrate;
 

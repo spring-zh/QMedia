@@ -69,7 +69,7 @@ width:(int)width height:(int)height bitrate:(int)bitrate
 @implementation QAudioDescribe
 
 - (instancetype)initWithParamenters:(QAudioCodec)codec rawFormat:(QRawAudioFormat)rawFormat
-samplerate:(float)samplerate nchannel:(int)nchannel bitrate:(int)bitrate
+samplerate:(int)samplerate nchannel:(int)nchannel bitrate:(int)bitrate
 {
     if (self = [super init]) {
         _codec = codec;

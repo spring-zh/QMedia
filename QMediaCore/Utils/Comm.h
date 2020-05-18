@@ -106,4 +106,4 @@ std::string ValueToString(const T &value){
 
 #define GET_ARRAY_COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
 
-#define FLOAT_ISEQUAL(val, eqVal) (fabs(val - eqVal) < 1e-5)
+#define FLOAT_ISEQUAL(val, eqVal) (fabs(val - eqVal) < FLT_EPSILON)
