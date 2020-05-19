@@ -10,7 +10,7 @@
 #define GRAPHICCORE_IMAGE_H
 
 #include <memory>
-#include "base/Macros.h"
+#include "GraphicCore/base/Macros.h"
 
 GRAPHICCORE_BEGIN
 

@@ -137,6 +137,8 @@ int ResamplerSpeex::resample(void *indata, unsigned int inSamples, void *outdata
             case FT_INT16:
                 nRet = speex_resampler_process_int(_resampler,0,(int16_t *)indata,&inputSamples, (int16_t *)outdata,&outputSamples);
                 break;
+            case FT_UINT8:
+                break;
         }
     } else if (_inChannels == 2){
         switch (_inFormat) {
@@ -145,6 +147,8 @@ int ResamplerSpeex::resample(void *indata, unsigned int inSamples, void *outdata
                 break;
             case FT_INT16:
                 nRet = speex_resampler_process_interleaved_int(_resampler,(int16_t *)indata,&inputSamples, (int16_t *)outdata,&outputSamples);
+                break;
+            case FT_UINT8:
                 break;
         }
     }
