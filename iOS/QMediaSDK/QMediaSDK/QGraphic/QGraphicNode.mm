@@ -158,9 +158,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     if([_animators containsObject:animator])
         return true;
     [_animators addObject:animator];
-    _graphicNode->addAnimator(animator.native);
-
-    return false;
+    return _graphicNode->addAnimator(animator.native);
 }
 - (bool)removeAnimator:(QNodeAnimator*)animator {
     if([_animators containsObject:animator])
