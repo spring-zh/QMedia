@@ -2,12 +2,12 @@
 // Created by spring on 2020/5/19.
 //
 
-#include "MediaDescribe_jni.h"
+#include "MediaDescribe_Jni.h"
 #include "j4a_generate/j4a_generate.h"
 #include <mutex>
 #include <Utils/Comm.h>
 
-jobject MediaDescribe_jni::VideoDescribeToJava(JNIEnv* env, VideoDescribe videoDescribe) {
+jobject MediaDescribe_Jni::VideoDescribeToJava(JNIEnv* env, VideoDescribe videoDescribe) {
 
     return J4AC_com_qmedia_qmediasdk_QSource_QVideoDescribe__QVideoDescribe__catchAll(env,
             (jint)videoDescribe.codectype,
@@ -17,7 +17,7 @@ jobject MediaDescribe_jni::VideoDescribeToJava(JNIEnv* env, VideoDescribe videoD
             videoDescribe.width, videoDescribe.height,
             videoDescribe.bitrate, videoDescribe.timeScale);
 }
-jobject MediaDescribe_jni::AudioDescribeToJava(JNIEnv* env, AudioDescribe audioDescribe) {
+jobject MediaDescribe_Jni::AudioDescribeToJava(JNIEnv* env, AudioDescribe audioDescribe) {
 
     return J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__catchAll(env, (jint)audioDescribe.codectype,
             (jint)audioDescribe.format,
@@ -26,7 +26,7 @@ jobject MediaDescribe_jni::AudioDescribeToJava(JNIEnv* env, AudioDescribe audioD
             audioDescribe.bitrate);
 }
 
-VideoDescribe MediaDescribe_jni::JavaToVideoDescribe(JNIEnv* env, jobject jvideoDescribe) {
+VideoDescribe MediaDescribe_Jni::JavaToVideoDescribe(JNIEnv* env, jobject jvideoDescribe) {
     VideoDescribe videoDescribe;
     videoDescribe.codectype = (VideoCodecType)J4AC_com_qmedia_qmediasdk_QSource_QVideoDescribe__codec__get(env, jvideoDescribe);
     videoDescribe.format = (RawVideoFormat)J4AC_com_qmedia_qmediasdk_QSource_QVideoDescribe__rawFormat__get(env, jvideoDescribe);
@@ -38,7 +38,7 @@ VideoDescribe MediaDescribe_jni::JavaToVideoDescribe(JNIEnv* env, jobject jvideo
     videoDescribe.timeScale = J4AC_com_qmedia_qmediasdk_QSource_QVideoDescribe__timeScale__get(env, jvideoDescribe);
     return videoDescribe;
 }
-AudioDescribe MediaDescribe_jni::JavaToAudioDescribe(JNIEnv* env, jobject jaudioDescribe) {
+AudioDescribe MediaDescribe_Jni::JavaToAudioDescribe(JNIEnv* env, jobject jaudioDescribe) {
     AudioDescribe audioDescribe;
     audioDescribe.codectype = (AudioCodecType)J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__codec__get(env, jaudioDescribe);
     audioDescribe.format = (RawAudioFormat)J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__rawFormat__get(env, jaudioDescribe);

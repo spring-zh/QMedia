@@ -3,14 +3,14 @@
 //
 
 #include "MediaSourceAdapter.h"
+#include "QVideoFrame_Jni.h"
+#include "QAudioFrame_Jni.h"
 #include "j4a_generate/j4a_generate.h"
 
 MediaSourceAdapter::MediaSourceAdapter(jobject jsource)
 {
     JNIEnv* env = JniUtils::getEnv();
     _object = env->NewWeakGlobalRef(jsource);
-    //make sure jni field and method only call once
-    static CallOnce once(&J4A_loadClass__J4AC_com_qmedia_qmediasdk_QSource_QMediaSource, env);
 }
 MediaSourceAdapter::~MediaSourceAdapter()
 {
@@ -49,17 +49,25 @@ bool MediaSourceAdapter::isEOF() {
 }
 
 VideoFrameDrawer *MediaSourceAdapter::createVideoFrameDrawer() {
-    return nullptr;
+    return new OESVideoFrameDrawer(_videoTarget);
 }
 
 VideoFrame MediaSourceAdapter::readNextVideoFrame(int &error) {
     JNIEnv* env = JniUtils::getEnv();
     jobject jframe = J4AC_com_qmedia_qmediasdk_QSource_QMediaSource__readNextVideoFrame(env, _object);
-    return VideoFrame(nullptr, 0);
+    VideoFrame videoFrame(nullptr, 0);
+    if (jframe) {
+        videoFrame = createVideoFrameByObject(env, jframe);
+    }
+    return videoFrame;
 }
 
 AudioFrame MediaSourceAdapter::readNextAudioFrame(int &error) {
     JNIEnv* env = JniUtils::getEnv();
     jobject jframe = J4AC_com_qmedia_qmediasdk_QSource_QMediaSource__readNextAudioFrame(env, _object);
-    return AudioFrame(nullptr, 0, 0);
+    AudioFrame audioFrame(nullptr, 0, 0);
+    if (jframe) {
+        audioFrame = createAudioFrameByObject(env, jframe);
+    }
+    return audioFrame;
 }

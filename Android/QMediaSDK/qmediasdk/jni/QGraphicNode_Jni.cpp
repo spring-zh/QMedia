@@ -62,6 +62,28 @@ NATIVE_FUNCTION(void , native_setRenderRange)(JNIEnv *env, jobject thiz, jobject
     }
 }
 
+#pragma mark name
+NATIVE_FUNCTION(jstring , native_getName)(JNIEnv *env, jobject thiz) {
+    GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
+            env, thiz));
+    std::string name = "";
+    if (node_ptr) {
+        name = (*node_ptr)->getName();
+    }
+    return env->NewStringUTF(name.c_str());
+}
+NATIVE_FUNCTION(void , native_setName)(JNIEnv *env, jobject thiz, jstring jname) {
+    GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
+            env, thiz));
+    if (node_ptr) {
+        const char *pname = env->GetStringUTFChars(jname, NULL);
+        std::string name_str(pname);
+        (*node_ptr)->setName(name_str);
+        env->ReleaseStringUTFChars(jname, pname);
+    }
+}
+
+#pragma mark Visible
 NATIVE_FUNCTION(jboolean , native_isVisible)(JNIEnv *env, jobject thiz) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
             env, thiz));
@@ -71,7 +93,6 @@ NATIVE_FUNCTION(jboolean , native_isVisible)(JNIEnv *env, jobject thiz) {
     }
     return visible;
 }
-#pragma mark Visible
 NATIVE_FUNCTION(void , native_setVisible)(JNIEnv *env, jobject thiz, jboolean jvisible) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
             env, thiz));
@@ -79,6 +100,7 @@ NATIVE_FUNCTION(void , native_setVisible)(JNIEnv *env, jobject thiz, jboolean jv
         (*node_ptr)->setVisible(jvisible);
     }
 }
+
 #pragma mark Rotation
 NATIVE_FUNCTION(jfloat , native_getRotation)(JNIEnv *env, jobject thiz) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(

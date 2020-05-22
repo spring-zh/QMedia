@@ -2,7 +2,10 @@ package com.qmedia.qmediasdk.QTrack;
 
 import android.util.Log;
 
+import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
+import com.qmedia.qmediasdk.QEditor.QCombiner;
+import com.qmedia.qmediasdk.QGraphic.QVideoTrackNode;
 import com.qmedia.qmediasdk.QSource.QMediaSource;
 
 public class QMediaTrack {
@@ -17,58 +20,80 @@ public class QMediaTrack {
             Log.e(TAG, "QMediaTrack prepare failed..");
         }
     }
-    boolean prepare() {
-        return native_prepare();
+
+    public QMediaSource getMediaSource() {
+        return mediaSource;
     }
-    boolean setTimeTo(long mSec) {
+
+    public QVideoTrackNode getGraphic() {
+        return graphic;
+    }
+
+    public QAudioTrackNode getAudio() {
+        return audio;
+    }
+
+    public boolean prepare(QCombiner combiner) {
+        if (native_prepare()) {
+            if (mediaSource.getVideoDescribe() != null)
+                graphic = new QVideoTrackNode(this, combiner);
+            if (mediaSource.getAudioDescribe() != null)
+                audio = new QAudioTrackNode(this, combiner);
+            return true;
+        }
+        return false;
+    }
+    public boolean setTimeTo(long mSec) {
         return native_setTimeTo(mSec);
     }
-    void stopMedia() {
+    public void stopMedia() {
         native_stopMedia();
     }
 
-    boolean isPrepare() {
+    public boolean isPrepare() {
         return native_isPrepare();
     }
-    float getPlaySpeed() {
+    public float getPlaySpeed() {
         return native_getPlaySpeed();
     }
-    long getSourceDuration() {
+    public long getSourceDuration() {
         return native_getSourceDuration();
     }
 
-    QRange getDisplayRange(){
+    public QRange getDisplayRange(){
         return native_getDisplayRange();
     }
-    void setDisplayRange(QRange range){
+    public void setDisplayRange(QRange range){
         native_setDisplayRange(range);
     }
-    QRange getSourceRange(){
+    public QRange getSourceRange(){
         return native_getSourceRange();
     }
-    void setSourceRange(QRange range){
+    public void setSourceRange(QRange range){
         native_setSourceRange(range);
     }
-    float getTimeScale(){
+    public float getTimeScale(){
         return native_getTimeScale();
     }
-    void setTimeScale(float timeScale){
+    public void setTimeScale(float timeScale){
         native_setTimeScale(timeScale);
     }
-    int getRepeatTimes(){
+    public int getRepeatTimes(){
         return native_getRepeatTimes();
     }
-    void setRepeatTimes(int repeatTimes){
+    public void setRepeatTimes(int repeatTimes){
         native_setRepeatTimes(repeatTimes);
     }
 
-    void release() {
+    public void release() {
         native_release();
         mediaSource = null;
         mPtr = 0;
     }
 
-    public QMediaSource mediaSource;
+    protected QVideoTrackNode graphic;
+    protected QAudioTrackNode audio;
+    protected QMediaSource mediaSource;
 
     protected native long native_create(QMediaSource mediaSource);
     protected native boolean native_prepare();

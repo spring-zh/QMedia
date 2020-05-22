@@ -5,12 +5,11 @@
 #include "Utils/Comm.h"
 #include "AudioTargetAdapter.h"
 #include "j4a_generate/j4a_generate.h"
-#include "MediaDescribe_jni.h"
+#include "MediaDescribe_Jni.h"
 
 AudioTargetAdapter::AudioTargetAdapter(jobject jtarget) {
     JNIEnv* env = JniUtils::getEnv();
     _object = env->NewWeakGlobalRef(jtarget);
-    static CallOnce once(&J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget, env);
 }
 AudioTargetAdapter::~AudioTargetAdapter() {
     JNIEnv* env = JniUtils::getEnv();
@@ -20,7 +19,7 @@ AudioTargetAdapter::~AudioTargetAdapter() {
 bool AudioTargetAdapter::init(AudioDescribe audioDesc) {
     JNIEnv* env = JniUtils::getEnv();
     //TODO: AudioDescribe --> QAudioDescribe
-    jobject jaudioDesc = MediaDescribe_jni::AudioDescribeToJava(env, audioDesc);
+    jobject jaudioDesc = MediaDescribe_Jni::AudioDescribeToJava(env, audioDesc);
     return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__initAudio(env, _object, jaudioDesc);
 }
 

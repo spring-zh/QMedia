@@ -2,24 +2,53 @@ package com.qmedia.qmediasdk.QGraphic;
 
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QVector;
+import com.qmedia.qmediasdk.QEditor.QCombiner;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
 public class QGraphicNode {
-    public QGraphicNode(String name) {
+    private static final String TAG = "QGraphicNode";
+    public QGraphicNode(String name, QCombiner combiner) {
+        this(combiner);
         mPtr = native_create(name);
     }
-    protected QGraphicNode() {
+    protected QGraphicNode(QCombiner combiner) {
+        weakCombiner = new WeakReference<>(combiner);
         //TODO: construct this for child class
     }
 
+    //TODO: childrens @QGraphicNode
     public ArrayList<QGraphicNode> getChildrens() {
         return childrens;
     }
+    public boolean addChildNode(QGraphicNode child) {
+        if (child != null && !childrens.contains(child)){
+            childrens.add(child);
+            child.parent = this;
+            weakCombiner.get().attachRenderNode(child, this);
+            return true;
+        }
+        return false;
+    }
+    public boolean removeChildNode(QGraphicNode child) {
+        if (childrens.contains(child)) {
+            child.parent = null;
+            childrens.remove(child);
+            weakCombiner.get().detachRenderNode(child);
+            return true;
+        }
+        return false;
+    }
+
     public QGraphicNode getParent() {
         return parent;
     }
 
+    //TODO: animators @QNodeAnimator
+    public ArrayList<QNodeAnimator> getAnimators() {
+        return animators;
+    }
     public boolean addAnimator(QNodeAnimator animator) {
         if (animators.contains(animator))
             return true;
@@ -34,6 +63,15 @@ public class QGraphicNode {
             return true;
         }
         return false;
+    }
+
+    public String getName() {
+        return native_getName();
+    }
+
+    public void setName(String name) {
+        this.name = name;
+        native_setName(name);
     }
 
     public QRange getRenderRange() {
@@ -155,13 +193,17 @@ public class QGraphicNode {
 
     public void release(){
         native_release();
+        childrens.clear();
+        animators.clear();
     }
 
 
+    private WeakReference<QCombiner> weakCombiner = null;
     private QGraphicNode parent = null;
     private ArrayList<QGraphicNode> childrens = new ArrayList();
     private ArrayList<QNodeAnimator> animators = new ArrayList();
 
+    String name;
     QRange renderRange;
     //transform propertys setting
     boolean visible;
@@ -185,6 +227,9 @@ public class QGraphicNode {
     protected native long native_create(String name);
     protected native boolean native_addAnimator(QNodeAnimator animator);
     protected native boolean native_removeAnimator(QNodeAnimator animator);
+
+    protected native String native_getName();
+    protected native void native_setName(String name);
 
     protected native QRange native_getRenderRange();
 
@@ -238,5 +283,5 @@ public class QGraphicNode {
 
     protected native void native_release();
     //native ptr
-    private long mPtr = 0;
+    protected long mPtr = 0;
 }

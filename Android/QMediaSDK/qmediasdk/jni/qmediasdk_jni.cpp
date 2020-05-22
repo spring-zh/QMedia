@@ -18,9 +18,9 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     }
 
 #ifdef __aarch64__
-    __android_log_print(ANDROID_LOG_INFO,"xlmediasdk","jni so arch: aarch64");
+    __android_log_print(ANDROID_LOG_INFO,"qmediasdk","jni so arch: aarch64");
 #elif __arm__
-    __android_log_print(ANDROID_LOG_INFO,"xlmediasdk","jni so arch: arm");
+    __android_log_print(ANDROID_LOG_INFO,"qmediasdk","jni so arch: arm");
 #endif
 
     JniUtils::setVM(vm);
@@ -30,8 +30,11 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QSource_QVideoDescribe(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QAudio_QAudioFrame(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QGraphic_QVideoFrame(env);
-
-//    J4A_loadClass__J4AC_com_qmedia_qmediasdk_QGraphic_QNodeAnimator(env);
+    J4A_loadClass__J4AC_com_qmedia_qmediasdk_QEditor_QEditorPlayer(env);
+    J4A_loadClass__J4AC_com_qmedia_qmediasdk_QGraphic_QNodeAnimator(env);
+    J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget(env);
+    J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget(env);
+    J4A_loadClass__J4AC_com_qmedia_qmediasdk_QSource_QMediaSource(env);
     return USE_JNI_VERION;
 
 }

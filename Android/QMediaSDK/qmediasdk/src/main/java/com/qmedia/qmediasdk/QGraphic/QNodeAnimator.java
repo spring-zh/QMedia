@@ -75,8 +75,10 @@ public class QNodeAnimator {
         this.mPtr = native_create(property, timeRang, beginPoint, endPoint, functionType, repleat , name);
     }
 
-    public void release(){
+    @Override
+    protected void finalize() throws Throwable {
         native_release();
+        super.finalize();
     }
 
     public String property;

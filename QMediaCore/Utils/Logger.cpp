@@ -81,7 +81,7 @@ int native_print(int level,int type, const char *tag, const char *file,int line,
     {
         #if defined(__ANDROID__)
         
-        __android_log_print(level, "xlmediasdk", "%s", logBuf);
+        __android_log_print(level, "qmediasdk", "%s", logBuf);
 
         #else
         

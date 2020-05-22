@@ -51,6 +51,7 @@ set(GRAPHIC_CORE_SRC
         GraphicCore/math/MathUtil.cpp
         GraphicCore/math/Quaternion.cpp
 
+        GraphicCore/opengl/shaders/ccShaders.cpp
         GraphicCore/opengl/Drawable2D.cpp
         GraphicCore/opengl/GLEngine.cpp
         GraphicCore/opengl/Texture2D.cpp

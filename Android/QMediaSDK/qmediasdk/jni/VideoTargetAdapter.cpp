@@ -5,12 +5,11 @@
 #include <Utils/Comm.h>
 #include "VideoTargetAdapter.h"
 #include "j4a_generate/j4a_generate.h"
-#include "MediaDescribe_jni.h"
+#include "MediaDescribe_Jni.h"
 
 VideoTargetAdapter::VideoTargetAdapter(jobject jtarget) {
     JNIEnv* env = JniUtils::getEnv();
     _object = env->NewWeakGlobalRef(jtarget);
-    static CallOnce once(&J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget, env);
 }
 VideoTargetAdapter::~VideoTargetAdapter() {
     JNIEnv* env = JniUtils::getEnv();
@@ -40,7 +39,7 @@ void VideoTargetAdapter::flush() {
 bool VideoTargetAdapter::init(VideoDescribe videoDesc) {
     JNIEnv* env = JniUtils::getEnv();
     //TODO: VideoDescribe --> QVideoDescribe
-    jobject jvideoDesc = MediaDescribe_jni::VideoDescribeToJava(env, videoDesc);
+    jobject jvideoDesc = MediaDescribe_Jni::VideoDescribeToJava(env, videoDesc);
     return J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__initVideo(env, _object, jvideoDesc);
 }
 

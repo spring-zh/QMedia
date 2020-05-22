@@ -14,7 +14,7 @@ extern "C" {
 #include "j4a_generate/QRange.h"
 #include "j4a_generate/QVector.h"
 #include "j4a_generate/QVideoFrame.h"
-#include "j4a_generate/QAudioFrame.h""
+#include "j4a_generate/QAudioFrame.h"
 #include "j4a_generate/QNodeAnimator.h"
 #include "j4a_generate/QMediaSource.h"
 #include "j4a_generate/QVideoTarget.h"
@@ -23,6 +23,7 @@ extern "C" {
 #include "j4a_generate/QVideoTarget.h"
 #include "j4a_generate/QAudioRender.h"
 #include "j4a_generate/QVideoRender.h"
+#include "j4a_generate/QEditorPlayer.h"
 
 #ifdef __cplusplus
 }

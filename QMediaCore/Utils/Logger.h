@@ -76,7 +76,7 @@ int native_print(int level,int type, const char *tag,const char *file, int line,
 #ifdef LOG_NDEBUG
     #if !LOG_NDEBUG
     #ifndef LOG_TAG
-    #define LOG_TAG "xlmediasdk"
+    #define LOG_TAG "qmediasdk"
     #endif
     #define  LOGV(...) //__android_log_print(ANDROID_LOG_VERBOSE,LOG_TAG,__VA_ARGS__)
     #define  LOGD(...) //__android_log_print(ANDROID_LOG_DEBUG,LOG_TAG,__VA_ARGS__)
@@ -109,23 +109,23 @@ int native_print(int level,int type, const char *tag,const char *file, int line,
 #define  LOGV(...)
 #define  LOGD(...)
 
-#define  LOGI(...) native_print(0, "xlmediasdk", __VA_ARGS__)
+#define  LOGI(...) native_print(0, "qmediasdk", __VA_ARGS__)
 
 
 #define  LOGW(...)
-#define  LOGE(...) native_print(0, "xlmediasdk", __VA_ARGS__)
+#define  LOGE(...) native_print(0, "qmediasdk", __VA_ARGS__)
 #define  LOGF(...)
 
 #endif
 
 #else//LOG_WRITE_FILE
 
-#define  LOGF(...) native_print(XLM_FATAL,1, "xlmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGV(...) native_print(XLM_VERBOSE,1, "xlmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGD(...) native_print(XLM_DEBUG,1, "xlmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGI(...) native_print(XLM_INFO,1, "xlmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGW(...) native_print(XLM_WARN,1, "xlmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGE(...) native_print(XLM_ERROR,1, "xlmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGF(...) native_print(XLM_FATAL,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGV(...) native_print(XLM_VERBOSE,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGD(...) native_print(XLM_DEBUG,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGI(...) native_print(XLM_INFO,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGW(...) native_print(XLM_WARN,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGE(...) native_print(XLM_ERROR,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
 
 #endif
 

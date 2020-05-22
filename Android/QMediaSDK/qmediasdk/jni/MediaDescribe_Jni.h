@@ -11,7 +11,7 @@
 #define QAUDIODESCRIBE_CLASSPATH "com/qmedia/qmediasdk/QSource/QAudioDescribe"
 #define QVIDEODESCRIBE_CLASSPATH "com/qmedia/qmediasdk/QSource/QVideoDescribe"
 
-class MediaDescribe_jni {
+class MediaDescribe_Jni {
 public:
     static jobject VideoDescribeToJava(JNIEnv* env, VideoDescribe videoDescribe);
     static jobject AudioDescribeToJava(JNIEnv* env, AudioDescribe audioDescribe);
