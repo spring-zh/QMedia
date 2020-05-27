@@ -48,3 +48,11 @@ JNIEXPORT void JNI_OnUnload(JavaVM* pVm, void* reserved) {
 }
 
 }
+
+
+#define NATIVE_FUNCTION(retT, name)\
+extern "C" JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QMediaSDK_##name
+
+NATIVE_FUNCTION(jstring, _1version)(JNIEnv *env, jobject thiz) {
+    return  env->NewStringUTF("1.0");
+}

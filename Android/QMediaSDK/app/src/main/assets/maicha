@@ -1,0 +1,7 @@
+[{
+		"name":	"maicha",
+		"desc":	"maicha",
+		"textureTarget":	"GL_TEXTURE_2D",
+		"fragmentShader":	" \nprecision highp float;\nvarying highp vec2 textureCoordinate; \nuniform sampler2D inputImageTexture;\nuniform sampler2D inputImageTexture2;\nvoid main()\n{\n vec4 value = texture2D(inputImageTexture, textureCoordinate);\n float r = texture2D(inputImageTexture2, vec2(value.r, 0.5)).r;\n float g = texture2D(inputImageTexture2, vec2(value.g, 0.5)).g;\n float b = texture2D(inputImageTexture2, vec2(value.b, 0.5)).b;\n gl_FragColor = vec4(r,g,b,1.0);\n} ",
+		"attrs":	[]
+	}]

@@ -120,12 +120,16 @@ int native_print(int level,int type, const char *tag,const char *file, int line,
 
 #else//LOG_WRITE_FILE
 
-#define  LOGF(...) native_print(XLM_FATAL,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGV(...) native_print(XLM_VERBOSE,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGD(...) native_print(XLM_DEBUG,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGI(...) native_print(XLM_INFO,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGW(...) native_print(XLM_WARN,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
-#define  LOGE(...) native_print(XLM_ERROR,1, "qmediasdk",__FILENAME__,__LINE__, __VA_ARGS__)
+#ifndef QMEDIA_MUDULE
+#define QMEDIA_MUDULE "qmediasdk"
+#endif
+
+#define  LOGF(...) native_print(XLM_FATAL,1, QMEDIA_MUDULE,__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGV(...) native_print(XLM_VERBOSE,1, QMEDIA_MUDULE,__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGD(...) native_print(XLM_DEBUG,1, QMEDIA_MUDULE,__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGI(...) native_print(XLM_INFO,1, QMEDIA_MUDULE,__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGW(...) native_print(XLM_WARN,1, QMEDIA_MUDULE,__FILENAME__,__LINE__, __VA_ARGS__)
+#define  LOGE(...) native_print(XLM_ERROR,1, QMEDIA_MUDULE,__FILENAME__,__LINE__, __VA_ARGS__)
 
 #endif
 

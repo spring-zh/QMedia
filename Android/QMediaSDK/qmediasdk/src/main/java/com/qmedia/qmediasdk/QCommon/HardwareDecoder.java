@@ -1,45 +1,56 @@
 package com.qmedia.qmediasdk.QCommon;
 
+import android.media.AudioFormat;
 import android.media.MediaCodec;
 import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.Surface;
 
+import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
 
 public class HardwareDecoder {
     private static  String TAG = "MediaDecoder";
 
     public interface DecodecFrameListener {
-        void OnDecodecFrame(DecodedImage decodedImage);
+        void OnDecodecFrame(DecodedFrame decodedFrame);
+        void OnDecodecEnd();
     }
 
     static public class EncodedPacket {
-        public EncodedPacket(ByteBuffer buffer, int size, long pts, long dts){
+        public EncodedPacket(ByteBuffer buffer, int size, long pts, long dts, int flag){
             this.buffer = buffer;
             this.size = size;
             this.dts = this.pts = pts;
             this.dts = dts;
+            this.flag = flag;
         }
         public ByteBuffer buffer;
         public int size;
         public long pts;
         public long dts;
+        public int flag;
     }
 
-    static public class DecodedImage {
-        public DecodedImage(@NonNull HardwareDecoder decoder, int imgIndex, long timeMs, int flags){
-            mDecoder = decoder;
+    static public class DecodedFrame {
+        public DecodedFrame(@NonNull HardwareDecoder decoder, int imgIndex, long timeMs, int flags){
+            _weakDecoder = new WeakReference<>(decoder);
             mIndex = imgIndex;
             mTimeMs = timeMs;
             mFlags = flags;
         }
-        public boolean updateImage(boolean render){
-            return mDecoder.updateImage(this, render);
+        public boolean updateImage(boolean bRender){
+            boolean bRet = false;
+            if (_weakDecoder.get() != null) {
+                bRet = _weakDecoder.get().updateImage(this, bRender);
+                mIndex = -1;
+            }
+            return bRet;
         }
-        private HardwareDecoder mDecoder;
+        private WeakReference<HardwareDecoder>  _weakDecoder;
         public int mIndex;
         public long mTimeMs;
         public int mFlags;
@@ -55,7 +66,7 @@ public class HardwareDecoder {
         public int size;
     }
 
-    static public class DecodedAudioBuffer extends DecodedImage {
+    static public class DecodedAudioBuffer extends DecodedFrame {
         public DecodedAudioBuffer(@NonNull HardwareDecoder decoder, int imgIndex, long timeMs, int flags, ByteBuffer buffer){
             super(decoder,imgIndex,timeMs,flags);
             isbuffer = true;
@@ -75,12 +86,9 @@ public class HardwareDecoder {
     private boolean mUseBuffer = true;
     private boolean mIsAudio;
 
-    public HardwareDecoder(boolean isAudio){
-        mIsAudio = isAudio;
-    }
-
-    public void setListener(DecodecFrameListener listener){
+    public HardwareDecoder(@NonNull DecodecFrameListener listener, boolean isAudio){
         mListener = listener;
+        mIsAudio = isAudio;
     }
 
     public boolean start(MediaFormat format, Surface surface){
@@ -88,163 +96,169 @@ public class HardwareDecoder {
         synchronized (this){
             try {
                 mDecoder = MediaCodec.createDecoderByType(mime);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                Log.e(TAG, "createDecoderByType fail mime = " + mime);
-                return false;
-            }
-
-            try {
+                if(surface != null) mUseBuffer = false;
                 mDecoder.configure(format, surface, null, 0);
                 mDecoder.start();
                 mStarting = true;
                 mAbout = false;
-                if(surface != null)
-                    mUseBuffer = false;
                 return true;
-            } catch (Exception e) {
+            }
+            catch (Exception e){
                 e.printStackTrace();
-                Log.e(TAG, "configure fail");
-                stop();
+                if (mDecoder != null)
+                    mDecoder.release();
                 return false;
             }
         }
     }
 
     public void stop(){
-        mAbout = true;
-        if (mDecoder != null){
-            mDecoder.stop();
+        synchronized (this) {
+            mAbout = true;
+            if (mDecoder != null) {
+                mDecoder.stop();
+            }
+            mStarting = false;
         }
-        mStarting = false;
     }
 
     public void flush(){
-        if (mDecoder != null){
-            mDecoder.flush();
+        synchronized (this) {
+            if (mDecoder != null) {
+                mDecoder.flush();
+            }
         }
     }
 
     public void release(){
-        if (mDecoder != null){
-            mDecoder.release();
+        synchronized (this) {
+            if (mDecoder != null) {
+                mDecoder.release();
+            }
+            mStarting = false;
+            mAbout = true;
         }
-        mStarting = false;
-        mAbout = true;
     }
 
-    public boolean decodePacket(EncodedPacket packet){
-        if (!mStarting || mDecoder == null)
-            return false;
+    //input null packet to wait for decoder finish output
+    public boolean decodePacket(@Nullable EncodedPacket packet){
+        synchronized (this) {
+            if (!mStarting || mDecoder == null)
+                return false;
 
-        ByteBuffer bBufIn = packet.buffer;
+            try {
 
-        try {
+                ByteBuffer[] inputBuffers = mDecoder.getInputBuffers();
+                ByteBuffer[] outputBuffers = mDecoder.getOutputBuffers();
+                MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
 
-            ByteBuffer[] inputBuffers = mDecoder.getInputBuffers();
-            ByteBuffer[] outputBuffers = mDecoder.getOutputBuffers();
+                ByteBuffer BuffIn = (packet==null? null : packet.buffer);
 
-//            long realTimeUs = 0;
-            MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
-            if (bBufIn != null){
                 int index = -1;
-                while (!mAbout && (index = mDecoder.dequeueInputBuffer(1000)) < 0){
+                while (!mAbout && (index = mDecoder.dequeueInputBuffer(1000)) < 0) {
                     int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
                     switch (outIndex) {
                         case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
                             inputBuffers = mDecoder.getInputBuffers();
                             break;
                         case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
-                            MediaFormat mediaFormat= mDecoder.getOutputFormat();
-                            Log.e(TAG,"KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
+                            MediaFormat mediaFormat = mDecoder.getOutputFormat();
+                            Log.e(TAG, "KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
                             break;
                         case MediaCodec.INFO_TRY_AGAIN_LATER:
                             break;
                         default:
-                            checkOutputAndCallback(outIndex,outputBuffers,info);
+                            checkOutputAndCallback(outIndex, outputBuffers, info);
                     }
 
                     Thread.sleep(50);//don't dequeue buffer too fast
                 }
 
-                if(0 <= index)
-                {
-                    ByteBuffer buffer = inputBuffers[index];// mDecoder.getInputBuffer(index);
-                    buffer.put(bBufIn);
-                    mDecoder.queueInputBuffer(index, 0, bBufIn.limit(), packet.pts, 0);
+                if (0 <= index) {
+                    if (BuffIn != null) {
+                        ByteBuffer buffer = inputBuffers[index];// mDecoder.getInputBuffer(index);
+                        buffer.put(BuffIn);
+                        mDecoder.queueInputBuffer(index, 0, BuffIn.limit(), packet.pts, 0);
+                    }else
+                        mDecoder.queueInputBuffer(index, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
                 }
-            }
 
-            int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
-            switch (outIndex) {
-                case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
-                    outputBuffers = mDecoder.getOutputBuffers();
-                    return false;
-                case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
-                    MediaFormat mediaFormat= mDecoder.getOutputFormat();
-                    Log.e(TAG,"KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
-                    return false;
-                case MediaCodec.INFO_TRY_AGAIN_LATER:
-                    return false;
-                default:
-                    checkOutputAndCallback(outIndex,outputBuffers,info);
-            }
+                int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
+                switch (outIndex) {
+                    case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
+                        outputBuffers = mDecoder.getOutputBuffers();
+                        return false;
+                    case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
+                        MediaFormat mediaFormat = mDecoder.getOutputFormat();
+                        Log.e(TAG, "KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
+                        return false;
+                    case MediaCodec.INFO_TRY_AGAIN_LATER:
+                        return false;
+                    default:
+                        checkOutputAndCallback(outIndex, outputBuffers, info);
+                }
 
-        } catch (Exception e) {
-            return false;
+                if (0 != (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM)){
+                    //TODO: read end of stream
+                    mListener.OnDecodecEnd();
+                }
+
+            } catch (Exception e) {
+                return false;
+            }
         }
-
         return true;
     }
 
     private void checkOutputAndCallback(int outIndex, ByteBuffer[] outputBuffers, MediaCodec.BufferInfo info){
-        long realTimeUs = info.presentationTimeUs;
-        realTimeUs = realTimeUs < 0 ? 0 : realTimeUs;
+        long realTimeMs = info.presentationTimeUs / 1000;
+        realTimeMs = realTimeMs < 0 ? 0 : realTimeMs;
 
-        if (info.size <= 0){
+        if (info.size <= 0 || outIndex < 0){
             //end of stream
 
         }else if(mListener != null) {
 
             MediaFormat format = mDecoder.getOutputFormat();
             if (mIsAudio){
-                ByteBuffer cachebuffer = ByteBuffer.allocate(info.size);
+                ByteBuffer cachebuffer = ByteBuffer.allocateDirect(info.size);
                 cachebuffer.clear();
                 cachebuffer.put(outputBuffers[outIndex]);
-                DecodedAudioBuffer audioBuffer = new DecodedAudioBuffer(this,outIndex,realTimeUs,info.flags,cachebuffer);
+                DecodedAudioBuffer audioBuffer = new DecodedAudioBuffer(this, outIndex,realTimeMs,info.flags,cachebuffer);
                 audioBuffer.mChannels = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
                 audioBuffer.mSamplerate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
-                audioBuffer.mAudioFmt = format.getInteger(MediaFormat.KEY_PCM_ENCODING);
+                audioBuffer.mAudioFmt = format.containsKey(MediaFormat.KEY_PCM_ENCODING)?
+                        format.getInteger(MediaFormat.KEY_PCM_ENCODING) : AudioFormat.ENCODING_PCM_16BIT;
                 audioBuffer.size = info.size;
+                audioBuffer.updateImage(false);
                 mListener.OnDecodecFrame(audioBuffer);
-                mDecoder.releaseOutputBuffer(outIndex,false);
+
             }else {
-                DecodedImage decodedImage = new DecodedImage(this,outIndex,realTimeUs,info.flags);
-                decodedImage.width = format.getInteger(MediaFormat.KEY_WIDTH);
-                decodedImage.height = format.getInteger(MediaFormat.KEY_HEIGHT);
-                decodedImage.rotation = format.getInteger(MediaFormat.KEY_ROTATION);
+                DecodedFrame decodedFrame = new DecodedFrame(this, outIndex,realTimeMs,info.flags);
+                decodedFrame.width = format.getInteger(MediaFormat.KEY_WIDTH);
+                decodedFrame.height = format.getInteger(MediaFormat.KEY_HEIGHT);
+                decodedFrame.rotation = format.containsKey(MediaFormat.KEY_ROTATION)?
+                        format.getInteger(MediaFormat.KEY_ROTATION) : 0;
                 if (mUseBuffer){
                     ByteBuffer cachebuffer = ByteBuffer.allocate(info.size);
                     cachebuffer.clear();
                     cachebuffer.put(outputBuffers[outIndex]);
-                    decodedImage.buffer = cachebuffer;
-                    decodedImage.isbuffer = true;
-                    decodedImage.size = info.size;
+                    decodedFrame.buffer = cachebuffer;
+                    decodedFrame.isbuffer = true;
+                    decodedFrame.size = info.size;
+                    decodedFrame.mIndex = -1;
+                    decodedFrame.updateImage(false);
                 }
-                mListener.OnDecodecFrame(decodedImage);
+                mListener.OnDecodecFrame(decodedFrame);
             }
-
-            return;
         }
-        mDecoder.releaseOutputBuffer(outIndex,false);
     }
 
-    private boolean updateImage(DecodedImage decodedImage, boolean brender){
-        if (decodedImage.mIndex >= 0 && !decodedImage.isbuffer){
+    private boolean updateImage(DecodedFrame decodedFrame, boolean brender){
+        if (decodedFrame.mIndex >= 0){
             try {
-                mDecoder.releaseOutputBuffer(decodedImage.mIndex,brender);
-                decodedImage.mIndex = -1;
+                mDecoder.releaseOutputBuffer(decodedFrame.mIndex,brender);
+                decodedFrame.mIndex = -1;
                 return true;
             }catch (IllegalStateException e) {
                 e.printStackTrace();

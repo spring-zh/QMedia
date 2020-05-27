@@ -7,10 +7,12 @@
 
 #include "JniUtils.h"
 #include "EffectEditor/MediaSource.h"
+#include "VideoTargetAdapter.h"
+#include "AudioTargetAdapter.h"
 
 class MediaSourceAdapter : public MediaSource{
 public:
-    MediaSourceAdapter(jobject jsource);
+    explicit MediaSourceAdapter(jobject jsource);
     ~MediaSourceAdapter();
 
     bool load() override;
@@ -19,6 +21,7 @@ public:
 
     bool isInit() override;
 
+    bool start(int64_t startMSec, int64_t endMSec) override ;
     void stop() override;
 
     bool seekTo(int64_t mSec) override;
@@ -32,7 +35,9 @@ public:
     AudioFrame readNextAudioFrame(int &error) override;
 
 protected:
-    jobject _object;
+    const JniUtils::JWeakObject _weakObj;
+    std::unique_ptr<VideoTargetAdapter> _videoTargetAdapter;
+    std::unique_ptr<AudioTargetAdapter> _audioTargetAdapter;
 };
 
 

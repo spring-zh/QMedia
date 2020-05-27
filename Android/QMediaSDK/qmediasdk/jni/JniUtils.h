@@ -53,46 +53,48 @@ int jni_reset_jfields(JNIEnv *env, void *jfields, const struct JniField *jfields
 int jni_exception_get_summary(JNIEnv *env, jthrowable exception, char **error);
 int jni_exception_check(JNIEnv *env);
 
+#define OBJECT_PTR_FIELD "mPtr"
 jlong getObjectPtr(JNIEnv* env, jobject thiz);
+jlong getObjectPtr(JNIEnv* env, jobject thiz, const char* field);
+bool setObjectPtr(JNIEnv* env, jobject thiz, jlong ptr, const char* field);
 bool setObjectPtr(JNIEnv* env, jobject thiz, jlong ptr);
-
 
 class JGlobalObject {
 public:
-    JGlobalObject(jobject obj) {
+    JGlobalObject(jobject object) {
         JNIEnv* env = getEnv();
-        _obj = env->NewGlobalRef(obj);
+        _object = env->NewGlobalRef(object);
     }
     ~JGlobalObject() {
         JNIEnv* env = getEnv();
-        env->DeleteGlobalRef(_obj);
+        env->DeleteGlobalRef(_object);
     }
 
-    jobject operator()(){
-        return _obj;
+    operator jobject() const{
+        return _object;
     }
 
 protected:
-    jobject _obj;
+    jobject _object;
 };
 
 class JWeakObject {
 public:
-    JWeakObject(jobject obj) {
+    JWeakObject(jobject object) {
         JNIEnv* env = getEnv();
-        _obj = env->NewWeakGlobalRef(obj);
+        _object = env->NewWeakGlobalRef(object);
     }
     ~JWeakObject() {
         JNIEnv* env = getEnv();
-        env->DeleteWeakGlobalRef(_obj);
+        env->DeleteWeakGlobalRef(_object);
     }
 
-    jobject operator()(){
-        return _obj;
+    inline operator jobject() const {
+        return _object;
     }
 
 protected:
-    jobject _obj;
+    jobject _object;
 };
 
 }

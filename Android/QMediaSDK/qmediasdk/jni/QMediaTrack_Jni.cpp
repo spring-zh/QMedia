@@ -8,9 +8,9 @@
 #include "MediaSourceAdapter.h"
 
 #define NATIVE_FUNCTION(retT, name)\
-JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QTrack_QMediaTrack_##name
+extern "C" JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QTrack_QMediaTrack_##name
 
-NATIVE_FUNCTION(jlong, native_create)(JNIEnv *env, jobject thiz, jobject jsource)
+NATIVE_FUNCTION(jlong, native_1create)(JNIEnv *env, jobject thiz, jobject jsource)
 {
     MediaSourceRef sourceRef = MediaSourceRef(new MediaSourceAdapter(jsource));
     MediaTrackRef* track_ptr = new MediaTrackRef(new MediaTrackImpl(sourceRef));
@@ -19,7 +19,7 @@ NATIVE_FUNCTION(jlong, native_create)(JNIEnv *env, jobject thiz, jobject jsource
 
 }
 
-NATIVE_FUNCTION(jboolean , native_prepare)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jboolean , native_1prepare)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -28,7 +28,7 @@ NATIVE_FUNCTION(jboolean , native_prepare)(JNIEnv *env, jobject thiz)
     return false;
 }
 
-NATIVE_FUNCTION(jboolean , native_setTimeTo)(JNIEnv *env, jobject thiz, jlong jmSec)
+NATIVE_FUNCTION(jboolean , native_1setTimeTo)(JNIEnv *env, jobject thiz, jlong jmSec)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -37,7 +37,7 @@ NATIVE_FUNCTION(jboolean , native_setTimeTo)(JNIEnv *env, jobject thiz, jlong jm
     return false;
 }
 
-NATIVE_FUNCTION(void , native_stopMedia)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(void , native_1stopMedia)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -45,7 +45,7 @@ NATIVE_FUNCTION(void , native_stopMedia)(JNIEnv *env, jobject thiz)
     }
 }
 
-NATIVE_FUNCTION(jboolean , native_isPrepare)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jboolean , native_1isPrepare)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -54,7 +54,7 @@ NATIVE_FUNCTION(jboolean , native_isPrepare)(JNIEnv *env, jobject thiz)
     return false;
 }
 
-NATIVE_FUNCTION(jfloat , native_getPlaySpeed)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jfloat , native_1getPlaySpeed)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -63,7 +63,7 @@ NATIVE_FUNCTION(jfloat , native_getPlaySpeed)(JNIEnv *env, jobject thiz)
     return 0.f;
 }
 
-NATIVE_FUNCTION(jlong , native_getSourceDuration)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jlong , native_1getSourceDuration)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -72,7 +72,7 @@ NATIVE_FUNCTION(jlong , native_getSourceDuration)(JNIEnv *env, jobject thiz)
     return 0;
 }
 
-NATIVE_FUNCTION(jobject , native_getDisplayRange)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jobject , native_1getDisplayRange)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -82,7 +82,7 @@ NATIVE_FUNCTION(jobject , native_getDisplayRange)(JNIEnv *env, jobject thiz)
     return nullptr;
 }
 
-NATIVE_FUNCTION(void , native_setDisplayRange)(JNIEnv *env, jobject thiz, jobject jrange)
+NATIVE_FUNCTION(void , native_1setDisplayRange)(JNIEnv *env, jobject thiz, jobject jrange)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -92,7 +92,7 @@ NATIVE_FUNCTION(void , native_setDisplayRange)(JNIEnv *env, jobject thiz, jobjec
     }
 }
 
-NATIVE_FUNCTION(jobject , native_getSourceRange)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jobject , native_1getSourceRange)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -102,7 +102,7 @@ NATIVE_FUNCTION(jobject , native_getSourceRange)(JNIEnv *env, jobject thiz)
     return nullptr;
 }
 
-NATIVE_FUNCTION(void , native_setSourceRange)(JNIEnv *env, jobject thiz, jobject jrange)
+NATIVE_FUNCTION(void , native_1setSourceRange)(JNIEnv *env, jobject thiz, jobject jrange)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -112,7 +112,7 @@ NATIVE_FUNCTION(void , native_setSourceRange)(JNIEnv *env, jobject thiz, jobject
     }
 }
 
-NATIVE_FUNCTION(jfloat , native_getTimeScale)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jfloat , native_1getTimeScale)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -121,7 +121,7 @@ NATIVE_FUNCTION(jfloat , native_getTimeScale)(JNIEnv *env, jobject thiz)
     return 0.f;
 }
 
-NATIVE_FUNCTION(void , native_setTimeScale)(JNIEnv *env, jobject thiz, jfloat jtimeScale)
+NATIVE_FUNCTION(void , native_1setTimeScale)(JNIEnv *env, jobject thiz, jfloat jtimeScale)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -129,7 +129,7 @@ NATIVE_FUNCTION(void , native_setTimeScale)(JNIEnv *env, jobject thiz, jfloat jt
     }
 }
 
-NATIVE_FUNCTION(jint , native_getRepeatTimes)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jint , native_1getRepeatTimes)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -138,7 +138,7 @@ NATIVE_FUNCTION(jint , native_getRepeatTimes)(JNIEnv *env, jobject thiz)
     return 0;
 }
 
-NATIVE_FUNCTION(void , native_setRepeatTimes)(JNIEnv *env, jobject thiz, jint jrepeatTimes)
+NATIVE_FUNCTION(void , native_1setRepeatTimes)(JNIEnv *env, jobject thiz, jint jrepeatTimes)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {
@@ -146,7 +146,7 @@ NATIVE_FUNCTION(void , native_setRepeatTimes)(JNIEnv *env, jobject thiz, jint jr
     }
 }
 
-NATIVE_FUNCTION(void , native_release)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(void , native_1release)(JNIEnv *env, jobject thiz)
 {
     MediaTrackRef * track_ptr = reinterpret_cast<MediaTrackRef *>(JniUtils::getObjectPtr(env, thiz));
     if (track_ptr) {

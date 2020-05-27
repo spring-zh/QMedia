@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:descendantFocusability="blocksDescendants">
+
+    <com.qmedia.qmediasdk.sample.sample.view.XMHorizontalScrollView
+        android:id="@+id/id_horizontalScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:background="@color/md_grey_900"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:id="@+id/id_gallery"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:background="@color/md_grey_900"
+            android:divider="#FFF"
+            android:dividerHeight="1px"
+            android:orientation="horizontal">
+        </LinearLayout>
+
+    </com.qmedia.qmediasdk.sample.sample.view.XMHorizontalScrollView>
+    <ListView
+        android:id="@+id/filter_listview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/id_horizontalScrollView">
+
+    </ListView>
+
+</RelativeLayout>

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+    <FrameLayout
+        android:id="@+id/frameLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="center_horizontal">
+
+        <com.qmedia.qmediasdk.QTarget.Implements.QPlayerView
+            android:id="@+id/render_view"
+            android:layout_width="243dp"
+            android:layout_height="432dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:layout_weight="1"></com.qmedia.qmediasdk.QTarget.Implements.QPlayerView>
+        <ProgressBar
+            android:id="@+id/bar_progress"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_gravity="center_horizontal|center_vertical"
+            android:visibility="invisible"
+            />
+
+    </FrameLayout>
+
+    <SeekBar
+        android:id="@+id/seekBar_process"
+        android:layout_width="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:layout_height="30dp"
+        android:maxHeight="6dp"
+        android:layout_marginTop="8dp"
+        android:max="100"
+        android:progress="0" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:padding="5dp">
+
+        <Button
+            android:id="@+id/btn_start"
+            android:layout_width="40dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:text="Start"
+            android:textSize="12sp"
+            style="?android:attr/buttonStyle"/>
+
+        <Button
+            android:id="@+id/btn_stop"
+            android:layout_width="40dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:text="Stop"
+            android:textSize="12sp"
+            style="?android:attr/buttonStyle"/>
+
+        <Button
+            android:id="@+id/btn_save"
+            android:layout_width="40dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:text="Save"
+            android:textSize="12sp"
+            style="?android:attr/buttonStyle"/>
+
+        <Button
+            android:id="@+id/btn_capture"
+            android:layout_width="40dp"
+            android:layout_height="38dp"
+            android:layout_weight="1"
+            android:text="Capture"
+            android:textSize="12sp"
+            style="?android:attr/buttonStyle"/>
+
+    </LinearLayout>
+
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:visibility="invisible">
+        <SeekBar
+            android:id="@+id/seekBar_rate"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:maxHeight="6dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="50" />
+
+        <SeekBar
+            android:id="@+id/seekBar_tempo"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:maxHeight="6dp"
+            android:layout_weight="1"
+            android:progress="50" />
+
+        <SeekBar
+            android:id="@+id/seekBar_pitch"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:maxHeight="6dp"
+            android:layout_weight="1"
+            android:max="100"
+            android:progress="50" />
+
+    </LinearLayout>
+
+
+
+</LinearLayout>

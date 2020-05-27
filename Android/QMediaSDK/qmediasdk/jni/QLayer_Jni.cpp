@@ -7,9 +7,9 @@
 #include "j4a_generate/j4a_generate.h"
 
 #define NATIVE_FUNCTION(retT, name)\
-JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QGraphic_QLayer_##name
+extern "C" JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QGraphic_QLayer_##name
 
-NATIVE_FUNCTION(jlong, native_create)(JNIEnv *env, jobject thiz, jobject jsize)
+NATIVE_FUNCTION(jlong, native_1create)(JNIEnv *env, jobject thiz, jobject jsize)
 {
     GraphicCore::Size size(J4AC_com_qmedia_qmediasdk_QCommon_QVector__v0__get(env, jsize),
                            J4AC_com_qmedia_qmediasdk_QCommon_QVector__v1__get(env, jsize));
@@ -18,7 +18,7 @@ NATIVE_FUNCTION(jlong, native_create)(JNIEnv *env, jobject thiz, jobject jsize)
     return reinterpret_cast<jlong>(layer_ptr);
 }
 
-NATIVE_FUNCTION(jobject , native_getBkColor)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(jobject , native_1getBkColor)(JNIEnv *env, jobject thiz)
 {
     GraphicCore::LayerRef * layer_ptr = reinterpret_cast<GraphicCore::LayerRef *>(JniUtils::getObjectPtr(env, thiz));
     if (layer_ptr) {
@@ -28,7 +28,7 @@ NATIVE_FUNCTION(jobject , native_getBkColor)(JNIEnv *env, jobject thiz)
     return J4AC_com_qmedia_qmediasdk_QCommon_QVector__QVector4(env, 0, 0, 0, 0);
 }
 
-NATIVE_FUNCTION(void , native_setBkColor)(JNIEnv *env, jobject thiz, jobject jcolor)
+NATIVE_FUNCTION(void , native_1setBkColor)(JNIEnv *env, jobject thiz, jobject jcolor)
 {
     GraphicCore::LayerRef * layer_ptr = reinterpret_cast<GraphicCore::LayerRef *>(JniUtils::getObjectPtr(env, thiz));
     if (layer_ptr) {

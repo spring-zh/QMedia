@@ -408,10 +408,10 @@ namespace JniUtils {
 
         return 0;
     }
-    jlong getObjectPtr(JNIEnv* env, jobject thiz)
+    jlong getObjectPtr(JNIEnv* env, jobject thiz, const char* field)
     {
         jclass clazz = env->GetObjectClass(thiz);
-        jfieldID fieldID = env->GetFieldID(clazz,"mPtr","J");
+        jfieldID fieldID = env->GetFieldID(clazz,field,"J");
         jlong ptr = 0;
         if (fieldID){
             ptr = env->GetLongField(thiz,fieldID);
@@ -419,17 +419,25 @@ namespace JniUtils {
         env->DeleteLocalRef(clazz);
         return ptr;
     }
+    jlong getObjectPtr(JNIEnv* env, jobject thiz)
+    {
+        return getObjectPtr(env, thiz, OBJECT_PTR_FIELD);
+    }
 
-    bool setObjectPtr(JNIEnv* env, jobject thiz, jlong ptr){
+    bool setObjectPtr(JNIEnv* env, jobject thiz, jlong ptr, const char* field){
         bool bRet = false;
         jclass clazz = env->GetObjectClass(thiz);
-        jfieldID fieldID = env->GetFieldID(clazz,"mPtr","J");
+        jfieldID fieldID = env->GetFieldID(clazz,field,"J");
         if (fieldID){
             env->SetLongField(thiz,fieldID, ptr);
             bRet = true;
         }
         env->DeleteLocalRef(clazz);
         return bRet;
+    }
+
+    bool setObjectPtr(JNIEnv* env, jobject thiz, jlong ptr){
+        return setObjectPtr(env, thiz, ptr, OBJECT_PTR_FIELD);
     }
 
 }

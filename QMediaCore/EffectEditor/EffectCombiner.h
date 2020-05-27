@@ -105,7 +105,7 @@ public:
     void setAudioTarget(AudioTarget* audioTarget);
     void setCallBack(Callback *callback) { _callback = callback; }
     
-    GraphicCore::RenderNodeRef getRootNode() const { return _displayLayer; }
+    const std::shared_ptr<RenderLayer>& getRootNode() const { return _displayLayer; }
 
     /**
      * set the output traget config what you want .

@@ -26,6 +26,7 @@ typedef struct J4AC_com_qmedia_qmediasdk_QCommon_QRange {
 
     jmethodID constructor_QRange;
     jmethodID method_isValid;
+    jmethodID method_getLength;
     jfieldID field_start;
     jfieldID field_end;
 } J4AC_com_qmedia_qmediasdk_QCommon_QRange;
@@ -76,6 +77,21 @@ jboolean J4AC_com_qmedia_qmediasdk_QCommon_QRange__isValid__catchAll(JNIEnv *env
     jboolean ret_value = J4AC_com_qmedia_qmediasdk_QCommon_QRange__isValid(env, thiz);
     if (J4A_ExceptionCheck__catchAll(env)) {
         return false;
+    }
+
+    return ret_value;
+}
+
+jlong J4AC_com_qmedia_qmediasdk_QCommon_QRange__getLength(JNIEnv *env, jobject thiz)
+{
+    return (*env)->CallLongMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QCommon_QRange.method_getLength);
+}
+
+jlong J4AC_com_qmedia_qmediasdk_QCommon_QRange__getLength__catchAll(JNIEnv *env, jobject thiz)
+{
+    jlong ret_value = J4AC_com_qmedia_qmediasdk_QCommon_QRange__getLength(env, thiz);
+    if (J4A_ExceptionCheck__catchAll(env)) {
+        return 0;
     }
 
     return ret_value;
@@ -161,6 +177,13 @@ int J4A_loadClass__J4AC_com_qmedia_qmediasdk_QCommon_QRange(JNIEnv *env)
     sign     = "()Z";
     class_J4AC_com_qmedia_qmediasdk_QCommon_QRange.method_isValid = J4A_GetMethodID__catchAll(env, class_id, name, sign);
     if (class_J4AC_com_qmedia_qmediasdk_QCommon_QRange.method_isValid == NULL)
+        goto fail;
+
+    class_id = class_J4AC_com_qmedia_qmediasdk_QCommon_QRange.id;
+    name     = "getLength";
+    sign     = "()J";
+    class_J4AC_com_qmedia_qmediasdk_QCommon_QRange.method_getLength = J4A_GetMethodID__catchAll(env, class_id, name, sign);
+    if (class_J4AC_com_qmedia_qmediasdk_QCommon_QRange.method_getLength == NULL)
         goto fail;
 
     class_id = class_J4AC_com_qmedia_qmediasdk_QCommon_QRange.id;

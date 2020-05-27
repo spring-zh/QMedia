@@ -3,28 +3,34 @@ package com.qmedia.qmediasdk.QCommon;
 import java.util.LinkedList;
 
 //use to cache decode output buffer sort by pts
-public class FrameCacheQueue<T extends HardwareDecoder.DecodedImage> extends LinkedList<T> {
+public class FrameCacheQueue<T extends HardwareDecoder.DecodedFrame> extends LinkedList<T> {
 
-    static class TimeRange {
-        public TimeRange(long start, long end){
-            this.start = start;
-            this.end = end;
-        }
-        long start;
-        long end;
+    private boolean isAbort = false;
+
+    private Object signal = new Object();
+    private QRange cacheTimeRange = new QRange(0,0);
+
+    //get the cache frame timestamp range
+    public QRange getCacheFrameRange(){
+        return cacheTimeRange;
     }
 
-    public TimeRange mRange = new TimeRange(0,0);
+    public boolean isAbort() {
+        return isAbort;
+    }
 
-    TimeRange getCacheFrameRange(){
-        return mRange;
+    public void setAbort(boolean abort) {
+        synchronized (signal) {
+            isAbort = abort;
+            signal.notify();
+        }
     }
 
     @Override
     public boolean add(T cacheSample)
     {
         boolean bRet;
-        synchronized (this) {
+        synchronized (signal) {
 
             //find insert position
             int pos;
@@ -34,42 +40,43 @@ public class FrameCacheQueue<T extends HardwareDecoder.DecodedImage> extends Lin
             }
             //first or insert position equal 0
             if (pos == 0)
-                mRange.start = cacheSample.mTimeMs;
+                cacheTimeRange.start = cacheSample.mTimeMs;
 
             if (pos == super.size()){
-                mRange.end = cacheSample.mTimeMs;
+                cacheTimeRange.end = cacheSample.mTimeMs;
                 bRet = super.add(cacheSample);
             }else {
                 super.add(pos, cacheSample);
                 bRet = true;
             }
-            this.notify();
+            //send notify to remove()' wait
+            signal.notify();
         }
         return bRet;
     }
 
+    //will block until add frame or isAbort set
     @Override
     public T remove() {
-//            if (isEmpty())
-//                return null;
+
         T sample = null;
 
-        synchronized (this) {
+        synchronized (signal) {
 
-            while (super.size() <= 0){
+            while (super.isEmpty() && !isAbort){
                 try {
-                    this.wait();
+                    signal.wait();
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
 
-            sample = super.remove();
-
             if (!isEmpty()) {
-                mRange.start = getFirst().mTimeMs;
-            } else {
-                mRange.start = mRange.end = 0;
+                sample = super.remove();
+
+                if (!isEmpty()) {
+                    cacheTimeRange.start = getFirst().mTimeMs;
+                }
             }
         }
         return sample;
@@ -78,7 +85,7 @@ public class FrameCacheQueue<T extends HardwareDecoder.DecodedImage> extends Lin
     @Override
     public void clear(){
 
-        synchronized (this) {
+        synchronized (signal) {
             while (super.size() > 0){
                 T sample = super.remove();
                 if (sample != null){
@@ -86,5 +93,6 @@ public class FrameCacheQueue<T extends HardwareDecoder.DecodedImage> extends Lin
                 }
             }
         }
+        cacheTimeRange.start = cacheTimeRange.end = 0;
     }
 }

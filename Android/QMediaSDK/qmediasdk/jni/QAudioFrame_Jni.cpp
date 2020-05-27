@@ -5,6 +5,9 @@
 #include "QAudioFrame_Jni.h"
 #include "j4a_generate/j4a_generate.h"
 
+#define QMEDIA_MUDULE "JavaAudioFrameBuffer"
+#include "Utils/Logger.h"
+
 JavaAudioFrameBuffer::JavaAudioFrameBuffer(jobject jframe) {
     JNIEnv* env = JniUtils::getEnv();
     _object = env->NewWeakGlobalRef(jframe);

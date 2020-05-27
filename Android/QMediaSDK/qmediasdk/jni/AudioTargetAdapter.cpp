@@ -5,78 +5,74 @@
 #include "Utils/Comm.h"
 #include "AudioTargetAdapter.h"
 #include "j4a_generate/j4a_generate.h"
-#include "MediaDescribe_Jni.h"
+#include "QMediaDescribe_Jni.h"
 
-AudioTargetAdapter::AudioTargetAdapter(jobject jtarget) {
-    JNIEnv* env = JniUtils::getEnv();
-    _object = env->NewWeakGlobalRef(jtarget);
+AudioTargetAdapter::AudioTargetAdapter(jobject jtarget):_weakObj(jtarget) {
 }
 AudioTargetAdapter::~AudioTargetAdapter() {
-    JNIEnv* env = JniUtils::getEnv();
-    env->DeleteWeakGlobalRef(_object);
 }
 
 bool AudioTargetAdapter::init(AudioDescribe audioDesc) {
     JNIEnv* env = JniUtils::getEnv();
     //TODO: AudioDescribe --> QAudioDescribe
-    jobject jaudioDesc = MediaDescribe_Jni::AudioDescribeToJava(env, audioDesc);
-    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__initAudio(env, _object, jaudioDesc);
+    jobject jaudioDesc = QMediaDescribe_Jni::AudioDescribeToJava(env, audioDesc);
+    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__initAudio(env, _weakObj, jaudioDesc);
 }
 
 void AudioTargetAdapter::unInit() {
     JNIEnv* env = JniUtils::getEnv();
-    J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__unInitAudio(env, _object);
+    J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__unInitAudio(env, _weakObj);
 }
 
 int AudioTargetAdapter::getSampleRate() const {
     JNIEnv* env = JniUtils::getEnv();
-    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getSampleRate(env, _object);
+    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getSampleRate(env, _weakObj);
 }
 
 int AudioTargetAdapter::getChannels() const {
     JNIEnv* env = JniUtils::getEnv();
-    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getChannels(env, _object);
+    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getChannels(env, _weakObj);
 }
 
 RawAudioFormat AudioTargetAdapter::getFormat() const {
     JNIEnv* env = JniUtils::getEnv();
-    return (RawAudioFormat)J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getFormat(env, _object);
+    return (RawAudioFormat)J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getFormat(env, _weakObj);
 }
 
 void AudioTargetAdapter::setVolume(float volume) {
     JNIEnv* env = JniUtils::getEnv();
-    J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setVolume(env, _object, volume);
+    J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setVolume(env, _weakObj, volume);
 }
 
 float AudioTargetAdapter::getVolume() const {
     JNIEnv* env = JniUtils::getEnv();
-    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getVolume(env, _object);
+    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getVolume(env, _weakObj);
 }
 
 int AudioTargetAdapter::getAudioDelayBytes() const {
     JNIEnv* env = JniUtils::getEnv();
-    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioDelay(env, _object);
+    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioDelay(env, _weakObj);
 }
 
 bool AudioTargetAdapter::start() {
     JNIEnv* env = JniUtils::getEnv();
-    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__startAudio(env, _object);
+    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__startAudio(env, _weakObj);
 }
 
 bool AudioTargetAdapter::stop() {
     JNIEnv* env = JniUtils::getEnv();
-    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__stopAudio(env, _object);
+    return J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__stopAudio(env, _weakObj);
 }
 
 void AudioTargetAdapter::pause(bool isPause) {
     JNIEnv* env = JniUtils::getEnv();
     if (isPause)
-        J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__pauseAudio(env, _object);
+        J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__pauseAudio(env, _weakObj);
     else
-        J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__resumeAudio(env, _object);
+        J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__resumeAudio(env, _weakObj);
 }
 
 void AudioTargetAdapter::flush() {
     JNIEnv* env = JniUtils::getEnv();
-    J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__flushAudio(env, _object);
+    J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__flushAudio(env, _weakObj);
 }

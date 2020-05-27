@@ -2,9 +2,10 @@ package com.qmedia.qmediasdk.QEditor;
 
 import android.os.Looper;
 
+import com.qmedia.qmediasdk.QCommon.QVector;
+import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QTarget.Implements.QAudioPlayer;
 import com.qmedia.qmediasdk.QTarget.QAudioRender;
-import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 import com.qmedia.qmediasdk.QTarget.QVideoRender;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 
@@ -14,6 +15,18 @@ import java.nio.ByteBuffer;
 
 public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRender{
 
+    //PlayerState
+    public static final int State_Idle = 0;
+    public static final int State_Initialized = 1;
+    public static final int State_AsyncPreparing = 2;
+    public static final int State_Prepared = 3;
+    public static final int State_Started = 4;
+    public static final int State_Paused = 5;
+    public static final int State_Completed = 5;
+    public static final int State_Stopped= 5;
+    public static final int State_Error = 5;
+    public static final int State_Ended = 5;
+
     public interface Observer {
         void onPrepare();
         void onPlayerStateChanged(int newState, int oldState);
@@ -21,33 +34,6 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
         void onSeekTo(long mSec);
         void onCompleted(int errcode);
     }
-
-//    public enum State {
-//        Idle(0),
-//        Initialized(1),
-//        AsyncPreparing(2),
-//        Prepared(3),
-//        Started(4),
-//        Paused(5),
-//        Completed(6),
-//        Stopped(7),
-//        Error(8),
-//        Ended(9);
-//
-//        State(int value){
-//            this.value = value;
-//        }
-//
-//        public int getValue() {
-//            return value;
-//        }
-//
-//        public void setValue(int value) {
-//            this.value = value;
-//        }
-//
-//        private int value;
-//    }
 
     public QEditorPlayer() {
         mCbHandler = new Handler(Looper.getMainLooper());
@@ -60,13 +46,15 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
     }
 
     private void init() {
-        native_create();
-        QAudioTarget audioTarget = new QAudioPlayer();
-        mediaFactory.setAudioTarget(audioTarget, this);
+        mPtr = native_create(rootNode);
+        QAudioPlayer audioPlayer = new QAudioPlayer();
+        audioPlayer.setRender(this);
+        setAudioTarget(audioPlayer); // set default audio player
     }
 
     public void setPlayerView(QVideoTarget playerView) {
-        mediaFactory.setVideoTarget(playerView, this);
+        playerView.setRender(this);
+        setVideoTarget(playerView);
     }
 
     public void setObserver(Observer observer) {
@@ -90,8 +78,12 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
         native_seekTo(timePoint,flags);
     }
 
+    public DisplayRootNode getRootNode() {
+        return rootNode;
+    }
+
     public int getPlayerState() {
-        return getPlayerState();
+        return native_getPlayerState();
     }
 
     public boolean isPaused() {
@@ -100,12 +92,12 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
 
     public void release() {
         native_release();
-        mediaFactory.release();
+        super.native_target_release();
         mObserver = null;
     }
 
     @Override
-    public boolean onAudioRender(ByteBuffer buffer, int needBytes, long wantTime) {
+    public boolean onAudioRender(byte[] buffer, int needBytes, long wantTime) {
         return native_onAudioRender(buffer, needBytes, wantTime);
     }
 
@@ -124,13 +116,14 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
         native_onVideoDestroy();
     }
 
-//    private int playerState;//QEditorPlayerState
+    //    private int playerState;//QEditorPlayerState
 //    private boolean isPaused;
+    private DisplayRootNode rootNode = new DisplayRootNode();
     private Handler mCbHandler;
     private Observer mObserver;
 
     //TODO: native
-    private native long native_create();
+    private native long native_create(DisplayRootNode rootNode);
     private native int native_getPlayerState();
     private native boolean native_isPaused();
     private native void native_start();
@@ -139,7 +132,7 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
     private native void native_stop();
     private native void native_seekTo(long timePoint ,int flags);
 
-    private native boolean native_onAudioRender(ByteBuffer buffer, int needBytes, long wantTime);
+    private native boolean native_onAudioRender(byte[] buffer, int needBytes, long wantTime);
     private native boolean native_onVideoRender(long wantTime) ;
     private native boolean native_onVideoCreate();
     private native boolean native_onVideoDestroy();
@@ -199,6 +192,16 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
                     mObserver.onCompleted(errcode);
                 }
             });
+        }
+    }
+
+    public class DisplayRootNode extends QGraphicNode {
+        DisplayRootNode() {
+            super(QEditorPlayer.this);
+        }
+
+        public void setBKColor(QVector color) {
+            setColor4(color);
         }
     }
 }

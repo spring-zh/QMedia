@@ -10,7 +10,7 @@
 
 class AudioTargetAdapter : public AudioTarget{
 public:
-    AudioTargetAdapter(jobject jtarget) ;
+    explicit AudioTargetAdapter(jobject jtarget) ;
     ~AudioTargetAdapter() ;
     bool init(AudioDescribe audioDesc) override;
 
@@ -37,7 +37,7 @@ public:
     void flush() override;
 
 protected:
-    jobject _object;
+    const JniUtils::JWeakObject _weakObj;
 };
 
 

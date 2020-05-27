@@ -10,7 +10,7 @@
 
 class VideoTargetAdapter : public  VideoTarget{
 public:
-    VideoTargetAdapter(jobject jtarget) ;
+    explicit VideoTargetAdapter(jobject jtarget) ;
     ~VideoTargetAdapter() ;
     bool start() override;
 
@@ -32,7 +32,7 @@ public:
 
 protected:
 
-    jobject _object;
+    const JniUtils::JWeakObject _weakObj;
 };
 
 

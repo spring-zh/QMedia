@@ -29,6 +29,8 @@ jobject J4AC_com_qmedia_qmediasdk_QCommon_QRange__QRange__catchAll(JNIEnv *env, 
 jobject J4AC_com_qmedia_qmediasdk_QCommon_QRange__QRange__asGlobalRef__catchAll(JNIEnv *env, jlong start, jlong end);
 jboolean J4AC_com_qmedia_qmediasdk_QCommon_QRange__isValid(JNIEnv *env, jobject thiz);
 jboolean J4AC_com_qmedia_qmediasdk_QCommon_QRange__isValid__catchAll(JNIEnv *env, jobject thiz);
+jlong J4AC_com_qmedia_qmediasdk_QCommon_QRange__getLength(JNIEnv *env, jobject thiz);
+jlong J4AC_com_qmedia_qmediasdk_QCommon_QRange__getLength__catchAll(JNIEnv *env, jobject thiz);
 jlong J4AC_com_qmedia_qmediasdk_QCommon_QRange__start__get(JNIEnv *env, jobject thiz);
 jlong J4AC_com_qmedia_qmediasdk_QCommon_QRange__start__get__catchAll(JNIEnv *env, jobject thiz);
 void J4AC_com_qmedia_qmediasdk_QCommon_QRange__start__set(JNIEnv *env, jobject thiz, jlong value);

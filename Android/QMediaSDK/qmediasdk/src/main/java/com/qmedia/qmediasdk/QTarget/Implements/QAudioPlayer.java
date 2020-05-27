@@ -27,7 +27,7 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
     private ByteBuffer audioData;
     private Thread playThread;
     private boolean abort_request = true;
-    private boolean pause_on = false;
+    private boolean pause_on = true;
     private boolean need_flush = false;
     private boolean need_set_volume = false;
     private float left_volume = 1.0f;
@@ -41,8 +41,8 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
 
     @Override
     public void run() {
-        int copy_size = 512;
-        assert ( audioData.capacity() > copy_size);
+        final int copy_size = 512;
+        assert (audioData.capacity() > copy_size);
         assert (atrack != null);
 
         android.os.Process.setThreadPriority(Process.THREAD_PRIORITY_URGENT_AUDIO);
@@ -80,7 +80,7 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
                     }
                 }
 
-                audioRender.onAudioRender(audioData, copy_size, -1);
+                audioRender.onAudioRender(audioData.array(), copy_size, -1);
                 if (need_flush){
                     need_flush = false;
                     atrack.flush();
@@ -101,8 +101,9 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
 
     @Override
     public boolean startAudio() {
+        Log.d(TAG, "startAudio");
         if (! isInit ) return false;
-
+        pause_on = false;
         abort_request = false;
         isStarted = true;
         playThread = new Thread(this);
@@ -112,7 +113,7 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
 
     @Override
     public boolean stopAudio() {
-
+        Log.d(TAG, "stopAudio");
         if (isStarted) {
             synchronized (wakeup) {
                 abort_request = true;
@@ -157,6 +158,7 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
 
     @Override
     public boolean initAudio(QAudioDescribe describe) {
+        Log.d(TAG, "initAudio samplerate:" + describe.samplerate + "channel:" + describe.nchannel);
         if (isInit) return true;
 
         this.describe = describe;
@@ -175,7 +177,7 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
                 pcm_bits = AudioFormat.ENCODING_PCM_FLOAT;
                 break;
             default:
-                return false;
+                break;
         }
         int minBufferSize = AudioTrack.getMinBufferSize(describe.samplerate, channelout, pcm_bits);
         if (minBufferSize <= 0) {

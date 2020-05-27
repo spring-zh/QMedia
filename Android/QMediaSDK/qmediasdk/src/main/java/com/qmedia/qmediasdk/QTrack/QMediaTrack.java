@@ -15,10 +15,6 @@ public class QMediaTrack {
     public QMediaTrack(QMediaSource mediaSource) {
         this.mediaSource = mediaSource;
         mPtr = native_create(mediaSource);
-        boolean bRet = native_prepare();
-        if (bRet) {
-            Log.e(TAG, "QMediaTrack prepare failed..");
-        }
     }
 
     public QMediaSource getMediaSource() {
@@ -40,8 +36,10 @@ public class QMediaTrack {
             if (mediaSource.getAudioDescribe() != null)
                 audio = new QAudioTrackNode(this, combiner);
             return true;
+        }else {
+            Log.e(TAG, "QMediaTrack prepare failed..");
+            return false;
         }
-        return false;
     }
     public boolean setTimeTo(long mSec) {
         return native_setTimeTo(mSec);

@@ -14,7 +14,7 @@ public class QGLContext {
         return qglContext;
     }
 
-    EGLContext eglContext() {
+    public EGLContext eglContext() {
         return eglCore.context();
     }
 

@@ -9,9 +9,9 @@
 using GraphicCore::AnimaNode;
 
 #define NATIVE_FUNCTION(retT, name)\
-JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QGraphic_QNodeAnimator_##name
+extern "C" JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QGraphic_QNodeAnimator_##name
 
-NATIVE_FUNCTION(jlong, native_create)(JNIEnv *env, jobject thiz, jstring jproperty, jobject jtimeRang, jobject jbeginPoint, jobject jendPoint,
+NATIVE_FUNCTION(jlong, native_1create)(JNIEnv *env, jobject thiz, jstring jproperty, jobject jtimeRang, jobject jbeginPoint, jobject jendPoint,
                                       jint functionType, jboolean repleat ,jstring jname)
 {
     AnimaNode::Animator* animator = new AnimaNode::Animator();
@@ -42,7 +42,7 @@ NATIVE_FUNCTION(jlong, native_create)(JNIEnv *env, jobject thiz, jstring jproper
     return reinterpret_cast<jlong>(animator);
 }
 
-NATIVE_FUNCTION(void , native_release)(JNIEnv *env, jobject thiz)
+NATIVE_FUNCTION(void , native_1release)(JNIEnv *env, jobject thiz)
 {
     AnimaNode::Animator* animator = reinterpret_cast<AnimaNode::Animator*>(JniUtils::getObjectPtr(env, thiz));
     if (animator) {

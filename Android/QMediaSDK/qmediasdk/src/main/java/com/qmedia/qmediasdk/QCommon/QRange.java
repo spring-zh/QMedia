@@ -14,6 +14,10 @@ public class QRange {
         return end > start;
     }
 
+    public long getLength() {
+        return end - start;
+    }
+
     public long start;
     public long end;
 }

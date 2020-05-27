@@ -2,12 +2,11 @@
 // Created by spring on 2020/5/21.
 //
 
-#include "QMediaFactory_Jni.h"
 #include "EffectEditor/EffectCombiner.h"
 
 #define NATIVE_FUNCTION(retT, name)\
-JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QEditor_QMediaFactory_##name
-
+extern "C" JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QEditor_QMediaFactory_##name
+#if 0
 NATIVE_FUNCTION(jlong, native_create)(JNIEnv *env, jobject thiz)
 {
     QMediaFactory_Jni *mediaFactory = new QMediaFactory_Jni();
@@ -23,7 +22,7 @@ NATIVE_FUNCTION(void, native_release)(JNIEnv *env, jobject thiz)
     JniUtils::setObjectPtr(env, thiz, 0);
 }
 
-NATIVE_FUNCTION(void, native_setVideoTarget)(JNIEnv *env, jobject thiz, jobject jtarget, jobject jcombiner)
+NATIVE_FUNCTION(void, native_setVideoTarget)(JNIEnv *env, jobject thiz, jobject jtarget/*, jobject jcombiner*/)
 {
     QMediaFactory_Jni * mediaFactory = reinterpret_cast<QMediaFactory_Jni *>(JniUtils::getObjectPtr(env, thiz));
     std::shared_ptr<EffectCombiner>* combiner_ptr = reinterpret_cast< std::shared_ptr<EffectCombiner> *>(JniUtils::getObjectPtr(env, jcombiner));
@@ -34,7 +33,7 @@ NATIVE_FUNCTION(void, native_setVideoTarget)(JNIEnv *env, jobject thiz, jobject 
     }
 }
 
-NATIVE_FUNCTION(void, native_setAudioTarget)(JNIEnv *env, jobject thiz, jobject jtarget, jobject jcombiner)
+NATIVE_FUNCTION(void, native_setAudioTarget)(JNIEnv *env, jobject thiz, jobject jtarget/*, jobject jcombiner*/)
 {
     QMediaFactory_Jni * mediaFactory = reinterpret_cast<QMediaFactory_Jni *>(JniUtils::getObjectPtr(env, thiz));
     std::shared_ptr<EffectCombiner>* combiner_ptr = reinterpret_cast< std::shared_ptr<EffectCombiner> *>(JniUtils::getObjectPtr(env, jcombiner));
@@ -44,3 +43,5 @@ NATIVE_FUNCTION(void, native_setAudioTarget)(JNIEnv *env, jobject thiz, jobject 
             (*combiner_ptr)->setAudioTarget(mediaFactory->_audioTargetAdapter.get());
     }
 }
+
+#endif

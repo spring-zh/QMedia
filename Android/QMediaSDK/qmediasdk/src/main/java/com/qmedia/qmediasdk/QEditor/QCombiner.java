@@ -1,7 +1,11 @@
 package com.qmedia.qmediasdk.QEditor;
 
+import android.util.Log;
+
+import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
+import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
 import com.qmedia.qmediasdk.QSource.QVideoDescribe;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;
@@ -10,14 +14,21 @@ import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 
 import java.util.ArrayList;
 
-public class QCombiner {
+public class QCombiner extends QMediaFactory{
+    private static final String TAG = "QCombiner";
+    protected QCombiner() {
+        super.setCombiner(this);
+        Log.i(TAG, "QMediaSDK Laod version " + QMediaSDK.SDK_VERSION);
+    }
 
     public void setVideoTarget(QVideoTarget videoTarget) {
-        mediaFactory.setVideoTarget(videoTarget, this);
+        super.videoTarget = videoTarget;
+        native_setVideoTarget(videoTarget);
     }
 
     public void setAudioTarget(QAudioTarget audioTarget) {
-        mediaFactory.setAudioTarget(audioTarget, this);
+        super.audioTarget = audioTarget;
+        native_setAudioTarget(audioTarget);
     }
 
     public void setVideoConfig(QVideoDescribe describe) {
@@ -31,32 +42,23 @@ public class QCombiner {
     public ArrayList<QMediaTrack> getMediaTracks() {
         return mediaTracks;
     }
-    public void addMediaTrack(QMediaTrack track) {
-        if (! mediaTracks.contains(track)) {
+    public boolean addMediaTrack(QMediaTrack track) {
+        boolean bRet = super.addMediaTrack(track);
+        if (bRet) {
             native_addMediaTrack(track);
-            mediaTracks.add(track);
+            if (track.getAudio() != null)
+                native_attachAudioNode(track.getAudio(), null);
         }
+        return bRet;
     }
-    public void removeMediaTrack(QMediaTrack track) {
-        if (mediaTracks.contains(track)) {
+    public boolean removeMediaTrack(QMediaTrack track) {
+        boolean bRet = super.removeMediaTrack(track);
+        if (bRet) {
             native_removeMediaTrack(track);
-            mediaTracks.remove(track);
+            if (track.getAudio() != null)
+                native_detachAudioNode(track.getAudio());
         }
-    }
-
-    //TODO: graphicNodes @QGraphicNode
-    public ArrayList<QGraphicNode> getGraphicNodes() {
-        return graphicNodes;
-    }
-    public void addGraphicNode(QGraphicNode node) {
-        if (! graphicNodes.contains(node)) {
-            graphicNodes.add(node);
-        }
-    }
-    public void removeGraphicNode(QGraphicNode node) {
-        if (graphicNodes.contains(node)) {
-            graphicNodes.remove(node);
-        }
+        return bRet;
     }
 
     public boolean attachRenderNode(QGraphicNode child, QGraphicNode parent) {
@@ -75,11 +77,6 @@ public class QCombiner {
         return native_getMediaTimeRange();
     }
 
-    protected ArrayList<QMediaTrack> mediaTracks = new ArrayList<>();
-    protected ArrayList<QGraphicNode> graphicNodes = new ArrayList<>();
-
-    protected QMediaFactory mediaFactory = new QMediaFactory();
-
     //TODO: native
     protected native void native_setVideoConfig(QVideoDescribe describe);
     protected native void native_setAudioConfig(QAudioDescribe describe);
@@ -89,8 +86,11 @@ public class QCombiner {
     protected native void native_removeMediaTrack(QMediaTrack track);
     protected native boolean native_attachRenderNode(QGraphicNode child, QGraphicNode parent);
     protected native boolean native_detachRenderNode(QGraphicNode current);
+    protected native boolean native_attachAudioNode(QAudioTrackNode child, QAudioTrackNode parent);
+    protected native boolean native_detachAudioNode(QAudioTrackNode current);
     protected native long native_getPosition();
     protected native QRange native_getMediaTimeRange();
+    protected native void native_target_release();
     //native ptr : don't modify it
     protected long mPtr = 0;
 }

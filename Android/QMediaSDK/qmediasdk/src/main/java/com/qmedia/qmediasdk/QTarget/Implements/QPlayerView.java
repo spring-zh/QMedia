@@ -4,9 +4,11 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.opengl.EGL14;
-import javax.microedition.khronos.egl.EGLContext;
+
+import android.opengl.EGLConfig;
+import android.opengl.EGLContext;
+import android.opengl.EGLDisplay;
 import android.opengl.GLES20;
-import android.opengl.GLSurfaceView;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -14,6 +16,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 
 import com.qmedia.qmediasdk.QCommon.QAspectLayout;
+import com.qmedia.qmediasdk.QCommon.QGLContext;
 import com.qmedia.qmediasdk.QSource.QMediaDescribe;
 import com.qmedia.qmediasdk.QSource.QVideoDescribe;
 import com.qmedia.qmediasdk.QTarget.QVideoRender;
@@ -28,21 +31,16 @@ import java.nio.ByteBuffer;
 import java.util.Timer;
 import java.util.TimerTask;
 
-import javax.microedition.khronos.egl.EGL10;
-import javax.microedition.khronos.egl.EGLConfig;
-import javax.microedition.khronos.egl.EGLDisplay;
-import javax.microedition.khronos.opengles.GL10;
-
 /**
  * Created by spring on 2017/6/19.
  */
 
-public class QPlayerView extends QAspectLayout implements GLSurfaceView.Renderer , QVideoTarget {
+public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Renderer , QVideoTarget {
 
     private static final String TAG = "QPlayerView";
     private static final boolean VERBOSE = false;
 
-    protected GLSurfaceView mGLSurfaceView;
+    protected GLSurfaceView14 mGLSurfaceView;
     private int mPreviewWidth;
     private int mPreviewHeight;
 
@@ -62,32 +60,31 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView.Renderer
     public QPlayerView(@NonNull Context context) {
         super(context);
 
-        mGLSurfaceView = new GLSurfaceView(context);
+        mGLSurfaceView = new GLSurfaceView14(context);
         init();
     }
 
     public QPlayerView(@NonNull Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
 
-        mGLSurfaceView = new GLSurfaceView(context, attrs);
+        mGLSurfaceView = new GLSurfaceView14(context, attrs);
         init();
     }
 
     public QPlayerView(@NonNull Context context, @Nullable AttributeSet attrs, @AttrRes int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
-        mGLSurfaceView = new GLSurfaceView(context, attrs);
+        mGLSurfaceView = new GLSurfaceView14(context, attrs);
         init();
     }
 
     private void init() {
-        Log.d(TAG, "XMBaseView init");
+        Log.d(TAG, "QPlayerView init");
 
         //TODO: use customize setting
-        //EXConfigChooser config = new EXConfigChooser();
-        //mGLSurfaceView.setEGLConfigChooser(config);
-
         mGLSurfaceView.setEGLContextClientVersion(2);     // select GLES 2.0
+        mGLSurfaceView.setEGLConfigChooser(new EXConfigChooser());
+        mGLSurfaceView.setEGLContextFactory(new ShareGLContextFactory(QGLContext.shared().eglContext()));
         mGLSurfaceView.setRenderer(this);
 //        mGLSurfaceView.setRenderMode(GLSurfaceView.RENDERMODE_WHEN_DIRTY);
 
@@ -233,14 +230,14 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView.Renderer
 
 
     @Override
-    public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+    public void onSurfaceCreated(EGLConfig config) {
         GLES20.glGetFloatv(GLES20.GL_COLOR_CLEAR_VALUE, bkcolors,0);
         GLES20.glGetIntegerv(GLES20.GL_VIEWPORT, viewPort, 0);
         mVideoRender.onVideoCreate();
     }
 
     @Override
-    public void onSurfaceChanged(GL10 gl, int width, int height) {
+    public void onSurfaceChanged(int width, int height) {
         mPreviewWidth = width;
         mPreviewHeight = height;
 
@@ -250,49 +247,17 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView.Renderer
     }
 
     @Override
-    public void onDrawFrame(GL10 gl) {
+    public boolean onDrawFrame() {
 
-        GLES20.glClearColor(bkcolors[0],bkcolors[1],bkcolors[2],bkcolors[3]);
-        GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
         if (isStarted || forceUpdate){
             forceUpdate = false;
+//            GLES20.glClearColor(bkcolors[0],bkcolors[1],bkcolors[2],bkcolors[3]);
+//            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
             mVideoRender.onVideoRender(-1);
+            return true;
         }
+        return false;
     }
-
-    /**
-     * Start display TimerTask
-     */
-//    protected void displayStart(){
-//        synchronized (mDisplayLck) {
-//            if (mDisplayTimer != null)
-//                mDisplayTimer.cancel();
-//
-//            mDisplayTimer = new Timer();
-//            mDisplayTimer.schedule(new TimerTask() {
-//                @Override
-//                public void run() {
-//                    mPts += 1000/mVideodescribe.framerate; //pts plus a frame's duration
-//                    mGLSurfaceView.requestRender();
-//                }
-//            }, 0, 1000 / mDisplayFps);
-//
-//            mbDisplay = true;
-//        }
-//    }
-//    /**
-//     * Stop display TimerTask
-//     */
-//    protected void displayStop(){
-//        synchronized (mDisplayLck) {
-//            if(mDisplayTimer != null) {
-//                mDisplayTimer.cancel();
-//                mDisplayTimer = null;
-//            }
-//
-//            mbDisplay = false;
-//        }
-//    }
 
     public void queueEvent(Runnable run) {
         mGLSurfaceView.queueEvent(run);
@@ -307,24 +272,25 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView.Renderer
         removeView(mGLSurfaceView);
     }
 
-    class EXConfigChooser implements GLSurfaceView.EGLConfigChooser {
+    private static final int EGL_RECORDABLE_ANDROID = 0x3142;
+    class EXConfigChooser implements GLSurfaceView14.EGLConfigChooser {
         @Override
-        public EGLConfig chooseConfig(EGL10 egl, EGLDisplay display) {
+        public EGLConfig chooseConfig(EGLDisplay display) {
             int attribs[] = {
-                    EGL10.EGL_LEVEL, 0,
-                    EGL10.EGL_RENDERABLE_TYPE, 4,  // EGL_OPENGL_ES2_BIT
-                    EGL10.EGL_COLOR_BUFFER_TYPE, EGL10.EGL_RGB_BUFFER,
-                    EGL10.EGL_RED_SIZE, 8,
-                    EGL10.EGL_GREEN_SIZE, 8,
-                    EGL10.EGL_BLUE_SIZE, 8,
-                    EGL10.EGL_DEPTH_SIZE, 16,
-                    EGL10.EGL_SAMPLE_BUFFERS, 1,
-                    EGL10.EGL_SAMPLES, 4,  // This is for 4x MSAA.
-                    EGL10.EGL_NONE
+                    EGL14.EGL_RED_SIZE, 8,
+                    EGL14.EGL_GREEN_SIZE, 8,
+                    EGL14.EGL_BLUE_SIZE, 8,
+                    EGL14.EGL_DEPTH_SIZE, 16,
+                    EGL14.EGL_SAMPLE_BUFFERS, 1,
+//                    EGL14.EGL_SINGLE_BUFFER, 1,
+                    EGL14.EGL_SURFACE_TYPE, /*EGL14.EGL_PBUFFER_BIT |*/ EGL14.EGL_WINDOW_BIT,
+                    EGL_RECORDABLE_ANDROID, 1,
+                    EGL14.EGL_SAMPLES, 4,  // This is for 4x MSAA.
+                    EGL14.EGL_NONE
             };
             EGLConfig[] configs = new EGLConfig[1];
             int[] configCounts = new int[1];
-            egl.eglChooseConfig(display, attribs, configs, 1, configCounts);
+            EGL14.eglChooseConfig(display, attribs, 0, configs, 0,1, configCounts, 0);
 
             if (configCounts[0] == 0) {
                 // Failed! Error handling.
@@ -335,7 +301,7 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView.Renderer
         }
     }
 
-    class ShareGLContextFactory implements GLSurfaceView.EGLContextFactory {
+    class ShareGLContextFactory implements GLSurfaceView14.EGLContextFactory {
         private int EGL_CONTEXT_CLIENT_VERSION = 0x3098;
         private EGLContext mShareContext = null;
 
@@ -344,14 +310,14 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView.Renderer
         }
 
         @Override
-        public EGLContext createContext(EGL10 egl, EGLDisplay display, EGLConfig eglConfig) {
-            int[] attrib_list = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL10.EGL_NONE };
-            return egl.eglCreateContext(display, eglConfig, mShareContext, attrib_list);
+        public EGLContext createContext(EGLDisplay display, EGLConfig eglConfig) {
+            int[] attrib_list = {EGL_CONTEXT_CLIENT_VERSION, 2, EGL14.EGL_NONE };
+            return EGL14.eglCreateContext(display, eglConfig, mShareContext, attrib_list, 0);
         }
 
         @Override
-        public void destroyContext(EGL10 egl, EGLDisplay display, EGLContext context) {
-            if (!egl.eglDestroyContext(display, context)) {
+        public void destroyContext(EGLDisplay display, EGLContext context) {
+            if (!EGL14.eglDestroyContext(display, context)) {
                 Log.e("DefaultContextFactory", "display:" + display + " context: " + context);
             }
         }

@@ -26,7 +26,7 @@ public:
 
 private:
 
-    jobject _object;
+    JniUtils::JWeakObject _weakObj;
 };
 
 

@@ -1,0 +1,7 @@
+[{
+		"name":	"heibai",
+		"desc":	"heibai",
+		"textureTarget":	"GL_TEXTURE_2D",
+		"fragmentShader":	" \nprecision highp float;\nvarying highp vec2 textureCoordinate; \nuniform sampler2D inputImageTexture;\n uniform highp float alpha;\n void main()\n{\n vec4 value = texture2D(inputImageTexture, textureCoordinate);\n float v = (value.r+value.g+value.b)/3.0; gl_FragColor = vec4(v,v,v,1.0);\n} ",
+		"attrs":	[]
+	}]

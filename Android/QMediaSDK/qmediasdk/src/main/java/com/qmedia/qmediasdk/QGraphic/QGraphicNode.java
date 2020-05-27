@@ -11,11 +11,14 @@ public class QGraphicNode {
     private static final String TAG = "QGraphicNode";
     public QGraphicNode(String name, QCombiner combiner) {
         this(combiner);
-        mPtr = native_create(name);
+        mPtr = native_create();
+        setName(name);
     }
+
+    //TODO: construct this for child class
     protected QGraphicNode(QCombiner combiner) {
         weakCombiner = new WeakReference<>(combiner);
-        //TODO: construct this for child class
+        combiner.addGraphicNode(this);
     }
 
     //TODO: childrens @QGraphicNode
@@ -203,28 +206,28 @@ public class QGraphicNode {
     private ArrayList<QGraphicNode> childrens = new ArrayList();
     private ArrayList<QNodeAnimator> animators = new ArrayList();
 
-    String name;
-    QRange renderRange;
+    String name = "";
+    QRange renderRange = new QRange(0,0);
     //transform propertys setting
-    boolean visible;
+    boolean visible = false;
 
-    float rotation;
-    QVector rotation3d;
-    float scaleX;
-    float scaleY;
-    float scaleZ;
+    float rotation = 0;
+    QVector rotation3d = new QVector(0,0,0);
+    float scaleX = 1;
+    float scaleY = 1;
+    float scaleZ = 1;
 
-    QVector contentSize;
-    QVector position;
-    float positionZ;
+    QVector contentSize = new QVector(0,0);
+    QVector position = new QVector(0,0);;
+    float positionZ = 0;
 
-    QVector anchorPoint;
-    QVector color4;
-    float alpha;
+    QVector anchorPoint = new QVector(0,0);;
+    QVector color4 = new QVector(1,1,1,1);;
+    float alpha = 1;
 
 
     //naitve
-    protected native long native_create(String name);
+    protected native long native_create();
     protected native boolean native_addAnimator(QNodeAnimator animator);
     protected native boolean native_removeAnimator(QNodeAnimator animator);
 
