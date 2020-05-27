@@ -29,25 +29,27 @@ public class FrameCacheQueue<T extends HardwareDecoder.DecodedFrame> extends Lin
     @Override
     public boolean add(T cacheSample)
     {
-        boolean bRet;
+        boolean bRet = false;
         synchronized (signal) {
 
-            //find insert position
-            int pos;
-            for (pos = 0;pos < super.size(); pos++){
-                if (get(pos).mTimeMs > cacheSample.mTimeMs)
-                    break;
-            }
-            //first or insert position equal 0
-            if (pos == 0)
-                cacheTimeRange.start = cacheSample.mTimeMs;
+            if (cacheSample != null) {
+                //find insert position
+                int pos;
+                for (pos = 0;pos < super.size(); pos++){
+                    if (get(pos).mTimeMs > cacheSample.mTimeMs)
+                        break;
+                }
+                //first or insert position equal 0
+                if (pos == 0)
+                    cacheTimeRange.start = cacheSample.mTimeMs;
 
-            if (pos == super.size()){
-                cacheTimeRange.end = cacheSample.mTimeMs;
-                bRet = super.add(cacheSample);
-            }else {
-                super.add(pos, cacheSample);
-                bRet = true;
+                if (pos == super.size()){
+                    cacheTimeRange.end = cacheSample.mTimeMs;
+                    bRet = super.add(cacheSample);
+                }else {
+                    super.add(pos, cacheSample);
+                    bRet = true;
+                }
             }
             //send notify to remove()' wait
             signal.notify();

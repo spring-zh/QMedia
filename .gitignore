@@ -8,3 +8,7 @@ iOS/SDKBuild/Debug-iphoneos/*
 iOS/SDKBuild/Debug-iphonesimulator/*
 iOS/Product/Sample/QMediaSDKSample/QMediaSDKSample.xcodeproj/project.xcworkspace/*
 iOS/Product/Sample/QMediaSDKSample/QMediaSDKSample.xcodeproj/xcuserdata/*
+Android/QMediaSDK/.gradle
+Android/QMediaSDK/qmediasdk/.externalNativeBuild
+Android/QMediaSDK/qmediasdk/build
+Android/QMediaSDK/.idea

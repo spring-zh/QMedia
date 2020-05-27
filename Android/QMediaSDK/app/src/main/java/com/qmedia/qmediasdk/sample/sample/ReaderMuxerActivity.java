@@ -161,9 +161,9 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 	protected void onDestroy() {
 		super.onDestroy();
 
+		mPreviewView.onDestroy();
 		editorPlayer.stop();
 		editorPlayer.release();
-		mPreviewView.onDestroy();
 
 	}
 
@@ -173,12 +173,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 	protected void onResume() {
 		super.onResume();
 
-        /*STEP1: 自动播放*/
-//        start();
-
-		if (true) {
-			return;
-		}
+		mPreviewView.onResume();
 	}
 
 	@Override

@@ -42,6 +42,13 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
 
     private int maxInputBufferSize = 0;
 
+    private boolean isVaild = true;
+    private boolean isEnd = false;
+
+    public boolean isEnd() {
+        return isEnd;
+    }
+
     public MediaStream(MediaFormat format, int index) {
         mFormat = format;
         String mime = format.getString(MediaFormat.KEY_MIME);
@@ -52,8 +59,10 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
             mFormat.setInteger(MediaFormat.KEY_PCM_ENCODING, AudioFormat.ENCODING_PCM_16BIT);
             mAudioDescribe = MediaFormatToAudioDescribe(format);
             mIsAudio = true;
-        }else
+        }else {
+            isVaild = false;
             return;
+        }
         maxInputBufferSize = format.getInteger(MediaFormat.KEY_MAX_INPUT_SIZE);
         mDurationUs = format.getLong(MediaFormat.KEY_DURATION);
         mTrackId = index;
@@ -62,6 +71,10 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
 
         //init decoder
         mMediaDecoder = new HardwareDecoder(this, mIsAudio);
+    }
+
+    public boolean isVaild() {
+        return isVaild;
     }
 
     public int getMaxInputBufferSize() {
@@ -79,6 +92,7 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
             if (!mMediaDecoder.start(mFormat, output))
                 return;
             mbStart = true;
+            isEnd = false;
             mDecodeThread = new Thread(this);
             mDecodeThread.start();
         }
@@ -102,6 +116,7 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
 
     //flush packets、decoder and output frames data
     public void flush(){
+        isEnd = false;
         mPacketQueue.clear();
         mFrameQueue.setAbort(true);
         mFrameQueue.clear();
@@ -147,12 +162,15 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
             decodedFrame.updateImage(false);
             return;
         }
+        decodedFrame.updateImage(true);
         mFrameQueue.add(decodedFrame);
     }
 
     @Override
     public void OnDecodecEnd() {
-
+        Log.i(TAG,"OnDecodecEnd type " + (mIsAudio? "audio": "video"));
+        isEnd = true;
+        mFrameQueue.add(null);
     }
 
     public static QVideoDescribe MediaFormatToVideoDescribe(MediaFormat mediaFormat) {

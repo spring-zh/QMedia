@@ -171,6 +171,13 @@ public class HardwareDecoder {
                             checkOutputAndCallback(outIndex, outputBuffers, info);
                     }
 
+                    if (0 != (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM)){
+                        //TODO: read end of stream
+                        mListener.OnDecodecEnd();
+                        return false;
+                    }else if (packet == null)
+                        break;
+
                     Thread.sleep(50);//don't dequeue buffer too fast
                 }
 
@@ -179,8 +186,9 @@ public class HardwareDecoder {
                         ByteBuffer buffer = inputBuffers[index];// mDecoder.getInputBuffer(index);
                         buffer.put(BuffIn);
                         mDecoder.queueInputBuffer(index, 0, BuffIn.limit(), packet.pts, 0);
-                    }else
+                    }else {
                         mDecoder.queueInputBuffer(index, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                    }
                 }
 
                 int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
@@ -230,7 +238,7 @@ public class HardwareDecoder {
                 audioBuffer.mAudioFmt = format.containsKey(MediaFormat.KEY_PCM_ENCODING)?
                         format.getInteger(MediaFormat.KEY_PCM_ENCODING) : AudioFormat.ENCODING_PCM_16BIT;
                 audioBuffer.size = info.size;
-                audioBuffer.updateImage(false);
+//                audioBuffer.updateImage(false);
                 mListener.OnDecodecFrame(audioBuffer);
 
             }else {
@@ -240,14 +248,14 @@ public class HardwareDecoder {
                 decodedFrame.rotation = format.containsKey(MediaFormat.KEY_ROTATION)?
                         format.getInteger(MediaFormat.KEY_ROTATION) : 0;
                 if (mUseBuffer){
-                    ByteBuffer cachebuffer = ByteBuffer.allocate(info.size);
+                    ByteBuffer cachebuffer = ByteBuffer.allocateDirect(info.size);
                     cachebuffer.clear();
                     cachebuffer.put(outputBuffers[outIndex]);
                     decodedFrame.buffer = cachebuffer;
                     decodedFrame.isbuffer = true;
                     decodedFrame.size = info.size;
                     decodedFrame.mIndex = -1;
-                    decodedFrame.updateImage(false);
+//                    decodedFrame.updateImage(false);
                 }
                 mListener.OnDecodecFrame(decodedFrame);
             }

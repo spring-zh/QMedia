@@ -207,6 +207,7 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
 //                mVideoRender.onVideoCreate();
             }
         });
+        forceUpdate = true;
     }
 
     //activity live
