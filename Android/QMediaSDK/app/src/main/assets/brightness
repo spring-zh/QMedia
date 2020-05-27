@@ -1,0 +1,9 @@
+[{
+		"name":	"Brightness",
+		"desc":	"Brightness",
+		"textureTarget":	"GL_TEXTURE_2D",
+		"fragmentShader":	"varying highp vec2 textureCoordinate;\n \n uniform sampler2D inputImageTexture;\n uniform lowp float brightness;\n \n void main()\n {\n     lowp vec4 textureColor = texture2D(inputImageTexture, textureCoordinate);\n     \n     gl_FragColor = vec4((textureColor.rgb + vec3(brightness)), textureColor.w);\n }",
+		"attrs":	[{
+				"brightness":	[0.5]
+			}]
+	}]

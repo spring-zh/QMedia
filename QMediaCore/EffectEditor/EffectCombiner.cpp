@@ -85,7 +85,7 @@ _state(CombinerState::Idle)
     _audioConfig.nchannel = 2;
     _audioConfig.bitwidth = 16;
     _audioConfig.codectype = AudioCodecType::kAAC;
-    _audioConfig.sampleFmt = RawAudioFormat::kS16;
+    _audioConfig.format = RawAudioFormat::kS16;
     _displayLayer = std::shared_ptr<RenderLayer>(new RenderLayer(this));
     _threadTask.setTaskCallback(&EffectCombiner::cmdCallback,this);
 }

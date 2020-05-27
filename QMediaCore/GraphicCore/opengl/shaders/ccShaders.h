@@ -29,8 +29,8 @@ THE SOFTWARE.
 #define __CCSHADER_H__
 /// @cond DO_NOT_SHOW
 
-#include "opengl/GLMacros.h"
-#include "base/Macros.h"
+#include "GraphicCore/opengl/GLMacros.h"
+#include "GraphicCore/base/Macros.h"
 
 /**
  * @addtogroup renderer

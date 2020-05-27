@@ -78,6 +78,17 @@ protected:
 //    ~Storage(){}
 //};
 
+class CallOnce {
+public:
+    template <class Callable, typename... Args >
+    explicit CallOnce(Callable&& __func, Args&&... __args){
+        std::forward<Callable>(__func)(std::forward<Args>(__args)...);
+//        std::function<void(void)> call = std::bind(__func, __args...);
+//        call();
+    }
+    ~CallOnce() = default;
+};
+
 constexpr unsigned BitValue(unsigned n) {
     return 1 << n;
 }
@@ -106,4 +117,4 @@ std::string ValueToString(const T &value){
 
 #define GET_ARRAY_COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
 
-#define FLOAT_ISEQUAL(val, eqVal) (fabs(val - eqVal) < 1e-5)
+#define FLOAT_ISEQUAL(val, eqVal) (fabs(val - eqVal) < FLT_EPSILON)

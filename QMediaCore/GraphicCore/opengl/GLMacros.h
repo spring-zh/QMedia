@@ -10,7 +10,7 @@
 #define GRAPHICCORE_GLMACROS_H
 
 #include "Utils/PlatformConfig.h"
-#include "../base/Macros.h"
+#include "GraphicCore/base/Macros.h"
 
 #if TARGET_PLATFORM == PLATFORM_IOS
 

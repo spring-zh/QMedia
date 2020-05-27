@@ -9,9 +9,8 @@
 #ifndef GRAPHICCORE_COLORTYPES_H
 #define GRAPHICCORE_COLORTYPES_H
 
-#include <OpenGLES/ES2/gl.h>
-#include "Macros.h"
-#include "../math/CCGeometry.h"
+#include "GraphicCore/opengl/GLMacros.h"
+#include "GraphicCore/math/CCGeometry.h"
 
 GRAPHICCORE_BEGIN
 

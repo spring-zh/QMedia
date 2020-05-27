@@ -1,0 +1,278 @@
+package com.qmedia.qmediasdk.QCommon;
+
+import android.media.AudioFormat;
+import android.media.MediaCodec;
+import android.media.MediaCodecInfo;
+import android.media.MediaFormat;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
+import android.util.Log;
+import android.view.Surface;
+
+import java.lang.ref.WeakReference;
+import java.nio.ByteBuffer;
+
+public class HardwareDecoder {
+    private static  String TAG = "MediaDecoder";
+
+    public interface DecodecFrameListener {
+        void OnDecodecFrame(DecodedFrame decodedFrame);
+        void OnDecodecEnd();
+    }
+
+    static public class EncodedPacket {
+        public EncodedPacket(ByteBuffer buffer, int size, long pts, long dts, int flag){
+            this.buffer = buffer;
+            this.size = size;
+            this.dts = this.pts = pts;
+            this.dts = dts;
+            this.flag = flag;
+        }
+        public ByteBuffer buffer;
+        public int size;
+        public long pts;
+        public long dts;
+        public int flag;
+    }
+
+    static public class DecodedFrame {
+        public DecodedFrame(@NonNull HardwareDecoder decoder, int imgIndex, long timeMs, int flags){
+            _weakDecoder = new WeakReference<>(decoder);
+            mIndex = imgIndex;
+            mTimeMs = timeMs;
+            mFlags = flags;
+        }
+        public boolean updateImage(boolean bRender){
+            boolean bRet = false;
+            if (_weakDecoder.get() != null) {
+                bRet = _weakDecoder.get().updateImage(this, bRender);
+                mIndex = -1;
+            }
+            return bRet;
+        }
+        private WeakReference<HardwareDecoder>  _weakDecoder;
+        public int mIndex;
+        public long mTimeMs;
+        public int mFlags;
+
+        public int width;
+        public int height;
+        public int rotation;
+
+        public int textureId;
+        //if use buffer cache
+        public boolean isbuffer;
+        public ByteBuffer buffer;
+        public int size;
+    }
+
+    static public class DecodedAudioBuffer extends DecodedFrame {
+        public DecodedAudioBuffer(@NonNull HardwareDecoder decoder, int imgIndex, long timeMs, int flags, ByteBuffer buffer){
+            super(decoder,imgIndex,timeMs,flags);
+            isbuffer = true;
+            this.buffer = buffer;
+        }
+
+        public int mChannels;
+        public int mAudioFmt;
+        public int mSamplerate;
+
+    }
+
+    private MediaCodec mDecoder = null;
+    private boolean mStarting = false;
+    private boolean mAbout = true;
+    private DecodecFrameListener mListener;
+    private boolean mUseBuffer = true;
+    private boolean mIsAudio;
+
+    public HardwareDecoder(@NonNull DecodecFrameListener listener, boolean isAudio){
+        mListener = listener;
+        mIsAudio = isAudio;
+    }
+
+    public boolean start(MediaFormat format, Surface surface){
+        String mime = format.getString(MediaFormat.KEY_MIME);
+        synchronized (this){
+            try {
+                mDecoder = MediaCodec.createDecoderByType(mime);
+                if(surface != null) mUseBuffer = false;
+                mDecoder.configure(format, surface, null, 0);
+                mDecoder.start();
+                mStarting = true;
+                mAbout = false;
+                return true;
+            }
+            catch (Exception e){
+                e.printStackTrace();
+                if (mDecoder != null)
+                    mDecoder.release();
+                return false;
+            }
+        }
+    }
+
+    public void stop(){
+        synchronized (this) {
+            mAbout = true;
+            if (mDecoder != null) {
+                mDecoder.stop();
+            }
+            mStarting = false;
+        }
+    }
+
+    public void flush(){
+        synchronized (this) {
+            if (mDecoder != null) {
+                mDecoder.flush();
+            }
+        }
+    }
+
+    public void release(){
+        synchronized (this) {
+            if (mDecoder != null) {
+                mDecoder.release();
+            }
+            mStarting = false;
+            mAbout = true;
+        }
+    }
+
+    //input null packet to wait for decoder finish output
+    public boolean decodePacket(@Nullable EncodedPacket packet){
+        synchronized (this) {
+            if (!mStarting || mDecoder == null)
+                return false;
+
+            try {
+
+                ByteBuffer[] inputBuffers = mDecoder.getInputBuffers();
+                ByteBuffer[] outputBuffers = mDecoder.getOutputBuffers();
+                MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
+
+                ByteBuffer BuffIn = (packet==null? null : packet.buffer);
+
+                int index = -1;
+                while (!mAbout && (index = mDecoder.dequeueInputBuffer(1000)) < 0) {
+                    int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
+                    switch (outIndex) {
+                        case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
+                            inputBuffers = mDecoder.getInputBuffers();
+                            break;
+                        case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
+                            MediaFormat mediaFormat = mDecoder.getOutputFormat();
+                            Log.e(TAG, "KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
+                            break;
+                        case MediaCodec.INFO_TRY_AGAIN_LATER:
+                            break;
+                        default:
+                            checkOutputAndCallback(outIndex, outputBuffers, info);
+                    }
+
+                    Thread.sleep(50);//don't dequeue buffer too fast
+                }
+
+                if (0 <= index) {
+                    if (BuffIn != null) {
+                        ByteBuffer buffer = inputBuffers[index];// mDecoder.getInputBuffer(index);
+                        buffer.put(BuffIn);
+                        mDecoder.queueInputBuffer(index, 0, BuffIn.limit(), packet.pts, 0);
+                    }else
+                        mDecoder.queueInputBuffer(index, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                }
+
+                int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
+                switch (outIndex) {
+                    case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
+                        outputBuffers = mDecoder.getOutputBuffers();
+                        return false;
+                    case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
+                        MediaFormat mediaFormat = mDecoder.getOutputFormat();
+                        Log.e(TAG, "KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
+                        return false;
+                    case MediaCodec.INFO_TRY_AGAIN_LATER:
+                        return false;
+                    default:
+                        checkOutputAndCallback(outIndex, outputBuffers, info);
+                }
+
+                if (0 != (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM)){
+                    //TODO: read end of stream
+                    mListener.OnDecodecEnd();
+                }
+
+            } catch (Exception e) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    private void checkOutputAndCallback(int outIndex, ByteBuffer[] outputBuffers, MediaCodec.BufferInfo info){
+        long realTimeMs = info.presentationTimeUs / 1000;
+        realTimeMs = realTimeMs < 0 ? 0 : realTimeMs;
+
+        if (info.size <= 0 || outIndex < 0){
+            //end of stream
+
+        }else if(mListener != null) {
+
+            MediaFormat format = mDecoder.getOutputFormat();
+            if (mIsAudio){
+                ByteBuffer cachebuffer = ByteBuffer.allocateDirect(info.size);
+                cachebuffer.clear();
+                cachebuffer.put(outputBuffers[outIndex]);
+                DecodedAudioBuffer audioBuffer = new DecodedAudioBuffer(this, outIndex,realTimeMs,info.flags,cachebuffer);
+                audioBuffer.mChannels = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
+                audioBuffer.mSamplerate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
+                audioBuffer.mAudioFmt = format.containsKey(MediaFormat.KEY_PCM_ENCODING)?
+                        format.getInteger(MediaFormat.KEY_PCM_ENCODING) : AudioFormat.ENCODING_PCM_16BIT;
+                audioBuffer.size = info.size;
+                audioBuffer.updateImage(false);
+                mListener.OnDecodecFrame(audioBuffer);
+
+            }else {
+                DecodedFrame decodedFrame = new DecodedFrame(this, outIndex,realTimeMs,info.flags);
+                decodedFrame.width = format.getInteger(MediaFormat.KEY_WIDTH);
+                decodedFrame.height = format.getInteger(MediaFormat.KEY_HEIGHT);
+                decodedFrame.rotation = format.containsKey(MediaFormat.KEY_ROTATION)?
+                        format.getInteger(MediaFormat.KEY_ROTATION) : 0;
+                if (mUseBuffer){
+                    ByteBuffer cachebuffer = ByteBuffer.allocate(info.size);
+                    cachebuffer.clear();
+                    cachebuffer.put(outputBuffers[outIndex]);
+                    decodedFrame.buffer = cachebuffer;
+                    decodedFrame.isbuffer = true;
+                    decodedFrame.size = info.size;
+                    decodedFrame.mIndex = -1;
+                    decodedFrame.updateImage(false);
+                }
+                mListener.OnDecodecFrame(decodedFrame);
+            }
+        }
+    }
+
+    private boolean updateImage(DecodedFrame decodedFrame, boolean brender){
+        if (decodedFrame.mIndex >= 0){
+            try {
+                mDecoder.releaseOutputBuffer(decodedFrame.mIndex,brender);
+                decodedFrame.mIndex = -1;
+                return true;
+            }catch (IllegalStateException e) {
+                e.printStackTrace();
+            }
+        }
+        return false;
+    }
+
+    private boolean isColorFormatSupported(int colorFormat, MediaCodecInfo.CodecCapabilities caps) {
+        for (int c : caps.colorFormats) {
+            if (c == colorFormat) {
+                return true;
+            }
+        }
+        return false;
+    }
+}

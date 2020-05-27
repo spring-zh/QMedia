@@ -28,7 +28,7 @@ const struct VideoDescribe XMToVideoDescribe(QVideoDescribe* xmdesc)
 
 QAudioDescribe* audioDescribeToXM(struct AudioDescribe desc)
 {
-    return [[QAudioDescribe alloc] initWithParamenters:(QAudioCodec)desc.codectype rawFormat:(QRawAudioFormat)desc.sampleFmt
+    return [[QAudioDescribe alloc] initWithParamenters:(QAudioCodec)desc.codectype rawFormat:(QRawAudioFormat)desc.format
     samplerate:desc.samplerate nchannel:desc.nchannel bitrate:desc.bitrate];
 }
 
@@ -36,7 +36,7 @@ const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc)
 {
     struct AudioDescribe audioDesc;
     audioDesc.codectype = (AudioCodecType)xmdesc.codec;
-    audioDesc.sampleFmt = (RawAudioFormat)xmdesc.rawFormat;
+    audioDesc.format = (RawAudioFormat)xmdesc.rawFormat;
     audioDesc.samplerate = xmdesc.samplerate;
     audioDesc.nchannel = xmdesc.nchannel;
     audioDesc.bitwidth = 16;
@@ -69,7 +69,7 @@ width:(int)width height:(int)height bitrate:(int)bitrate
 @implementation QAudioDescribe
 
 - (instancetype)initWithParamenters:(QAudioCodec)codec rawFormat:(QRawAudioFormat)rawFormat
-samplerate:(float)samplerate nchannel:(int)nchannel bitrate:(int)bitrate
+samplerate:(int)samplerate nchannel:(int)nchannel bitrate:(int)bitrate
 {
     if (self = [super init]) {
         _codec = codec;

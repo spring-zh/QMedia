@@ -21,8 +21,8 @@ This file was modified to fit the cocos2d-x project
 #include "MathUtil.h"
 #include "Utils/PlatformConfig.h"
 
-#if (TARGET_PLATFORM == PLATFORM_ANDROID) || defined (__arm64__)
-//#include <cpu-features.h>
+#if (TARGET_PLATFORM == PLATFORM_ANDROID)
+#include <cpu-features.h>
 #endif
 
 //#define USE_NEON32        : neon 32 code will be used

@@ -52,6 +52,7 @@ enum VideoRotation {
 struct VideoDescribe
 {
 	VideoCodecType codectype;
+	RawVideoFormat format;
 	VideoRotation rotation;
 	float framerate;
 	int width;
@@ -96,7 +97,7 @@ enum ChannelLayout {
 struct AudioDescribe
 {
 	AudioCodecType codectype;
-    RawAudioFormat sampleFmt;
+    RawAudioFormat format;
 	int samplerate;
 	int nchannel;
 	int bitwidth;
