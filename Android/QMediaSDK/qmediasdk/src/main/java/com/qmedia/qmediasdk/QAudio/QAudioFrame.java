@@ -13,27 +13,27 @@ public class QAudioFrame {
         this.size = size;
         this.timestamp = timestamp;
     }
-    int channels() {
+    public int channels() {
         return channel;
     }
-    int sampleRate() {
+    public int sampleRate() {
         return sampleRate;
     }
-    int sampleBits() {
+    public int sampleBits() {
         return sampleBits;
     }
-    int samples() {
+    public int samples() {
         return samplesInFrame;
     }
 
-    long timestamp() {
+    public long timestamp() {
         return timestamp;
     }
 
-    ByteBuffer buffer() {
+    public ByteBuffer buffer() {
         return buffer;
     }
-    int Size() {
+    public int Size() {
         return size;
     }
 

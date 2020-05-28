@@ -148,7 +148,7 @@ public class HardwareDecoder {
             ByteBuffer BuffIn = (packet==null? null : packet.buffer);
             int index = mDecoder.dequeueInputBuffer(1000);
             if (index >= 0) {
-                iRet = 1;
+                iRet = 0;
                 if (BuffIn != null) {
                     ByteBuffer buffer = inputBuffers[index];// mDecoder.getInputBuffer(index);
                     buffer.put(BuffIn);
@@ -265,48 +265,54 @@ public class HardwareDecoder {
         return true;
     }
 
+    private DecodedAudioBuffer makeAudioFrame(int outIndex, ByteBuffer[] outputBuffers, MediaCodec.BufferInfo info ,MediaFormat format, long realTimeMs)
+    {
+        ByteBuffer cachebuffer = ByteBuffer.allocateDirect(info.size);
+        cachebuffer.clear();
+        cachebuffer.put(outputBuffers[outIndex]);
+        DecodedAudioBuffer audioBuffer = new DecodedAudioBuffer(this, outIndex,realTimeMs,info.flags,cachebuffer);
+        audioBuffer.mChannels = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
+        audioBuffer.mSamplerate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
+        audioBuffer.mAudioFmt = format.containsKey(MediaFormat.KEY_PCM_ENCODING)?
+                format.getInteger(MediaFormat.KEY_PCM_ENCODING) : AudioFormat.ENCODING_PCM_16BIT;
+        audioBuffer.size = info.size;
+        return audioBuffer;
+    }
+
+    private DecodedFrame makeVideoFrame(int outIndex, ByteBuffer[] outputBuffers, MediaCodec.BufferInfo info ,MediaFormat format, long realTimeMs)
+    {
+        DecodedFrame decodedFrame = new DecodedFrame(this, outIndex,realTimeMs,info.flags);
+        decodedFrame.width = format.getInteger(MediaFormat.KEY_WIDTH);
+        decodedFrame.height = format.getInteger(MediaFormat.KEY_HEIGHT);
+        decodedFrame.rotation = format.containsKey(MediaFormat.KEY_ROTATION)?
+                format.getInteger(MediaFormat.KEY_ROTATION) : 0;
+        if (mUseBuffer){
+            ByteBuffer cachebuffer = ByteBuffer.allocateDirect(info.size);
+            cachebuffer.clear();
+            cachebuffer.put(outputBuffers[outIndex]);
+            decodedFrame.buffer = cachebuffer;
+            decodedFrame.isbuffer = true;
+            decodedFrame.size = info.size;
+            decodedFrame.mIndex = -1;
+        }
+        return decodedFrame;
+    }
+
     private void checkOutputAndCallback(int outIndex, ByteBuffer[] outputBuffers, MediaCodec.BufferInfo info){
         long realTimeMs = info.presentationTimeUs / 1000;
         realTimeMs = realTimeMs < 0 ? 0 : realTimeMs;
 
         if (info.size <= 0 || outIndex < 0){
             //end of stream
-
-        }else if(mListener != null) {
-
-            MediaFormat format = mDecoder.getOutputFormat();
-            if (mIsAudio){
-                ByteBuffer cachebuffer = ByteBuffer.allocateDirect(info.size);
-                cachebuffer.clear();
-                cachebuffer.put(outputBuffers[outIndex]);
-                DecodedAudioBuffer audioBuffer = new DecodedAudioBuffer(this, outIndex,realTimeMs,info.flags,cachebuffer);
-                audioBuffer.mChannels = format.getInteger(MediaFormat.KEY_CHANNEL_COUNT);
-                audioBuffer.mSamplerate = format.getInteger(MediaFormat.KEY_SAMPLE_RATE);
-                audioBuffer.mAudioFmt = format.containsKey(MediaFormat.KEY_PCM_ENCODING)?
-                        format.getInteger(MediaFormat.KEY_PCM_ENCODING) : AudioFormat.ENCODING_PCM_16BIT;
-                audioBuffer.size = info.size;
-//                audioBuffer.updateImage(false);
-                mListener.OnDecodecFrame(audioBuffer);
-
-            }else {
-                DecodedFrame decodedFrame = new DecodedFrame(this, outIndex,realTimeMs,info.flags);
-                decodedFrame.width = format.getInteger(MediaFormat.KEY_WIDTH);
-                decodedFrame.height = format.getInteger(MediaFormat.KEY_HEIGHT);
-                decodedFrame.rotation = format.containsKey(MediaFormat.KEY_ROTATION)?
-                        format.getInteger(MediaFormat.KEY_ROTATION) : 0;
-                if (mUseBuffer){
-                    ByteBuffer cachebuffer = ByteBuffer.allocateDirect(info.size);
-                    cachebuffer.clear();
-                    cachebuffer.put(outputBuffers[outIndex]);
-                    decodedFrame.buffer = cachebuffer;
-                    decodedFrame.isbuffer = true;
-                    decodedFrame.size = info.size;
-                    decodedFrame.mIndex = -1;
-//                    decodedFrame.updateImage(false);
-                }
-                mListener.OnDecodecFrame(decodedFrame);
-            }
+            return;
         }
+        DecodedFrame outframe;
+        if (mIsAudio) {
+            outframe = makeAudioFrame(outIndex,outputBuffers,info, mDecoder.getOutputFormat(),realTimeMs);
+        }else
+            outframe = makeVideoFrame(outIndex,outputBuffers,info, mDecoder.getOutputFormat(),realTimeMs);
+
+        mListener.OnDecodecFrame(outframe);
     }
 
     private boolean updateImage(DecodedFrame decodedFrame, boolean brender){

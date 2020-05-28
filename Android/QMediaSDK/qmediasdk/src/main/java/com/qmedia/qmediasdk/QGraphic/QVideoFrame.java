@@ -26,28 +26,28 @@ public class QVideoFrame {
         this.timestamp = timestamp;
     }
 
-    int width() {
+    public int width() {
         return width;
     }
-    int height() {
+    public int height() {
         return height;
     }
-    boolean is_texture() {
+    public boolean is_texture() {
         return is_texture;
     }
-    ByteBuffer buffer() {
+    public ByteBuffer buffer() {
         return buffer;
     }
 
-    long timestamp() {
+    public long timestamp() {
         return timestamp;
     }
 
-    int textureid() {
+    public int textureid() {
         return textureid;
     }
 
-    int getFormat() {
+    public int getFormat() {
         return format;
     }
 

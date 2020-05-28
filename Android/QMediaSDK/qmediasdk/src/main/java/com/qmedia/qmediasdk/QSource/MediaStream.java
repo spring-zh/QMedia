@@ -1,22 +1,13 @@
 package com.qmedia.qmediasdk.QSource;
 
-import android.graphics.SurfaceTexture;
 import android.media.AudioFormat;
-import android.media.MediaCodecInfo;
 import android.media.MediaFormat;
-import android.opengl.GLES20;
-import android.os.Looper;
 import android.util.Log;
 import android.view.Surface;
 
 import com.qmedia.qmediasdk.QCommon.EncodedPacketQueue;
 import com.qmedia.qmediasdk.QCommon.FrameCacheQueue;
 import com.qmedia.qmediasdk.QCommon.HardwareDecoder;
-import com.qmedia.qmediasdk.QCommon.QGLContext;
-
-import java.util.LinkedList;
-import java.util.concurrent.atomic.AtomicInteger;
-import java.util.logging.Handler;
 
 public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListener{
 
@@ -24,7 +15,7 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
     public boolean mbStart = false;
     protected long mStartTimeLimit;
     public int mTrackId;
-
+    public long lastPacketTimestamp;
     public boolean mIsAudio;
     public long mDurationUs;
     //for video
@@ -184,7 +175,9 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
             decodedFrame.updateImage(false);
             return;
         }
-        decodedFrame.updateImage(true);
+        if (decodedFrame.isbuffer)
+            decodedFrame.updateImage(true);
+
         mFrameQueue.add(decodedFrame);
     }
 

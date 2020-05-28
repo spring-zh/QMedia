@@ -105,20 +105,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
 
             if (bPacketOverCache) {
                 try {
-                    Thread.sleep(500);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                continue;
-            }
-
-            if ( mIsExtractorEnd) {
-                for (MediaStream stream : mediaStreams) {
-                    if (!stream.isEnd())
-                        stream.mPacketQueue.add(null);
-                }
-                try {
-                    Thread.sleep(100);
+                    Thread.sleep(200);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
@@ -126,6 +113,20 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
             }
 
             synchronized (this){
+                if ( mIsExtractorEnd) {
+                    //wait for decode finished
+                    for (MediaStream stream : mediaStreams) {
+                        if (!stream.isEnd() && stream.mPacketQueue.size() == 0)
+                            stream.mPacketQueue.add(null);
+                    }
+                    try {
+                        Thread.sleep(10);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    continue;
+                }
+
                 int track_index = mExtractor.getSampleTrackIndex();
                 int flag = mExtractor.getSampleFlags();
                 long pts = mExtractor.getSampleTime();
@@ -137,6 +138,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                     if (sampleSize > 0) {
                         HardwareDecoder.EncodedPacket packet = new HardwareDecoder.EncodedPacket(readBuffer, sampleSize, pts, pts, flag);
                         stream.mPacketQueue.add(packet);
+                        stream.lastPacketTimestamp = pts;
                     }
                 }else if (track_index == -1) {
                     mIsExtractorEnd = true;
@@ -169,7 +171,6 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                 mMediaDurationUs = Math.max(mMediaDurationUs, stream.mDurationUs);
 
                 if (stream.mVideoDescribe != null) {
-//                    mVideoStream = stream;
                     mVideoIndex = i;
                     mExtractor.selectTrack(mVideoIndex);
                     //TODO: create SurfaceTexture for HardWare Decoder
@@ -179,13 +180,12 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                             qglContext.unUseCurrent();
                             mOESTextureid = qglContext.createTextureOES();
                             mVideoSurfaceTexture = new SurfaceTexture(mOESTextureid);
-                            mVideoSurfaceTexture.setOnFrameAvailableListener(this);
                             qglContext.unUseCurrent();
                         }
+                        mVideoSurfaceTexture.setOnFrameAvailableListener(this);
                     }
                 }
                 else if (stream.mAudioDescribe != null) {
-//                    mAudioStream = stream;
                     mAudioIndex = i;
                     mExtractor.selectTrack(mAudioIndex);
                 }
@@ -328,8 +328,12 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
         QVideoFrame videoFrame = null;
         if (decodedFrame != null) {
             videoFrame = new QVideoFrame(mOESTextureid, decodedFrame.width, decodedFrame.height , QVideoFrame.TEXTURE_OES, decodedFrame.mTimeMs);
-//            decodedFrame.updateImage(true);
+            decodedFrame.updateImage(true);
+            GLES20.glFinish();
             mVideoSurfaceTexture.updateTexImage();
+//            if (mVideoSurfaceTexture.getTimestamp()/1000000 != decodedFrame.mTimeMs) {
+//                Log.w(TAG, "texture timestamp " + mVideoSurfaceTexture.getTimestamp()/1000000 + " buffer timestamp " + decodedFrame.mTimeMs);
+//            }
         }
         return videoFrame;
     }
@@ -364,8 +368,9 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
         if (mVideoIndex >= 0)
             videoStream = mediaStreams.get(streamMap[mVideoIndex]);
 
-        if (mVideoIndex >= 0) //if has video stream
+        if (mVideoIndex >= 0) { //if has video stream
             mExtractor.seekTo(timeMs * 1000, MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
+        }
         else
             mExtractor.seekTo(timeMs * 1000, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
 
@@ -386,10 +391,10 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                 int sampleSize = mExtractor.readSampleData(readBuffer, 0);
                 if (sampleSize > 0) {
                     HardwareDecoder.EncodedPacket packet = new HardwareDecoder.EncodedPacket(readBuffer, sampleSize, pts, pts, flag);
+                    stream.lastPacketTimestamp = pts;
                     stream.mPacketQueue.add(packet);
                 }
             }else if (track_index == -1) {
-                mIsExtractorEnd = true;
                 for (MediaStream stream : mediaStreams) {
                     stream.mPacketQueue.add(null);
                 }
@@ -401,9 +406,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                 flush_packet_count --;
             }
 
-            if (! mExtractor.advance()){
-                mIsExtractorEnd = true;
-            }
+            mExtractor.advance();
 
             //check if deocde finish
             if (videoStream != null) { //wait for first video decodeframe
