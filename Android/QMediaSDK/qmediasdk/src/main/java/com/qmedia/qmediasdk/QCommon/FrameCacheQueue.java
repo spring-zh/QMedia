@@ -88,12 +88,13 @@ public class FrameCacheQueue<T extends HardwareDecoder.DecodedFrame> extends Lin
     public void clear(){
 
         synchronized (signal) {
-            while (super.size() > 0){
-                T sample = super.remove();
-                if (sample != null){
-                    sample.updateImage(false);
-                }
-            }
+//            while (super.size() > 0){
+//                T sample = super.remove();
+//                if (sample != null){
+//                    sample.updateImage(false);
+//                }
+//            }
+            super.clear();
         }
         cacheTimeRange.start = cacheTimeRange.end = 0;
     }

@@ -11,6 +11,7 @@ import android.view.Surface;
 
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
+import java.util.LinkedList;
 
 public class HardwareDecoder {
     private static  String TAG = "MediaDecoder";
@@ -81,7 +82,7 @@ public class HardwareDecoder {
 
     private MediaCodec mDecoder = null;
     private boolean mStarting = false;
-    private boolean mAbout = true;
+    public boolean mAbout = false;
     private DecodecFrameListener mListener;
     private boolean mUseBuffer = true;
     private boolean mIsAudio;
@@ -93,115 +94,126 @@ public class HardwareDecoder {
 
     public boolean start(MediaFormat format, Surface surface){
         String mime = format.getString(MediaFormat.KEY_MIME);
-        synchronized (this){
-            try {
-                mDecoder = MediaCodec.createDecoderByType(mime);
-                if(surface != null) mUseBuffer = false;
-                mDecoder.configure(format, surface, null, 0);
-                mDecoder.start();
-                mStarting = true;
-                mAbout = false;
-                return true;
-            }
-            catch (Exception e){
-                e.printStackTrace();
-                if (mDecoder != null)
-                    mDecoder.release();
-                return false;
-            }
+        try {
+            mDecoder = MediaCodec.createDecoderByType(mime);
+            if(surface != null) mUseBuffer = false;
+            mDecoder.configure(format, surface, null, 0);
+            mDecoder.start();
+            mStarting = true;
+            mAbout = false;
+            return true;
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            if (mDecoder != null)
+                mDecoder.release();
+            return false;
         }
     }
 
     public void stop(){
-        synchronized (this) {
-            mAbout = true;
-            if (mDecoder != null) {
-                mDecoder.stop();
-            }
-            mStarting = false;
+        mAbout = true;
+        if (mDecoder != null) {
+            mDecoder.stop();
         }
+        mStarting = false;
     }
 
     public void flush(){
-        synchronized (this) {
-            if (mDecoder != null) {
-                mDecoder.flush();
-            }
+        if (mDecoder != null) {
+            mDecoder.flush();
         }
     }
 
     public void release(){
-        synchronized (this) {
-            if (mDecoder != null) {
-                mDecoder.release();
-            }
-            mStarting = false;
-            mAbout = true;
+        if (mDecoder != null) {
+            mDecoder.release();
         }
+        mStarting = false;
+        mAbout = true;
+    }
+
+    //input null packet to wait for decoder finish output
+    public int decodePacket_direct(@Nullable EncodedPacket packet) {
+        if (!mStarting || mDecoder == null)
+            return -1;
+
+        int iRet = 0;
+
+        try {
+            ByteBuffer[] inputBuffers = mDecoder.getInputBuffers();
+            ByteBuffer[] outputBuffers = mDecoder.getOutputBuffers();
+            MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
+
+            ByteBuffer BuffIn = (packet==null? null : packet.buffer);
+            int index = mDecoder.dequeueInputBuffer(1000);
+            if (index >= 0) {
+                iRet = 1;
+                if (BuffIn != null) {
+                    ByteBuffer buffer = inputBuffers[index];// mDecoder.getInputBuffer(index);
+                    buffer.put(BuffIn);
+                    mDecoder.queueInputBuffer(index, 0, BuffIn.limit(), packet.pts, 0);
+                }else {
+                    mDecoder.queueInputBuffer(index, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                }
+            }else //decoder is busy
+                iRet = -2;
+
+            int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
+            switch (outIndex) {
+                case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
+                    outputBuffers = mDecoder.getOutputBuffers();
+                    break;
+                case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
+                    MediaFormat mediaFormat = mDecoder.getOutputFormat();
+                    Log.e(TAG, "KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
+                    break;
+                case MediaCodec.INFO_TRY_AGAIN_LATER:
+                    break;
+                default:
+                    checkOutputAndCallback(outIndex, outputBuffers, info);
+                    break;
+            }
+
+            if (0 != (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM)){
+                //TODO: read end of stream
+                mListener.OnDecodecEnd();
+            }
+
+
+        }catch (Exception e) {
+            iRet = -1;
+        }
+
+        return iRet;
     }
 
     //input null packet to wait for decoder finish output
     public boolean decodePacket(@Nullable EncodedPacket packet){
-        synchronized (this) {
-            if (!mStarting || mDecoder == null)
-                return false;
+        if (!mStarting || mDecoder == null)
+            return false;
 
-            try {
+        try {
 
-                ByteBuffer[] inputBuffers = mDecoder.getInputBuffers();
-                ByteBuffer[] outputBuffers = mDecoder.getOutputBuffers();
-                MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
+            ByteBuffer[] inputBuffers = mDecoder.getInputBuffers();
+            ByteBuffer[] outputBuffers = mDecoder.getOutputBuffers();
+            MediaCodec.BufferInfo info = new MediaCodec.BufferInfo();
 
-                ByteBuffer BuffIn = (packet==null? null : packet.buffer);
+            ByteBuffer BuffIn = (packet==null? null : packet.buffer);
 
-                int index = -1;
-                while (!mAbout && (index = mDecoder.dequeueInputBuffer(1000)) < 0) {
-                    int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
-                    switch (outIndex) {
-                        case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
-                            inputBuffers = mDecoder.getInputBuffers();
-                            break;
-                        case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
-                            MediaFormat mediaFormat = mDecoder.getOutputFormat();
-                            Log.e(TAG, "KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
-                            break;
-                        case MediaCodec.INFO_TRY_AGAIN_LATER:
-                            break;
-                        default:
-                            checkOutputAndCallback(outIndex, outputBuffers, info);
-                    }
-
-                    if (0 != (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM)){
-                        //TODO: read end of stream
-                        mListener.OnDecodecEnd();
-                        return false;
-                    }else if (packet == null)
-                        break;
-
-                    Thread.sleep(50);//don't dequeue buffer too fast
-                }
-
-                if (0 <= index) {
-                    if (BuffIn != null) {
-                        ByteBuffer buffer = inputBuffers[index];// mDecoder.getInputBuffer(index);
-                        buffer.put(BuffIn);
-                        mDecoder.queueInputBuffer(index, 0, BuffIn.limit(), packet.pts, 0);
-                    }else {
-                        mDecoder.queueInputBuffer(index, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
-                    }
-                }
-
+            int index = -1;
+            while (!mAbout && (index = mDecoder.dequeueInputBuffer(1000)) < 0) {
                 int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
                 switch (outIndex) {
                     case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
-                        outputBuffers = mDecoder.getOutputBuffers();
-                        return false;
+                        inputBuffers = mDecoder.getInputBuffers();
+                        break;
                     case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
                         MediaFormat mediaFormat = mDecoder.getOutputFormat();
                         Log.e(TAG, "KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
-                        return false;
+                        break;
                     case MediaCodec.INFO_TRY_AGAIN_LATER:
-                        return false;
+                        break;
                     default:
                         checkOutputAndCallback(outIndex, outputBuffers, info);
                 }
@@ -209,12 +221,47 @@ public class HardwareDecoder {
                 if (0 != (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM)){
                     //TODO: read end of stream
                     mListener.OnDecodecEnd();
-                }
+                    return false;
+                }else if (packet == null)
+                    break;
 
-            } catch (Exception e) {
-                return false;
+                Thread.sleep(50);//don't dequeue buffer too fast
             }
+
+            if (0 <= index) {
+                if (BuffIn != null) {
+                    ByteBuffer buffer = inputBuffers[index];// mDecoder.getInputBuffer(index);
+                    buffer.put(BuffIn);
+                    mDecoder.queueInputBuffer(index, 0, BuffIn.limit(), packet.pts, 0);
+                }else {
+                    mDecoder.queueInputBuffer(index, 0, 0, 0, MediaCodec.BUFFER_FLAG_END_OF_STREAM);
+                }
+            }
+
+            int outIndex = mDecoder.dequeueOutputBuffer(info, 1000);
+            switch (outIndex) {
+                case MediaCodec.INFO_OUTPUT_BUFFERS_CHANGED:
+                    outputBuffers = mDecoder.getOutputBuffers();
+                    return false;
+                case MediaCodec.INFO_OUTPUT_FORMAT_CHANGED:
+                    MediaFormat mediaFormat = mDecoder.getOutputFormat();
+                    Log.e(TAG, "KEY_COLOR_FORMAT =  " + mediaFormat.getInteger(MediaFormat.KEY_COLOR_FORMAT));
+                    return false;
+                case MediaCodec.INFO_TRY_AGAIN_LATER:
+                    return false;
+                default:
+                    checkOutputAndCallback(outIndex, outputBuffers, info);
+            }
+
+            if (0 != (info.flags & MediaCodec.BUFFER_FLAG_END_OF_STREAM)){
+                //TODO: read end of stream
+                mListener.OnDecodecEnd();
+            }
+
+        } catch (Exception e) {
+            return false;
         }
+
         return true;
     }
 

@@ -36,14 +36,15 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
     public FrameCacheQueue mFrameQueue = new FrameCacheQueue();
 
     protected MediaFormat mFormat;
-    protected HardwareDecoder mMediaDecoder;
-    public int mMaxOutputFrameNum = 4;
+    public HardwareDecoder mMediaDecoder;
+    public int mMaxOutputFrameNum = 2;
     private Thread mDecodeThread;
 
     private int maxInputBufferSize = 0;
 
     private boolean isVaild = true;
     private boolean isEnd = false;
+    private boolean needFlush = false;
 
     public boolean isEnd() {
         return isEnd;
@@ -93,16 +94,17 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
                 return;
             mbStart = true;
             isEnd = false;
-            mDecodeThread = new Thread(this);
+            mDecodeThread = new Thread(this, "DecodeThread " + (mIsAudio ? "audio" : "video"));
             mDecodeThread.start();
         }
     }
 
     //stop decoded thread
     public void stop(){
+        flush();
         mbStart = false;
-        mFrameQueue.setAbort(true);
-        mPacketQueue.add(null);//add null packet to abort thie waiting for PacketQueue
+//        mFrameQueue.setAbort(true);
+//        mPacketQueue.add(null);//add null packet to abort thie waiting for PacketQueue
         if (mDecodeThread != null) {
             try {
                 mDecodeThread.join();
@@ -111,17 +113,23 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
             }
             mDecodeThread = null;
         }
-        mMediaDecoder.stop();
+//        mMediaDecoder.stop();
     }
 
     //flush packets、decoder and output frames data
     public void flush(){
+
+        synchronized (this) {
+            needFlush = true;
+            while (needFlush) {
+                try {
+                    this.wait(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
         isEnd = false;
-        mPacketQueue.clear();
-        mFrameQueue.setAbort(true);
-        mFrameQueue.clear();
-        mFrameQueue.setAbort(false);
-        mMediaDecoder.flush();
     }
 
     //release just been called after stop
@@ -136,15 +144,29 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
     public void run(){
         while (mbStart){
             try {
+                synchronized (this){
+                    if (needFlush) {
+                        mFrameQueue.clear();
+                        mPacketQueue.clear();
+                        mMediaDecoder.flush();
+                    }
+                    needFlush = false;
+                    this.notify();
+                }
                 // handle output mFrameQueue overload
-                while (mFrameQueue.size() > mMaxOutputFrameNum && !mFrameQueue.isAbort()) {
+                if ( (mPacketQueue.size() <=0 || mFrameQueue.size() > mMaxOutputFrameNum) && !mFrameQueue.isAbort()) {
                     //TODO: use notify to replace it
                     Thread.sleep(10);
+                    continue;
                 }
                 if (! mbStart) break;
 
                 HardwareDecoder.EncodedPacket packet = mPacketQueue.remove();
-                mMediaDecoder.decodePacket(packet);
+                int ret;
+                do {
+                    ret = mMediaDecoder.decodePacket_direct(packet);
+                    if (ret != -2) break;
+                }while (!needFlush && mbStart);
 
             } catch (InterruptedException e) {
                 e.printStackTrace();

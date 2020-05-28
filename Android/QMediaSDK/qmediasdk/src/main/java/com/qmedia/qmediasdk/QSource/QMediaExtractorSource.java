@@ -260,7 +260,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
             }
 
             mIsStarted = true;
-            mParseThread = new Thread(this);
+            mParseThread = new Thread(this, "ParseThread");
             mParseThread.start();
             return true;
         }
@@ -295,11 +295,11 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
             mLastPacketTime = timeMs;
 
             for (MediaStream stream : mediaStreams){
-                stream.setStartTimeLimit(timeMs);
                 stream.flush();
             }
+
             mIsExtractorEnd = false;
-            mExtractor.seekTo(timeMs*1000, MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
+            decodeTo(timeMs, true);
         }
         return true;
     }
@@ -352,7 +352,75 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
 
     @Override
     public void onFrameAvailable(SurfaceTexture surfaceTexture) {
-        Log.i(TAG, "onFrameAvailable count " + mTextureImageCount.incrementAndGet());
+//        Log.i(TAG, "onFrameAvailable count " + mTextureImageCount.incrementAndGet());
+    }
+
+    boolean decodeTo(long timeMs , boolean isForce) {
+        boolean bRet = false;
+        int flush_packet_count = 8;
+
+        //find video stream
+        MediaStream videoStream = null;
+        if (mVideoIndex >= 0)
+            videoStream = mediaStreams.get(streamMap[mVideoIndex]);
+
+        if (mVideoIndex >= 0) //if has video stream
+            mExtractor.seekTo(timeMs * 1000, MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
+        else
+            mExtractor.seekTo(timeMs * 1000, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
+
+        for (MediaStream stream : mediaStreams) {
+            if (isForce) //for precision
+                stream.setStartTimeLimit(timeMs);
+            else //for ambiguous, use first packet timestamp
+                stream.setStartTimeLimit(mExtractor.getSampleTime() / 1000);
+        }
+
+        while (flush_packet_count > 0) {
+            int track_index = mExtractor.getSampleTrackIndex();
+            int flag = mExtractor.getSampleFlags();
+            long pts = mExtractor.getSampleTime();
+            if ((track_index >= 0) && (streamMap[track_index] >= 0)) {
+                MediaStream stream = mediaStreams.get(streamMap[track_index]);
+                ByteBuffer readBuffer = ByteBuffer.allocate(stream.getMaxInputBufferSize());
+                int sampleSize = mExtractor.readSampleData(readBuffer, 0);
+                if (sampleSize > 0) {
+                    HardwareDecoder.EncodedPacket packet = new HardwareDecoder.EncodedPacket(readBuffer, sampleSize, pts, pts, flag);
+                    stream.mPacketQueue.add(packet);
+                }
+            }else if (track_index == -1) {
+                mIsExtractorEnd = true;
+                for (MediaStream stream : mediaStreams) {
+                    stream.mPacketQueue.add(null);
+                }
+                try {
+                    Thread.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                flush_packet_count --;
+            }
+
+            if (! mExtractor.advance()){
+                mIsExtractorEnd = true;
+            }
+
+            //check if deocde finish
+            if (videoStream != null) { //wait for first video decodeframe
+                if (videoStream.mFrameQueue.size() > 0) {
+                    bRet = true;
+                    break;
+                }
+            } else { //wait for first decodeframe
+                for (MediaStream stream : mediaStreams) {
+                    if (stream.mFrameQueue.size() > 0) {
+                        bRet = true;
+                        break;
+                    }
+                }
+            }
+        }
+        return bRet;
     }
 
     int getAudioFormatBytes(int audioFormat) {
