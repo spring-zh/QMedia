@@ -246,12 +246,12 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
     }
 
     @Override
-    public void setRender(QAudioRender audioRender) {
+    public void setAudioRender(QAudioRender audioRender) {
         this.audioRender = audioRender;
     }
 
     @Override
-    public QAudioRender getRender() {
+    public QAudioRender getAudioRender() {
         return audioRender;
     }
 

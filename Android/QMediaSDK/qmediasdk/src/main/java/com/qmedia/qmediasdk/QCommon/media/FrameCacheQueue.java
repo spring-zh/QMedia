@@ -1,4 +1,6 @@
-package com.qmedia.qmediasdk.QCommon;
+package com.qmedia.qmediasdk.QCommon.media;
+
+import com.qmedia.qmediasdk.QCommon.QRange;
 
 import java.util.LinkedList;
 

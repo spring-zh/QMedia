@@ -1,4 +1,4 @@
-package com.qmedia.qmediasdk.QTarget.Implements;
+package com.qmedia.qmediasdk.QCommon;
 
 /*
  * Copyright (C) 2008 The Android Open Source Project
@@ -29,7 +29,6 @@ import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 
-import android.opengl.EGL14;
 import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;

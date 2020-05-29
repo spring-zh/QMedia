@@ -5,11 +5,10 @@ import android.media.AudioFormat;
 import android.media.MediaExtractor;
 import android.media.MediaFormat;
 import android.opengl.GLES20;
-import android.util.Log;
 import android.view.Surface;
 
 import com.qmedia.qmediasdk.QAudio.QAudioFrame;
-import com.qmedia.qmediasdk.QCommon.HardwareDecoder;
+import com.qmedia.qmediasdk.QCommon.media.HardwareDecoder;
 import com.qmedia.qmediasdk.QCommon.QGLContext;
 import com.qmedia.qmediasdk.QGraphic.QVideoFrame;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;

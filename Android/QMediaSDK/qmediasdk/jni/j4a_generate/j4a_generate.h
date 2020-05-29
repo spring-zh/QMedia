@@ -24,6 +24,7 @@ extern "C" {
 #include "j4a_generate/QAudioRender.h"
 #include "j4a_generate/QVideoRender.h"
 #include "j4a_generate/QEditorPlayer.h"
+#include "j4a_generate/QExporter.h"
 
 #ifdef __cplusplus
 }

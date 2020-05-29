@@ -5,9 +5,9 @@ import android.media.MediaFormat;
 import android.util.Log;
 import android.view.Surface;
 
-import com.qmedia.qmediasdk.QCommon.EncodedPacketQueue;
-import com.qmedia.qmediasdk.QCommon.FrameCacheQueue;
-import com.qmedia.qmediasdk.QCommon.HardwareDecoder;
+import com.qmedia.qmediasdk.QCommon.media.EncodedPacketQueue;
+import com.qmedia.qmediasdk.QCommon.media.FrameCacheQueue;
+import com.qmedia.qmediasdk.QCommon.media.HardwareDecoder;
 
 public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListener{
 

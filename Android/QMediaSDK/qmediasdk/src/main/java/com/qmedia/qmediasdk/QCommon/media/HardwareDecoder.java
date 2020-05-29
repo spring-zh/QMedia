@@ -1,4 +1,4 @@
-package com.qmedia.qmediasdk.QCommon;
+package com.qmedia.qmediasdk.QCommon.media;
 
 import android.media.AudioFormat;
 import android.media.MediaCodec;
@@ -11,7 +11,6 @@ import android.view.Surface;
 
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
-import java.util.LinkedList;
 
 public class HardwareDecoder {
     private static  String TAG = "MediaDecoder";

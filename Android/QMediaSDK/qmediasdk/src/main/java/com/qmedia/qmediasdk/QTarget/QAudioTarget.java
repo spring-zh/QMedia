@@ -20,6 +20,6 @@ public interface QAudioTarget {
     void setAudioDelay(int audioDelay);
     int getAudioDelay();
     //render
-    void setRender(QAudioRender audioRender);
-    QAudioRender getRender();
+    void setAudioRender(QAudioRender audioRender);
+    QAudioRender getAudioRender();
 }

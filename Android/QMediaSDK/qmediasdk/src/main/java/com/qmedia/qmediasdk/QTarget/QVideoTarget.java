@@ -16,6 +16,6 @@ public interface QVideoTarget {
 
 
     //render
-    void setRender(QVideoRender videoRender);
-    QVideoRender getRender();
+    void setVideoRender(QVideoRender videoRender);
+    QVideoRender getVideoRender();
 }

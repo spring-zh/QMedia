@@ -31,6 +31,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QAudio_QAudioFrame(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QGraphic_QVideoFrame(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QEditor_QEditorPlayer(env);
+    J4A_loadClass__J4AC_com_qmedia_qmediasdk_QEditor_QExporter(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QGraphic_QNodeAnimator(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget(env);

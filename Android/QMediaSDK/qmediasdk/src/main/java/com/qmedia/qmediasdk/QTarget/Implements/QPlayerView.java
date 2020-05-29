@@ -15,9 +15,9 @@ import android.support.annotation.Nullable;
 import android.util.AttributeSet;
 import android.util.Log;
 
+import com.qmedia.qmediasdk.QCommon.GLSurfaceView14;
 import com.qmedia.qmediasdk.QCommon.QAspectLayout;
 import com.qmedia.qmediasdk.QCommon.QGLContext;
-import com.qmedia.qmediasdk.QSource.QMediaDescribe;
 import com.qmedia.qmediasdk.QSource.QVideoDescribe;
 import com.qmedia.qmediasdk.QTarget.QVideoRender;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
@@ -28,8 +28,6 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.Timer;
-import java.util.TimerTask;
 
 /**
  * Created by spring on 2017/6/19.
@@ -150,12 +148,12 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
     }
 
     @Override
-    public void setRender(QVideoRender videoRender) {
+    public void setVideoRender(QVideoRender videoRender) {
         mVideoRender = videoRender;
     }
 
     @Override
-    public QVideoRender getRender() {
+    public QVideoRender getVideoRender() {
         return mVideoRender;
     }
 

@@ -18,7 +18,7 @@ public class QAudioDescribe {
     public static final int QRawAudioFormatFLOAT = 5;
     public static final int QRawAudioFormatUnknown = 99;
 
-    public QAudioDescribe(int codec, int rawFormat, int samplerate, int nchannel, float bitrate) {
+    public QAudioDescribe(int codec, int rawFormat, int samplerate, int nchannel, int bitrate) {
         this.codec = codec;
         this.rawFormat = rawFormat;
         this.samplerate = samplerate;
@@ -29,5 +29,5 @@ public class QAudioDescribe {
     public int rawFormat; //QRawAudioFormat
     public int samplerate;
     public int nchannel;
-    public float bitrate;
+    public int bitrate;
 }
