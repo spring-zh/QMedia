@@ -24,9 +24,9 @@
 
 #include "j4a/j4a_base.h"
 
-jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jfloat bitrate);
-jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__catchAll(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jfloat bitrate);
-jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__asGlobalRef__catchAll(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jfloat bitrate);
+jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jint bitrate);
+jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__catchAll(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jint bitrate);
+jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__asGlobalRef__catchAll(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jint bitrate);
 jint J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__codec__get(JNIEnv *env, jobject thiz);
 jint J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__codec__get__catchAll(JNIEnv *env, jobject thiz);
 void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__codec__set(JNIEnv *env, jobject thiz, jint value);
@@ -43,10 +43,10 @@ jint J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__nchannel__get(JNIEnv *env
 jint J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__nchannel__get__catchAll(JNIEnv *env, jobject thiz);
 void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__nchannel__set(JNIEnv *env, jobject thiz, jint value);
 void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__nchannel__set__catchAll(JNIEnv *env, jobject thiz, jint value);
-jfloat J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get(JNIEnv *env, jobject thiz);
-jfloat J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get__catchAll(JNIEnv *env, jobject thiz);
-void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set(JNIEnv *env, jobject thiz, jfloat value);
-void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set__catchAll(JNIEnv *env, jobject thiz, jfloat value);
+jint J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get(JNIEnv *env, jobject thiz);
+jint J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get__catchAll(JNIEnv *env, jobject thiz);
+void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set(JNIEnv *env, jobject thiz, jint value);
+void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set__catchAll(JNIEnv *env, jobject thiz, jint value);
 int J4A_loadClass__J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe(JNIEnv *env);
 
 #endif//J4A__com_qmedia_qmediasdk_QSource_QAudioDescribe__H

@@ -57,7 +57,7 @@ struct VideoDescribe
 	float framerate;
 	int width;
 	int height;
-	float bitrate;
+	int bitrate;
 	int timeScale;
 };
 
@@ -101,7 +101,7 @@ struct AudioDescribe
 	int samplerate;
 	int nchannel;
 	int bitwidth;
-	float bitrate;
+	int bitrate;
 };
 
 struct SubtitleDescribe

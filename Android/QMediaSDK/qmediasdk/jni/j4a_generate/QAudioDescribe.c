@@ -33,12 +33,12 @@ typedef struct J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe {
 } J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe;
 static J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe;
 
-jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jfloat bitrate)
+jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jint bitrate)
 {
     return (*env)->NewObject(env, class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.id, class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.constructor_QAudioDescribe, codec, rawFormat, samplerate, nchannel, bitrate);
 }
 
-jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__catchAll(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jfloat bitrate)
+jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__catchAll(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jint bitrate)
 {
     jobject ret_object = J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe(env, codec, rawFormat, samplerate, nchannel, bitrate);
     if (J4A_ExceptionCheck__catchAll(env) || !ret_object) {
@@ -48,7 +48,7 @@ jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__catchA
     return ret_object;
 }
 
-jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__asGlobalRef__catchAll(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jfloat bitrate)
+jobject J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__asGlobalRef__catchAll(JNIEnv *env, jint codec, jint rawFormat, jint samplerate, jint nchannel, jint bitrate)
 {
     jobject ret_object   = NULL;
     jobject local_object = J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__QAudioDescribe__catchAll(env, codec, rawFormat, samplerate, nchannel, bitrate);
@@ -172,14 +172,14 @@ void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__nchannel__set__catchAll(J
     J4A_ExceptionCheck__catchAll(env);
 }
 
-jfloat J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get(JNIEnv *env, jobject thiz)
+jint J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get(JNIEnv *env, jobject thiz)
 {
-    return (*env)->GetFloatField(env, thiz, class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.field_bitrate);
+    return (*env)->GetIntField(env, thiz, class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.field_bitrate);
 }
 
-jfloat J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get__catchAll(JNIEnv *env, jobject thiz)
+jint J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get__catchAll(JNIEnv *env, jobject thiz)
 {
-    jfloat ret_value = J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get(env, thiz);
+    jint ret_value = J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get(env, thiz);
     if (J4A_ExceptionCheck__catchAll(env)) {
         return 0;
     }
@@ -187,12 +187,12 @@ jfloat J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__get__catchAll(
     return ret_value;
 }
 
-void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set(JNIEnv *env, jobject thiz, jfloat value)
+void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set(JNIEnv *env, jobject thiz, jint value)
 {
-    (*env)->SetFloatField(env, thiz, class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.field_bitrate, value);
+    (*env)->SetIntField(env, thiz, class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.field_bitrate, value);
 }
 
-void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set__catchAll(JNIEnv *env, jobject thiz, jfloat value)
+void J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set__catchAll(JNIEnv *env, jobject thiz, jint value)
 {
     J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe__bitrate__set(env, thiz, value);
     J4A_ExceptionCheck__catchAll(env);
@@ -216,7 +216,7 @@ int J4A_loadClass__J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe(JNIEnv *env)
 
     class_id = class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.id;
     name     = "<init>";
-    sign     = "(IIIIF)V";
+    sign     = "(IIIII)V";
     class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.constructor_QAudioDescribe = J4A_GetMethodID__catchAll(env, class_id, name, sign);
     if (class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.constructor_QAudioDescribe == NULL)
         goto fail;
@@ -251,7 +251,7 @@ int J4A_loadClass__J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe(JNIEnv *env)
 
     class_id = class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.id;
     name     = "bitrate";
-    sign     = "F";
+    sign     = "I";
     class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.field_bitrate = J4A_GetFieldID__catchAll(env, class_id, name, sign);
     if (class_J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe.field_bitrate == NULL)
         goto fail;
