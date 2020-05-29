@@ -42,19 +42,16 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 
     private boolean bInit = false;
 
-    public QFileExporterTarget() {
+    public QFileExporterTarget(String fileName) {
         Log.d(TAG, "QFileExporterTarget new." + this.toString());
-    }
-
-    public void setOutputPath(String fileName){
         mOutputFileName = fileName;
     }
 
-    public boolean mbEnableAudio = true;
-    public boolean mbKeyFrameMode = false;
+    private boolean mbEnableAudio = true;
+    private boolean mbKeyFrameMode = false;
 
-    public QVideoDescribe mVideoConfig = null;
-    public QAudioDescribe mAudioConfig = null;
+    private QVideoDescribe mVideoConfig = null;
+    private QAudioDescribe mAudioConfig = null;
 
     QAudioRender mAudioRender = null;
     QVideoRender mVideoRender = null;
@@ -81,7 +78,7 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
                 mMuxerCore = new MuxerCore(mOutputFileName,true);
 
             mAudioThread = new AudioThread(mAudioConfig);
-            mVideoThread.start();
+            mAudioThread.start();
         } catch (IOException e) {
             e.printStackTrace();
             return false;
@@ -181,7 +178,7 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
     @Override
     public boolean startVideo() {
         Log.i(TAG, "startVideo");
-        if (mVideoConfig != null)
+        if (mVideoConfig == null)
             return false;
         if (mVideoThread != null)
             return true;
@@ -350,7 +347,7 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 //                mVideoEncoder.requireKeyFrame();
                 mVideoEncoder.drainEncoder(false);
 
-                GlUtil.checkGlError("onVideoRender before");
+//                GlUtil.checkGlError("onVideoRender before");
 
                 if (getVideoRender().onVideoRender(timestampUs / 1000))
                 {

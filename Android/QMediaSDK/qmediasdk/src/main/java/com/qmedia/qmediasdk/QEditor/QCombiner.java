@@ -4,6 +4,7 @@ import android.util.Log;
 
 import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
+import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
@@ -16,6 +17,9 @@ import java.util.ArrayList;
 
 public class QCombiner extends QMediaFactory{
     private static final String TAG = "QCombiner";
+
+    protected DisplayRootNode rootNode = new DisplayRootNode();
+
     protected QCombiner() {
         super.setCombiner(this);
         Log.i(TAG, "QMediaSDK Laod version " + QMediaSDK.SDK_VERSION);
@@ -36,6 +40,10 @@ public class QCombiner extends QMediaFactory{
     }
     public void setAudioConfig(QAudioDescribe describe) {
         native_setAudioConfig(describe);
+    }
+
+    public DisplayRootNode getRootNode() {
+        return rootNode;
     }
 
     //TODO: mediaTracks @QMediaTrack
@@ -75,6 +83,17 @@ public class QCombiner extends QMediaFactory{
 
     public QRange getMediaTimeRange() {
         return native_getMediaTimeRange();
+    }
+
+
+    public class DisplayRootNode extends QGraphicNode {
+        DisplayRootNode() {
+            super(QCombiner.this);
+        }
+
+        public void setBKColor(QVector color) {
+            setColor4(color);
+        }
     }
 
     //TODO: native

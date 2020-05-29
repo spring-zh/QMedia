@@ -3,8 +3,6 @@ package com.qmedia.qmediasdk.QEditor;
 import android.os.Handler;
 import android.os.Looper;
 
-import com.qmedia.qmediasdk.QCommon.QVector;
-import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QTarget.QAudioRender;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 import com.qmedia.qmediasdk.QTarget.QVideoRender;
@@ -22,7 +20,6 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
 
     private Handler mCbHandler;
     private Observer mObserver;
-    private DisplayRootNode rootNode = new DisplayRootNode();
 
     public QExporter(QVideoTarget videoTarget, QAudioTarget audioTarget) {
         this(videoTarget, audioTarget, null);
@@ -98,7 +95,7 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
     private native void native_release();
 
     //TODO: QExporter callback @callbynative
-    void onExporterStarted(int code) {
+    private void onExporterStarted(int code) {
         if (mObserver != null) {
             mCbHandler.post(new Runnable() {
                 @Override
@@ -108,7 +105,7 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
             });
         }
     }
-    void onExporterStoped(int code) {
+    private void onExporterStoped(int code) {
         if (mObserver != null) {
             mCbHandler.post(new Runnable() {
                 @Override
@@ -118,7 +115,7 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
             });
         }
     }
-    void onExporterProgressUpdated(long progress) {
+    private void onExporterProgressUpdated(long progress) {
         if (mObserver != null) {
             mCbHandler.post(new Runnable() {
                 @Override
@@ -128,7 +125,7 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
             });
         }
     }
-    void onExporterCanceled(int code) {
+    private void onExporterCanceled(int code) {
         if (mObserver != null) {
             mCbHandler.post(new Runnable() {
                 @Override
@@ -138,7 +135,7 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
             });
         }
     }
-    void onExporterCompleted() {
+    private void onExporterCompleted() {
         if (mObserver != null) {
             mCbHandler.post(new Runnable() {
                 @Override
@@ -146,16 +143,6 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
                     mObserver.onExporterCompleted();
                 }
             });
-        }
-    }
-
-    public class DisplayRootNode extends QGraphicNode {
-        DisplayRootNode() {
-            super(QExporter.this);
-        }
-
-        public void setBKColor(QVector color) {
-            setColor4(color);
         }
     }
 }

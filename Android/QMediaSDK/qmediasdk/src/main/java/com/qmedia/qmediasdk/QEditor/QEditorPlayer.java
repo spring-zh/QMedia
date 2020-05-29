@@ -83,10 +83,6 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
         native_seekTo(timePoint,flags);
     }
 
-    public DisplayRootNode getRootNode() {
-        return rootNode;
-    }
-
     public int getPlayerState() {
         return native_getPlayerState();
     }
@@ -123,7 +119,6 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
 
     //    private int playerState;//QEditorPlayerState
 //    private boolean isPaused;
-    private DisplayRootNode rootNode = new DisplayRootNode();
     private Handler mCbHandler;
     private Observer mObserver;
 
@@ -197,16 +192,6 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
                     mObserver.onCompleted(errcode);
                 }
             });
-        }
-    }
-
-    public class DisplayRootNode extends QGraphicNode {
-        DisplayRootNode() {
-            super(QEditorPlayer.this);
-        }
-
-        public void setBKColor(QVector color) {
-            setColor4(color);
         }
     }
 }

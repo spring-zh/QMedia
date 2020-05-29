@@ -1,5 +1,6 @@
 package com.qmedia.qmediasdk.sample.sample;
 
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Point;
 import android.graphics.Rect;
@@ -26,9 +27,14 @@ import java.util.TimerTask;
 
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QVector;
+import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QEditor.QEditorPlayer;
+import com.qmedia.qmediasdk.QEditor.QExporter;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
 import com.qmedia.qmediasdk.QMediaSDK;
+import com.qmedia.qmediasdk.QSource.QAudioDescribe;
+import com.qmedia.qmediasdk.QSource.QVideoDescribe;
+import com.qmedia.qmediasdk.QTarget.Implements.QFileExporterTarget;
 import com.qmedia.qmediasdk.QTarget.Implements.QPlayerView;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 import com.qmedia.qmediasdk.sample.R;
@@ -51,6 +57,34 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 	Handler mUIHandler;
 
 	QEditorPlayer editorPlayer = new QEditorPlayer();
+
+	QExporter exporter;
+
+	void setEffects(QCombiner combiner) {
+		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
+
+		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
+		QMediaTrack videoTrack = combiner.createVideoTrack(path);
+		videoTrack.getGraphic().setPosition(new QVector(targetW/4, targetH/4));
+		videoTrack.getGraphic().setContentSize(new QVector(targetW/2, targetH/2));
+		videoTrack.getGraphic().setAnchorPoint(new QVector(0.5f,0.5f));
+
+		QDuplicateNode duplicatenodeL = new QDuplicateNode(videoTrack.getGraphic(), combiner);
+		duplicatenodeL.setContentSize(new QVector(targetW/2, targetH/2));
+		duplicatenodeL.setPosition(new QVector(0, targetH/4));
+		duplicatenodeL.setAnchorPoint(new QVector(0.5f,0.5f));
+		duplicatenodeL.setRotation3d(new QVector(0, 90, 0));
+
+		QDuplicateNode duplicatenodeR = new QDuplicateNode(videoTrack.getGraphic(), combiner);
+		duplicatenodeR.setContentSize(new QVector(targetW/2, targetH/2));
+		duplicatenodeR.setPosition(new QVector(targetW/2, targetH/4));
+		duplicatenodeR.setAnchorPoint(new QVector(0.5f,0.5f));
+		duplicatenodeR.setRotation3d(new QVector(0, -90, 0));
+
+		combiner.getRootNode().addChildNode(videoTrack.getGraphic());
+		combiner.getRootNode().addChildNode(duplicatenodeL);
+		combiner.getRootNode().addChildNode(duplicatenodeR);
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -130,29 +164,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 		});
 
 		//TODO: set resources
-		editorPlayer.getRootNode().setBKColor(new QVector(0,0,1,1));
-
-		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
-		QMediaTrack videoTrack = editorPlayer.createVideoTrack(path);
-		videoTrack.getGraphic().setPosition(new QVector(targetW/4, targetH/4));
-		videoTrack.getGraphic().setContentSize(new QVector(targetW/2, targetH/2));
-		videoTrack.getGraphic().setAnchorPoint(new QVector(0.5f,0.5f));
-
-		QDuplicateNode duplicatenodeL = new QDuplicateNode(videoTrack.getGraphic(), editorPlayer);
-		duplicatenodeL.setContentSize(new QVector(targetW/2, targetH/2));
-		duplicatenodeL.setPosition(new QVector(0, targetH/4));
-		duplicatenodeL.setAnchorPoint(new QVector(0.5f,0.5f));
-		duplicatenodeL.setRotation3d(new QVector(0, 90, 0));
-
-		QDuplicateNode duplicatenodeR = new QDuplicateNode(videoTrack.getGraphic(), editorPlayer);
-		duplicatenodeR.setContentSize(new QVector(targetW/2, targetH/2));
-		duplicatenodeR.setPosition(new QVector(targetW/2, targetH/4));
-		duplicatenodeR.setAnchorPoint(new QVector(0.5f,0.5f));
-		duplicatenodeR.setRotation3d(new QVector(0, -90, 0));
-
-		editorPlayer.getRootNode().addChildNode(videoTrack.getGraphic());
-		editorPlayer.getRootNode().addChildNode(duplicatenodeL);
-		editorPlayer.getRootNode().addChildNode(duplicatenodeR);
+		setEffects(editorPlayer);
 
 		editorPlayer.start();
 	}
@@ -197,11 +209,61 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 			}
 			break;
 			case R.id.btn_save: {
+
+				if (exporter != null)
+					return;
+
 				String savePath = "/sdcard/output.mp4";
 				File f = new File(savePath);
 				if(f.exists()){
 					f.delete();
 				}
+
+				QFileExporterTarget fileExporterTarget = new QFileExporterTarget(savePath);
+				fileExporterTarget.setEnableAudio(true);
+				exporter = new QExporter(fileExporterTarget,fileExporterTarget);
+				exporter.setAudioConfig(new QAudioDescribe(QAudioDescribe.QAudioCodecAAC, QAudioDescribe.QRawAudioFormatS16,
+						44100, 2, 64000));
+				exporter.setVideoConfig(new QVideoDescribe(QVideoDescribe.QVideoCodecH264, QVideoDescribe.QRawVideoFormatHardware,
+						QVideoDescribe.QVideoRotation_0, 25, 640, 480, 1*1024*1024, 1000));
+				exporter.setObserver(new QExporter.Observer() {
+					@Override
+					public void onExporterStarted(int code) {
+						
+					}
+
+					@Override
+					public void onExporterStoped(int code) {
+						mProgressBar.setVisibility(View.INVISIBLE);
+						exporter.release();
+						exporter = null;
+						Toast.makeText(ReaderMuxerActivity.this, "onExporterStoped", Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onExporterProgressUpdated(long progress) {
+						QRange range = editorPlayer.getMediaTimeRange();
+						mProgressBar.setProgress((int) (exporter.getPosition() * 100 / range.getLength()));
+					}
+
+					@Override
+					public void onExporterCanceled(int code) {
+						mProgressBar.setVisibility(View.INVISIBLE);
+						exporter.release();
+						exporter = null;
+						Toast.makeText(ReaderMuxerActivity.this, "onExporterCanceled", Toast.LENGTH_SHORT).show();
+					}
+
+					@Override
+					public void onExporterCompleted() {
+						mProgressBar.setVisibility(View.INVISIBLE);
+						exporter.release();
+						exporter = null;
+						Toast.makeText(ReaderMuxerActivity.this, "onExporterCompleted", Toast.LENGTH_SHORT).show();
+					}
+				});
+				setEffects(exporter);
+				exporter.start();
 
 
 				mProgressBar.setVisibility(View.VISIBLE);
