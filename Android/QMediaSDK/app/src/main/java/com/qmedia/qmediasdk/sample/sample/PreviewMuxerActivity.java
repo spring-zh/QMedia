@@ -20,6 +20,7 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QEditor.QEditorPlayer;
 import com.qmedia.qmediasdk.QEditor.QExporter;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
+import com.qmedia.qmediasdk.QGraphic.QNodeAnimator;
 import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
 import com.qmedia.qmediasdk.QSource.QVideoDescribe;
@@ -70,9 +71,19 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		duplicatenodeR.setAnchorPoint(new QVector(0.5f,0.5f));
 		duplicatenodeR.setRotation3d(new QVector(0, -90, 0));
 
+		combiner.getRootNode().setAnchorPoint(new QVector(0.5f,0.5f));
+		combiner.getRootNode().setContentSize(new QVector(targetW, targetH));
 		combiner.getRootNode().addChildNode(videoTrack.getGraphic());
 		combiner.getRootNode().addChildNode(duplicatenodeL);
 		combiner.getRootNode().addChildNode(duplicatenodeR);
+
+
+		QNodeAnimator an1 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(0, 5000) ,
+				new QVector(0, 0, 0) , new QVector(-180, 180, 180), QNodeAnimator.Linear ,false, "");
+		QNodeAnimator an2 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(5000, 10000) ,
+				new QVector(-180, 180, 180) , new QVector(-360, 360, 360), QNodeAnimator.Linear ,false, "");
+		combiner.getRootNode().addAnimator(an1);
+		combiner.getRootNode().addAnimator(an2);
 	}
 
 	@Override
