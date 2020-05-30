@@ -1,5 +1,6 @@
 package com.qmedia.qmediasdk.QSource;
 
+import android.content.res.AssetFileDescriptor;
 import android.graphics.SurfaceTexture;
 import android.media.AudioFormat;
 import android.media.MediaExtractor;
@@ -12,6 +13,7 @@ import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
 import com.qmedia.qmediasdk.QCommon.media.HardwareDecoder;
 import com.qmedia.qmediasdk.QCommon.QGLContext;
 import com.qmedia.qmediasdk.QGraphic.QVideoFrame;
+import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 
@@ -26,6 +28,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
     private static final String TAG = "QMediaExtractorSource";
 
     String mFileName;
+    boolean bReadInAsset = false;
 
     QVideoTarget mVideoTarget;
     QAudioTarget mAudioTarget;
@@ -53,8 +56,9 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
 
     AtomicInteger mTextureImageCount = new AtomicInteger(0);
 
-    public QMediaExtractorSource(String filename) {
+    public QMediaExtractorSource(String filename, boolean inAsset) {
         mFileName = filename;
+        bReadInAsset = inAsset;
         for (int i = 0; i < streamMap.length ; i++) {
             streamMap[i] = -1;
         }
@@ -155,10 +159,17 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
     public boolean load() {
         if(mIsPrepare)
             return true;
-        File videoFile = new File(mFileName);
+
         mExtractor = new MediaExtractor();
         try {
-            mExtractor.setDataSource(videoFile.getAbsolutePath());
+            if (!bReadInAsset) {
+                File videoFile = new File(mFileName);
+                mExtractor.setDataSource(videoFile.getAbsolutePath());
+            }else {
+                AssetFileDescriptor assetFileDescriptor = QMediaSDK.getContext().getAssets().openFd(mFileName);
+                mExtractor.setDataSource(assetFileDescriptor.getFileDescriptor(),assetFileDescriptor.getStartOffset(),assetFileDescriptor.getLength());
+            }
+
             int numTracks = mExtractor.getTrackCount();
             for (int i = 0; i < numTracks && i < MAX_STREAM_COUNT; i++) {
                 MediaFormat format = mExtractor.getTrackFormat(i);

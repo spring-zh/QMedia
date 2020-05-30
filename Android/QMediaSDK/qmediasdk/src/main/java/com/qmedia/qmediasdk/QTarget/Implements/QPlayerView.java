@@ -360,7 +360,7 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
                 setRenderTexture(0);
 
                 GLES20.glDisable(GLES20.GL_DEPTH_TEST);
-//                GLES20.glViewport(viewPort[0],viewPort[1], viewPort[2], viewPort[3]);
+
                 QVector viewVec = calculateViewPort(displayMode, mVideodescribe.width, mVideodescribe.height, mPreviewWidth, mPreviewHeight);
                 GLES20.glViewport((int)viewVec.v0, (int)viewVec.v1, (int)(viewVec.v2 - viewVec.v0), (int)(viewVec.v3 - viewVec.v1));
 //                GLES20.glClearColor(bkcolors[0],bkcolors[1],bkcolors[2],bkcolors[3]);

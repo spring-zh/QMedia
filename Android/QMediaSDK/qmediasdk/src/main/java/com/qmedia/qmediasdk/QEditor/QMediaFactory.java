@@ -70,8 +70,8 @@ public class QMediaFactory {
     }
 
 
-    public QMediaTrack createVideoTrack(String filePath) {
-        QMediaSource mediaSource = new QMediaExtractorSource(filePath);
+    public QMediaTrack createVideoTrack(String filePath, boolean inAsset) {
+        QMediaSource mediaSource = new QMediaExtractorSource(filePath, inAsset);
         mediaSource.setVideoTarget(videoTarget);
         mediaSource.setAudioTarget(audioTarget);
         QMediaTrack mediaTrack = new QMediaTrack(mediaSource);

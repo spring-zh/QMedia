@@ -53,8 +53,9 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 	void setEffects(QCombiner combiner) {
 		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
 
-		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
-		QMediaTrack videoTrack = combiner.createVideoTrack(path);
+//		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
+		String path = "test.mp4";
+		QMediaTrack videoTrack = combiner.createVideoTrack(path, true);
 		videoTrack.getGraphic().setPosition(new QVector(targetW/4, targetH/4));
 		videoTrack.getGraphic().setContentSize(new QVector(targetW/2, targetH/2));
 		videoTrack.getGraphic().setAnchorPoint(new QVector(0.5f,0.5f));
@@ -91,6 +92,7 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader_muxer);
 //		Log.i(TAG, "qmediasdk version: " + QMediaSDK.SDK_VERSION);
+		QMediaSDK.init(this);
 		mframeLayout = (FrameLayout) findViewById(R.id.frameLayout);
 		mPreviewView = (QPlayerView) findViewById(R.id.render_view);
 		mPreviewView.setDisplayMode(QPlayerView.DisplayMode.Adaptive);
