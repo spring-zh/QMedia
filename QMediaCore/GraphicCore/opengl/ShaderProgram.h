@@ -102,6 +102,7 @@ public:
         }
 
         unsigned int _texture;
+        GLenum _textureTarget = GL_TEXTURE_2D;
         int _int_val;
         std::vector<int> _int_array;
         float _float_val;

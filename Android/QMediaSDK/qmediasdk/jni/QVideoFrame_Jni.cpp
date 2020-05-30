@@ -144,7 +144,10 @@ void OESVideoFrameDrawer::drawFrame(const GraphicCore::Scene* scene, const Graph
 
         _program->setVertexAttribValue("a_texCoord", GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS), Drawable2D::RECTANGLE_TEX_COORDS);
         _program->setVertexAttribValue("a_position", GET_ARRAY_COUNT(posArray) ,posArray);
-        _program->setUniformValue("uTexture",_textureid);
+        Uniform::Value textureVal;
+        textureVal._textureTarget = GL_TEXTURE_EXTERNAL_OES;
+        textureVal._texture = _textureid;
+        _program->setUniformValue("uTexture",textureVal);
         GraphicCore::Mat4 mvpMatrix;
         GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
         GraphicCore::Mat4 texMatrix;

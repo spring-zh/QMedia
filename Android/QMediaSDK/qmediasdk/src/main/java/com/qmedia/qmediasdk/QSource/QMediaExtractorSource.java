@@ -8,6 +8,7 @@ import android.opengl.GLES20;
 import android.view.Surface;
 
 import com.qmedia.qmediasdk.QAudio.QAudioFrame;
+import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
 import com.qmedia.qmediasdk.QCommon.media.HardwareDecoder;
 import com.qmedia.qmediasdk.QCommon.QGLContext;
 import com.qmedia.qmediasdk.QGraphic.QVideoFrame;
@@ -176,8 +177,9 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                     {
                         QGLContext qglContext = QGLContext.shared();
                         synchronized (qglContext) {
-                            qglContext.unUseCurrent();
+                            qglContext.useAsCurrentContext();
                             mOESTextureid = qglContext.createTextureOES();
+                            GlUtil.checkGlError("createTextureOES");
                             mVideoSurfaceTexture = new SurfaceTexture(mOESTextureid);
                             qglContext.unUseCurrent();
                         }

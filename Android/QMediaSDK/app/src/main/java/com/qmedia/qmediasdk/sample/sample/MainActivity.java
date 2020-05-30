@@ -3,9 +3,6 @@ package com.qmedia.qmediasdk.sample.sample;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.AssetManager;
-import android.graphics.Bitmap;
-import android.media.MediaCodec;
-import android.media.MediaMuxer;
 import android.os.Environment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,7 +11,6 @@ import android.view.View;
 import android.widget.Button;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 		button_audio.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(MainActivity.this, ReaderMuxerActivity.class);
+				Intent intent = new Intent(MainActivity.this, PreviewMuxerActivity.class);
 //				intent.putExtra("LAUNCH_TYPE", Constant.LAUNCH_TYPE_MERGE);
 				Log.d(TAG, "LAUNCH_TYPE_MERGE");
 				startActivity(intent);

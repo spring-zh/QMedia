@@ -364,7 +364,7 @@ bool ShaderProgram::use() {
     if (currProgram != _program) {
         glUseProgram(_program);
         if(glGetError() != GL_NO_ERROR) {
-//            loginfo("glUseProgram %d faild",_program);
+            LOGW("glUseProgram %d faild",_program);
             return false;
         }
     }
@@ -410,7 +410,7 @@ bool ShaderProgram::beginDraw()
             auto &uniform = item.second;
             if (uniform._type == Uniform::TEXTURE){
                 glActiveTexture(GL_TEXTURE0 + textureId);
-                glBindTexture(GL_TEXTURE_2D, uniform._value._texture);
+                glBindTexture(uniform._value._textureTarget, uniform._value._texture);
                 glUniform1i(uniform._glbinder._location, textureId);
 
                 textureId++;
@@ -434,7 +434,7 @@ GLuint ShaderProgram::LoadShader(GLenum type, const char* shaderSrc) {
 
     if (!shader)
     {
-//        logerror("glCreateShader failed");
+        glCheckError();
         return 0;
     }
 
@@ -460,7 +460,6 @@ GLuint ShaderProgram::LoadShader(GLenum type, const char* shaderSrc) {
            info_log = NULL;
         }
         glCheckError();
-//        logerror("glCompileShader failed");
         glDeleteShader(shader);
         return 0;
     }

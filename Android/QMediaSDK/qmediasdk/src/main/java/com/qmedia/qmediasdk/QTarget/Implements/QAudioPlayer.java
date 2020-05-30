@@ -9,7 +9,6 @@ import android.os.Process;
 import android.util.Log;
 
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
-import com.qmedia.qmediasdk.QSource.QMediaDescribe;
 import com.qmedia.qmediasdk.QTarget.QAudioRender;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 
@@ -117,13 +116,17 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
         if (isStarted) {
             synchronized (wakeup) {
                 abort_request = true;
+                wakeup.notify();
             }
-            try {
-                playThread.wait();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
+
+            if (playThread != null) {
+                try {
+                    playThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                playThread = null;
             }
-            playThread = null;
         }
         isStarted = false;
         return true;
@@ -186,7 +189,7 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
         }
         Log.i(TAG, "AudioTrack.getMinBufferSize " + minBufferSize);
         minBufferSize *= AUDIOTRACK_PLAYBACK_MAXSPEED;
-        audioData = ByteBuffer.allocateDirect(minBufferSize);
+        audioData = ByteBuffer.allocate(minBufferSize);
 
         atrack = new AudioTrack(AudioManager.STREAM_MUSIC, describe.samplerate, channelout, pcm_bits, minBufferSize, AudioTrack.MODE_STREAM);
         isInit = true;
@@ -198,7 +201,6 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
         if (isInit) {
             atrack.release();
             atrack = null;
-            audioData.reset();
             audioData = null;
         }
         isInit = false;

@@ -4,10 +4,12 @@ package com.qmedia.qmediasdk.QTarget.Implements;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.opengl.EGLContext;
+import android.opengl.GLES10Ext;
 import android.opengl.GLES20;
 import android.util.Log;
 
 import com.qmedia.qmediasdk.QCommon.QGLContext;
+import com.qmedia.qmediasdk.QCommon.gles.Drawable2d;
 import com.qmedia.qmediasdk.QCommon.gles.EglCore;
 import com.qmedia.qmediasdk.QCommon.gles.FullFrameRect;
 import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
@@ -25,6 +27,9 @@ import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
+
+import javax.microedition.khronos.opengles.GL11Ext;
+import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 /**
  * Created by spring on 2017/5/8.
@@ -262,14 +267,15 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 
     class VideoThread extends Thread implements HardwareEncoder.Listener{
 
-        //private static final String TAG = "VideoThread";
         private static final boolean VERBOSE = false;
 
         // ----- accessed exclusively by encoder thread -----
         private WindowSurface mInputWindowSurface;
         private EglCore mEglCore;
         private FullFrameRect mFullScreen;
-//        private EGLContext mSharedContext = null;
+        private int []targetTexure = new int[1];
+        private int []targetFrameBuffer = new int[1];
+
         private HardwareEncoder mVideoEncoder;
         boolean mThreadRuning = false;
 
@@ -281,7 +287,7 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 
 
         VideoThread(QVideoDescribe describe) throws IOException {
-
+            setName("VideoEncodeThread");
             mVideoEncoder = new HardwareEncoder(this,false);
             mVideoEncoder.startVideoEncoder((int) describe.framerate,describe.width,describe.height,describe.bitrate,false);
 //            mSharedContext = conf.mEglContext;
@@ -308,24 +314,55 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
             mVideoEncoder.release();
         }
 
+        void createTextureTarget(){
+            mFullScreen = new FullFrameRect(
+                    new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
+            targetTexure[0] = mFullScreen.createTextureObject();
+            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, /*level*/ 0, GLES20.GL_RGBA,
+                    mWidth, mHeight, /*border*/ 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+            GlUtil.checkGlError("loadImageTexture");
+            GLES20.glGenFramebuffers(1, targetFrameBuffer,0);
+        }
+
+        void releaseTextureTarget() {
+            GLES20.glDeleteTextures(1,targetTexure, 0);
+            GLES20.glDeleteFramebuffers(1, targetFrameBuffer, 0);
+            if (mFullScreen != null) {
+                mFullScreen.release(false);
+                mFullScreen = null;
+            }
+        }
+
+        void setRenderTexture(int texId) {
+            if (texId > 0) {
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, targetFrameBuffer[0]);
+                GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+                        GLES20.GL_TEXTURE_2D, texId, 0);
+            }else {
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+            }
+
+            int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
+            if (status != GLES20.GL_FRAMEBUFFER_COMPLETE)
+            {
+                GlUtil.checkGlError("glCheckFramebufferStatus: " +  status);
+            }
+        }
+
         private void prepareEGL(EGLContext sharedContext) {
 
             mEglCore = new EglCore(sharedContext, EglCore.FLAG_RECORDABLE);
             mInputWindowSurface = new WindowSurface(mEglCore, mVideoEncoder.getInputSurface(), true);
             mInputWindowSurface.makeCurrent();
-
-            mFullScreen = new FullFrameRect(
-                    new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
+            Log.i(TAG, "GL_EXTENSIONS : " + GLES20.glGetString(GLES20.GL_EXTENSIONS));
+            createTextureTarget();
         }
         private void releaseEGL() {
-//            mVideoEncoder.release();
+
+            releaseTextureTarget();
             if (mInputWindowSurface != null) {
                 mInputWindowSurface.release();
                 mInputWindowSurface = null;
-            }
-            if (mFullScreen != null) {
-                mFullScreen.release(false);
-                mFullScreen = null;
             }
             if (mEglCore != null) {
                 mEglCore.release();
@@ -338,8 +375,8 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 
             long timestampUs = 0;
             prepareEGL(QGLContext.shared().eglContext());
-
             GLES20.glViewport(0,0,mWidth,mHeight);
+            GlUtil.checkGlError("after prepareEGL");
 
             getVideoRender().onVideoCreate();
 
@@ -347,12 +384,14 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 //                mVideoEncoder.requireKeyFrame();
                 mVideoEncoder.drainEncoder(false);
 
-//                GlUtil.checkGlError("onVideoRender before");
-
+                GlUtil.checkGlError("onVideoRender before");
+                setRenderTexture(targetTexure[0]);
                 if (getVideoRender().onVideoRender(timestampUs / 1000))
                 {
+                    GlUtil.checkGlError("onVideoRender after");
+                    setRenderTexture(0);
+                    mFullScreen.drawFrame(targetTexure[0], null);
                     mInputWindowSurface.setPresentationTime((timestampUs + 10)*1000);
-
                     mInputWindowSurface.swapBuffers();
 //                    mVideoEncoder.requireKeyFrame();
                     timestampUs += mTimeDuration;
@@ -402,11 +441,12 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
         long mLastWriteTime = 0;
 
         AudioThread(QAudioDescribe describe) throws IOException {
+            setName("AudioEncodeThread");
             mAudioEncoder = new HardwareEncoder(this,true);
             mAudioEncoder.startAudioEncoder(describe.samplerate,describe.nchannel, describe.bitrate);
 
+            //set size bytes for each packet
             requestSize = 1024 * describe.nchannel * 2;
-//            mBuffer = new byte[mBufferLen];
 
             mAudioTimestampUs = 0;
             bytesPerSecond = describe.samplerate * describe.nchannel * 2;

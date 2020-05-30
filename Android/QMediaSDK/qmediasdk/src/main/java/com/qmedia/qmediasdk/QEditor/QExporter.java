@@ -96,51 +96,56 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
 
     //TODO: QExporter callback @callbynative
     private void onExporterStarted(int code) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onExporterStarted(code);
+                    observer.onExporterStarted(code);
                 }
             });
         }
     }
     private void onExporterStoped(int code) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onExporterStoped(code);
+                    observer.onExporterStoped(code);
                 }
             });
         }
     }
     private void onExporterProgressUpdated(long progress) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onExporterProgressUpdated(progress);
+                    observer.onExporterProgressUpdated(progress);
                 }
             });
         }
     }
     private void onExporterCanceled(int code) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onExporterCanceled(code);
+                    observer.onExporterCanceled(code);
                 }
             });
         }
     }
     private void onExporterCompleted() {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onExporterCompleted();
+                    observer.onExporterCompleted();
                 }
             });
         }

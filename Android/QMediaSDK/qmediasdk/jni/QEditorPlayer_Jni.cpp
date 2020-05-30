@@ -13,6 +13,12 @@ QEditorPlayer_Jni::QEditorPlayer_Jni(jobject jpalyer): EditorPlayer() , _weakObj
     EditorPlayer::setCallBack(this);
 }
 QEditorPlayer_Jni::~QEditorPlayer_Jni() {
+    _threadTask.postTask([this]() ->RetCode {
+        _stop();
+        _audioTarget->unInit();
+        return RetCode::ok;
+    });
+    _threadTask.waitForStop();
 }
 
 void QEditorPlayer_Jni::onPrepare(RetCode code) {

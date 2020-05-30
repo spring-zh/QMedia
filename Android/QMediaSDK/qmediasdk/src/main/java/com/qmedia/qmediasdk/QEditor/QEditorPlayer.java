@@ -141,55 +141,60 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
 
     //TODO: Player callback @callbynative
     private void onPrepare(int errcode) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onPrepare();
+                    observer.onPrepare();
                 }
             });
         }
     }
 
     private void onPlayerStateChanged(int newState, int oldState) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onPlayerStateChanged(newState, oldState);
+                    observer.onPlayerStateChanged(newState, oldState);
                 }
             });
         }
     }
 
     private void onPlayerTimeProgressUpdated(long progress) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onPlayerTimeProgressUpdated(progress);
+                    observer.onPlayerTimeProgressUpdated(progress);
                 }
             });
         }
     }
 
     private void onSeekTo(long mSec) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onSeekTo(mSec);
+                    observer.onSeekTo(mSec);
                 }
             });
         }
     }
 
     private void onCompleted(int errcode) {
-        if (mObserver != null) {
+        Observer observer = mObserver;
+        if (observer != null) {
             mCbHandler.post(new Runnable() {
                 @Override
                 public void run() {
-                    mObserver.onCompleted(errcode);
+                    observer.onCompleted(errcode);
                 }
             });
         }

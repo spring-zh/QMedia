@@ -1,9 +1,5 @@
 package com.qmedia.qmediasdk.sample.sample;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -15,15 +11,8 @@ import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QVector;
@@ -39,7 +28,7 @@ import com.qmedia.qmediasdk.QTarget.Implements.QPlayerView;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 import com.qmedia.qmediasdk.sample.R;
 
-public class ReaderMuxerActivity extends AppCompatActivity implements View.OnClickListener{
+public class PreviewMuxerActivity extends AppCompatActivity implements View.OnClickListener{
 
 	private final String TAG = "PreviewView";
 	ProgressBar mProgressBar;
@@ -93,6 +82,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 //		Log.i(TAG, "qmediasdk version: " + QMediaSDK.SDK_VERSION);
 		mframeLayout = (FrameLayout) findViewById(R.id.frameLayout);
 		mPreviewView = (QPlayerView) findViewById(R.id.render_view);
+		mPreviewView.setDisplayMode(QPlayerView.DisplayMode.Adaptive);
 
 		Log.e(TAG, "activity_create width=" + mPreviewView.getWidth() + " height=" + mPreviewView.getHeight() + " " + QMediaSDK.SDK_VERSION);
 
@@ -191,6 +181,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 	@Override
 	protected void onPause() {
 		super.onPause();
+		mPreviewView.onPause();
 	}
 
 
@@ -237,7 +228,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 						mProgressBar.setVisibility(View.INVISIBLE);
 						exporter.release();
 						exporter = null;
-						Toast.makeText(ReaderMuxerActivity.this, "onExporterStoped", Toast.LENGTH_SHORT).show();
+						Toast.makeText(PreviewMuxerActivity.this, "onExporterStoped", Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
@@ -251,7 +242,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 						mProgressBar.setVisibility(View.INVISIBLE);
 						exporter.release();
 						exporter = null;
-						Toast.makeText(ReaderMuxerActivity.this, "onExporterCanceled", Toast.LENGTH_SHORT).show();
+						Toast.makeText(PreviewMuxerActivity.this, "onExporterCanceled", Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
@@ -259,7 +250,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 						mProgressBar.setVisibility(View.INVISIBLE);
 						exporter.release();
 						exporter = null;
-						Toast.makeText(ReaderMuxerActivity.this, "onExporterCompleted", Toast.LENGTH_SHORT).show();
+						Toast.makeText(PreviewMuxerActivity.this, "onExporterCompleted", Toast.LENGTH_SHORT).show();
 					}
 				});
 				setEffects(exporter);

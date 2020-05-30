@@ -28,14 +28,7 @@ public:
     }
     ~ThreadTask()
     {
-        functmp nullfunction = nullptr;
-        _funcQueue.Put(nullfunction,-1);
-        try {
-            if (_thread.joinable())
-                _thread.join();
-        }catch (std::exception & e){
-            
-        }
+        waitForStop();
     }
     
     template <class func_ptr,class... Args/*,typename = typename std::enable_if<!std::is_void<RetT>::value>::type*/>
@@ -64,11 +57,23 @@ public:
     void clearTask(){
         _funcQueue.RemoveAll();
     }
-    
+
+    void waitForStop() {
+        functmp nullfunction = nullptr;
+        _funcQueue.Put(nullfunction,-1);
+        try {
+            if (_thread.joinable())
+                _thread.join();
+        }catch (std::exception & e){
+
+        }
+    }
+
+protected:
     inline void _postTask(const functmp& func, int vId){
         _funcQueue.Put(func, vId);
     }
-protected:
+
     ThreadTask(const ThreadTask& that);
     ThreadTask& operator=(const ThreadTask& that);
     

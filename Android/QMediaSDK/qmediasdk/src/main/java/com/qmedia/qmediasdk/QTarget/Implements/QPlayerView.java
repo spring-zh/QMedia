@@ -18,6 +18,10 @@ import android.util.Log;
 import com.qmedia.qmediasdk.QCommon.GLSurfaceView14;
 import com.qmedia.qmediasdk.QCommon.QAspectLayout;
 import com.qmedia.qmediasdk.QCommon.QGLContext;
+import com.qmedia.qmediasdk.QCommon.QVector;
+import com.qmedia.qmediasdk.QCommon.gles.FullFrameRect;
+import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
+import com.qmedia.qmediasdk.QCommon.gles.Texture2dProgram;
 import com.qmedia.qmediasdk.QSource.QVideoDescribe;
 import com.qmedia.qmediasdk.QTarget.QVideoRender;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
@@ -42,11 +46,13 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
     private int mPreviewWidth;
     private int mPreviewHeight;
 
-    //render control
-//    protected volatile boolean mbDisplay = false;
-//    private Object mDisplayLck = new Object();
-//    private int mDisplayFps = 30;
-//    private Timer mDisplayTimer;
+    public enum DisplayMode {
+        Stretch,
+        Adaptive,
+        Clip
+    }
+
+    private DisplayMode displayMode = DisplayMode.Stretch;
 
     QVideoDescribe mVideodescribe;
     private QVideoRender mVideoRender;
@@ -98,16 +104,72 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
 //        notifyRender();
     }
 
+    public void setDisplayMode(DisplayMode mode) {
+        displayMode = mode;
+    }
+
+    QVector calculateViewPort(DisplayMode mode, int srcW, int srcH, int dstW, int dstH) {
+        QVector dstRegion = new QVector(0,0,0,0);
+//        int []ret = {0,0,0,0};
+        switch (mode) {
+            case Stretch:
+                dstRegion.v2 = dstW;
+                dstRegion.v3 = dstH;
+                break;
+            case Adaptive:
+            {
+                float dstRatio = (float) dstW / dstH;
+                float srcRatio = (float) srcW / srcH;
+                if (srcRatio > dstRatio) {
+                    dstRegion.v0 = 0;
+                    dstRegion.v2 = dstW;
+                    int newH = (int) (dstW / srcRatio);
+                    dstRegion.v1 = (dstH - newH)/2;
+                    dstRegion.v3 = (dstH + newH)/2;
+                } else {
+                    dstRegion.v1 = 0;
+                    dstRegion.v3 = dstH;
+                    int newW = (int) (dstH * srcRatio);
+                    dstRegion.v0 = (dstW - newW) / 2;
+                    dstRegion.v2 = (dstW + newW) / 2;
+                }
+            }
+                break;
+            case Clip:
+
+                break;
+
+        }
+        return dstRegion;
+    }
+
     @Override
     public boolean startVideo() {
-        isStarted = true;
+//        mGLSurfaceView.queueEvent(new Runnable() {
+//            @Override
+//            public void run() {
+//                mVideoRender.onVideoCreate();
+//            }
+//        });
+        synchronized (this){
+            isStarted = true;
+        }
         return true;
     }
 
     @Override
     public boolean stopVideo() {
-        isStarted = false;
-        return false;
+        synchronized (this) {
+            isStarted = false;
+        }
+        mGLSurfaceView.queueEvent(new Runnable() {
+            @Override
+            public void run() {
+                mVideoRender.onVideoDestroy();
+                releaseTextureTarget();
+            }
+        });
+        return true;
     }
 
     @Override
@@ -174,12 +236,9 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
                 matrix.setValues(floats);
                 Bitmap dstbitmap = Bitmap.createBitmap(bmp,0, 0, mPreviewWidth, mPreviewHeight, matrix, true);
                 bmp.recycle();
-                bmp = null;
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 dstbitmap.compress(Bitmap.CompressFormat.JPEG, 90, bos);
                 dstbitmap.recycle();
-                dstbitmap = null;
-                captureBuffer = null;
                 try {
                     FileOutputStream fos = new FileOutputStream(new File(filename));
                     bos.writeTo(fos);
@@ -210,21 +269,65 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
 
     //activity live
     public void onPause() {
-//        mGLSurfaceView.onPause();
+        mGLSurfaceView.onPause();
     }
 
     public void onDestroy() {
 
-	    mGLSurfaceView.queueEvent(new Runnable() {
-		    @Override public void run() {
-			    // Tell the renderer that it's about to be paused so it can clean up.
-			    mVideoRender.onVideoDestroy();
-		    }
-	    });
+//	    mGLSurfaceView.queueEvent(new Runnable() {
+//		    @Override public void run() {
+//			    // Tell the renderer that it's about to be paused so it can clean up.
+//			    mVideoRender.onVideoDestroy();
+//		    }
+//	    });
     }
 
-    public void notifyRender(){
-        mGLSurfaceView.requestRender();
+    boolean bTextureCreate = false;
+    private FullFrameRect mFullScreen;
+    private int []targetTexure = new int[1];
+    private int []targetFrameBuffer = new int[1];
+
+    void createTextureTarget(int width, int height){
+        if (bTextureCreate) {
+            return;
+        }
+        mFullScreen = new FullFrameRect(
+                new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
+        targetTexure[0] = mFullScreen.createTextureObject();
+        GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, /*level*/ 0, GLES20.GL_RGBA,
+                width, height, /*border*/ 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
+        GlUtil.checkGlError("loadImageTexture");
+        GLES20.glGenFramebuffers(1, targetFrameBuffer,0);
+
+        bTextureCreate = true;
+    }
+
+    void releaseTextureTarget() {
+        if (!bTextureCreate)
+            return;
+        GLES20.glDeleteTextures(1,targetTexure, 0);
+        GLES20.glDeleteFramebuffers(1, targetFrameBuffer, 0);
+        if (mFullScreen != null) {
+            mFullScreen.release(false);
+            mFullScreen = null;
+        }
+        bTextureCreate = false;
+    }
+
+    void setRenderTexture(int texId) {
+        if (texId > 0) {
+            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, targetFrameBuffer[0]);
+            GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
+                    GLES20.GL_TEXTURE_2D, texId, 0);
+        }else {
+            GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+        }
+
+        int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
+        if (status != GLES20.GL_FRAMEBUFFER_COMPLETE)
+        {
+            GlUtil.checkGlError("glCheckFramebufferStatus: " +  status);
+        }
     }
 
 
@@ -247,19 +350,28 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
 
     @Override
     public boolean onDrawFrame() {
+        createTextureTarget(mVideodescribe.width, mVideodescribe.height);
+        synchronized (this) {
+            if (isStarted || forceUpdate) {
+                forceUpdate = false;
+                setRenderTexture(targetTexure[0]);
+                GLES20.glViewport(0,0, mVideodescribe.width, mVideodescribe.height);
+                mVideoRender.onVideoRender(-1);
+                setRenderTexture(0);
 
-        if (isStarted || forceUpdate){
-            forceUpdate = false;
-//            GLES20.glClearColor(bkcolors[0],bkcolors[1],bkcolors[2],bkcolors[3]);
-//            GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT);
-            mVideoRender.onVideoRender(-1);
-            return true;
+                GLES20.glDisable(GLES20.GL_DEPTH_TEST);
+//                GLES20.glViewport(viewPort[0],viewPort[1], viewPort[2], viewPort[3]);
+                QVector viewVec = calculateViewPort(displayMode, mVideodescribe.width, mVideodescribe.height, mPreviewWidth, mPreviewHeight);
+                GLES20.glViewport((int)viewVec.v0, (int)viewVec.v1, (int)(viewVec.v2 - viewVec.v0), (int)(viewVec.v3 - viewVec.v1));
+//                GLES20.glClearColor(bkcolors[0],bkcolors[1],bkcolors[2],bkcolors[3]);
+//                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+
+                mFullScreen.drawFrame(targetTexure[0], null);
+
+                return true;
+            }
         }
         return false;
-    }
-
-    public void queueEvent(Runnable run) {
-        mGLSurfaceView.queueEvent(run);
     }
 
     @Override

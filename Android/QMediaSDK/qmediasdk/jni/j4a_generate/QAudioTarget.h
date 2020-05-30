@@ -52,11 +52,11 @@ void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setAudioDelay(JNIEnv *env, 
 void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setAudioDelay__catchAll(JNIEnv *env, jobject thiz, jint audioDelay);
 jint J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioDelay(JNIEnv *env, jobject thiz);
 jint J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioDelay__catchAll(JNIEnv *env, jobject thiz);
-void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setRender(JNIEnv *env, jobject thiz, jobject audioRender);
-void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setRender__catchAll(JNIEnv *env, jobject thiz, jobject audioRender);
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender(JNIEnv *env, jobject thiz);
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender__catchAll(JNIEnv *env, jobject thiz);
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender__asGlobalRef__catchAll(JNIEnv *env, jobject thiz);
+void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setAudioRender(JNIEnv *env, jobject thiz, jobject audioRender);
+void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setAudioRender__catchAll(JNIEnv *env, jobject thiz, jobject audioRender);
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioRender(JNIEnv *env, jobject thiz);
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioRender__catchAll(JNIEnv *env, jobject thiz);
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioRender__asGlobalRef__catchAll(JNIEnv *env, jobject thiz);
 int J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget(JNIEnv *env);
 
 #endif//J4A__com_qmedia_qmediasdk_QTarget_QAudioTarget__H
