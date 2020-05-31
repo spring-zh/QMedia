@@ -33,8 +33,8 @@ typedef struct J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget {
     jmethodID method_getTargetHeight;
     jmethodID method_getFrameRate;
     jmethodID method_getTargetContext;
-    jmethodID method_setRender;
-    jmethodID method_getRender;
+    jmethodID method_setVideoRender;
+    jmethodID method_getVideoRender;
 } J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget;
 static J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget;
 
@@ -185,25 +185,25 @@ fail:
     return ret_object;
 }
 
-void J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setRender(JNIEnv *env, jobject thiz, jobject videoRender)
+void J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setVideoRender(JNIEnv *env, jobject thiz, jobject videoRender)
 {
-    (*env)->CallVoidMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_setRender, videoRender);
+    (*env)->CallVoidMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_setVideoRender, videoRender);
 }
 
-void J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setRender__catchAll(JNIEnv *env, jobject thiz, jobject videoRender)
+void J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setVideoRender__catchAll(JNIEnv *env, jobject thiz, jobject videoRender)
 {
-    J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setRender(env, thiz, videoRender);
+    J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setVideoRender(env, thiz, videoRender);
     J4A_ExceptionCheck__catchAll(env);
 }
 
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender(JNIEnv *env, jobject thiz)
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getVideoRender(JNIEnv *env, jobject thiz)
 {
-    return (*env)->CallObjectMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_getRender);
+    return (*env)->CallObjectMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_getVideoRender);
 }
 
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender__catchAll(JNIEnv *env, jobject thiz)
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getVideoRender__catchAll(JNIEnv *env, jobject thiz)
 {
-    jobject ret_object = J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender(env, thiz);
+    jobject ret_object = J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getVideoRender(env, thiz);
     if (J4A_ExceptionCheck__catchAll(env) || !ret_object) {
         return NULL;
     }
@@ -211,10 +211,10 @@ jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender__catchAll(JNIE
     return ret_object;
 }
 
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender__asGlobalRef__catchAll(JNIEnv *env, jobject thiz)
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getVideoRender__asGlobalRef__catchAll(JNIEnv *env, jobject thiz)
 {
     jobject ret_object   = NULL;
-    jobject local_object = J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender__catchAll(env, thiz);
+    jobject local_object = J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getVideoRender__catchAll(env, thiz);
     if (J4A_ExceptionCheck__catchAll(env) || !local_object) {
         ret_object = NULL;
         goto fail;
@@ -311,17 +311,17 @@ int J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget(JNIEnv *env)
         goto fail;
 
     class_id = class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.id;
-    name     = "setRender";
+    name     = "setVideoRender";
     sign     = "(Lcom/qmedia/qmediasdk/QTarget/QVideoRender;)V";
-    class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_setRender = J4A_GetMethodID__catchAll(env, class_id, name, sign);
-    if (class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_setRender == NULL)
+    class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_setVideoRender = J4A_GetMethodID__catchAll(env, class_id, name, sign);
+    if (class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_setVideoRender == NULL)
         goto fail;
 
     class_id = class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.id;
-    name     = "getRender";
+    name     = "getVideoRender";
     sign     = "()Lcom/qmedia/qmediasdk/QTarget/QVideoRender;";
-    class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_getRender = J4A_GetMethodID__catchAll(env, class_id, name, sign);
-    if (class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_getRender == NULL)
+    class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_getVideoRender = J4A_GetMethodID__catchAll(env, class_id, name, sign);
+    if (class_J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget.method_getVideoRender == NULL)
         goto fail;
 
     J4A_ALOGD("J4ALoader: OK: '%s' loaded\n", "com.qmedia.qmediasdk.QTarget.QVideoTarget");

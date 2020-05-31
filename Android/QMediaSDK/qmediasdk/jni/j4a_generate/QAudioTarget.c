@@ -38,8 +38,8 @@ typedef struct J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget {
     jmethodID method_getVolume;
     jmethodID method_setAudioDelay;
     jmethodID method_getAudioDelay;
-    jmethodID method_setRender;
-    jmethodID method_getRender;
+    jmethodID method_setAudioRender;
+    jmethodID method_getAudioRender;
 } J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget;
 static J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget;
 
@@ -229,25 +229,25 @@ jint J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioDelay__catchAll(JNI
     return ret_value;
 }
 
-void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setRender(JNIEnv *env, jobject thiz, jobject audioRender)
+void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setAudioRender(JNIEnv *env, jobject thiz, jobject audioRender)
 {
-    (*env)->CallVoidMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_setRender, audioRender);
+    (*env)->CallVoidMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_setAudioRender, audioRender);
 }
 
-void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setRender__catchAll(JNIEnv *env, jobject thiz, jobject audioRender)
+void J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setAudioRender__catchAll(JNIEnv *env, jobject thiz, jobject audioRender)
 {
-    J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setRender(env, thiz, audioRender);
+    J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__setAudioRender(env, thiz, audioRender);
     J4A_ExceptionCheck__catchAll(env);
 }
 
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender(JNIEnv *env, jobject thiz)
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioRender(JNIEnv *env, jobject thiz)
 {
-    return (*env)->CallObjectMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_getRender);
+    return (*env)->CallObjectMethod(env, thiz, class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_getAudioRender);
 }
 
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender__catchAll(JNIEnv *env, jobject thiz)
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioRender__catchAll(JNIEnv *env, jobject thiz)
 {
-    jobject ret_object = J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender(env, thiz);
+    jobject ret_object = J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioRender(env, thiz);
     if (J4A_ExceptionCheck__catchAll(env) || !ret_object) {
         return NULL;
     }
@@ -255,10 +255,10 @@ jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender__catchAll(JNIE
     return ret_object;
 }
 
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender__asGlobalRef__catchAll(JNIEnv *env, jobject thiz)
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioRender__asGlobalRef__catchAll(JNIEnv *env, jobject thiz)
 {
     jobject ret_object   = NULL;
-    jobject local_object = J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getRender__catchAll(env, thiz);
+    jobject local_object = J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget__getAudioRender__catchAll(env, thiz);
     if (J4A_ExceptionCheck__catchAll(env) || !local_object) {
         ret_object = NULL;
         goto fail;
@@ -390,17 +390,17 @@ int J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget(JNIEnv *env)
         goto fail;
 
     class_id = class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.id;
-    name     = "setRender";
+    name     = "setAudioRender";
     sign     = "(Lcom/qmedia/qmediasdk/QTarget/QAudioRender;)V";
-    class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_setRender = J4A_GetMethodID__catchAll(env, class_id, name, sign);
-    if (class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_setRender == NULL)
+    class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_setAudioRender = J4A_GetMethodID__catchAll(env, class_id, name, sign);
+    if (class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_setAudioRender == NULL)
         goto fail;
 
     class_id = class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.id;
-    name     = "getRender";
+    name     = "getAudioRender";
     sign     = "()Lcom/qmedia/qmediasdk/QTarget/QAudioRender;";
-    class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_getRender = J4A_GetMethodID__catchAll(env, class_id, name, sign);
-    if (class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_getRender == NULL)
+    class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_getAudioRender = J4A_GetMethodID__catchAll(env, class_id, name, sign);
+    if (class_J4AC_com_qmedia_qmediasdk_QTarget_QAudioTarget.method_getAudioRender == NULL)
         goto fail;
 
     J4A_ALOGD("J4ALoader: OK: '%s' loaded\n", "com.qmedia.qmediasdk.QTarget.QAudioTarget");

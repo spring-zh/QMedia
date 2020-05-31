@@ -134,7 +134,7 @@
     <string name="button_media">ButtonMedia</string>
     <string name="button_camera">ButtonCamera</string>
     <string name="button_merge">ButtonMerge</string>
-    <string name="title_activity_reader_muxer">ReaderMuxerActivity</string>
+    <string name="title_activity_reader_muxer">PreviewMuxerActivity</string>
 
 
     <string name="size">已选%1$s</string>

@@ -13,7 +13,12 @@ QExporter_Jni::QExporter_Jni(jobject jexporter): EditorExporter(), _weakObj(jexp
     EditorExporter::setCallBack(this);
 }
 QExporter_Jni::~QExporter_Jni() {
-
+    _threadTask.postTask([this]() ->RetCode {
+        _stop();
+        _audioTarget->unInit();
+        return RetCode::ok;
+    });
+    _threadTask.waitForStop();
 }
 
 void QExporter_Jni::onStarted(RetCode code) {

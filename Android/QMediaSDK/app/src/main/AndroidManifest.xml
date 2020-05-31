@@ -29,7 +29,7 @@
         </activity>
 
         <activity
-            android:name="com.qmedia.qmediasdk.sample.sample.ReaderMuxerActivity"
+            android:name="com.qmedia.qmediasdk.sample.sample.PreviewMuxerActivity"
             android:label="@string/title_activity_reader_muxer"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>

@@ -43,11 +43,11 @@ jfloat J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getFrameRate__catchAll(JN
 jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getTargetContext(JNIEnv *env, jobject thiz);
 jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getTargetContext__catchAll(JNIEnv *env, jobject thiz);
 jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getTargetContext__asGlobalRef__catchAll(JNIEnv *env, jobject thiz);
-void J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setRender(JNIEnv *env, jobject thiz, jobject videoRender);
-void J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setRender__catchAll(JNIEnv *env, jobject thiz, jobject videoRender);
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender(JNIEnv *env, jobject thiz);
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender__catchAll(JNIEnv *env, jobject thiz);
-jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getRender__asGlobalRef__catchAll(JNIEnv *env, jobject thiz);
+void J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setVideoRender(JNIEnv *env, jobject thiz, jobject videoRender);
+void J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__setVideoRender__catchAll(JNIEnv *env, jobject thiz, jobject videoRender);
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getVideoRender(JNIEnv *env, jobject thiz);
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getVideoRender__catchAll(JNIEnv *env, jobject thiz);
+jobject J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget__getVideoRender__asGlobalRef__catchAll(JNIEnv *env, jobject thiz);
 int J4A_loadClass__J4AC_com_qmedia_qmediasdk_QTarget_QVideoTarget(JNIEnv *env);
 
 #endif//J4A__com_qmedia_qmediasdk_QTarget_QVideoTarget__H

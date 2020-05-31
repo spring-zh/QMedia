@@ -25,12 +25,12 @@ public class QCombiner extends QMediaFactory{
         Log.i(TAG, "QMediaSDK Laod version " + QMediaSDK.SDK_VERSION);
     }
 
-    public void setVideoTarget(QVideoTarget videoTarget) {
+    protected void setVideoTarget(QVideoTarget videoTarget) {
         super.videoTarget = videoTarget;
         native_setVideoTarget(videoTarget);
     }
 
-    public void setAudioTarget(QAudioTarget audioTarget) {
+    protected void setAudioTarget(QAudioTarget audioTarget) {
         super.audioTarget = audioTarget;
         native_setAudioTarget(audioTarget);
     }

@@ -13,8 +13,8 @@
 class AudioProcess
 {
 public:
-    AudioProcess() = default;
-    ~AudioProcess() = default;
+    AudioProcess() = delete;
+    ~AudioProcess() = delete;
 
     static void mixAudio(uint8_t * dst, const uint8_t * src, int len, float volume);
 

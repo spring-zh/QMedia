@@ -9,6 +9,7 @@
 #ifndef MEDIACORE_AUDIOCLOCK_H
 #define MEDIACORE_AUDIOCLOCK_H
 
+#include "Utils/Comm.h"
 #include "output/AudioTarget.h"
 #include "core/AudioProcess.h"
 

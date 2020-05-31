@@ -1,9 +1,5 @@
 package com.qmedia.qmediasdk.sample.sample;
 
-import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.Point;
-import android.graphics.Rect;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -14,16 +10,10 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
-import android.widget.VideoView;
 
-import java.io.ByteArrayOutputStream;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QVector;
@@ -31,6 +21,7 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QEditor.QEditorPlayer;
 import com.qmedia.qmediasdk.QEditor.QExporter;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
+import com.qmedia.qmediasdk.QGraphic.QNodeAnimator;
 import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
 import com.qmedia.qmediasdk.QSource.QVideoDescribe;
@@ -39,10 +30,10 @@ import com.qmedia.qmediasdk.QTarget.Implements.QPlayerView;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 import com.qmedia.qmediasdk.sample.R;
 
-public class ReaderMuxerActivity extends AppCompatActivity implements View.OnClickListener{
+public class PreviewMuxerActivity extends AppCompatActivity implements View.OnClickListener{
 
 	private final String TAG = "PreviewView";
-	ProgressBar mProgressBar;
+	TextView mProgressBar;
 	SeekBar mSeekBar;
 	boolean mIsTrack = false;
 
@@ -63,8 +54,10 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 	void setEffects(QCombiner combiner) {
 		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
 
-		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
-		QMediaTrack videoTrack = combiner.createVideoTrack(path);
+//		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
+		QMediaTrack videoTrack = combiner.createVideoTrack("test.mp4", true);
+		QMediaTrack audioTrack = combiner.createAudioTrack("LR.mp3", true);
+
 		videoTrack.getGraphic().setPosition(new QVector(targetW/4, targetH/4));
 		videoTrack.getGraphic().setContentSize(new QVector(targetW/2, targetH/2));
 		videoTrack.getGraphic().setAnchorPoint(new QVector(0.5f,0.5f));
@@ -81,9 +74,19 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 		duplicatenodeR.setAnchorPoint(new QVector(0.5f,0.5f));
 		duplicatenodeR.setRotation3d(new QVector(0, -90, 0));
 
+		combiner.getRootNode().setAnchorPoint(new QVector(0.5f,0.5f));
+		combiner.getRootNode().setContentSize(new QVector(targetW, targetH));
 		combiner.getRootNode().addChildNode(videoTrack.getGraphic());
 		combiner.getRootNode().addChildNode(duplicatenodeL);
 		combiner.getRootNode().addChildNode(duplicatenodeR);
+
+
+		QNodeAnimator an1 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(0, 5000) ,
+				new QVector(0, 0, 0) , new QVector(-180, 180, 180), QNodeAnimator.Linear ,false, "");
+		QNodeAnimator an2 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(5000, 10000) ,
+				new QVector(-180, 180, 180) , new QVector(-360, 360, 360), QNodeAnimator.Linear ,false, "");
+		combiner.getRootNode().addAnimator(an1);
+		combiner.getRootNode().addAnimator(an2);
 	}
 
 	@Override
@@ -91,8 +94,10 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader_muxer);
 //		Log.i(TAG, "qmediasdk version: " + QMediaSDK.SDK_VERSION);
+		QMediaSDK.init(this);
 		mframeLayout = (FrameLayout) findViewById(R.id.frameLayout);
 		mPreviewView = (QPlayerView) findViewById(R.id.render_view);
+		mPreviewView.setDisplayMode(QPlayerView.DisplayMode.Adaptive);
 
 		Log.e(TAG, "activity_create width=" + mPreviewView.getWidth() + " height=" + mPreviewView.getHeight() + " " + QMediaSDK.SDK_VERSION);
 
@@ -106,8 +111,8 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 		btn_save.setOnClickListener(this);
 		btn_capture.setOnClickListener(this);
 
-		mProgressBar = (ProgressBar) findViewById(R.id.bar_progress);
-		mProgressBar.setMax(100);
+		mProgressBar = (TextView) findViewById(R.id.bar_progress);
+//		mProgressBar.setMax(100);
 		mSeekBar = (SeekBar) findViewById(R.id.seekBar_process);
 		mSeekBar.setMax(100);
 		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -191,6 +196,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 	@Override
 	protected void onPause() {
 		super.onPause();
+		mPreviewView.onPause();
 	}
 
 
@@ -237,13 +243,14 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 						mProgressBar.setVisibility(View.INVISIBLE);
 						exporter.release();
 						exporter = null;
-						Toast.makeText(ReaderMuxerActivity.this, "onExporterStoped", Toast.LENGTH_SHORT).show();
+						Toast.makeText(PreviewMuxerActivity.this, "onExporterStoped", Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
 					public void onExporterProgressUpdated(long progress) {
 						QRange range = editorPlayer.getMediaTimeRange();
-						mProgressBar.setProgress((int) (exporter.getPosition() * 100 / range.getLength()));
+//						mProgressBar.setProgress((int) (exporter.getPosition() * 100 / range.getLength()));
+						mProgressBar.setText((int) (exporter.getPosition() * 100 / range.getLength()) + "%");
 					}
 
 					@Override
@@ -251,7 +258,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 						mProgressBar.setVisibility(View.INVISIBLE);
 						exporter.release();
 						exporter = null;
-						Toast.makeText(ReaderMuxerActivity.this, "onExporterCanceled", Toast.LENGTH_SHORT).show();
+						Toast.makeText(PreviewMuxerActivity.this, "onExporterCanceled", Toast.LENGTH_SHORT).show();
 					}
 
 					@Override
@@ -259,7 +266,7 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 						mProgressBar.setVisibility(View.INVISIBLE);
 						exporter.release();
 						exporter = null;
-						Toast.makeText(ReaderMuxerActivity.this, "onExporterCompleted", Toast.LENGTH_SHORT).show();
+						Toast.makeText(PreviewMuxerActivity.this, "onExporterCompleted", Toast.LENGTH_SHORT).show();
 					}
 				});
 				setEffects(exporter);
@@ -267,8 +274,8 @@ public class ReaderMuxerActivity extends AppCompatActivity implements View.OnCli
 
 
 				mProgressBar.setVisibility(View.VISIBLE);
-				mProgressBar.setMax(100);
-				mProgressBar.setIndeterminate(false);
+//				mProgressBar.setMax(100);
+//				mProgressBar.setIndeterminate(false);
 			}
 			break;
 			case R.id.btn_capture:

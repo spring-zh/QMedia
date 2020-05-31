@@ -27,7 +27,6 @@ public class QGLContext {
     }
 
     public int createTextureOES() {
-        useAsCurrentContext();
 
         int[] textures = new int[1];
         GLES20.glGenTextures(1, textures, 0);
@@ -47,7 +46,6 @@ public class QGLContext {
                 GLES20.GL_CLAMP_TO_EDGE);
         GlUtil.checkGlError("glTexParameter");
 
-        unUseCurrent();
         return texId;
     }
 

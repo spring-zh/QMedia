@@ -70,8 +70,22 @@ public class QMediaFactory {
     }
 
 
-    public QMediaTrack createVideoTrack(String filePath) {
-        QMediaSource mediaSource = new QMediaExtractorSource(filePath);
+    public QMediaTrack createVideoTrack(String filePath, boolean inAsset) {
+        QMediaSource mediaSource = new QMediaExtractorSource(filePath, true, true, inAsset);
+        mediaSource.setVideoTarget(videoTarget);
+        mediaSource.setAudioTarget(audioTarget);
+        QMediaTrack mediaTrack = new QMediaTrack(mediaSource);
+        if (mediaTrack.prepare(weakCombiner.get())) {
+            addMediaTrack(mediaTrack);
+            return mediaTrack;
+        }else {
+            mediaTrack.release();
+            return null;
+        }
+    }
+
+    public QMediaTrack createAudioTrack(String filePath, boolean inAsset) {
+        QMediaSource mediaSource = new QMediaExtractorSource(filePath, false, true, inAsset);
         mediaSource.setVideoTarget(videoTarget);
         mediaSource.setAudioTarget(audioTarget);
         QMediaTrack mediaTrack = new QMediaTrack(mediaSource);
