@@ -9,6 +9,7 @@ import android.opengl.GLES20;
 import android.view.Surface;
 
 import com.qmedia.qmediasdk.QAudio.QAudioFrame;
+import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
 import com.qmedia.qmediasdk.QCommon.media.HardwareDecoder;
 import com.qmedia.qmediasdk.QCommon.QGLContext;
@@ -41,8 +42,6 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
 
     int mOESTextureid = 0;
     SurfaceTexture mVideoSurfaceTexture = null;
-//    MediaStream mVideoStream = null;
-//    MediaStream mAudioStream = null;
     int mVideoIndex = -1;
     int mAudioIndex = -1;
 
@@ -54,10 +53,21 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
     long mLastPacketTime = -1;
     final int mPacketCacheConut = 25;
 
+    boolean mEnableVideo = true;
+    boolean mEnableAudio = true;
+
+    QRange mTimeRange = new QRange();
+
     AtomicInteger mTextureImageCount = new AtomicInteger(0);
 
     public QMediaExtractorSource(String filename, boolean inAsset) {
+        this(filename,true,true,inAsset);
+    }
+
+    public QMediaExtractorSource(String filename, boolean enableVideo, boolean enableAudio,boolean inAsset) {
         mFileName = filename;
+        mEnableVideo = enableVideo;
+        mEnableAudio = enableAudio;
         bReadInAsset = inAsset;
         for (int i = 0; i < streamMap.length ; i++) {
             streamMap[i] = -1;
@@ -177,6 +187,10 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                 if (! stream.isVaild())
                     continue;
 
+                //check enable stream
+                if ((!mEnableVideo && !stream.mIsAudio) || (!mEnableAudio && stream.mIsAudio))
+                    continue;
+
                 mediaStreams.add(stream);
                 streamMap[i] = mediaStreams.size() - 1;
                 mMediaDurationUs = Math.max(mMediaDurationUs, stream.mDurationUs);
@@ -260,6 +274,9 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
             if (mIsStarted)
                 return true;
 
+            mTimeRange.start = startMSec;
+            mTimeRange.end = endMSec;
+
             mIsExtractorEnd = false;
             mExtractor.seekTo(startMSec,MediaExtractor.SEEK_TO_PREVIOUS_SYNC);
             mLastPacketTime = startMSec;
@@ -303,10 +320,15 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
     public boolean seekTo(long timeMs) {
         if (!mIsStarted)
             return false;
+        if (timeMs >= mTimeRange.end) {
+            return false;
+        }
+        mTimeRange.start = timeMs;
         synchronized (this) {
             mLastPacketTime = timeMs;
 
             for (MediaStream stream : mediaStreams){
+                stream.mFrameQueue.setAbort(false);
                 stream.flush();
             }
 
@@ -334,7 +356,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
     @Override
     public QVideoFrame readNextVideoFrame() {
         MediaStream videoStream = mediaStreams.get(streamMap[mVideoIndex]);
-        if (videoStream.isEnd())
+        if (videoStream.mFrameQueue.size() <=0 && videoStream.isEnd())
             return null;
         HardwareDecoder.DecodedFrame decodedFrame = videoStream.mFrameQueue.remove();
         QVideoFrame videoFrame = null;
@@ -343,9 +365,6 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
             decodedFrame.updateImage(true);
             GLES20.glFinish();
             mVideoSurfaceTexture.updateTexImage();
-//            if (mVideoSurfaceTexture.getTimestamp()/1000000 != decodedFrame.mTimeMs) {
-//                Log.w(TAG, "texture timestamp " + mVideoSurfaceTexture.getTimestamp()/1000000 + " buffer timestamp " + decodedFrame.mTimeMs);
-//            }
         }
         return videoFrame;
     }
@@ -353,7 +372,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
     @Override
     public QAudioFrame readNextAudioFrame() {
         MediaStream audioStream = mediaStreams.get(streamMap[mAudioIndex]);
-        if (audioStream.isEnd())
+        if (audioStream.mFrameQueue.size() <=0 && audioStream.isEnd())
             return null;
         HardwareDecoder.DecodedAudioBuffer decodedAudioBuffer = (HardwareDecoder.DecodedAudioBuffer) audioStream.mFrameQueue.remove();
         QAudioFrame audioFrame = null;
@@ -373,7 +392,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
 
     boolean decodeTo(long timeMs , boolean isForce) {
         boolean bRet = false;
-        int flush_packet_count = 8;
+        int flush_packet_count = 15;
 
         //find video stream
         MediaStream videoStream = null;
@@ -387,6 +406,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
             mExtractor.seekTo(timeMs * 1000, MediaExtractor.SEEK_TO_CLOSEST_SYNC);
 
         for (MediaStream stream : mediaStreams) {
+            stream.waitForFlush();
             if (isForce) //for precision
                 stream.setStartTimeLimit(timeMs);
             else //for ambiguous, use first packet timestamp
@@ -408,7 +428,10 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                 }
             }else if (track_index == -1) {
                 for (MediaStream stream : mediaStreams) {
-                    stream.mPacketQueue.add(null);
+                    if (stream.lastPacketTimestamp == -1)
+                        stream.setIsEnd(true);
+                    else
+                        stream.mPacketQueue.add(null);
                 }
                 try {
                     Thread.sleep(100);
@@ -429,8 +452,7 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
             } else { //wait for first decodeframe
                 for (MediaStream stream : mediaStreams) {
                     if (stream.mFrameQueue.size() > 0) {
-                        bRet = true;
-                        break;
+                        return true;
                     }
                 }
             }

@@ -31,7 +31,7 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
     public int mMaxOutputFrameNum = 2;
     private Thread mDecodeThread;
 
-    private int maxInputBufferSize = 0;
+    private int maxInputBufferSize = 512 * 1024;
 
     private boolean isVaild = true;
     private boolean isEnd = false;
@@ -39,6 +39,9 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
 
     public boolean isEnd() {
         return isEnd;
+    }
+    public void setIsEnd(boolean isEnd) {
+        this.isEnd = isEnd;
     }
 
     public MediaStream(MediaFormat format, int index) {
@@ -55,7 +58,8 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
             isVaild = false;
             return;
         }
-        maxInputBufferSize = format.getInteger(MediaFormat.KEY_MAX_INPUT_SIZE);
+        maxInputBufferSize = format.containsKey(MediaFormat.KEY_MAX_INPUT_SIZE)?
+                format.getInteger(MediaFormat.KEY_MAX_INPUT_SIZE) : maxInputBufferSize;
         mDurationUs = format.getLong(MediaFormat.KEY_DURATION);
         mTrackId = index;
         //init
@@ -93,6 +97,7 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
     //stop decoded thread
     public void stop(){
         flush();
+        waitForFlush();
         mbStart = false;
 //        mFrameQueue.setAbort(true);
 //        mPacketQueue.add(null);//add null packet to abort thie waiting for PacketQueue
@@ -108,19 +113,25 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
     }
 
     //flush packets、decoder and output frames data
-    public void flush(){
-
+    public void flush() {
         synchronized (this) {
             needFlush = true;
-            while (needFlush) {
-                try {
-                    this.wait(100);
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
+        }
+    }
+    public void waitForFlush(){
+        if (needFlush){
+            synchronized (this) {
+                while (needFlush) {
+                    try {
+                        this.wait(100);
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
         isEnd = false;
+        lastPacketTimestamp = -1;
     }
 
     //release just been called after stop
@@ -140,12 +151,12 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
                         mFrameQueue.clear();
                         mPacketQueue.clear();
                         mMediaDecoder.flush();
+                        needFlush = false;
+                        this.notify();
                     }
-                    needFlush = false;
-                    this.notify();
                 }
                 // handle output mFrameQueue overload
-                if ( (mPacketQueue.size() <=0 || mFrameQueue.size() > mMaxOutputFrameNum) && !mFrameQueue.isAbort()) {
+                if ( mPacketQueue.size() <=0 || mFrameQueue.size() > mMaxOutputFrameNum) {
                     //TODO: use notify to replace it
                     Thread.sleep(10);
                     continue;
@@ -185,7 +196,7 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
     public void OnDecodecEnd() {
         Log.i(TAG,"OnDecodecEnd type " + (mIsAudio? "audio": "video"));
         isEnd = true;
-        mFrameQueue.add(null);
+        mFrameQueue.setAbort(true);
     }
 
     public static QVideoDescribe MediaFormatToVideoDescribe(MediaFormat mediaFormat) {

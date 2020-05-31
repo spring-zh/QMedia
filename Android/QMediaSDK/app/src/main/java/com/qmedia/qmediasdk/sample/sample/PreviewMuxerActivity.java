@@ -54,8 +54,9 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
 
 //		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
-		String path = "test.mp4";
-		QMediaTrack videoTrack = combiner.createVideoTrack(path, true);
+		QMediaTrack videoTrack = combiner.createVideoTrack("test.mp4", true);
+		QMediaTrack audioTrack = combiner.createAudioTrack("LR.mp3", true);
+
 		videoTrack.getGraphic().setPosition(new QVector(targetW/4, targetH/4));
 		videoTrack.getGraphic().setContentSize(new QVector(targetW/2, targetH/2));
 		videoTrack.getGraphic().setAnchorPoint(new QVector(0.5f,0.5f));

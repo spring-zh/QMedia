@@ -105,7 +105,7 @@ public class QAudioPlayer implements QAudioTarget , Runnable{
         pause_on = false;
         abort_request = false;
         isStarted = true;
-        playThread = new Thread(this);
+        playThread = new Thread(this, "QAudioPlayer");
         playThread.start();
         return true;
     }
