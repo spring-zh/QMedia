@@ -50,13 +50,6 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
             mCbHandler = cbHandler;
     }
 
-    private void init() {
-        mPtr = native_create(rootNode);
-        QAudioPlayer audioPlayer = new QAudioPlayer();
-        audioPlayer.setAudioRender(this);
-        setAudioTarget(audioPlayer); // set default audio player
-    }
-
     public void setPlayerView(QVideoTarget playerView) {
         playerView.setVideoRender(this);
         setVideoTarget(playerView);

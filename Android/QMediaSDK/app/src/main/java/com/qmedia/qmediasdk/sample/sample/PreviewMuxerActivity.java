@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ProgressBar;
 import android.widget.SeekBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
@@ -32,7 +33,7 @@ import com.qmedia.qmediasdk.sample.R;
 public class PreviewMuxerActivity extends AppCompatActivity implements View.OnClickListener{
 
 	private final String TAG = "PreviewView";
-	ProgressBar mProgressBar;
+	TextView mProgressBar;
 	SeekBar mSeekBar;
 	boolean mIsTrack = false;
 
@@ -110,8 +111,8 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		btn_save.setOnClickListener(this);
 		btn_capture.setOnClickListener(this);
 
-		mProgressBar = (ProgressBar) findViewById(R.id.bar_progress);
-		mProgressBar.setMax(100);
+		mProgressBar = (TextView) findViewById(R.id.bar_progress);
+//		mProgressBar.setMax(100);
 		mSeekBar = (SeekBar) findViewById(R.id.seekBar_process);
 		mSeekBar.setMax(100);
 		mSeekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -248,7 +249,8 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 					@Override
 					public void onExporterProgressUpdated(long progress) {
 						QRange range = editorPlayer.getMediaTimeRange();
-						mProgressBar.setProgress((int) (exporter.getPosition() * 100 / range.getLength()));
+//						mProgressBar.setProgress((int) (exporter.getPosition() * 100 / range.getLength()));
+						mProgressBar.setText((int) (exporter.getPosition() * 100 / range.getLength()) + "%");
 					}
 
 					@Override
@@ -272,8 +274,8 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 
 
 				mProgressBar.setVisibility(View.VISIBLE);
-				mProgressBar.setMax(100);
-				mProgressBar.setIndeterminate(false);
+//				mProgressBar.setMax(100);
+//				mProgressBar.setIndeterminate(false);
 			}
 			break;
 			case R.id.btn_capture:
