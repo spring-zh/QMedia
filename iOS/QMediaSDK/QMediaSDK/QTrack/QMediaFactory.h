@@ -15,6 +15,7 @@
 @property (nonatomic, readonly) id<QAudioTarget> audioTarget;
 
 - (QMediaTrack*)createVideoTrack:(NSString *)filePath;
+- (QMediaTrack*)createAudioTrack:(NSString *)filePath;
 - (QMediaTrack*)createCaptureTrack:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position video:(bool)enableVideo audio:(bool)enableAudio;
 
 - (QMediaTrack*)createOldVideoTrack:(NSString *)filePath DEPRECATED_ATTRIBUTE;

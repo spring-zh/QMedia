@@ -11,6 +11,7 @@
 @interface QAssetReaderSource : NSObject<QMediaSource>
 
 - (instancetype)initWithFilePath:(NSString *)filePath;
+- (instancetype)initWithFilePath:(NSString *)filePath audio:(bool)enableAudio video:(bool)enableVideo;
 
 /**output target
  * MediaSource can adaptive by output target

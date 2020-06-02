@@ -67,8 +67,10 @@
 //    self.player.rootNode.position = CGPointMake(-100, -100);
 //    self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
     NSString* testVideoFile2 = [QFileUtils getFileFromMainbundleAbsolutePath:@"video/test.mp4"];
+    NSString* testAudioFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"audio/LR.mp3"];
     
     QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2];
+    QMediaTrack* audioTrack = [self.player.mediaFactory createAudioTrack:testAudioFile];
 //    XMVideoTrack* videoTrack = [self.player.mediaFactory createOldVideoTrack:testVideoFile2];
 
 //    QVideoTrackNode *videoNode = [[QVideoTrackNode alloc] initFromTrack:videoTrack];
@@ -128,8 +130,10 @@
     duplicatenodeR.anchorPoint = CGPointMake(0.5, 0.5);
     duplicatenodeR.rotation3d = QVectorV3(0, -90, 0);
     
- 
+    //add videoTrack
     [self.player addMediaTrack:videoTrack];
+    //add audioTrack
+    [self.player addMediaTrack:audioTrack];
     
     QGraphicNode* composeNode = [[QGraphicNode alloc] initWithName:@"composeNode"];
     [self.player addGraphicNode:composeNode];

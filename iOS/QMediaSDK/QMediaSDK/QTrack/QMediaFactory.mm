@@ -81,6 +81,15 @@
     return [[QMediaTrack alloc] initWithMediaSource:readerSource];
 }
 
+- (QMediaTrack*)createAudioTrack:(NSString *)filePath
+{
+    QAssetReaderSource* readerSource = [[QAssetReaderSource alloc] initWithFilePath:filePath audio:true video:false];
+    readerSource.videoTarget = _videoTarget;
+    readerSource.audioTarget = _audioTarget;
+//    readerSource.video_frame_format = kCVPixelFormatType_32BGRA;
+    return [[QMediaTrack alloc] initWithMediaSource:readerSource];
+}
+
 - (QMediaTrack*)createCaptureTrack:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position video:(bool)enableVideo audio:(bool)enableAudio;
 {
     QCaptureSource* captureSource = [[QCaptureSource alloc] initWithPreset:preset position:position];
