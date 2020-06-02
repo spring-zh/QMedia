@@ -18,6 +18,8 @@ _repeatTimes(1),
 _absoluteTrackRange(0,0),
 _video_stream_idx(-1),_audio_stream_idx(-1)
 {
+    _after_seek_video = false;
+    _after_seek_audio = false;
     _last_video_ms = -1;
     _last_audio_ms = -1;
     _media_position_ms = -1;
@@ -101,6 +103,8 @@ bool MediaTrackImpl::setPositionTo(int64_t mSec)
             }
         }
     }
+    _after_seek_video = true;
+    _after_seek_audio = true;
     return bRet;
 }
 
@@ -144,6 +148,11 @@ VideoFrame MediaTrackImpl::getVideoFrame(int64_t mSec , bool& isEnd)
             if (errRet == 0) {
                 retFrame = std::move(readframe);
                 _media_position_ms = _last_video_ms = retFrame.timestamp_ms();
+                //TODO:
+                if (_after_seek_video) {
+                    _after_seek_video = false;
+                    break;
+                }
             }else if(errRet == 1){
                 isEnd = true;
                 break;
@@ -179,6 +188,12 @@ AudioFrame MediaTrackImpl::getAudioFrame(int64_t mSec , bool& isEnd)
             if (errRet == 0) {
                 retFrame = std::move(readframe);
                 _last_audio_ms = retFrame.timestamp_ms();
+
+                //TODO:
+                if (_after_seek_audio) {
+                    _after_seek_audio = false;
+                    break;
+                }
             }else if(errRet == 1) {
                 isEnd = true;
                 break;

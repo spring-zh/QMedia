@@ -87,6 +87,10 @@ protected:
     
     int _video_stream_idx;
     int _audio_stream_idx;
+
+    //optimize
+    bool _after_seek_video;
+    bool _after_seek_audio;
 };
 
 #endif /* EFFECTEDITOR_MEDIATRACKIMPL_H */
