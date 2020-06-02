@@ -363,8 +363,8 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
 
                 QVector viewVec = calculateViewPort(displayMode, mVideodescribe.width, mVideodescribe.height, mPreviewWidth, mPreviewHeight);
                 GLES20.glViewport((int)viewVec.v0, (int)viewVec.v1, (int)(viewVec.v2 - viewVec.v0), (int)(viewVec.v3 - viewVec.v1));
-//                GLES20.glClearColor(bkcolors[0],bkcolors[1],bkcolors[2],bkcolors[3]);
-//                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
+                GLES20.glClearColor(bkcolors[0],bkcolors[1],bkcolors[2],bkcolors[3]);
+                GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
 
                 mFullScreen.drawFrame(targetTexure[0], null);
 
