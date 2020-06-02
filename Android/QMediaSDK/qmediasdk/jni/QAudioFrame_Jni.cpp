@@ -10,7 +10,7 @@
 
 JavaAudioFrameBuffer::JavaAudioFrameBuffer(jobject jframe) {
     JNIEnv* env = JniUtils::getEnv();
-    _object = env->NewWeakGlobalRef(jframe);
+    _object = env->NewGlobalRef(jframe);
     jobject jbuffer = J4AC_com_qmedia_qmediasdk_QAudio_QAudioFrame__buffer(env, jframe);
     _pbuffer = (uint8_t*)env->GetDirectBufferAddress(jbuffer);
     _size = env->GetDirectBufferCapacity(jbuffer);
@@ -20,7 +20,7 @@ JavaAudioFrameBuffer::JavaAudioFrameBuffer(jobject jframe) {
 }
 JavaAudioFrameBuffer::~JavaAudioFrameBuffer() {
     JNIEnv* env = JniUtils::getEnv();
-    env->DeleteWeakGlobalRef(_object);
+    env->DeleteGlobalRef(_object);
 }
 
 int JavaAudioFrameBuffer::Channels() const {
