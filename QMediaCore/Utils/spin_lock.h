@@ -29,6 +29,38 @@ private:
     std::atomic_flag flag_ = ATOMIC_FLAG_INIT;
 };
 
+class ticket_lock {
+public:
+
+    ticket_lock():_head(0),_tail(0){
+    }
+
+    ~ticket_lock() = default;
+
+    void lock()
+    {
+        std::unique_lock<std::mutex> lck(_mutex);
+        unsigned long queue_me = _tail++;
+        while (queue_me != _head)
+        {
+            _condition.wait(lck);
+        }
+    }
+
+    void unlock()
+    {
+        std::unique_lock<std::mutex> lck(_mutex);
+        _head++;
+        _condition.notify_all();
+    }
+
+private:
+    std::mutex _mutex;
+    std::condition_variable _condition;
+
+    unsigned long _head, _tail;
+};
+
 template <class mutexT>
 class t_lock_guard {
 public:
