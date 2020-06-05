@@ -1,4 +1,4 @@
-package com.qmedia.qmediasdk.sample.sample;
+package com.qmedia.qmediasdk.sample;
 
 import android.content.Context;
 import android.content.Intent;
@@ -18,19 +18,14 @@ import com.qmedia.qmediasdk.sample.R;
 
 public class MainActivity extends AppCompatActivity {
 
-	private static final String TAG = "MAINACTIVITY";
-
-	//private final int CONTEXT_CLIENT_VERSION = 3;
-	//private GLSurfaceView mGLSurfaceView;
-
-//	OutputMuxer mOutputMuxer = new OutputMuxer();
+	private static final String TAG = "MainActivity";
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 
-		Button button_audio = (Button)findViewById(R.id.button_audio);
+		Button button_audio = (Button)findViewById(R.id.button_preview);
 		button_audio.setOnClickListener(new View.OnClickListener(){
 			@Override
 			public void onClick(View v) {
@@ -41,29 +36,6 @@ public class MainActivity extends AppCompatActivity {
 
 			}
 		});
-
-		String path = Environment.getExternalStorageDirectory().getPath();
-		if (!(new File(path + "/test.mp4").exists())) {
-			Log.d(TAG, "MainActivity copyfile" + path + "/test2.m4v");
-			copyDBToSD(this, path, "test.mp4");
-		}
-		if (!(new File(path + "/test2.m4v").exists())) {
-			Log.d(TAG, "MainActivity copyfile" + path + "/test2.m4v");
-			copyDBToSD(this, path, "test2.m4v");
-		}
-
-		if (!(new File(path + "/ID_24.bmp").exists())) {
-			Log.d(TAG, "MainActivity copyfile" + path + "/ID_24.bmp");
-			copyDBToSD(this, path, "ID_24.bmp");
-		}
-
-		if (!(new File(path + "/audio.mp3").exists())) {
-			Log.d(TAG, "MainActivity copyfile" + path + "/audio.mp3");
-			copyDBToSD(this, path, "audio.mp3");
-		}
-		Log.d(TAG, "oncreate getStoragePath=" + path);
-
-		//MediaMuxerTest.MediaMuxer("/sdcard/test.mp4", "/sdcard/test_out.mp4");
 	}
 
 	public static void copyDBToSD(Context context, String path, String filename) {

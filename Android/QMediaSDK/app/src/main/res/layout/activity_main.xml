@@ -6,53 +6,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
+
     <Button
-        android:id="@+id/button_media"
+        android:id="@+id/button_preview"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_media"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/button_audio"
-        android:layout_marginRight="0dp"
-        app:layout_constraintRight_toRightOf="@+id/button_audio"
-        app:layout_constraintHorizontal_bias="0.095"
-        android:layout_marginTop="27dp"
-        app:layout_constraintTop_toBottomOf="@+id/button_audio"
-        android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/button_camera"
-        android:layout_width="158dp"
-        android:layout_height="37dp"
-        android:layout_marginLeft="8dp"
-        android:layout_marginRight="20dp"
-        android:layout_marginTop="19dp"
-        android:text="@string/button_camera"
-        app:layout_constraintHorizontal_bias="0.088"
-        app:layout_constraintLeft_toLeftOf="@+id/button_media"
-        app:layout_constraintRight_toRightOf="@+id/button_media"
-        app:layout_constraintTop_toBottomOf="@+id/button_media"
-        tools:ignore="MissingConstraints" />
-
-    <Button
-        android:id="@+id/button_merge"
-        android:layout_width="132dp"
-        android:layout_height="41dp"
-        android:text="@string/button_merge"
-        android:layout_marginRight="44dp"
-        app:layout_constraintRight_toRightOf="@+id/button_camera"
-        android:layout_marginTop="30dp"
-        app:layout_constraintTop_toBottomOf="@+id/button_camera"
-        android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/button_camera"
-        app:layout_constraintHorizontal_bias="0.166"
-        android:visibility="gone"/>
-
-    <Button
-        android:id="@+id/button_audio"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="P and R"
+        android:text="Preview Record"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="16dp"
         android:layout_marginLeft="8dp"
@@ -62,16 +21,29 @@
         app:layout_constraintHorizontal_bias="0.085" />
 
     <Button
-        android:id="@+id/button_ui"
+        android:id="@+id/button_select"
+        android:layout_width="wrap_content"
+        android:layout_height="37dp"
+        android:layout_marginLeft="8dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="19dp"
+        android:text="Select"
+        app:layout_constraintLeft_toLeftOf="@+id/button_preview"
+        app:layout_constraintRight_toRightOf="@+id/button_preview"
+        app:layout_constraintTop_toBottomOf="@+id/button_preview"
+        tools:ignore="MissingConstraints" />
+
+    <Button
+        android:id="@+id/button_camrea"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Button_UI"
+        android:text="@string/button_camera"
         android:layout_marginRight="8dp"
-        app:layout_constraintRight_toRightOf="@+id/button_merge"
+        app:layout_constraintRight_toRightOf="@+id/button_select"
         android:layout_marginTop="29dp"
-        app:layout_constraintTop_toBottomOf="@+id/button_merge"
+        app:layout_constraintTop_toBottomOf="@+id/button_select"
         android:layout_marginLeft="8dp"
-        app:layout_constraintLeft_toLeftOf="@+id/button_merge"
+        app:layout_constraintLeft_toLeftOf="@+id/button_select"
         app:layout_constraintHorizontal_bias="0.215"/>
 
 

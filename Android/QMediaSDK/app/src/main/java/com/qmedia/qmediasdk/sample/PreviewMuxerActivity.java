@@ -1,4 +1,4 @@
-package com.qmedia.qmediasdk.sample.sample;
+package com.qmedia.qmediasdk.sample;
 
 import android.os.Bundle;
 import android.os.Environment;
