@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "../mediadef/VideoFrame.h"
-#include "../mediadef/CodecSpecificInfo.h"
-#include "../mediadef/EncodedPacket.h"
+#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/mediadef/CodecSpecificInfo.h"
+#include "MediaCore/mediadef/EncodedPacket.h"
 #include <stdint.h>
 
 class DecodedImageCallback {

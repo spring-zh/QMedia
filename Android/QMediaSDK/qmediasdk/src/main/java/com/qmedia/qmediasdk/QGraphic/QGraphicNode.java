@@ -194,6 +194,28 @@ public class QGraphicNode {
         native_setAlpha(alpha);
     }
 
+    public void copyForm(QGraphicNode from) {
+        setName(from.name);
+        setPosition(from.position);
+        setPositionZ(from.positionZ);
+        setContentSize(from.contentSize);
+        setAnchorPoint(from.anchorPoint);
+        setColor4(from.color4);
+        setRotation(from.rotation);
+        setRotation3d(from.rotation3d);
+        setScaleX(from.scaleX);
+        setScaleY(from.scaleY);
+        setScaleZ(from.scaleZ);
+        setVisible(from.visible);
+        setRenderRange(from.getRenderRange());
+
+        animators.clear();
+        for (QNodeAnimator animator : from.animators) {
+            addAnimator(new QNodeAnimator(animator.property,animator.timeRang,animator.beginPoint,animator.endPoint,animator.functionType,
+                    animator.repleat,animator.name));
+        }
+    }
+
     public void release(){
         native_release();
         childrens.clear();
@@ -209,7 +231,7 @@ public class QGraphicNode {
     String name = "";
     QRange renderRange = new QRange(0,0);
     //transform propertys setting
-    boolean visible = false;
+    boolean visible = true;
 
     float rotation = 0;
     QVector rotation3d = new QVector(0,0,0);

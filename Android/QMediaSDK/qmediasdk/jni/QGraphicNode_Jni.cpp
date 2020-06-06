@@ -111,7 +111,7 @@ NATIVE_FUNCTION(jfloat , native_1getRotation)(JNIEnv *env, jobject thiz) {
     return rotation;
 }
 
-NATIVE_FUNCTION(void , native_1setRotation)(JNIEnv *env, jobject thiz, jboolean jrotation) {
+NATIVE_FUNCTION(void , native_1setRotation)(JNIEnv *env, jobject thiz, jfloat jrotation) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
             env, thiz));
     if (node_ptr) {
@@ -152,7 +152,7 @@ NATIVE_FUNCTION(jfloat , native_1getScaleX)(JNIEnv *env, jobject thiz) {
     return scaleX;
 }
 
-NATIVE_FUNCTION(void , native_1setScaleX)(JNIEnv *env, jobject thiz, jboolean jscaleX) {
+NATIVE_FUNCTION(void , native_1setScaleX)(JNIEnv *env, jobject thiz, jfloat jscaleX) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
             env, thiz));
     if (node_ptr) {
@@ -171,11 +171,11 @@ NATIVE_FUNCTION(jfloat , native_1getScaleY)(JNIEnv *env, jobject thiz) {
     return scaleY;
 }
 
-NATIVE_FUNCTION(void , native_1setScaleY)(JNIEnv *env, jobject thiz, jboolean jscaleY) {
+NATIVE_FUNCTION(void , native_1setScaleY)(JNIEnv *env, jobject thiz, jfloat jscaleY) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
             env, thiz));
     if (node_ptr) {
-        (*node_ptr)->setScaleX(jscaleY);
+        (*node_ptr)->setScaleY(jscaleY);
     }
 }
 
@@ -185,16 +185,16 @@ NATIVE_FUNCTION(jfloat , native_1getScaleZ)(JNIEnv *env, jobject thiz) {
             env, thiz));
     jfloat scaleZ = 1;
     if (node_ptr) {
-        scaleZ = (*node_ptr)->getScaleY();
+        scaleZ = (*node_ptr)->getScaleZ();
     }
     return scaleZ;
 }
 
-NATIVE_FUNCTION(void , native_1setScaleZ)(JNIEnv *env, jobject thiz, jboolean jscaleZ) {
+NATIVE_FUNCTION(void , native_1setScaleZ)(JNIEnv *env, jobject thiz, jfloat jscaleZ) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
             env, thiz));
     if (node_ptr) {
-        (*node_ptr)->setScaleX(jscaleZ);
+        (*node_ptr)->setScaleZ(jscaleZ);
     }
 }
 
@@ -253,7 +253,7 @@ NATIVE_FUNCTION(jfloat , native_1getPositionZ)(JNIEnv *env, jobject thiz) {
     return positionZ;
 }
 
-NATIVE_FUNCTION(void , native_1setPositionZ)(JNIEnv *env, jobject thiz, jboolean jpositionZ) {
+NATIVE_FUNCTION(void , native_1setPositionZ)(JNIEnv *env, jobject thiz, jfloat jpositionZ) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
             env, thiz));
     if (node_ptr) {
@@ -319,7 +319,7 @@ NATIVE_FUNCTION(jfloat , native_1getAlpha)(JNIEnv *env, jobject thiz) {
     return alpha;
 }
 
-NATIVE_FUNCTION(void , native_1setAlpha)(JNIEnv *env, jobject thiz, jboolean jalpha) {
+NATIVE_FUNCTION(void , native_1setAlpha)(JNIEnv *env, jobject thiz, jfloat jalpha) {
     GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
             env, thiz));
     if (node_ptr) {
