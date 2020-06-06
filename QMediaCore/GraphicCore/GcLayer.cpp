@@ -42,7 +42,7 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
         return;
     }
     
-    if (_transformDirty || _contentSizeDirty) {
+    if (_transformDirty || _contentSizeDirty || (parentFlags & Flags_Update) ) {
         _modelViewTransform = Node::transform(parentTransform);
     }
     _transformUpdated = false;
@@ -97,6 +97,11 @@ void Layer::duplicateDraw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & t
         Color4F realColor = diaplayNode->getColor();
         colorVal._floatOrmatrix_array = {realColor.r,realColor.g,realColor.b,realColor.a};
         _shaderProgram.setUniformValue("uColor", colorVal);
+        if (! FLOAT_ISEQUAL(diaplayNode->getColor().a, 1.0f)) {
+            _shaderProgram.enableBlend(true);
+        }
+        else
+            _shaderProgram.enableBlend(false);
         _shaderProgram.setVertexAttribValue("a_position", vertValue);
         _shaderProgram.setVertexAttribValue("a_texCoord", 8, Drawable2D::RECTANGLE_TEX_COORDS);
         _shaderProgram.setUniformValue("uMVPMatrix",GET_ARRAY_COUNT(mvpMatrix.m),mvpMatrix.m);
@@ -141,7 +146,7 @@ void Layer::releaseRes()
 {
     _shaderProgram.releaseProgram();
     if (_framebuffer) {
-        _framebuffer->attachTexture2D(FrameBuffer::COLOR, nullptr);
+//        _framebuffer->attachTexture2D(FrameBuffer::COLOR, nullptr);
         _framebuffer->release();
         delete _framebuffer;
     }

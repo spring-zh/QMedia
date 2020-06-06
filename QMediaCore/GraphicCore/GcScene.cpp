@@ -188,7 +188,7 @@ void Scene::setProjection(Projection projection)
             Mat4 matrixPerspective, matrixLookup;
             
             // issue #1334
-            Mat4::createPerspective(60, size.width/size.height, 10, zeye+size.height/2, &matrixPerspective);
+            Mat4::createPerspective(60, size.width/size.height, 10, 1000/*zeye+size.height/2*/, &matrixPerspective);
             
             Vec3 eye(size.width/2, size.height/2, zeye), center(size.width/2, size.height/2, 0.0f), up(0.0f, 1.0f, 0.0f);
             Mat4::createLookAt(eye, center, up, &matrixLookup);
