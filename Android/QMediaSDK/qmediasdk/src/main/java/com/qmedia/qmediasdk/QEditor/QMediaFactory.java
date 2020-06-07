@@ -58,6 +58,7 @@ public class QMediaFactory {
                     index ++;
                 }
             }
+            graphicNodes.add(node);
             return true;
         }else
             return false;
@@ -75,8 +76,10 @@ public class QMediaFactory {
         mediaSource.setVideoTarget(videoTarget);
         mediaSource.setAudioTarget(audioTarget);
         QMediaTrack mediaTrack = new QMediaTrack(mediaSource);
-        if (mediaTrack.prepare(weakCombiner.get())) {
+        if (mediaTrack.prepare()) {
             addMediaTrack(mediaTrack);
+            mediaTrack.generateVideoTrackNode(weakCombiner.get());
+            mediaTrack.generateAudioTrackNode(weakCombiner.get());
             return mediaTrack;
         }else {
             mediaTrack.release();
@@ -89,8 +92,9 @@ public class QMediaFactory {
         mediaSource.setVideoTarget(videoTarget);
         mediaSource.setAudioTarget(audioTarget);
         QMediaTrack mediaTrack = new QMediaTrack(mediaSource);
-        if (mediaTrack.prepare(weakCombiner.get())) {
+        if (mediaTrack.prepare()) {
             addMediaTrack(mediaTrack);
+            mediaTrack.generateAudioTrackNode(weakCombiner.get());
             return mediaTrack;
         }else {
             mediaTrack.release();

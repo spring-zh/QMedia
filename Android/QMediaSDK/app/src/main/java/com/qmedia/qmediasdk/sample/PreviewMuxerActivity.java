@@ -44,18 +44,21 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
     final int targetH = 480;
 	boolean bfileEnd = false;
 
-	//    Timer mTimer;//process timer
-	Handler mUIHandler;
-
 	QEditorPlayer editorPlayer = new QEditorPlayer();
 
 	QExporter exporter;
+
+	String[] select_images;
 
 	void setEffects(QCombiner combiner) {
 		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
 
 //		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
-		QMediaTrack videoTrack = combiner.createVideoTrack("test.mp4", true);
+		QMediaTrack videoTrack ;
+		if (select_images != null && select_images.length > 0) {
+			videoTrack = combiner.createVideoTrack(select_images[0], false);
+		}else
+			videoTrack = combiner.createVideoTrack("test.mp4", true);
 		QMediaTrack audioTrack = combiner.createAudioTrack("LR.mp3", true);
 
 		videoTrack.getGraphic().setPosition(new QVector(targetW/4, targetH/4));
@@ -94,6 +97,9 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader_muxer);
 //		Log.i(TAG, "qmediasdk version: " + QMediaSDK.SDK_VERSION);
+
+		 select_images = getIntent().getStringArrayExtra("SELECT_VIDEO");
+
 		QMediaSDK.init(this);
 		mframeLayout = (FrameLayout) findViewById(R.id.frameLayout);
 		mPreviewView = (QPlayerView) findViewById(R.id.render_view);
@@ -269,7 +275,8 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 						Toast.makeText(PreviewMuxerActivity.this, "onExporterCompleted", Toast.LENGTH_SHORT).show();
 					}
 				});
-				setEffects(exporter);
+//				setEffects(exporter);
+				exporter.copyForm(editorPlayer);
 				exporter.start();
 
 

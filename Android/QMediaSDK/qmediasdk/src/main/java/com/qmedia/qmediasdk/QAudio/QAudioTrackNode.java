@@ -10,6 +10,7 @@ public class QAudioTrackNode {
         this.mediaTrack = mediaTrack;
         weakCombiner = new WeakReference<>(combiner);
         mPtr = native_create(mediaTrack);
+        combiner.attachAudioNode(this, null);
     }
 
     public QMediaTrack getMediaTrack() {

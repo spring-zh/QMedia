@@ -74,6 +74,11 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
         }
     }
 
+    public String getFileName() { return mFileName; }
+    public boolean readInAsset() { return bReadInAsset; }
+    public boolean enableVideo() { return mEnableVideo; }
+    public boolean enableAudio() { return mEnableAudio; }
+
     @Override
     public void setVideoTarget(QVideoTarget videoTarget) {
         mVideoTarget = videoTarget;

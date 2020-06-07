@@ -29,18 +29,32 @@ public class QMediaTrack {
         return audio;
     }
 
-    public boolean prepare(QCombiner combiner) {
-        if (native_prepare()) {
-            if (mediaSource.getVideoDescribe() != null)
-                graphic = new QVideoTrackNode(this, combiner);
-            if (mediaSource.getAudioDescribe() != null)
-                audio = new QAudioTrackNode(this, combiner);
-            return true;
-        }else {
-            Log.e(TAG, "QMediaTrack prepare failed..");
-            return false;
-        }
+    public boolean prepare() {
+//        if (native_prepare()) {
+//            if (mediaSource.getVideoDescribe() != null)
+//                graphic = new QVideoTrackNode(this, combiner);
+//            if (mediaSource.getAudioDescribe() != null)
+//                audio = new QAudioTrackNode(this, combiner);
+//            return true;
+//        }else {
+//            Log.e(TAG, "QMediaTrack prepare failed..");
+//            return false;
+//        }
+        return native_prepare();
     }
+
+    public boolean generateVideoTrackNode(QCombiner combiner) {
+        if (mediaSource.getVideoDescribe() != null)
+            graphic = new QVideoTrackNode(this, combiner);
+        return graphic != null;
+    }
+
+    public boolean generateAudioTrackNode(QCombiner combiner) {
+        if (mediaSource.getAudioDescribe() != null)
+            audio = new QAudioTrackNode(this, combiner);
+        return audio != null;
+    }
+
     public boolean setTimeTo(long mSec) {
         return native_setTimeTo(mSec);
     }

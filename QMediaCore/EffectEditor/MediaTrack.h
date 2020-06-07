@@ -31,12 +31,12 @@ public:
     virtual void setRepeatTimes(int repeatTimes) = 0;
     virtual int getRepeatTimes() = 0;
 
-    //set the real track area range for player and display |----|
+    //set the display track time range for player and display |----|
     virtual bool setDisplayTrackRange(Range<int64_t> absoluteRange) = 0;
-    //get the display track range, if display track range not set then calculation it by paraments
+    //get the display track range, if display track range not set then calculation it by parameters
     virtual const Range<int64_t> getDisplayTrackRange() const = 0;
     
-    //set thre base source range, this is useful for split source data
+    //set the base source range, this is useful for split source data
     virtual bool setSourceRange(Range<int64_t> selectSourceRange) = 0;
     //get the source track range, if source track range not set then return the media context's duration
     virtual const Range<int64_t> getSourceRange() const = 0;

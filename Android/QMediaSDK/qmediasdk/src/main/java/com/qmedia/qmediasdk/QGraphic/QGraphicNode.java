@@ -194,6 +194,7 @@ public class QGraphicNode {
         native_setAlpha(alpha);
     }
 
+    //copy parameters from other GraphicNode
     public void copyForm(QGraphicNode from) {
         setName(from.name);
         setPosition(from.position);

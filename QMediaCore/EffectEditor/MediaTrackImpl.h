@@ -36,7 +36,7 @@ public:
     void setRepeatTimes(int repeatTimes) override { _repeatTimes = repeatTimes; }
     int getRepeatTimes() override { return _repeatTimes; }
 
-    //get the absolute track range, if absolute track range not set then calculation it by paraments
+    //get the absolute track range, if absolute track range not set then calculation it by parameters
     virtual const Range<int64_t> getDisplayTrackRange() const override;
     //set the real track area range for player and display |----|
     bool setDisplayTrackRange(Range<int64_t> absoluteRange) override {
