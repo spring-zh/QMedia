@@ -7,6 +7,7 @@ import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
 import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
+import com.qmedia.qmediasdk.QGraphic.QImageNode;
 import com.qmedia.qmediasdk.QGraphic.QLayer;
 import com.qmedia.qmediasdk.QGraphic.QVideoTrackNode;
 import com.qmedia.qmediasdk.QMediaSDK;
@@ -19,6 +20,8 @@ import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.UUID;
 
 public class QCombiner extends QMediaFactory{
     private static final String TAG = "QCombiner";
@@ -52,18 +55,18 @@ public class QCombiner extends QMediaFactory{
     }
 
     //TODO: mediaTracks @QMediaTrack
-    public ArrayList<QMediaTrack> getMediaTracks() {
-        return mediaTracks;
-    }
+//    public ArrayList<QMediaTrack> getMediaTracks() {
+//        return mediaTracks;
+//    }
     public boolean addMediaTrack(QMediaTrack track) {
-        boolean bRet = super.addMediaTrack(track);
+        boolean bRet = super.addMediaTrackIndex(track);
         if (bRet) {
             native_addMediaTrack(track);
         }
         return bRet;
     }
     public boolean removeMediaTrack(QMediaTrack track) {
-        boolean bRet = super.removeMediaTrack(track);
+        boolean bRet = super.removeMediaTrackIndex(track);
         if (bRet) {
             native_removeMediaTrack(track);
         }
@@ -96,7 +99,7 @@ public class QCombiner extends QMediaFactory{
 
     public class DisplayRootNode extends QGraphicNode {
         DisplayRootNode() {
-            super(QCombiner.this);
+            super(QCombiner.this, UUID.randomUUID().toString());
         }
 
         public void setBKColor(QVector color) {
@@ -105,52 +108,87 @@ public class QCombiner extends QMediaFactory{
     }
 
     public void copyForm(QCombiner from) {
+        //copy rootNode
+        graphicNodes.clear();
+        rootNode.copyForm(from.rootNode);
+        super.addGraphicNodeIndex(rootNode);
+
         //copy mediaTracks
-        for (QMediaTrack mediaTrack : from.mediaTracks) {
-            QMediaSource fromSource = mediaTrack.getMediaSource();
+        for (HashMap.Entry<String, QMediaTrack> entry : from.mediaTracks.entrySet()) {
+            QMediaTrack fromTrack = entry.getValue();
+            QMediaSource fromSource = fromTrack.getMediaSource();
             if (fromSource instanceof QMediaExtractorSource) {
                 QMediaExtractorSource fromExtractorSource = (QMediaExtractorSource)fromSource;
-                if (fromExtractorSource.enableVideo()) {
-                    createVideoTrack(fromExtractorSource.getFileName(),fromExtractorSource.readInAsset());
-                }else
-                    createAudioTrack(fromExtractorSource.getFileName(),fromExtractorSource.readInAsset());
+                QMediaSource mediaSource = new QMediaExtractorSource(fromExtractorSource.getFileName(),
+                        fromExtractorSource.enableVideo(), fromExtractorSource.enableAudio(), fromExtractorSource.readInAsset());
+                mediaSource.setVideoTarget(videoTarget);
+                mediaSource.setAudioTarget(audioTarget);
+                QMediaTrack mediaTrack = new QMediaTrack(mediaSource, fromTrack.getId());
+                if (mediaTrack.prepare()) {
+                    this.addMediaTrack(mediaTrack);
+                    if (fromTrack.getGraphic() != null) {
+                        mediaTrack.generateVideoTrackNode(this, fromTrack.getGraphic().getId());
+                        mediaTrack.getGraphic().copyForm(fromTrack.getGraphic());
+                    }
+                    mediaTrack.generateAudioTrackNode(this);
+                }else {
+                    mediaTrack.release();
+                }
             }
         }
 
-        //copy graphic nodes
-        rootNode.copyForm(from.rootNode);
-        for (QGraphicNode fromNode : from.graphicNodes) {
+        //copy graphic nodes;
+        for (HashMap.Entry<String, QGraphicNode> entry: from.graphicNodes.entrySet()) {
             QGraphicNode newNode;
+            QGraphicNode fromNode = entry.getValue();
             if (fromNode instanceof DisplayRootNode) {
                 continue;
             }else if (fromNode instanceof QVideoTrackNode) {
                 //TODO: set QVideoTrackNode
-                int index = from.mediaTracks.indexOf(((QVideoTrackNode) fromNode).getMediaTrack());
-                QMediaTrack mediaTrack = mediaTracks.get(index);
-                newNode = mediaTrack.getGraphic();
-            }else if (fromNode instanceof QDuplicateNode) {
-                QDuplicateNode fromDuplicateNode = (QDuplicateNode)fromNode;
-                int index = from.graphicNodes.indexOf(fromDuplicateNode.getFromNode());
-                newNode = new QDuplicateNode(graphicNodes.get(index), this);
+//                int index = from.mediaTracks.indexOf(((QVideoTrackNode) fromNode).getMediaTrack());
+//                QMediaTrack mediaTrack = mediaTracks.get(index);
+//                newNode = mediaTrack.getGraphic();
+                continue;
             }else if (fromNode instanceof QLayer) {
                 QLayer fromLayer = (QLayer)fromNode;
-                QLayer layer = new QLayer(fromLayer.getLayerSize(),"", this);
+                QLayer layer = new QLayer(fromLayer.getLayerSize(),"", this, fromNode.getId());
                 layer.setBkColor(fromLayer.getBkColor());
                 newNode = layer;
+            }else if (fromNode instanceof QImageNode) {
+                QImageNode fromImage = (QImageNode)fromNode;
+                QImageNode imageNode = new QImageNode(fromImage.getFilePath(),fromImage.isInAsset() , this, fromImage.getId());
+                newNode = imageNode;
             }else {
-                newNode = new QGraphicNode("", this);
+                newNode = new QGraphicNode("", this, fromNode.getId());
             }
 
             newNode.copyForm(fromNode);
-
-            int parent_index = from.graphicNodes.indexOf(fromNode.getParent());
-            if (parent_index == -1)
-                rootNode.addChildNode(newNode);
-            else {
-                graphicNodes.get(parent_index).addChildNode(newNode);
-            }
         }
 
+        //copy duplicate nodes;
+        for (HashMap.Entry<String, QGraphicNode> entry: from.duplicateNodes.entrySet()) {
+            QDuplicateNode fromNode = (QDuplicateNode)entry.getValue();
+            QGraphicNode findNode = graphicNodes.get(fromNode.getFromNode().getId());
+
+            QGraphicNode newNode = new QDuplicateNode(findNode, this, fromNode.getId());
+            newNode.copyForm(fromNode);
+        }
+
+        //copy render trees
+        copyRenderTrees(from.rootNode, rootNode);
+    }
+
+    private void copyRenderTrees(QGraphicNode fromNode, QGraphicNode currentNode) {
+        for (QGraphicNode graphicNode : fromNode.getChildrens()) {
+            QGraphicNode childNode = graphicNodes.get(graphicNode.getId());
+            if (childNode == null)
+                childNode = duplicateNodes.get(graphicNode.getId());
+
+            if (childNode != null) {
+                currentNode.addChildNode(childNode);
+                copyRenderTrees(graphicNode, childNode);
+            }
+        }
     }
 
     //TODO: native

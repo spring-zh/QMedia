@@ -8,13 +8,24 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QGraphic.QVideoTrackNode;
 import com.qmedia.qmediasdk.QSource.QMediaSource;
 
+import java.util.UUID;
+
 public class QMediaTrack {
 
     private static final String TAG = "QMediaTrack";
 
     public QMediaTrack(QMediaSource mediaSource) {
+        this(mediaSource, UUID.randomUUID().toString());
+    }
+
+    public QMediaTrack(QMediaSource mediaSource, String id) {
+        this.id = id;
         this.mediaSource = mediaSource;
         mPtr = native_create(mediaSource);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public QMediaSource getMediaSource() {
@@ -53,6 +64,12 @@ public class QMediaTrack {
         if (mediaSource.getAudioDescribe() != null)
             audio = new QAudioTrackNode(this, combiner);
         return audio != null;
+    }
+
+    public boolean generateVideoTrackNode(QCombiner combiner, String id) {
+        if (mediaSource.getVideoDescribe() != null)
+            graphic = new QVideoTrackNode(this, combiner, id);
+        return graphic != null;
     }
 
     public boolean setTimeTo(long mSec) {
@@ -103,6 +120,7 @@ public class QMediaTrack {
         mPtr = 0;
     }
 
+    protected String id;
     protected QVideoTrackNode graphic;
     protected QAudioTrackNode audio;
     protected QMediaSource mediaSource;

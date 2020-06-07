@@ -38,6 +38,8 @@ Texture2D* GeneralTexture2D::createFromImage(const Image* image)
     glGenTextures(1, &texture->_textureid);
     glBindTexture(GL_TEXTURE_2D, texture->_textureid);
     glTexImage2D(GL_TEXTURE_2D, 0 ,gl_format, image->width() , image->height() , 0, gl_format, GL_UNSIGNED_BYTE, image->getBuffer());
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
     

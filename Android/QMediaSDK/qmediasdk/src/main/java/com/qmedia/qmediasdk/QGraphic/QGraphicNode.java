@@ -6,19 +6,28 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class QGraphicNode {
     private static final String TAG = "QGraphicNode";
     public QGraphicNode(String name, QCombiner combiner) {
-        this(combiner);
+        this(name, combiner, UUID.randomUUID().toString());
+    }
+    public QGraphicNode(String name, QCombiner combiner, String id) {
+        this(combiner, id);
         mPtr = native_create();
         setName(name);
     }
 
     //TODO: construct this for child class
-    protected QGraphicNode(QCombiner combiner) {
+    protected QGraphicNode(QCombiner combiner, String id) {
+        this.id = id;
         weakCombiner = new WeakReference<>(combiner);
-        combiner.addGraphicNode(this);
+        combiner.addGraphicNodeIndex(this);
+    }
+
+    public String getId() {
+        return id;
     }
 
     //TODO: childrens @QGraphicNode
@@ -196,6 +205,7 @@ public class QGraphicNode {
 
     //copy parameters from other GraphicNode
     public void copyForm(QGraphicNode from) {
+        this.id = from.id;
         setName(from.name);
         setPosition(from.position);
         setPositionZ(from.positionZ);
@@ -229,6 +239,7 @@ public class QGraphicNode {
     private ArrayList<QGraphicNode> childrens = new ArrayList();
     private ArrayList<QNodeAnimator> animators = new ArrayList();
 
+    protected String id;
     String name = "";
     QRange renderRange = new QRange(0,0);
     //transform propertys setting

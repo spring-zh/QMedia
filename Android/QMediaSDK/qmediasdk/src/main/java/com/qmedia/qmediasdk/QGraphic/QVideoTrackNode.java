@@ -3,9 +3,14 @@ package com.qmedia.qmediasdk.QGraphic;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 
+import java.util.UUID;
+
 public class QVideoTrackNode extends QGraphicNode {
     public QVideoTrackNode(QMediaTrack mediaTrack, QCombiner combiner) {
-        super(combiner);
+        this(mediaTrack,combiner, UUID.randomUUID().toString());
+    }
+    public QVideoTrackNode(QMediaTrack mediaTrack, QCombiner combiner, String id) {
+        super(combiner, id);
         this.mediaTrack = mediaTrack;
         mPtr = native_create(mediaTrack);
     }

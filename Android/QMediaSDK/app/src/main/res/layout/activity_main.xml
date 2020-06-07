@@ -23,7 +23,7 @@
         android:id="@+id/button_select_images"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/button_camera"/>
+        android:text="Images TimeLine"/>
 
 
 </LinearLayout>
