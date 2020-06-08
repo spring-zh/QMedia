@@ -21,9 +21,9 @@
 - (float)getPlaySpeed;
 - (int64_t)getSourceDuration;//source media total duration
 
-- (NSRange)getDisplayTrackRange;
-- (void)setDisplayTrackRange:(NSRange)range;
+@property (nonatomic, readonly) NSString* uid;
 @property (nonatomic) NSRange sourceRange;
+@property (nonatomic) NSRange displayRange;
 @property (nonatomic) float timeScale;
 @property (nonatomic) int repeatTimes;
 @property (nonatomic, readonly) id<QMediaSource> source;

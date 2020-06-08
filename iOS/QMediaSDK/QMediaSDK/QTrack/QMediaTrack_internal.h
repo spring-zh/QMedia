@@ -11,5 +11,6 @@
 
 @interface QMediaTrack(internal)
 - (instancetype)initWithMediaSourceNative:(MediaSourceRef)mediaSource;
+- (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource uid:(NSString*)uid;
 @property (nonatomic, readonly) MediaTrackRef native;
 @end

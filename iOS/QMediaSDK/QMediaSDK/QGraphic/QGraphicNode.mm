@@ -23,6 +23,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 #pragma mark QGraphicNode
 
 @implementation QGraphicNode {
+    NSString *_uid;
     NSString *_nodeName;
     GraphicCore::RenderNodeRef _graphicNode;
     NSMutableArray* _childrens;
@@ -53,7 +54,16 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 
 - (instancetype)initWithName:(NSString*)name
 {
+    CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef uuid = CFUUIDCreateString(kCFAllocatorDefault, uuidref);
+    CFRelease(uuidref);
+    return [self initWithName:name uid:(__bridge_transfer NSString *)uuid];
+}
+
+- (instancetype)initWithName:(NSString*)name  uid:(NSString*)uid
+{
     if ((self = [self init]) != nil) {
+        _uid = [uid copy];
         _graphicNode = GraphicCore::RenderNodeRef(new GraphicCore::RenderNode());
         _nodeName = [name copy];
         std::string s_name = std::string([name UTF8String]);
@@ -79,6 +89,10 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
         _parent = nil;
     }
     return self;
+}
+
+- (NSString*)uid {
+    return _uid;
 }
 
 - (GraphicCore::RenderNodeRef)native {

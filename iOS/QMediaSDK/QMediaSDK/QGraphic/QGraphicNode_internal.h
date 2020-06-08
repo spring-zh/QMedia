@@ -30,6 +30,7 @@
 
 @interface QGraphicNode(internal)
 - (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode;
+- (instancetype)initWithName:(NSString*)name  uid:(NSString*)uid;
 @property (nonatomic, readonly) GraphicCore::RenderNodeRef native;
 
 - (bool)addChildNodeDirect:(QGraphicNode*)childNode;

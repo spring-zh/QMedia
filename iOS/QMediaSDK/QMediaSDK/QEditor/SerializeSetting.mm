@@ -325,7 +325,7 @@
         [dic setValue:dic_sourceRange forKey:@"sourceRange"];
     }
     {
-        NSRange dRange = [self getDisplayTrackRange];
+        NSRange dRange = [self displayRange];
         NSDictionary* dic_displayTrackRange = [[NSMutableDictionary alloc] init];
         [dic_displayTrackRange setValue:@(dRange.location) forKey:@"location"];
         [dic_displayTrackRange setValue:@(dRange.length) forKey:@"length"];
@@ -373,7 +373,7 @@
             NSRange range;
             range.location = [[dic_sub valueForKey:@"location"] intValue];
             range.length = [[dic_sub valueForKey:@"length"] intValue];
-            [mediaTrack setDisplayTrackRange:range];
+            mediaTrack.displayRange = range;
         }
 
         mediaTrack.timeScale = [[dic valueForKey:@"timeScale"] floatValue];

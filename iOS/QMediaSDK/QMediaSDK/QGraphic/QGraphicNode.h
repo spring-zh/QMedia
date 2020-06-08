@@ -46,6 +46,7 @@ QColor4 QColorMaker(float r, float g, float b, float a);
 - (bool)removeAnimator:(QNodeAnimator*)animator;
 - (void)clearAllAnimators;
 
+@property (nonatomic, readonly) NSString* uid;
 @property (nonatomic) NSRange renderRange;
 
 //transform propertys setting
