@@ -1,7 +1,6 @@
-## QMediaCore Structure UML
+## SDK FrameWork And Data Flow Diagram
+---
+![avatar](resource/SDKFramework.png)
 
-![avatar](resource/qmediaframework.png)
-
-## IOS Implement UML
-
-![avatar](resource/IOSImplement.png)
+---
+For more details see implementation [Class UML](ClassUML.md)
