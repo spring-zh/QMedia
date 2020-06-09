@@ -20,6 +20,9 @@
 @property (nonatomic, weak) id<QAudioTarget> audioTarget;
 
 @property (nonatomic, readonly) NSString * filePath;
+@property (nonatomic, readonly) bool enableAudio;
+@property (nonatomic, readonly) bool enableVideo;
+
 //media source describe
 @property (nonatomic, readonly) QVideoDescribe* videoDesc;
 @property (nonatomic, readonly) QAudioDescribe* audioDesc;

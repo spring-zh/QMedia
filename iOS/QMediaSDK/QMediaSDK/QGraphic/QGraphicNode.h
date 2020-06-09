@@ -24,20 +24,21 @@ QColor4 QColorMaker(float r, float g, float b, float a);
 }
 #endif
 
+@class QCombiner;
+
 // QGraphicNode
 @interface QGraphicNode : NSObject
 
-- (instancetype)initWithName:(NSString*)name;
+- (instancetype)initWithName:(NSString*)name combiner:(QCombiner*)combiner;
+- (instancetype)initWithName:(NSString*)name combiner:(QCombiner*)combiner uid:(NSString*)uid;
 @property (nonatomic, readonly) NSString* name;
 
 @property (nonatomic, weak, readonly) QGraphicNode* parent;
 //for children nodes
 @property (nonatomic, readonly) NSArray* childrens;
-/**
- * use QCombiner attachRenderNode/detachRenderNode to instead of these
- */
-- (bool)addChildNode:(QGraphicNode*)childNode DEPRECATED_ATTRIBUTE;
-- (bool)removeChildNode:(QGraphicNode*)childNode DEPRECATED_ATTRIBUTE;
+
+- (bool)addChildNode:(QGraphicNode*)childNode;
+- (bool)removeChildNode:(QGraphicNode*)childNode;
 - (void)clearAllChildrens;
 
 //for animator
@@ -46,7 +47,11 @@ QColor4 QColorMaker(float r, float g, float b, float a);
 - (bool)removeAnimator:(QNodeAnimator*)animator;
 - (void)clearAllAnimators;
 
+- (void)copyFrom:(QGraphicNode*)fromNode;
+
+//uuid for index
 @property (nonatomic, readonly) NSString* uid;
+//display and render time range
 @property (nonatomic) NSRange renderRange;
 
 //transform propertys setting

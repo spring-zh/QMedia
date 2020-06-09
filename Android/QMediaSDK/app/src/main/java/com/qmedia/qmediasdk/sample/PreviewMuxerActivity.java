@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.UUID;
 
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QVector;
@@ -21,6 +22,8 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QEditor.QEditorPlayer;
 import com.qmedia.qmediasdk.QEditor.QExporter;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
+import com.qmedia.qmediasdk.QGraphic.QImageNode;
+import com.qmedia.qmediasdk.QGraphic.QLayer;
 import com.qmedia.qmediasdk.QGraphic.QNodeAnimator;
 import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
@@ -82,6 +85,19 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		combiner.getRootNode().addChildNode(videoTrack.getGraphic());
 		combiner.getRootNode().addChildNode(duplicatenodeL);
 		combiner.getRootNode().addChildNode(duplicatenodeR);
+
+		String imagePath = Environment.getExternalStorageDirectory().getPath() + "/li.jpg";
+		QImageNode imageNode = new QImageNode(imagePath, false, combiner);
+		imageNode.setRenderRange(new QRange(5000, 15000));
+		imageNode.setContentSize(new QVector(320, 240));
+		combiner.getRootNode().addChildNode(imageNode);
+
+//		QLayer layer = new QLayer(new QVector(targetW, targetH), "", combiner);
+//		layer.setContentSize(new QVector(targetW, targetH));
+//		layer.addChildNode(videoTrack.getGraphic());
+//		layer.addChildNode(duplicatenodeL);
+//		layer.addChildNode(duplicatenodeR);
+//		combiner.getRootNode().addChildNode(layer);
 
 
 		QNodeAnimator an1 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(0, 5000) ,

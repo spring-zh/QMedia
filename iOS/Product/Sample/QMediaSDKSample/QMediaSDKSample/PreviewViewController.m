@@ -69,12 +69,11 @@
     NSString* testVideoFile2 = [QFileUtils getFileFromMainbundleAbsolutePath:@"video/test.mp4"];
     NSString* testAudioFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"audio/LR.mp3"];
     
-    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2];
-    QMediaTrack* audioTrack = [self.player.mediaFactory createAudioTrack:testAudioFile];
+    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2 combiner:self.player];
+    QMediaTrack* audioTrack = [self.player.mediaFactory createAudioTrack:testAudioFile combiner:self.player];
 //    XMVideoTrack* videoTrack = [self.player.mediaFactory createOldVideoTrack:testVideoFile2];
 
 //    QVideoTrackNode *videoNode = [[QVideoTrackNode alloc] initFromTrack:videoTrack];
-    [self.player addGraphicNode:videoTrack.graphic];
         videoTrack.graphic.position = CGPointMake(targetW/4, targetH/4);
         videoTrack.graphic.contentSize = CGSizeMake(targetW/2, targetH/2);//self.player.layerSize;
         //    videoTrack.graphic.color4 = XMColorMaker(1, 1, 1, 0.5);
@@ -96,35 +95,13 @@
     [self.player attachRenderNode:captureTrack.graphic parent:self.player.rootNode];
 #endif
     
-//    [self.player attachRenderNode:videoTrack.graphic parent:layer];
-    
-//    [layer addChildNode:videoNode];
-//    [self.player.rootNode addChildNode:layer];
-//    [self.player.rootNode addChildNode:captureTrack.graphic];
-#if 0
-    QDuplicateNode* duplicatenode = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
-    [self.player addGraphicNode:duplicatenode];
-    duplicatenode.contentSize = CGSizeMake(320, 240);
-    duplicatenode.position = CGPointMake(50, 50);
-    duplicatenode.anchorPoint = CGPointMake(0.5, 0.5);
-    QNodeAnimator* animator = [[QNodeAnimator alloc] initWith:property_scalexy range:NSMakeRange(0, 5000) begin:QVectorV2(0.5,0.5) end:QVectorV2(1,1) functype:Quint_EaseOut repleat:false];
-    [duplicatenode addAnimator:animator];
-    duplicatenode.renderRange = NSMakeRange(1000, 15000);
-//    duplicatenode.color4 = QColorMaker(0, 1, 0.5, 1);
-//    [self.player.rootNode addChildNode:duplicatenode];
-    [self.player attachRenderNode:duplicatenode parent:self.player.rootNode];
-#endif
-    
-    
-    QDuplicateNode* duplicatenodeL = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
-    [self.player addGraphicNode:duplicatenodeL];
+    QDuplicateNode* duplicatenodeL = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic combiner:self.player];
     duplicatenodeL.contentSize = CGSizeMake(targetW/2, targetH/2);
     duplicatenodeL.position = CGPointMake(0, targetH/4);
     duplicatenodeL.anchorPoint = CGPointMake(0.5, 0.5);
     duplicatenodeL.rotation3d = QVectorV3(0, 90, 0);
 
-    QDuplicateNode* duplicatenodeR = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic];
-    [self.player addGraphicNode:duplicatenodeR];
+    QDuplicateNode* duplicatenodeR = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic combiner:self.player];
     duplicatenodeR.contentSize = CGSizeMake(targetW/2, targetH/2);
     duplicatenodeR.position = CGPointMake(targetW/2, targetH/4);
     duplicatenodeR.anchorPoint = CGPointMake(0.5, 0.5);
@@ -135,19 +112,25 @@
     //add audioTrack
     [self.player addMediaTrack:audioTrack];
     
-    QGraphicNode* composeNode = [[QGraphicNode alloc] initWithName:@"composeNode"];
-    [self.player addGraphicNode:composeNode];
+    QGraphicNode* composeNode = [[QGraphicNode alloc] initWithName:@"composeNode" combiner:self.player];
     composeNode.contentSize = CGSizeMake(640, 480);
     composeNode.anchorPoint = CGPointMake(0.5, 0.5);
     QNodeAnimator * an1 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:NSMakeRange(0, 5000) begin:QVectorV3(0, 0, 0) end:QVectorV3(-180, 180, 180) functype:Linear repleat:false];
     [composeNode addAnimator:an1];
     QNodeAnimator * an2 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:NSMakeRange(5000, 5000) begin:QVectorV3(-180, 180, 180) end:QVectorV3(-360, 360, 360) functype:Linear repleat:false];
     [composeNode addAnimator:an2];
-    [self.player attachRenderNode:videoTrack.graphic parent:composeNode];
-    [self.player attachRenderNode:duplicatenodeL parent:composeNode];
-    [self.player attachRenderNode:duplicatenodeR parent:composeNode];
+    [composeNode addChildNode:videoTrack.graphic];
+    [composeNode addChildNode:duplicatenodeL];
+    [composeNode addChildNode:duplicatenodeR];
     
-    [self.player attachRenderNode:composeNode parent:self.player.rootNode];
+    NSString* testImageFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"image/li.jpg"];
+    QImageNode* imageNode = [[QImageNode alloc] initWithPath:testImageFile combiner:self.player];
+    imageNode.contentSize = CGSizeMake(320, 240);
+    imageNode.renderRange = NSMakeRange(2000, 10000);
+    imageNode.alpha = 0.8;
+    
+    [self.player.rootNode addChildNode:imageNode];
+    [self.player.rootNode addChildNode:composeNode];
     
     self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
     
@@ -170,8 +153,6 @@
     
     [[NSNotificationCenter defaultCenter] postNotificationName:@"AddNewPoint" object:[NSValue valueWithCGPoint:locationPoint]];
 }
-
-
 
 - (void)viewWillAppear:(BOOL)animated
 {

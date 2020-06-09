@@ -11,6 +11,7 @@
 #import "QAssetReaderSource.h"
 #import "QCaptureSource.h"
 #import "QDuplicateNode.h"
+#import "QImageNode.h"
 #import "QLayer.h"
 #import "QMediaFactory.h"
 

@@ -15,26 +15,23 @@
     GraphicCore::LayerRef _layer;
 }
 
-- (instancetype)initWithSize:(CGSize)size name:(NSString*)name
+- (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner
+{
+    CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef uuid = CFUUIDCreateString(kCFAllocatorDefault, uuidref);
+    CFRelease(uuidref);
+    return [self initWithSize:size combiner:combiner uid:(__bridge_transfer NSString *)uuid];
+}
+
+- (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner uid:(NSString*)uid
 {
     _layer = GraphicCore::LayerRef(new GraphicCore::Layer(GraphicCore::Size(size.width,size.height)));
-//    _layer->setContentSize(GraphicCore::Size(size.width, size.height));
-    std::string s_name = std::string([name UTF8String]);
-    _layer->setName(s_name);
     _bkColor = QColorMaker(0, 0, 0, 0);
-    return (self = [super initWithNode:_layer]);
+    return (self = [super initWithNode:_layer combiner:combiner uid:uid]);
 }
 
 - (void)dealloc {
     NSLog(@"QLayer dealloc");
-}
-
-- (instancetype)initWithLayer:(GraphicCore::LayerRef)layer
-{
-    if ((self = [super initWithNode:layer]) != nil) {
-        _layer = layer;
-    }
-    return self;
 }
 
 - (CGSize)layerSize {

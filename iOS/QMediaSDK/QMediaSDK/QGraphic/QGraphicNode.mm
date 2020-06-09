@@ -7,6 +7,7 @@
 //
 
 #import "QGraphicNode_internal.h"
+#import "QCombiner_internal.h"
 
 using GraphicCore::AnimaNode;
 
@@ -28,6 +29,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     GraphicCore::RenderNodeRef _graphicNode;
     NSMutableArray* _childrens;
     NSMutableArray* _animators;
+    __weak QCombiner* _combiner;
 }
 
 @synthesize parent = _parent;
@@ -46,24 +48,25 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
         self.origin_positionZ = 0;
         self.origin_anchorPoint = CGPointMake(0, 0);
         self.origin_color4 = QColorMaker(1, 1, 1, 1);
-        self.origin_alpha = 1.0f;
+//        self.origin_alpha = 1.0f;
         self.origin_visible = true;
     }
     return self;
 }
 
-- (instancetype)initWithName:(NSString*)name
+- (instancetype)initWithName:(NSString*)name combiner:(QCombiner*)combiner
 {
     CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
     CFStringRef uuid = CFUUIDCreateString(kCFAllocatorDefault, uuidref);
     CFRelease(uuidref);
-    return [self initWithName:name uid:(__bridge_transfer NSString *)uuid];
+    return [self initWithName:name combiner:combiner uid:(__bridge_transfer NSString *)uuid];
 }
 
-- (instancetype)initWithName:(NSString*)name  uid:(NSString*)uid
+- (instancetype)initWithName:(NSString*)name combiner:(QCombiner*)combiner uid:(NSString*)uid
 {
     if ((self = [self init]) != nil) {
         _uid = [uid copy];
+        _combiner = combiner;
         _graphicNode = GraphicCore::RenderNodeRef(new GraphicCore::RenderNode());
         _nodeName = [name copy];
         std::string s_name = std::string([name UTF8String]);
@@ -71,14 +74,26 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
         _childrens = [[NSMutableArray alloc] init];
         _animators = [[NSMutableArray alloc] init];
         _parent = nil;
+        
+        [_combiner addGraphicNodeIndex:self];
     }
     return self;
 }
 
 #pragma mark - private function
-- (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode
+- (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode combiner:(QCombiner*)combiner
+{
+    CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef uuid = CFUUIDCreateString(kCFAllocatorDefault, uuidref);
+    CFRelease(uuidref);
+    return [self initWithNode:graphicNode combiner:combiner uid:(__bridge_transfer NSString *)uuid];
+}
+
+- (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode combiner:(QCombiner*)combiner  uid:(NSString*)uid
 {
     if ((self = [self init]) != nil) {
+        _uid = uid;
+        _combiner = combiner;
         _graphicNode = graphicNode;
         if (_graphicNode == nullptr) {
             return nil;
@@ -87,6 +102,8 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
         _childrens = [[NSMutableArray alloc] init];
         _animators = [[NSMutableArray alloc] init];
         _parent = nil;
+        
+        [_combiner addGraphicNodeIndex:self];
     }
     return self;
 }
@@ -100,6 +117,12 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 }
 #pragma mark - private function //
 
+- (void)setName:(NSString *)name {
+    _nodeName = [name copy];
+    std::string s_name = std::string([name UTF8String]);
+    _graphicNode->setName(s_name);
+}
+
 - (void)setParent:(QGraphicNode *)parent {
     _parent = parent;
 }
@@ -110,16 +133,10 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 
 - (bool)addChildNode:(QGraphicNode*)childNode
 {
-    if (childNode == nil) {
-        return false;
-    }
-    if([_childrens containsObject:childNode])
-        return true;
-    childNode.native->removeFromParent();
-    childNode.native->setParent(nullptr);
-    if(_graphicNode->addChildren(childNode.native.get())){
+    if (childNode != nil && ![_childrens containsObject:childNode]) {
         [_childrens addObject:childNode];
         [childNode setParent:self];
+        [_combiner attachRenderNode:childNode parent:self];
         return true;
     }
     return false;
@@ -128,28 +145,9 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 {
     if([_childrens containsObject:childNode])
     {
-        childNode.native->removeFromParent();
-        childNode.native->setParent(nullptr);
-        [_childrens removeObject:childNode];
-        return true;
-    }
-    return false;
-}
-
-- (bool)addChildNodeDirect:(QGraphicNode*)childNode {
-    if (childNode != nil && ![_childrens containsObject:childNode]) {
-        [_childrens addObject:childNode];
-        [childNode setParent:self];
-        return true;
-    }
-    return false;
-}
-
-- (bool)removeChildNodeDirect:(QGraphicNode*)childNode {
-    if([_childrens containsObject:childNode])
-    {
         [childNode setParent:nil];
         [_childrens removeObject:childNode];
+        [_combiner detachRenderNode:childNode];
         return true;
     }
     return false;
@@ -188,6 +186,27 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
         _graphicNode->removeAnimator(animator.native);
     }
     [_animators removeAllObjects];
+}
+
+- (void)copyFrom:(QGraphicNode*)fromNode {
+    _uid = fromNode.uid;
+    [self setName:fromNode.name];
+    self.position = fromNode.origin_position;
+    self.positionZ = fromNode.origin_positionZ;
+    self.contentSize = fromNode.origin_contentSize;
+    self.anchorPoint = fromNode.origin_anchorPoint;
+    self.color4 = fromNode.origin_color4;
+    self.rotation3d = fromNode.origin_rotation3d;
+    self.scaleX = fromNode.origin_scaleX;
+    self.scaleY = fromNode.origin_scaleY;
+    self.scaleZ = fromNode.origin_scaleZ;
+    self.visible = fromNode.origin_visible;
+    self.renderRange = fromNode.renderRange;
+    
+    [_animators removeAllObjects];
+    for (QNodeAnimator* animator in fromNode.animators) {
+        [self addAnimator:[[QNodeAnimator alloc] initWith:animator.property range:animator.timeRang begin:animator.beginPoint end:animator.endPoint functype:animator.functionType repleat:animator.repleat]];
+    }
 }
 
 - (NSString*)name{
@@ -303,9 +322,11 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     return color.a;
 }
 - (void)setAlpha:(float)alpha{
-    self.origin_alpha = alpha;
-    GraphicCore::Color4F color = _graphicNode->getColor();
-    color.a = alpha;
+    QColor4 qcolor = self.origin_color4;
+    qcolor.a = alpha;
+    self.origin_color4 = qcolor;
+    
+    GraphicCore::Color4F color = {qcolor.r, qcolor.g, qcolor.b, qcolor.a};
     _graphicNode->setColor(color);
 }
 

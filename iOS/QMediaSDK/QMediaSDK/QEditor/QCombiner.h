@@ -10,16 +10,21 @@
 #import "QMediaFactory.h"
 #import "QGraphicNode.h"
 
+@interface DisplayRootNode : QGraphicNode
+@property (nonatomic) QColor4 bkColor;
+@end
+
 @interface QCombiner : NSObject <Serializable>
 
 @property (nonatomic) id<QVideoTarget> videoTarget;
 @property (nonatomic) id<QAudioTarget> audioTarget;
 
 //resource for index
-@property (nonatomic, readonly) NSArray<QMediaTrack*>* subObjects;
-@property (nonatomic, readonly) NSArray<QGraphicNode*>* graphicNodes;
+@property (nonatomic, readonly) NSDictionary<NSString*, QMediaTrack*>* subObjects;
+@property (nonatomic, readonly) NSDictionary<NSString*, QGraphicNode*>* graphicNodes;
+@property (nonatomic, readonly) NSDictionary<NSString*, QGraphicNode*>* duplicateNodes;
 
-@property (nonatomic, readonly) QGraphicNode* rootNode;
+@property (nonatomic, readonly) DisplayRootNode* rootNode;
 @property (nonatomic, readonly) QMediaFactory* mediaFactory;
 
 // set the video/audio output target config
@@ -30,18 +35,11 @@
 - (void)addMediaTrack:(QMediaTrack*)track;
 - (void)removeMediaTrack:(QMediaTrack*)track;
 
-// will update graphicNodes resource index .
-// for serialize settings
-- (void)addGraphicNode:(QGraphicNode*)node;
-- (void)removeGraphicNode:(QGraphicNode*)node;
-
-//add / remove graphicNode, will be execute on render thread
-- (bool)attachRenderNode:(QGraphicNode*)child parent:(QGraphicNode*)parent;
-- (bool)detachRenderNode:(QGraphicNode*)current;
-
 @property (nonatomic, readonly) int64_t position;
 @property (nonatomic, readonly) NSRange mediaTimeRange;
 
+//copy settings from other
+- (void)copyFrom:(QCombiner*)from;
 
 //serialize all settings, include mediaTracks, graphicNodes , render trees
 - (NSDictionary*)serialize;

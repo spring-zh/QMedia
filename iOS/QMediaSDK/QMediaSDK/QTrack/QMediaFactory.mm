@@ -72,40 +72,59 @@
 //    return self;
 //}
 
-- (QMediaTrack*)createVideoTrack:(NSString *)filePath
+- (QMediaTrack*)createVideoTrack:(NSString *)filePath combiner:(QCombiner*)combiner
 {
     QAssetReaderSource* readerSource = [[QAssetReaderSource alloc] initWithFilePath:filePath];
     readerSource.videoTarget = _videoTarget;
     readerSource.audioTarget = _audioTarget;
 //    readerSource.video_frame_format = kCVPixelFormatType_32BGRA;
-    return [[QMediaTrack alloc] initWithMediaSource:readerSource];
+    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:readerSource];
+    if (mediaTrack) {
+        [mediaTrack generateVideoTrackNode:combiner];
+        [mediaTrack generateAudioTrackNode:combiner];
+    }
+    return mediaTrack;
 }
 
-- (QMediaTrack*)createAudioTrack:(NSString *)filePath
+- (QMediaTrack*)createAudioTrack:(NSString *)filePath combiner:(QCombiner*)combiner
 {
     QAssetReaderSource* readerSource = [[QAssetReaderSource alloc] initWithFilePath:filePath audio:true video:false];
     readerSource.videoTarget = _videoTarget;
     readerSource.audioTarget = _audioTarget;
 //    readerSource.video_frame_format = kCVPixelFormatType_32BGRA;
-    return [[QMediaTrack alloc] initWithMediaSource:readerSource];
+    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:readerSource];
+    if (mediaTrack) {
+        [mediaTrack generateAudioTrackNode:combiner];
+    }
+    return mediaTrack;
 }
 
-- (QMediaTrack*)createCaptureTrack:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position video:(bool)enableVideo audio:(bool)enableAudio;
+- (QMediaTrack*)createCaptureTrack:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position video:(bool)enableVideo audio:(bool)enableAudio combiner:(QCombiner*)combiner;
 {
     QCaptureSource* captureSource = [[QCaptureSource alloc] initWithPreset:preset position:position];
     captureSource.videoTarget = _videoTarget;
     captureSource.audioTarget = _audioTarget;
     captureSource.enableVideo = enableVideo;
     captureSource.enableAudio = enableAudio;
-    return [[QMediaTrack alloc] initWithMediaSource:captureSource];
+    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:captureSource];
+    if (mediaTrack) {
+        if(enableVideo)[mediaTrack generateVideoTrackNode:combiner];
+        if(enableAudio)[mediaTrack generateAudioTrackNode:combiner];
+    }
+    return mediaTrack;
 }
 
-- (QMediaTrack*)createOldVideoTrack:(NSString *)filePath{
+- (QMediaTrack*)createOldVideoTrack:(NSString *)filePath combiner:(QCombiner*)combiner{
     QInternalVideoSource *xmSource = [[QInternalVideoSource alloc] initWithFilePath:filePath];
     [xmSource native]->setVideoTarget(_videoTargetAdapter.get());
     [xmSource native]->setAudioTarget(_audioTargetAdapter.get());
 
-    return [[QMediaTrack alloc] initWithMediaSourceNative:[xmSource native]] ;
+    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSourceNative:[xmSource native]] ;
+    if (mediaTrack) {
+        [mediaTrack generateVideoTrackNode:combiner];
+        [mediaTrack generateAudioTrackNode:combiner];
+    }
+    return mediaTrack;
 }
 
 @end

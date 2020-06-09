@@ -10,6 +10,8 @@
 #import "QVideoTrackNode.h"
 #import "QAudioTrackNode.h"
 
+@class QCombiner;
+
 @interface QMediaTrack : NSObject
 
 - (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource;
@@ -20,6 +22,9 @@
 - (bool)isPrepare;
 - (float)getPlaySpeed;
 - (int64_t)getSourceDuration;//source media total duration
+
+- (bool)generateAudioTrackNode:(QCombiner*)combiner;
+- (bool)generateVideoTrackNode:(QCombiner*)combiner;
 
 @property (nonatomic, readonly) NSString* uid;
 @property (nonatomic) NSRange sourceRange;

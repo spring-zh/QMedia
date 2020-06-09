@@ -78,7 +78,7 @@
 }
 
 @end
-
+#if 0
 #pragma mark QGraphicNode serialize ---------------------
 @implementation QGraphicNode(serialize)
 - (NSDictionary*)serialize {
@@ -285,7 +285,7 @@
 }
 
 @end
-
+#endif
 #pragma mark Source serialize ---------------------
 @implementation QAssetReaderSource(serialize)
 - (NSDictionary*)serialize {
@@ -308,7 +308,7 @@
     return dic;
 }
 @end
-
+#if 0
 #pragma mark QMediaTrack serialize ---------------------
 @implementation QMediaTrack(serialize)
 
@@ -384,3 +384,4 @@
 }
 
 @end
+#endif

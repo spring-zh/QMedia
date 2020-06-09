@@ -35,10 +35,10 @@
     if ((self = [super init]) != nil) {
         _uid = [uid copy];
         _mediaSource = mediaSource;
-        _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(MediaSourceRef(new MediaSourceAdapter(mediaSource))));
+        _mediaTrackNative = MediaTrackRef(new MediaTrackImpl(MediaSourceRef(new MediaSourceAdapter(mediaSource))));
         if(_mediaTrackNative->prepare()){
-            _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
-            _audio = [[QAudioTrackNode alloc] initFromTrack:self];
+//            _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
+//            _audio = [[QAudioTrackNode alloc] initFromTrack:self];
         }else
             self = nil;
     }
@@ -50,8 +50,8 @@
     if ((self = [super init]) != nil) {
         _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(mediaSource));
         if(_mediaTrackNative->prepare()){
-            _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
-            _audio = [[QAudioTrackNode alloc] initFromTrack:self];
+//            _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
+//            _audio = [[QAudioTrackNode alloc] initFromTrack:self];
         }else
             self = nil;
     }
@@ -63,6 +63,32 @@
     NSLog(@"%@ dealloc ", self);
     _mediaTrackNative.reset();
     _mediaSource = nil;
+}
+
+- (bool)generateAudioTrackNode:(QCombiner*)combiner {
+    if (_mediaSource.audioDesc) {
+        _audio = [[QAudioTrackNode alloc] initFromTrack:self combiner:combiner];
+    }
+    return _audio != nil;
+}
+- (bool)generateVideoTrackNode:(QCombiner*)combiner {
+    if (_mediaSource.videoDesc) {
+        _graphic = [[QVideoTrackNode alloc] initFromTrack:self combiner:combiner];
+    }
+    return _graphic != nil;
+}
+
+- (bool)generateAudioTrackNode:(QCombiner*)combiner uid:(NSString*)uid{
+    if (_mediaSource.audioDesc) {
+        _audio = [[QAudioTrackNode alloc] initFromTrack:self combiner:combiner uid:uid];
+    }
+    return _audio != nil;
+}
+- (bool)generateVideoTrackNode:(QCombiner*)combiner uid:(NSString*)uid{
+    if (_mediaSource.videoDesc) {
+        _graphic = [[QVideoTrackNode alloc] initFromTrack:self combiner:combiner uid:uid];
+    }
+    return _graphic != nil;
 }
 
 - (bool) prepare {

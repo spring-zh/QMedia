@@ -138,6 +138,14 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
     return _path;
 }
 
+- (bool)enableVideo {
+    return _enableVideo;
+}
+
+- (bool)enableAudio {
+    return _enableAudio;
+}
+
 -(QVideoDescribe*)videoDesc
 {
     return _vdesc;

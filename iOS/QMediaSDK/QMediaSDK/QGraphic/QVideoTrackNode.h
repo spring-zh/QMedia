@@ -14,7 +14,8 @@
 */
 @interface QVideoTrackNode : QGraphicNode
 
-- (instancetype)initFromTrack:(QMediaTrack*)mediaTrack;
+- (instancetype)initFromTrack:(QMediaTrack*)mediaTrack combiner:(QCombiner*)combiner;
+- (instancetype)initFromTrack:(QMediaTrack*)mediaTrack combiner:(QCombiner*)combiner uid:(NSString*)uid;
 @property (nonatomic, readonly) QMediaTrack* mediaTrack;
 
 @end

@@ -82,7 +82,7 @@
     ResTrackTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ResTrackTableViewCell" forIndexPath:indexPath];
     
     cell.cellIndex = indexPath.row;
-    QMediaTrack *track = [self.player.subObjects objectAtIndex:indexPath];
+    QMediaTrack *track = [[self.player.subObjects allValues] objectAtIndex:indexPath];
 //    XMObject* subObject = self.globalXMObject.subObjects[indexPath.row];
     cell.globalTimeLength = self.player.mediaTimeRange.length ;
     cell.resTimeLength = track.displayRange.length;
