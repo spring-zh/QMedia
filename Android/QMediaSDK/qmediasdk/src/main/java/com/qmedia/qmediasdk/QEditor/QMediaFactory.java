@@ -1,5 +1,6 @@
 package com.qmedia.qmediasdk.QEditor;
 
+import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
 import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QSource.QMediaExtractorSource;
@@ -95,6 +96,24 @@ public class QMediaFactory {
             return false;
     }
 
+    //TODO: duplicateNodes @QGraphicNode
+    public HashMap<String, QAudioTrackNode> getAudioNodes() {
+        return audioNodes;
+    }
+    public boolean addAudioNodeIndex(QAudioTrackNode node) {
+        if (! audioNodes.containsValue(node) && node != null) {
+            audioNodes.put(node.getId(), node);
+            return true;
+        }else
+            return false;
+    }
+    public boolean removeAudioNodeIndex(QAudioTrackNode node) {
+        if (node != null && audioNodes.containsValue(node)) {
+            audioNodes.remove(node);
+            return true;
+        }else
+            return false;
+    }
 
     public QMediaTrack createVideoTrack(String filePath, boolean inAsset) {
         QMediaSource mediaSource = new QMediaExtractorSource(filePath, true, true, inAsset);
@@ -135,6 +154,7 @@ public class QMediaFactory {
     protected HashMap<String/*id*/, QMediaTrack> mediaTracks = new HashMap<>();
     protected HashMap<String/*id*/, QGraphicNode> graphicNodes = new HashMap<>();
     protected HashMap<String/*id*/, QGraphicNode> duplicateNodes = new HashMap<>();
+    protected HashMap<String/*id*/, QAudioTrackNode> audioNodes = new HashMap<>();
 
     QVideoTarget videoTarget = null;
     QAudioTarget audioTarget = null;

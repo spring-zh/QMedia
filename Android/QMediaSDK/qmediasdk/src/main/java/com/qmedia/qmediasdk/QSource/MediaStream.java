@@ -109,7 +109,7 @@ public class MediaStream implements Runnable, HardwareDecoder.DecodecFrameListen
             }
             mDecodeThread = null;
         }
-//        mMediaDecoder.stop();
+        mMediaDecoder.stop();
     }
 
     //flush packets、decoder and output frames data

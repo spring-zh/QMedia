@@ -238,14 +238,9 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                 mExtractor.release();
                 mExtractor = null;
             }
-            for (MediaStream stream : mediaStreams) {
-                stream.release();;
-            }
-            mediaStreams.clear();
-            mVideoIndex = mAudioIndex = -1;
 
             if (mVideoSurfaceTexture != null){
-                {
+                {//release hardware surfacetexture
                     QGLContext qglContext = QGLContext.shared();
                     synchronized (qglContext) {
                         qglContext.useAsCurrentContext();
@@ -262,6 +257,13 @@ public class QMediaExtractorSource implements QMediaSource ,Runnable, SurfaceTex
                 mVideoSurfaceTexture.release();
                 mVideoSurfaceTexture = null;
             }
+
+            for (MediaStream stream : mediaStreams) {
+                stream.release();;
+            }
+
+            mediaStreams.clear();
+            mVideoIndex = mAudioIndex = -1;
 
             mIsPrepare = false;
         }

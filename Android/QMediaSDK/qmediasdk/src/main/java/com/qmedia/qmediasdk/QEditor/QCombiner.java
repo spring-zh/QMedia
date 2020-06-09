@@ -131,8 +131,6 @@ public class QCombiner extends QMediaFactory{
                         mediaTrack.getGraphic().copyForm(fromTrack.getGraphic());
                     }
                     mediaTrack.generateAudioTrackNode(this);
-                }else {
-                    mediaTrack.release();
                 }
             }
         }
@@ -191,6 +189,29 @@ public class QCombiner extends QMediaFactory{
         }
     }
 
+    public void release() {
+        //release all graphic node
+        for (HashMap.Entry<String, QGraphicNode> entry: duplicateNodes.entrySet()) {
+            entry.getValue().release();
+        }
+        for (HashMap.Entry<String, QGraphicNode> entry: graphicNodes.entrySet()) {
+            entry.getValue().release();
+        }
+        duplicateNodes.clear();
+        graphicNodes.clear();
+        //release all audio node
+        for (HashMap.Entry<String, QAudioTrackNode> entry: audioNodes.entrySet()) {
+            entry.getValue().release();
+        }
+        audioNodes.clear();
+        //release all media track
+        for (HashMap.Entry<String, QMediaTrack> entry: mediaTracks.entrySet()) {
+            entry.getValue().release();
+        }
+        mediaTracks.clear();
+        native_target_release();
+    }
+
     //TODO: native
     protected native void native_setVideoConfig(QVideoDescribe describe);
     protected native void native_setAudioConfig(QAudioDescribe describe);
@@ -204,7 +225,7 @@ public class QCombiner extends QMediaFactory{
     protected native boolean native_detachAudioNode(QAudioTrackNode current);
     protected native long native_getPosition();
     protected native QRange native_getMediaTimeRange();
-    protected native void native_target_release();
+    private native void native_target_release();
     //native ptr : don't modify it
     protected long mPtr = 0;
 }
