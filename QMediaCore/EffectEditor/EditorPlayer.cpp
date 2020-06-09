@@ -86,7 +86,7 @@ void EditorPlayer::onPrepared(RetCode code)
     _state = EffectCombiner::_state;
     _userPaused = true;
     _playerClock.setPaused(true);
-    _playerClock.setClock(_playerTimeRange._start);
+    _playerClock.setClock(getValidTimeRange()._start);
     _videoTarget->flush();
     _callback->onPrepare(code);
 }

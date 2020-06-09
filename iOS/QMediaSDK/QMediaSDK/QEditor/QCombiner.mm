@@ -171,10 +171,14 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     return true;
 }
 
+- (void)setMediaTimeRange:(NSRange)timeRange {
+    Range<int64_t> tRange = {static_cast<int64_t>(timeRange.location) , static_cast<int64_t>(timeRange.location + timeRange.length)};
+    _combiner->setValidTimeRange(tRange);
+}
 - (NSRange)mediaTimeRange
 {
     NSRange nsRange;
-    Range<int64_t> tRange = _combiner->getMediaTimeRange();
+    Range<int64_t> tRange = _combiner->getValidTimeRange();
     nsRange.location = static_cast<NSUInteger>(tRange._start);
     nsRange.length = static_cast<NSUInteger>(tRange.getLength());
     return nsRange;
@@ -196,6 +200,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 
 #pragma mark copy settings
 - (void)copyFrom:(QCombiner*)from {
+    self.mediaTimeRange = from.mediaTimeRange;
     //copy rootNode
     [_graphicNodesArray removeAllObjects];
     [_rootNode copyFrom:from.rootNode];

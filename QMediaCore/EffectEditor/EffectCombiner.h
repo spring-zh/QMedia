@@ -122,6 +122,9 @@ public:
     virtual void stop();
     
     virtual int64_t getPosition() const = 0;
+
+    void setValidTimeRange(Range<int64_t> range) { _validTimeRange = range; }
+    Range<int64_t> getValidTimeRange();
     
     //media manage
     void addMediaTrack(MediaTrackRef mediaTrack);
@@ -169,6 +172,8 @@ protected:
     VideoTarget* _videoTarget;
     AudioTarget* _audioTarget;
     std::shared_ptr<RenderLayer> _displayLayer;
+
+    Range<int64_t> _validTimeRange;
     
     bool _bVideoCompleted;
     bool _bAudioCompleted;

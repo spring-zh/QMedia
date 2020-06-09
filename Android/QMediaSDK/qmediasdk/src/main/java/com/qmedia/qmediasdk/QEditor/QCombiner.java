@@ -92,6 +92,9 @@ public class QCombiner extends QMediaFactory{
         return native_getPosition();
     }
 
+    public void setValidTimeRange(QRange timeRange) {
+        native_setValidTimeRange(timeRange);
+    }
     public QRange getMediaTimeRange() {
         return native_getMediaTimeRange();
     }
@@ -108,6 +111,7 @@ public class QCombiner extends QMediaFactory{
     }
 
     public void copyForm(QCombiner from) {
+        setValidTimeRange(from.getMediaTimeRange());
         //copy rootNode
         graphicNodes.clear();
         rootNode.copyForm(from.rootNode);
@@ -224,6 +228,7 @@ public class QCombiner extends QMediaFactory{
     protected native boolean native_attachAudioNode(QAudioTrackNode child, QAudioTrackNode parent);
     protected native boolean native_detachAudioNode(QAudioTrackNode current);
     protected native long native_getPosition();
+    protected native void native_setValidTimeRange(QRange timeRange);
     protected native QRange native_getMediaTimeRange();
     private native void native_target_release();
     //native ptr : don't modify it

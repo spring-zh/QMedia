@@ -156,7 +156,7 @@ EffectCombiner::RetCode EffectCombiner::_prepare()
     
     //TODO: start all media tracks
     _bAudioCompleted = _bVideoCompleted = false;
-    _playerTimeRange = getMediaTimeRange();
+
     MediaSupervisor::start();
     
     _state = CombinerState::Prepared;
@@ -317,21 +317,19 @@ bool EffectCombiner::onVideoRender(int64_t wantTimeMs)
     
     int64_t position = wantTimeMs;
     
-    if (position >= _playerTimeRange._end)
+    if (position >= getValidTimeRange()._end)
     {
         if( !_bVideoCompleted) {
             _bVideoCompleted = true;
             _threadTask.postTask(&EffectCombiner::onStreamCompleted, this, MediaType::Video);
         }
-        position = _playerTimeRange._end;
+        position = getValidTimeRange()._end;
     }else
         _bVideoCompleted = false;
     
     _displayLayer->render(position);
     
     return true;
-    
-    
 }
 
 bool EffectCombiner::onRenderDestroy()
@@ -382,7 +380,7 @@ bool EffectCombiner::onAudioRender(uint8_t * const buffer, unsigned needBytes) {
         audio_pts = _audioClock.getClock();
     }
     
-    if (audio_pts >= _playerTimeRange._end)
+    if (audio_pts >= getValidTimeRange()._end)
     {
         if (!_bAudioCompleted) {
             _bAudioCompleted = true;
@@ -439,6 +437,13 @@ void EffectCombiner::stop()
 {
     _threadTask.removeTaskById(CMD_START);
     _threadTask.postTask((int)CMD_STOP, &EffectCombiner::_stop, this);
+}
+
+Range<int64_t> EffectCombiner::getValidTimeRange() {
+    if ( _validTimeRange.isValid())
+        return _validTimeRange;
+    else
+        return getMediaTimeRange();
 }
 
 void EffectCombiner::addMediaTrack(MediaTrackRef mediaTrack)

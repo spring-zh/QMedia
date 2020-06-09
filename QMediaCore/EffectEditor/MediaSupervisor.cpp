@@ -42,7 +42,7 @@ Range<int64_t> MediaSupervisor::getMediaTimeRange() const
 
 void MediaSupervisor::start()
 {
-    setPositionTo(_playerTimeRange._start);
+    setPositionTo(0);
 }
 
 #define USE_ASYNC_CALL 1

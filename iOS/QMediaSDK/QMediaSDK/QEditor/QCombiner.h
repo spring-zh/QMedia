@@ -36,7 +36,7 @@
 - (void)removeMediaTrack:(QMediaTrack*)track;
 
 @property (nonatomic, readonly) int64_t position;
-@property (nonatomic, readonly) NSRange mediaTimeRange;
+@property (nonatomic) NSRange mediaTimeRange;
 
 //copy settings from other
 - (void)copyFrom:(QCombiner*)from;
