@@ -54,7 +54,8 @@ extern "C" JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QEditor_QEditorPlaye
 NATIVE_FUNCTION(jlong, native_1create)(JNIEnv *env, jobject thiz, jobject jnode)
 {
     EditorPlayerRef* editorPlayer_ptr = new EditorPlayerRef(new QEditorPlayer_Jni(thiz));
-    JniUtils::setObjectPtr(env, jnode, (jlong)&((*editorPlayer_ptr)->getRootNode()));
+    std::shared_ptr<RenderLayer>* renderLayer_ptr = new std::shared_ptr<RenderLayer>((*editorPlayer_ptr)->getRootNode());
+    JniUtils::setObjectPtr(env, jnode, (jlong)renderLayer_ptr);
     return reinterpret_cast<jlong>(editorPlayer_ptr);
 }
 
