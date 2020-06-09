@@ -446,13 +446,13 @@ ease_function getTweenFunctionByType(EaseFunctionType functionType)
             func = &circEaseInOut;
             break;
         case EaseFunctionType::Elastic_EaseIn:
-            func = [](float t)->float{return elasticEaseIn(t,3);};
+            func = [](float t)->float{return elasticEaseIn(t,0.3f);};
             break;
         case EaseFunctionType::Elastic_EaseOut:
-            func = [](float t)->float{return elasticEaseOut(t,3);};
+            func = [](float t)->float{return elasticEaseOut(t,0.3f);};
             break;
         case EaseFunctionType::Elastic_EaseInOut:
-            func = [](float t)->float{return elasticEaseInOut(t,3);};
+            func = [](float t)->float{return elasticEaseInOut(t,0.3f);};
             break;
         case EaseFunctionType::Back_EaseIn:
             func = &backEaseIn;
