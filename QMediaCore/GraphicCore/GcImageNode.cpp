@@ -14,6 +14,10 @@ ImageNode::ImageNode(std::string filePath) {
     FILE* imgfile = fopen(filePath.c_str(), "rb");
     if (imgfile) {
         _image = std::shared_ptr<Image>(Image::createFromFile(imgfile));
+        if (_image.get()){
+            _width = _image->width();
+            _height = _image->height();
+        }
         fclose(imgfile);
     }
 }

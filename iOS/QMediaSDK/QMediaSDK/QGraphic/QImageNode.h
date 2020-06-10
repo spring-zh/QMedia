@@ -19,5 +19,6 @@
 - (instancetype)initWithPath:(NSString*)filePath combiner:(QCombiner*)combiner;
 - (instancetype)initWithPath:(NSString*)filePath combiner:(QCombiner*)combiner uid:(NSString*)uid;
 @property (nonatomic, readonly) NSString* filePath;
+@property (nonatomic, readonly) CGSize imgSize;
 
 @end

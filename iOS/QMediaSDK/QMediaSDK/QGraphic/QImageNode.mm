@@ -38,4 +38,8 @@
     return _filePath;
 }
 
+- (CGSize)imgSize {
+    return CGSizeMake(_imageNode->getWidth(), _imageNode->getHeight());
+}
+
 @end

@@ -17,3 +17,16 @@ NATIVE_FUNCTION(jlong, native_1create)(JNIEnv *env, jobject thiz, jstring jfileP
 
     return reinterpret_cast<jlong>(imageNode_ptr);
 }
+
+NATIVE_FUNCTION(jobject , native_1getSize)(JNIEnv *env, jobject thiz)
+{
+    GraphicCore::ImageNodeRef *imageNode_ptr = reinterpret_cast<GraphicCore::ImageNodeRef *>(JniUtils::getObjectPtr(
+            env, thiz));
+    int width = 0;
+    int height = 0;
+    if (imageNode_ptr){
+        width = (*imageNode_ptr)->getWidth();
+        height = (*imageNode_ptr)->getHeight();
+    }
+    return J4AC_com_qmedia_qmediasdk_QCommon_QVector__QVector2(env, width, height);
+}

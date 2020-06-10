@@ -19,6 +19,9 @@ public:
     explicit ImageNode(std::string filePath);
     explicit ImageNode(uint8_t * iamge_buffer);
     virtual ~ImageNode() = default;
+
+    int getWidth() { return _width; }
+    int getHeight() { return _height; }
     
     // create/release gl resource
     virtual bool createRes() override ;
@@ -26,6 +29,8 @@ public:
 
 private:
     std::shared_ptr<Image> _image;
+    int _width;
+    int _height;
 };
 
 using ImageNodeRef = std::shared_ptr<ImageNode>;
