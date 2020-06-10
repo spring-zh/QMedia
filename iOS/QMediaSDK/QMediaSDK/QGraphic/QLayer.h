@@ -12,9 +12,12 @@
 
 #import "QGraphicNode.h"
 
+@class QCombiner;
+
 @interface QLayer : QGraphicNode
 
-- (instancetype)initWithSize:(CGSize)size name:(NSString*)name;
+- (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner;
+- (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner uid:(NSString*)uid;
 @property (nonatomic, readonly) CGSize layerSize;
 @property (nonatomic) QColor4 bkColor;
 

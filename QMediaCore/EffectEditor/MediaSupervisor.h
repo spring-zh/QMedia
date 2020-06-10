@@ -24,9 +24,6 @@ public:
         return _mediaTracks.find(mediaTrack) != _mediaTracks.end();
     }
     
-    void setPlayerTimeRange(Range<int64_t> range) { _playerTimeRange = range; }
-    const Range<int64_t>& getPlayerTimeRange() const { return _playerTimeRange; }
-    
     //proxy mediaTracks
     Range<int64_t> getMediaTimeRange() const;
     
@@ -35,8 +32,6 @@ public:
     void stop();
     
 protected:
-    
-    Range<int64_t> _playerTimeRange;
     std::set<MediaTrackRef> _mediaTracks;
     
     std::list<GraphicCore::RenderNodeRef> _graphicChannels;

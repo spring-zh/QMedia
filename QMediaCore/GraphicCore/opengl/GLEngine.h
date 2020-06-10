@@ -45,7 +45,7 @@ public:
     void saveStatus();
     void recoverStatus();
 
-    bool checkSupportExtension(const char* extension);
+    static bool checkSupportExtension(const char* extension);
     
     //FIXME:
     Texture2D* getImageTexture(const char* name, const uint8_t* buffer, int buffersize);

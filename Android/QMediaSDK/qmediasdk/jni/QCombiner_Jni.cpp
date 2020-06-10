@@ -115,11 +115,21 @@ NATIVE_FUNCTION(jlong , native_1getPosition)(JNIEnv *env, jobject thiz)
     return 0;
 }
 
+NATIVE_FUNCTION(void , native_1setValidTimeRange)(JNIEnv *env, jobject thiz, jobject jtimeRange)
+{
+    EffectCombinerRef * combiner_ptr = reinterpret_cast<EffectCombinerRef *>(JniUtils::getObjectPtr(env, thiz));
+    if (combiner_ptr) {
+        Range<int64_t> range = {J4AC_com_qmedia_qmediasdk_QCommon_QRange__start__get(env, jtimeRange),
+                                J4AC_com_qmedia_qmediasdk_QCommon_QRange__end__get(env, jtimeRange)};
+        (*combiner_ptr)->setValidTimeRange(range);
+    }
+}
+
 NATIVE_FUNCTION(jobject , native_1getMediaTimeRange)(JNIEnv *env, jobject thiz)
 {
     EffectCombinerRef * combiner_ptr = reinterpret_cast<EffectCombinerRef *>(JniUtils::getObjectPtr(env, thiz));
     if (combiner_ptr) {
-        Range<int64_t > mediaTimeRange = (*combiner_ptr)->getMediaTimeRange();
+        Range<int64_t > mediaTimeRange = (*combiner_ptr)->getValidTimeRange();
         return J4AC_com_qmedia_qmediasdk_QCommon_QRange__QRange(env, mediaTimeRange._start, mediaTimeRange._end);
     }
     return J4AC_com_qmedia_qmediasdk_QCommon_QRange__QRange(env, 0, 0);

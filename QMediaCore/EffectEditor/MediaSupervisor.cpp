@@ -42,13 +42,13 @@ Range<int64_t> MediaSupervisor::getMediaTimeRange() const
 
 void MediaSupervisor::start()
 {
-    setPositionTo(_playerTimeRange._start);
+    setPositionTo(0);
 }
 
-#define USE_AYSNC_CALL 1
+#define USE_ASYNC_CALL 1
 void MediaSupervisor::setPositionTo(int64_t mSec)
 {
-#if USE_AYSNC_CALL
+#if USE_ASYNC_CALL
     //async call then sync
     if (_mediaTracks.size() > 1) {
         std::vector<std::future<bool>> futures;
@@ -64,7 +64,7 @@ void MediaSupervisor::setPositionTo(int64_t mSec)
         _mediaTracks.begin()->get()->setPositionTo(mSec);
     }
 #endif
-#if !USE_AYSNC_CALL
+#if !USE_ASYNC_CALL
     //direct call
     for (auto &track : _mediaTracks) {
         track->setPositionTo(mSec);
@@ -74,7 +74,7 @@ void MediaSupervisor::setPositionTo(int64_t mSec)
 
 void MediaSupervisor::stop()
 {
-#if USE_AYSNC_CALL
+#if USE_ASYNC_CALL
     if (_mediaTracks.size() > 1) {
         std::vector<std::future<void>> futures;
         for (auto &track : _mediaTracks) {
@@ -89,7 +89,7 @@ void MediaSupervisor::stop()
         _mediaTracks.begin()->get()->stopMedia();
     }
 #endif
-#if !USE_AYSNC_CALL
+#if !USE_ASYNC_CALL
     for (auto &track : _mediaTracks) {
         track->stopMedia();
     }

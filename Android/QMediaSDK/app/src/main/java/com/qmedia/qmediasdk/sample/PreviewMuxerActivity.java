@@ -1,4 +1,4 @@
-package com.qmedia.qmediasdk.sample.sample;
+package com.qmedia.qmediasdk.sample;
 
 import android.os.Bundle;
 import android.os.Environment;
@@ -14,6 +14,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.io.File;
+import java.util.UUID;
 
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QVector;
@@ -21,6 +22,8 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QEditor.QEditorPlayer;
 import com.qmedia.qmediasdk.QEditor.QExporter;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
+import com.qmedia.qmediasdk.QGraphic.QImageNode;
+import com.qmedia.qmediasdk.QGraphic.QLayer;
 import com.qmedia.qmediasdk.QGraphic.QNodeAnimator;
 import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
@@ -44,18 +47,21 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
     final int targetH = 480;
 	boolean bfileEnd = false;
 
-	//    Timer mTimer;//process timer
-	Handler mUIHandler;
-
 	QEditorPlayer editorPlayer = new QEditorPlayer();
 
 	QExporter exporter;
+
+	String[] select_images;
 
 	void setEffects(QCombiner combiner) {
 		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
 
 //		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
-		QMediaTrack videoTrack = combiner.createVideoTrack("test.mp4", true);
+		QMediaTrack videoTrack ;
+		if (select_images != null && select_images.length > 0) {
+			videoTrack = combiner.createVideoTrack(select_images[0], false);
+		}else
+			videoTrack = combiner.createVideoTrack("test.mp4", true);
 		QMediaTrack audioTrack = combiner.createAudioTrack("LR.mp3", true);
 
 		videoTrack.getGraphic().setPosition(new QVector(targetW/4, targetH/4));
@@ -80,6 +86,19 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		combiner.getRootNode().addChildNode(duplicatenodeL);
 		combiner.getRootNode().addChildNode(duplicatenodeR);
 
+		String imagePath = Environment.getExternalStorageDirectory().getPath() + "/li.jpg";
+		QImageNode imageNode = new QImageNode(imagePath, false, combiner);
+		imageNode.setRenderRange(new QRange(5000, 15000));
+		imageNode.setContentSize(new QVector(320, 240));
+		combiner.getRootNode().addChildNode(imageNode);
+
+//		QLayer layer = new QLayer(new QVector(targetW, targetH), "", combiner);
+//		layer.setContentSize(new QVector(targetW, targetH));
+//		layer.addChildNode(videoTrack.getGraphic());
+//		layer.addChildNode(duplicatenodeL);
+//		layer.addChildNode(duplicatenodeR);
+//		combiner.getRootNode().addChildNode(layer);
+
 
 		QNodeAnimator an1 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(0, 5000) ,
 				new QVector(0, 0, 0) , new QVector(-180, 180, 180), QNodeAnimator.Linear ,false, "");
@@ -94,6 +113,9 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_reader_muxer);
 //		Log.i(TAG, "qmediasdk version: " + QMediaSDK.SDK_VERSION);
+
+		 select_images = getIntent().getStringArrayExtra("SELECT_VIDEO");
+
 		QMediaSDK.init(this);
 		mframeLayout = (FrameLayout) findViewById(R.id.frameLayout);
 		mPreviewView = (QPlayerView) findViewById(R.id.render_view);
@@ -269,7 +291,8 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 						Toast.makeText(PreviewMuxerActivity.this, "onExporterCompleted", Toast.LENGTH_SHORT).show();
 					}
 				});
-				setEffects(exporter);
+//				setEffects(exporter);
+				exporter.copyForm(editorPlayer);
 				exporter.start();
 
 

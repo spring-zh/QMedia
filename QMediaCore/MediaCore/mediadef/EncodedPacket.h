@@ -12,11 +12,6 @@
 #include <stdint.h>
 #include <memory>
 
-constexpr unsigned BitValue(unsigned n) {
-	return 1 << n;
-}
-inline bool HasValue(unsigned a, unsigned val) { return a & val; }
-
 class EncodedData {
 public:
 	virtual ~EncodedData() {}
@@ -44,7 +39,7 @@ public:
 	}
 
 	GeneralEncodedData(const GeneralEncodedData& from) {
-		copyFrom(from._data, from.size);
+		copyFrom(from._data, from.size());
 		set_value(from._pts, from._dts, from._is_bframe, from._isCompleteFrame);
 	}
 
@@ -76,7 +71,7 @@ public:
 	int64_t pts() const { return _pts; }
 	int64_t dts() const { return _dts; }
 	const uint8_t *data() { return _data; }
-	size_t size() { return _size; }
+	size_t size() const { return _size; }
 
 	bool bframe() const { return _is_bframe; }
 

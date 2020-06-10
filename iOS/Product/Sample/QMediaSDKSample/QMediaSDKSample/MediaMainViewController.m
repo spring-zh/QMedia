@@ -568,7 +568,7 @@
         NSLog(@"%@", videoURL);
         
 //        XMVideoTrack* videoTrack = [[XMMediaFactory sharedInstance] createVideoTrack:self.player filePath:videoURL.absoluteString];
-        QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:videoURL.absoluteString];
+        QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:videoURL.absoluteString combiner:self.player];
         [self.player addMediaTrack:videoTrack];
 //        CGFloat duration = [self getVideoLength:videoURL];
 //        CGSize dspSize = [GlobalXMObject sharedInstance].pixelSize;
@@ -634,7 +634,7 @@
                       savedToFilePath:(NSString*)path
 {
 //    XMVideoTrack* videoTrack = [[XMMediaFactory sharedInstance] createVideoTrack:self.player filePath:path];
-    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:path];
+    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:path combiner:self.player];
     [self.player addMediaTrack:videoTrack];
 //    CGFloat duration = [self getVideoLength:[NSURL fileURLWithPath:path]];
 //    CGSize dspSize = [GlobalXMObject sharedInstance].pixelSize;

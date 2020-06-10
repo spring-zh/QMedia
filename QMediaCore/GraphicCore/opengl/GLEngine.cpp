@@ -86,7 +86,7 @@ void GLEngine::recoverStatus()
     _framebufferStack.pop();
 }
 
-bool checkSupportExtension(const char* extension)
+bool GLEngine::checkSupportExtension(const char* extension)
 {
     std::string extensions = (const char*)glGetString(GL_EXTENSIONS);
     return (extensions.find(extension)!= std::string::npos);

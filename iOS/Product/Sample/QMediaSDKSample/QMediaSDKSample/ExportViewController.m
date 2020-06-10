@@ -52,7 +52,8 @@
     [self.exporter setAudioConfig:adesc];
     [self.exporter setVideoConfig:vdesc];
     
-    [self.exporter loadSerializeSettings:[[GlobalXMObject sharedInstance].player serialize]];
+//    [self.exporter loadSerializeSettings:[[GlobalXMObject sharedInstance].player serialize]];
+    [self.exporter copyFrom:[GlobalXMObject sharedInstance].player];
 
     [self.exporter start];
 }

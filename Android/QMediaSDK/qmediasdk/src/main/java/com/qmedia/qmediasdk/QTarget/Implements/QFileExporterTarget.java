@@ -477,7 +477,7 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 
                 mAudioTimestampUs += 1000000L * requestSize / bytesPerSecond;
 
-                ByteBuffer byteBuffer = ByteBuffer.allocateDirect(requestSize);
+                ByteBuffer byteBuffer = ByteBuffer.allocate(requestSize);
                 if(getAudioRender().onAudioRender(byteBuffer.array(), requestSize, mAudioTimestampUs/1000))
                 {
                     //Log.e(TAG,"GETAV_AUDIO readLen " + readLen[0] + " pts " + timeUs[0]);

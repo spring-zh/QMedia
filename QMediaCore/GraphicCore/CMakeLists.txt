@@ -32,6 +32,8 @@ set(GRAPHIC_CORE_HEADER
         GraphicCore/GcNode.h
         GraphicCore/GcAnimaNode.h
         GraphicCore/GcRenderNode.h
+        GraphicCore/GcImageNode.h
+        GraphicCore/GcTextureNode.h
         GraphicCore/GcDuplicateNode.h
         GraphicCore/GcLayer.h
         GraphicCore/GcFilter.h
@@ -62,6 +64,8 @@ set(GRAPHIC_CORE_SRC
         GraphicCore/GcNode.cpp
         GraphicCore/GcAnimaNode.cpp
         GraphicCore/GcRenderNode.cpp
+        GraphicCore/GcImageNode.cpp
+        GraphicCore/GcTextureNode.cpp
         GraphicCore/GcDuplicateNode.cpp
         GraphicCore/GcLayer.cpp
         GraphicCore/GcFilter.cpp

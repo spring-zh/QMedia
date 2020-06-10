@@ -15,6 +15,11 @@
 
 GRAPHICCORE_BEGIN
 
+enum ParentFlags : int {
+    Flags_None = 0,
+    Flags_Update = 1
+};
+
 class Node {
 public:
     Node();

@@ -7,14 +7,26 @@
 //
 
 #include "FrameBuffer.h"
+#include "GraphicCore/opengl/GLEngine.h"
 #include "Utils/Logger.h"
+
+#if __ANDROID_NDK__
+#include "EGL/egl.h"
+/* OpenGL ES extension functions. */
+PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC glFramebufferTexture2DMultisampleEXT_ = NULL;
+PFNGLRENDERBUFFERSTORAGEMULTISAMPLEIMGPROC glRenderbufferStorageMultisampleEXT_ = NULL;
+#else
+#define glFramebufferTexture2DMultisampleEXT_ glFramebufferTexture2DMultisampleEXT
+#define glRenderbufferStorageMultisampleEXT_ glRenderbufferStorageMultisampleEXT
+#endif
 
 GRAPHICCORE_BEGIN
 
 FrameBuffer::FrameBuffer():
 _attachTexture(nullptr),
 _fbo(0),
-_last_fbol(0)
+_last_fbol(0),
+_useMultisample(false)
 {
 
 }
@@ -81,8 +93,35 @@ bool FrameBuffer::attachTexture2D(AttachMode mode, Texture2D *texture2D)
     if (texture2D == nullptr){
         glFramebufferTexture2D(GL_FRAMEBUFFER,attachment,GL_TEXTURE_2D,0,0);
     }
-    else
-        glFramebufferTexture2D(GL_FRAMEBUFFER,attachment,GL_TEXTURE_2D,texture2D->getTextureId(),0);
+    else {
+#if __ANDROID_NDK__
+        bool uspport_multisample = GLEngine::checkSupportExtension("GL_EXT_multisampled_render_to_texture");
+        glFramebufferTexture2DMultisampleEXT_ = (PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC) eglGetProcAddress(
+                "glFramebufferTexture2DMultisampleEXT");
+        if (!glFramebufferTexture2DMultisampleEXT_) {
+            LOGW("Couldn't get function pointer to glFramebufferTexture2DMultisampleEXT()");
+            uspport_multisample = false;
+        }
+
+        if (uspport_multisample && _useMultisample) {
+            GLint samples = 0;
+            glGetIntegerv(GL_MAX_SAMPLES_EXT, &samples);
+            if (samples > 4 || samples <= 0)
+            {
+                samples = 4;
+            }
+            glFramebufferTexture2DMultisampleEXT_(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D,
+                                                 texture2D->getTextureId(), 0, samples);
+            GLenum  err = glGetError();
+            if (err) {
+                glCheckError();
+                glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture2D->getTextureId(), 0);
+            }
+        } else
+#endif
+            glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D,
+                                   texture2D->getTextureId(), 0);
+    }
 
     _attachTexture = texture2D;
 

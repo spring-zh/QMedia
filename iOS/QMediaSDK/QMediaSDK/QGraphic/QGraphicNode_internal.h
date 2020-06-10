@@ -7,6 +7,7 @@
 //
 
 #import "QGraphicNode.h"
+#import "QCombiner.h"
 #include "GraphicCore/GcRenderNode.h"
 #include "GraphicCore/GcDuplicateNode.h"
 #include "EffectEditor/MediaGraphicChannel.h"
@@ -25,14 +26,15 @@
 @property (nonatomic, assign) float origin_positionZ;
 @property (nonatomic, assign) CGPoint origin_anchorPoint;
 @property (nonatomic, assign) QColor4 origin_color4;
-@property (nonatomic, assign) float origin_alpha;
+//@property (nonatomic, assign) float origin_alpha;
 @end
 
 @interface QGraphicNode(internal)
-- (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode;
+- (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode combiner:(QCombiner*)combiner;
+- (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode combiner:(QCombiner*)combiner uid:(NSString*)uid;
 @property (nonatomic, readonly) GraphicCore::RenderNodeRef native;
-
-- (bool)addChildNodeDirect:(QGraphicNode*)childNode;
-- (bool)removeChildNodeDirect:(QGraphicNode*)childNode;
+//
+//- (bool)addChildNodeDirect:(QGraphicNode*)childNode;
+//- (bool)removeChildNodeDirect:(QGraphicNode*)childNode;
 
 @end

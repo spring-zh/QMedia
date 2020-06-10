@@ -61,5 +61,6 @@ target_link_libraries( # Specifies the target library.
                        ${log-lib}
                        # ${OpenCV_LIBS}
                        -lGLESv2
+                       -lEGL
                        -llog 
                        )

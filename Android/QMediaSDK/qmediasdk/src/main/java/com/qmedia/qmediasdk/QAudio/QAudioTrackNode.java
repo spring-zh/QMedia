@@ -4,12 +4,24 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 
 import java.lang.ref.WeakReference;
+import java.util.UUID;
 
 public class QAudioTrackNode {
     public QAudioTrackNode(QMediaTrack mediaTrack, QCombiner combiner){
+        this(mediaTrack,combiner, UUID.randomUUID().toString());
+    }
+
+    public QAudioTrackNode(QMediaTrack mediaTrack, QCombiner combiner, String uuid){
+        this.id = uuid;
         this.mediaTrack = mediaTrack;
         weakCombiner = new WeakReference<>(combiner);
         mPtr = native_create(mediaTrack);
+        combiner.addAudioNodeIndex(this);
+        combiner.attachAudioNode(this, null);
+    }
+
+    public String getId() {
+        return id;
     }
 
     public QMediaTrack getMediaTrack() {
@@ -37,6 +49,7 @@ public class QAudioTrackNode {
         mediaTrack = null;
     }
 
+    protected String id;
     QMediaTrack mediaTrack;
     private WeakReference<QCombiner> weakCombiner = null;
 

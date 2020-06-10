@@ -11,6 +11,7 @@
 @interface QAssetReaderSource : NSObject<QMediaSource>
 
 - (instancetype)initWithFilePath:(NSString *)filePath;
+- (instancetype)initWithFilePath:(NSString *)filePath audio:(bool)enableAudio video:(bool)enableVideo;
 
 /**output target
  * MediaSource can adaptive by output target
@@ -19,6 +20,9 @@
 @property (nonatomic, weak) id<QAudioTarget> audioTarget;
 
 @property (nonatomic, readonly) NSString * filePath;
+@property (nonatomic, readonly) bool enableAudio;
+@property (nonatomic, readonly) bool enableVideo;
+
 //media source describe
 @property (nonatomic, readonly) QVideoDescribe* videoDesc;
 @property (nonatomic, readonly) QAudioDescribe* audioDesc;

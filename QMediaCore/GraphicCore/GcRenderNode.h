@@ -6,8 +6,8 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
-#ifndef EFFECTEDITOR_RENDERNODE_H
-#define EFFECTEDITOR_RENDERNODE_H
+#ifndef GRAPHICCORE_RENDERNODE_H
+#define GRAPHICCORE_RENDERNODE_H
 
 #include "GcAnimaNode.h"
 
@@ -19,7 +19,9 @@ public:
     RenderNode();
     virtual ~RenderNode();
     
-    virtual void draw(Scene* /*scene*/, const Mat4 & /*transform*/, uint32_t /*flags*/) override {}
+    virtual void draw(Scene* scene, const Mat4 & transform, uint32_t flags) override {
+        return duplicateDraw(scene, transform, this);
+    }
     virtual void visit(Scene *scene, const Mat4& parentTransform, uint32_t parentFlags) override;
     
     //call by DuplicateNode
@@ -41,4 +43,4 @@ using RenderNodeRef = std::shared_ptr<RenderNode>;
 
 GRAPHICCORE_END
 
-#endif /* EFFECTEDITOR_RENDERNODE_H */
+#endif /* GRAPHICCORE_RENDERNODE_H */

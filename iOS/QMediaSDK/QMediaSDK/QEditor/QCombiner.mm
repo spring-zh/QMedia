@@ -20,12 +20,25 @@
 extern const struct VideoDescribe XMToVideoDescribe(QVideoDescribe* xmdesc);
 extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 
+@implementation DisplayRootNode
+
+- (QColor4)bkColor {
+    return [self color4];
+}
+
+- (void)setBkColor:(QColor4)bkColor {
+    [self setColor4:bkColor];
+}
+
+@end
+
 @implementation QCombiner {
-    NSMutableArray<QMediaTrack*>* _subObjectArray;
-    NSMutableArray<QGraphicNode*>* _graphicNodesArray;
+    NSMutableDictionary<NSString*, QMediaTrack*>* _subObjectArray;
+    NSMutableDictionary<NSString*, QGraphicNode*>* _graphicNodesArray;
+    NSMutableDictionary<NSString*, QGraphicNode*>* _duplicateNodesArray;
     EffectCombiner* _combiner;
     QMediaFactory *_mediaFactory;
-    QGraphicNode* _rootNode;
+    DisplayRootNode* _rootNode;
 }
 
 - (instancetype)initWithNative:(EffectCombiner* )combiner_native
@@ -33,9 +46,10 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     if ((self = [super init]) != nil) {
         _combiner = combiner_native;
         _mediaFactory = [QMediaFactory new];
-        _subObjectArray = [NSMutableArray new];
-        _graphicNodesArray = [NSMutableArray new];
-        _rootNode = [[QGraphicNode alloc] initWithNode:_combiner->getRootNode()];
+        _subObjectArray = [NSMutableDictionary new];
+        _graphicNodesArray = [NSMutableDictionary new];
+        _duplicateNodesArray = [NSMutableDictionary new];
+        _rootNode = [[DisplayRootNode alloc] initWithNode:_combiner->getRootNode() combiner:self];
     }
     return self;
 }
@@ -71,74 +85,106 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     _combiner->setAudioConfig(XMToAudioDescribe(describe));
 }
 
-- (NSArray<QMediaTrack*>*)subObjects
+- (NSDictionary<NSString*, QMediaTrack*>*)subObjects
 {
     return _subObjectArray;
+}
+
+- (NSDictionary<NSString*, QGraphicNode*>*)graphicNodes
+{
+    return _graphicNodesArray;
+}
+
+- (NSDictionary<NSString*, QGraphicNode*>*)duplicateNodes
+{
+    return _duplicateNodesArray;
 }
 
 #pragma mark - Player Control
 - (void)addMediaTrack:(QMediaTrack*)track
 {
-    _combiner->addMediaTrack(track.native);
-    _combiner->attachAudioNode(track.audio.native, nullptr);
-    [_subObjectArray addObject:track];
+    if (! [_subObjectArray objectForKey:track.uid]) {
+        _combiner->addMediaTrack(track.native);
+        [_subObjectArray setValue:track forKey:track.uid];
+    }
 }
 - (void)removeMediaTrack:(QMediaTrack*)track
 {
-    [self detachRenderNode:track.graphic];
-    _combiner->detachAudioNode(track.audio.native);
-    _combiner->removeMediaTrack(track.native);
-    [_subObjectArray removeObject:track];
+    if ([_subObjectArray objectForKey:track.uid]) {
+        [self detachRenderNode:track.graphic];
+        _combiner->detachAudioNode(track.audio.native);
+        _combiner->removeMediaTrack(track.native);
+        [_subObjectArray removeObjectForKey:track.uid];
+    }
 }
 
-- (void)addGraphicNode:(QGraphicNode*)node {
-    if ([_graphicNodesArray containsObject:node])
+- (void)addGraphicNodeIndex:(QGraphicNode*)node {
+    if ([node isKindOfClass:QDuplicateNode.class]) {
+        [self addDuplicateNodeIndex:node];
+    }else {
+        if ([_graphicNodesArray objectForKey:node.uid])
         return;
-    
-    int index = 0;
-    if (! [node isKindOfClass:QDuplicateNode.class]) {
-        for (QGraphicNode *graphicNode in _graphicNodesArray) {
-            if ([graphicNode isKindOfClass:QDuplicateNode.class]) {
-                [_graphicNodesArray insertObject:node atIndex:index];
-                return;
-            }
-            index ++;
-        }
+        [_graphicNodesArray setValue:node forKey:node.uid];
     }
-    
-    [_graphicNodesArray addObject:node];
 }
-- (void)removeGraphicNode:(QGraphicNode*)node {
-    if ([_graphicNodesArray containsObject:node]) {
-        [_graphicNodesArray removeObject:node];
+- (void)removeGraphicNodeIndex:(QGraphicNode*)node {
+    if ([node isKindOfClass:QDuplicateNode.class]) {
+        [self removeDuplicateNodeIndex:node];
+    }else {
+        if ([_graphicNodesArray objectForKey:node.uid])
+            [_graphicNodesArray removeObjectForKey:node.uid];
     }
+}
+
+- (bool)addDuplicateNodeIndex:(QGraphicNode*)node {
+    if (![_duplicateNodesArray objectForKey:node.uid]) {
+        [_duplicateNodesArray setValue:node forKey:node.uid];
+        return true;
+    }
+    return false;
+}
+
+- (bool)removeDuplicateNodeIndex:(QGraphicNode*)node {
+    if ([_duplicateNodesArray objectForKey:node.uid]) {
+        [_duplicateNodesArray removeObjectForKey:node.uid];
+        return true;
+    }
+    return false;
 }
 
 - (bool)attachRenderNode:(QGraphicNode*)child parent:(QGraphicNode*)parent {
-    if ([parent addChildNodeDirect:child]) {
-        _combiner->attachRenderNode(child.native, parent.native);
-        return true;
-    }
-    return false;
+    _combiner->attachRenderNode(child.native, parent.native);
+    return true;
 }
 - (bool)detachRenderNode:(QGraphicNode*)current {
-    if ([current.parent removeChildNodeDirect:current]) {
-        _combiner->detachRenderNode(current.native);
-        return true;
-    }
-    return false;
+    _combiner->detachRenderNode(current.native);
+    return true;
 }
 
+- (bool)attachAudioNode:(QAudioTrackNode*)child parent:(QAudioTrackNode*)parent {
+    _combiner->attachAudioNode(child.native, nullptr);
+    return true;
+}
+
+- (bool)detachAudioNode:(QAudioTrackNode*)current {
+    _combiner->detachAudioNode(current.native);
+    return true;
+}
+
+- (void)setMediaTimeRange:(NSRange)timeRange {
+    Range<int64_t> tRange = {static_cast<int64_t>(timeRange.location) , static_cast<int64_t>(timeRange.location + timeRange.length)};
+    _combiner->setValidTimeRange(tRange);
+}
 - (NSRange)mediaTimeRange
 {
     NSRange nsRange;
-    Range<int64_t> tRange = _combiner->getMediaTimeRange();
+    Range<int64_t> tRange = _combiner->getValidTimeRange();
     nsRange.location = static_cast<NSUInteger>(tRange._start);
     nsRange.length = static_cast<NSUInteger>(tRange.getLength());
     return nsRange;
 }
 
-- (QGraphicNode*)rootNode {
+- (DisplayRootNode*)rootNode {
     return _rootNode;
 }
 
@@ -152,7 +198,85 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     return _mediaFactory;
 }
 
+#pragma mark copy settings
+- (void)copyFrom:(QCombiner*)from {
+    self.mediaTimeRange = from.mediaTimeRange;
+    //copy rootNode
+    [_graphicNodesArray removeAllObjects];
+    [_rootNode copyFrom:from.rootNode];
+    [self addGraphicNodeIndex:_rootNode];
+    
+    //copy mediaTracks
+    for (QMediaTrack* fromTrack in from.subObjects.allValues) {
+        if ([fromTrack.source isKindOfClass:QAssetReaderSource.class]) {
+            QAssetReaderSource* fromSource = (QAssetReaderSource*)fromTrack.source;
+            QAssetReaderSource* mediaSource = [[QAssetReaderSource alloc] initWithFilePath:fromSource.filePath audio:fromSource.enableAudio video:fromSource.enableVideo];
+            [mediaSource setVideoTarget:_mediaFactory.videoTarget];
+            [mediaSource setAudioTarget:_mediaFactory.audioTarget];
+            QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:mediaSource uid:fromTrack.uid];
+            if ([mediaTrack prepare]) {
+                [self addMediaTrack:mediaTrack];
+                if (fromTrack.graphic) {
+                    [mediaTrack generateVideoTrackNode:self uid:fromTrack.graphic.uid];
+                    [mediaTrack.graphic copyFrom:fromTrack.graphic];
+                }
+                [mediaTrack generateAudioTrackNode:self uid:fromTrack.audio.uid];
+            }
+        }
+    }
+    
+    //copy graphic nodes
+    for (QGraphicNode *fromNode in from.graphicNodes.allValues) {
+        QGraphicNode* newNode;
+        if ([fromNode isKindOfClass:DisplayRootNode.class]) {
+            continue;
+        }else if ([fromNode isKindOfClass:QVideoTrackNode.class]) {
+            continue;
+        }else if ([fromNode isKindOfClass:QLayer.class]) {
+            QLayer* fromLayer = (QLayer*)fromNode;
+            QLayer* layer = [[QLayer alloc] initWithSize:fromLayer.layerSize combiner:self uid:fromLayer.uid];
+            layer.bkColor = fromLayer.bkColor;
+            newNode = layer;
+        }else if ([fromNode isKindOfClass:QImageNode.class]) {
+            QImageNode* fromImageNode = (QImageNode*)fromNode;
+            QImageNode* imageNode = [[QImageNode alloc] initWithPath:fromImageNode.filePath combiner:self uid:fromNode.uid];
+            newNode = imageNode;
+        }
+        else /*QGraphicNode*/{
+            newNode = [[QGraphicNode alloc] initWithName:fromNode.name combiner:self uid:fromNode.uid];
+        }
+        
+        [newNode copyFrom:fromNode];
+    }
+    
+    //copy duplicate nodes
+    for (QGraphicNode *fromNode in from.duplicateNodes.allValues) {
+        QDuplicateNode* fromDuplicateNode = (QDuplicateNode*)fromNode;
+        QGraphicNode* dependentNode = [_graphicNodesArray objectForKey:fromDuplicateNode.nodeFrom.uid];
+        QDuplicateNode* newNode = [[QDuplicateNode alloc] initFromNode:dependentNode combiner:self uid:fromNode.uid];
+        [newNode copyFrom:fromNode];
+    }
+    
+    [self copyRenderTrees:from.rootNode currentNode:_rootNode];
+}
 
+- (void)copyRenderTrees:(QGraphicNode*)fromNode currentNode:(QGraphicNode*)currentNode {
+    for (QGraphicNode* graphicNode in fromNode.childrens) {
+        QGraphicNode* childNode = nil;
+        if ([graphicNode isKindOfClass:QDuplicateNode.class]) {
+            childNode = [_duplicateNodesArray objectForKey:graphicNode.uid];
+        }else {
+            childNode = [_graphicNodesArray objectForKey:graphicNode.uid];
+        }
+        
+        if (childNode != nil) {
+            [currentNode addChildNode:childNode];
+            [self copyRenderTrees:graphicNode currentNode:childNode];
+        }
+    }
+}
+
+#if 0
 #pragma mark serialize ------------------------------------------
 #pragma mark serialize_graphicTree
 - (NSDictionary*)serialize_graphicTree:(QGraphicNode*)root isRoot:(bool)isRoot{
@@ -208,7 +332,6 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     }
     return dic;
 }
-
 
 #pragma mark deSerialize ------------------------------------------
 
@@ -267,5 +390,5 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     }
     return true;
 }
-
+#endif
 @end

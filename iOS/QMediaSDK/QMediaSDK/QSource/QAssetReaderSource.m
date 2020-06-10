@@ -99,9 +99,17 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
     bool _isStarted;
     int64_t _media_duration;
     NSRange _media_time_range;
+    
+    bool _enableAudio;
+    bool _enableVideo;
 }
 
 - (instancetype)initWithFilePath:(NSString *)filePath
+{
+    return [self initWithFilePath:filePath audio:true video:true];
+}
+
+- (instancetype)initWithFilePath:(NSString *)filePath audio:(bool)enableAudio video:(bool)enableVideo
 {
     self = [super init];
     if (self) {
@@ -114,6 +122,9 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
         _isInit = false;
         _isStarted = false;
         _media_duration = 0;
+        
+        _enableAudio = enableAudio;
+        _enableVideo = enableVideo;
     }
     return self;
 }
@@ -125,6 +136,14 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
 
 - (NSString*)filePath {
     return _path;
+}
+
+- (bool)enableVideo {
+    return _enableVideo;
+}
+
+- (bool)enableAudio {
+    return _enableAudio;
 }
 
 -(QVideoDescribe*)videoDesc
@@ -151,12 +170,16 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
     CMTime time = [_inputAsset duration];
     _media_duration = 1000*time.value/time.timescale;
     
-    _videoTrack = [[_inputAsset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+    if (_enableVideo) {
+        _videoTrack = [[_inputAsset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+    }
     if (_videoTrack != nil) {
         QMediaDescribe* mediaDescribe = AVAssetTrackToMediaDescribe(_videoTrack);
         _vdesc = mediaDescribe.videoDescribe;
     }
-    _audioTrack = [[_inputAsset tracksWithMediaType:AVMediaTypeAudio] firstObject];
+    if (_enableAudio) {
+        _audioTrack = [[_inputAsset tracksWithMediaType:AVMediaTypeAudio] firstObject];
+    }
     if (_audioTrack != nil) {
         QMediaDescribe* mediaDescribe = AVAssetTrackToMediaDescribe(_audioTrack);
         _adesc = mediaDescribe.audioDescribe;

@@ -18,7 +18,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name="com.qmedia.qmediasdk.sample.sample.MainActivity"
+            android:name="com.qmedia.qmediasdk.sample.MainActivity"
             android:label="@string/app_name"
             android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
@@ -29,16 +29,11 @@
         </activity>
 
         <activity
-            android:name="com.qmedia.qmediasdk.sample.sample.PreviewMuxerActivity"
+            android:name="com.qmedia.qmediasdk.sample.PreviewMuxerActivity"
             android:label="@string/title_activity_reader_muxer"
             android:theme="@style/AppTheme.NoActionBar">
         </activity>
 
-        <activity android:name="com.qmedia.qmediasdk.sample.sample.activity.Navigation"
-                  android:label="@string/title_activity_reader_muxer"
-
-        >
-        </activity>
     </application>
 
 </manifest>

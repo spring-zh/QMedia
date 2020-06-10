@@ -11,7 +11,7 @@ USING_GRAPHICCORE
 
 JavaVideoFrameBuffer::JavaVideoFrameBuffer(jobject jframe){
     JNIEnv* env = JniUtils::getEnv();
-    _object = env->NewWeakGlobalRef(jframe);
+    _object = env->NewGlobalRef(jframe);
     bool isTexture = J4AC_com_qmedia_qmediasdk_QGraphic_QVideoFrame__is_texture(env, jframe);
     if (isTexture) {
         pixel_format_ = RawVideoFormat::kHardware;
@@ -27,7 +27,7 @@ JavaVideoFrameBuffer::JavaVideoFrameBuffer(jobject jframe){
 }
 JavaVideoFrameBuffer::~JavaVideoFrameBuffer(){
     JNIEnv* env = JniUtils::getEnv();
-    env->DeleteWeakGlobalRef(_object);
+    env->DeleteGlobalRef(_object);
 }
 
 int JavaVideoFrameBuffer::width() const {

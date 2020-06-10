@@ -34,6 +34,8 @@ public:
     bool attachTexture2D(AttachMode mode, Texture2D *texture2D);
     Texture2D *getAttachTexture2D() const { return _attachTexture;};
 
+    void useMultisample(bool used) { _useMultisample = used; }
+
 protected:
     friend class GLEngine;
     FrameBuffer();
@@ -41,6 +43,7 @@ protected:
     Texture2D *_attachTexture;
     GLuint _fbo;
     GLint _last_fbol;
+    bool _useMultisample;
 };
 
 GRAPHICCORE_END

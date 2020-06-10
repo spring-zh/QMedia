@@ -8,18 +8,31 @@
 
 #import "QAudioTrackNode_internal.h"
 #import "QMediaTrack_internal.h"
+#import "QCombiner_internal.h"
 
 
 @implementation QAudioTrackNode {
+    NSString *_uid;
     MediaAudioChannelRef _audioNode;
     __weak QMediaTrack *_mediaTrack;
+    __weak QCombiner* _combiner;
 }
 
-- (instancetype)initFromTrack:(QMediaTrack*)mediaTrack {
+- (instancetype)initFromTrack:(QMediaTrack*)mediaTrack combiner:(QCombiner*)combiner {
+    CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef uuid = CFUUIDCreateString(kCFAllocatorDefault, uuidref);
+    CFRelease(uuidref);
+    return [self initFromTrack:mediaTrack combiner:combiner uid:(__bridge_transfer NSString *)uuid];
+}
+- (instancetype)initFromTrack:(QMediaTrack*)mediaTrack combiner:(QCombiner*)combiner uid:(NSString*)uid {
     if (! mediaTrack.native->getAudioDescribe()) //media source doesn't contain audio channel
         return nil;
-    
-    return [self initWithNode:MediaAudioChannelRef(new MediaAudioChannel(mediaTrack.native.get()))];
+    _uid = uid;
+    _combiner = combiner;
+    if([self initWithNode:MediaAudioChannelRef(new MediaAudioChannel(mediaTrack.native.get()))]) {
+        [combiner attachAudioNode:self parent:nil];
+    }
+    return self;
 }
 
 #pragma mark - private function
@@ -32,6 +45,10 @@
         }
     }
     return self;
+}
+
+- (NSString*)uid {
+    return _uid;
 }
 
 - (bool)enable{

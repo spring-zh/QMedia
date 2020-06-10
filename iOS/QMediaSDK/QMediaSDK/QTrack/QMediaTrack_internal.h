@@ -11,5 +11,9 @@
 
 @interface QMediaTrack(internal)
 - (instancetype)initWithMediaSourceNative:(MediaSourceRef)mediaSource;
+- (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource uid:(NSString*)uid;
 @property (nonatomic, readonly) MediaTrackRef native;
+
+- (bool)generateAudioTrackNode:(QCombiner*)combiner uid:(NSString*)uid;
+- (bool)generateVideoTrackNode:(QCombiner*)combiner uid:(NSString*)uid;
 @end

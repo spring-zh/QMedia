@@ -82,11 +82,11 @@
     ResTrackTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ResTrackTableViewCell" forIndexPath:indexPath];
     
     cell.cellIndex = indexPath.row;
-    QMediaTrack *track = [self.player.subObjects objectAtIndex:indexPath];
+    QMediaTrack *track = [[self.player.subObjects allValues] objectAtIndex:indexPath];
 //    XMObject* subObject = self.globalXMObject.subObjects[indexPath.row];
     cell.globalTimeLength = self.player.mediaTimeRange.length ;
-    cell.resTimeLength = [track getDisplayTrackRange].length;
-    cell.resStartTimePoint = [track getDisplayTrackRange].location;
+    cell.resTimeLength = track.displayRange.length;
+    cell.resStartTimePoint = track.displayRange.location;
     cell.resNameLabel.text = @"subObject.name";
     return cell;
 }

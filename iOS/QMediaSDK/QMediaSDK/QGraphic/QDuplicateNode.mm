@@ -14,11 +14,19 @@
     __weak QGraphicNode* _nodeFrom;
 }
 
-- (instancetype)initFromNode:(QGraphicNode*)nodeFrom
+- (instancetype)initFromNode:(QGraphicNode*)nodeFrom combiner:(QCombiner*)combiner
+{
+    CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
+    CFStringRef uuid = CFUUIDCreateString(kCFAllocatorDefault, uuidref);
+    CFRelease(uuidref);
+    return [self initFromNode:nodeFrom combiner:combiner uid:(__bridge_transfer NSString *)uuid];
+}
+
+- (instancetype)initFromNode:(QGraphicNode*)nodeFrom combiner:(QCombiner*)combiner uid:(NSString*)uid
 {
     _nodeFrom = nodeFrom;
     _duplicateNode = GraphicCore::DuplicateNodeRef(new GraphicCore::DuplicateNode(nodeFrom.native.get()));
-    return (self = [super initWithNode:_duplicateNode]);
+    return (self = [super initWithNode:_duplicateNode combiner:combiner uid:uid]);
 }
 
 - (QGraphicNode*)nodeFrom {

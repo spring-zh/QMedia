@@ -10,11 +10,6 @@
 
 GRAPHICCORE_BEGIN
 
-enum ParentFlags : int {
-    Flags_None = 0,
-    Flags_Update = 1
-};
-
 Node::Node():
 _rotationX(0),
 _rotationY(0),

@@ -9,7 +9,11 @@
 #ifndef MEDIACORE_QPLAYER_H
 #define MEDIACORE_QPLAYER_H
 
+#include "Utils/ThreadTask.h"
 #include "core/SteadyClock.h"
+#include "AudioClock.h"
+#include "decoder/VideoDecoder.h"
+#include "decoder/AudioDecoder.h"
 #include "output/VideoTarget.h"
 #include "output/AudioTarget.h"
 
@@ -23,6 +27,19 @@ public:
         ok = 0
     };
     
+    enum State : int{
+        Idle = 0,
+        Initialized,
+        AsyncPreparing,
+        Prepared,
+        Started,
+        Paused,
+        Completed,
+        Stopped,
+        Error,
+        Ended
+    };
+    
     class Callback
     {
     public:
@@ -33,15 +50,19 @@ public:
         virtual void onCompleted(RetCode code) = 0;
     };
     
-    QPlayer();
+    QPlayer(VideoDecoderFactory* vdFactory, AudioDecoderFactory* adFactory);
     ~QPlayer();
     
     void setCallBack(Callback *callback) { _callback = callback; }
+    void setVideoTarget(VideoTarget* videoTarget);
+    void setAudioTarget(AudioTarget* audioTarget);
     
     //player control
-    void start() {}
-    void pause(bool bPause = true) {}
-    void seek(int64_t mSec, int flag) {}
+    RetCode open(std::string url);
+    RetCode play();
+    RetCode pause();
+    RetCode seek(int64_t mSec, int flag);
+    RetCode close();
     
 protected:
     virtual bool onRenderCreate() override;
@@ -51,8 +72,19 @@ protected:
 
 private:
 
+    State _state;
     Callback *_callback;
+    //output target pointer
+    VideoDescribe _videoConfig;
+    AudioDescribe _audioConfig;
+    VideoTarget* _videoTarget;
+    AudioTarget* _audioTarget;
+    
     SteadyClock<int64_t, scale_milliseconds> _playerClock;
+    AudioClock _audioClock;
+    
+    //the thread for handle sync commands
+    ThreadTask<RetCode> _threadTask;
 };
 
 #endif /* MEDIACORE_QPLAYER_H */

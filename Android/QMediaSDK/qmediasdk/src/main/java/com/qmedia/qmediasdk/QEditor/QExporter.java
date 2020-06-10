@@ -51,9 +51,10 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
     public void cancel() {
         native_cancel();
     }
+    @Override
     public void release() {
         native_release();
-        super.native_target_release();
+        super.release();
         mObserver = null;
     }
 

@@ -6,19 +6,28 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.UUID;
 
 public class QGraphicNode {
     private static final String TAG = "QGraphicNode";
     public QGraphicNode(String name, QCombiner combiner) {
-        this(combiner);
+        this(name, combiner, UUID.randomUUID().toString());
+    }
+    public QGraphicNode(String name, QCombiner combiner, String id) {
+        this(combiner, id);
         mPtr = native_create();
         setName(name);
     }
 
     //TODO: construct this for child class
-    protected QGraphicNode(QCombiner combiner) {
+    protected QGraphicNode(QCombiner combiner, String id) {
+        this.id = id;
         weakCombiner = new WeakReference<>(combiner);
-        combiner.addGraphicNode(this);
+        combiner.addGraphicNodeIndex(this);
+    }
+
+    public String getId() {
+        return id;
     }
 
     //TODO: childrens @QGraphicNode
@@ -194,6 +203,30 @@ public class QGraphicNode {
         native_setAlpha(alpha);
     }
 
+    //copy parameters from other GraphicNode
+    public void copyForm(QGraphicNode from) {
+        this.id = from.id;
+        setName(from.name);
+        setPosition(from.position);
+        setPositionZ(from.positionZ);
+        setContentSize(from.contentSize);
+        setAnchorPoint(from.anchorPoint);
+        setColor4(from.color4);
+        setRotation(from.rotation);
+        setRotation3d(from.rotation3d);
+        setScaleX(from.scaleX);
+        setScaleY(from.scaleY);
+        setScaleZ(from.scaleZ);
+        setVisible(from.visible);
+        setRenderRange(from.getRenderRange());
+
+        animators.clear();
+        for (QNodeAnimator animator : from.animators) {
+            addAnimator(new QNodeAnimator(animator.property,animator.timeRang,animator.beginPoint,animator.endPoint,animator.functionType,
+                    animator.repleat,animator.name));
+        }
+    }
+
     public void release(){
         native_release();
         childrens.clear();
@@ -206,10 +239,11 @@ public class QGraphicNode {
     private ArrayList<QGraphicNode> childrens = new ArrayList();
     private ArrayList<QNodeAnimator> animators = new ArrayList();
 
+    protected String id;
     String name = "";
     QRange renderRange = new QRange(0,0);
     //transform propertys setting
-    boolean visible = false;
+    boolean visible = true;
 
     float rotation = 0;
     QVector rotation3d = new QVector(0,0,0);
