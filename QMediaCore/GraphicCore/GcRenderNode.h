@@ -25,7 +25,7 @@ public:
     virtual void visit(Scene *scene, const Mat4& parentTransform, uint32_t parentFlags) override;
     
     //call by DuplicateNode
-    virtual void duplicateDraw(Scene* /*scene*/, const Mat4 & /*transform*/, const Node* /*diaplayNode*/) {}
+    virtual void duplicateDraw(Scene* /*scene*/, const Mat4 & /*transform*/, const Node* /*displayNode*/) {}
     
     virtual const Range<int64_t> getRange() { return _renderRange; }
     virtual void setRange(Range<int64_t> range) { _renderRange = range; }

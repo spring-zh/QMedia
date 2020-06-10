@@ -339,11 +339,12 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
             node->getColor().b,
             node->getColor().a};
         _program->setUniformValue("uColor", colorVal);
-        if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)) {
-            _program->enableBlend(true);
-        }
-        else
-            _program->enableBlend(false);
+        if (node->getBlendFunc() != BlendFunc::DISABLE) {
+            _program->setBlendFunc(node->getBlendFunc());
+        } else if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)){
+            _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
+        } else
+            _program->setBlendFunc(BlendFunc::DISABLE);
         
         _program->drawRect();
     }
@@ -510,11 +511,12 @@ void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const Grap
             node->getColor().b,
             node->getColor().a};
         _program->setUniformValue("uColor", colorVal);
-        if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)) {
-            _program->enableBlend(true);
-        }
-        else
-            _program->enableBlend(false);
+        if (node->getBlendFunc() != BlendFunc::DISABLE) {
+            _program->setBlendFunc(node->getBlendFunc());
+        } else if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)){
+            _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
+        } else
+            _program->setBlendFunc(BlendFunc::DISABLE);
         
         _program->drawRect();
     }

@@ -8,8 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		6F049348244B1BDC00F8B73B /* EditorExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F049347244B1BDC00F8B73B /* EditorExporter.cpp */; };
-		6F187491248DD3E0009C4B94 /* GcTextureNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F187490248DD3E0009C4B94 /* GcTextureNode.cpp */; };
 		6F187494248DD402009C4B94 /* GcImageNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F187492248DD402009C4B94 /* GcImageNode.cpp */; };
+		6F1874A32490DFF3009C4B94 /* Texture2DDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F1874A12490DFF3009C4B94 /* Texture2DDrawer.cpp */; };
 		6F3720702469896800356951 /* speex_resampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F37206F2469896800356951 /* speex_resampler.c */; };
 		6F45922A2461ADE800FABEAF /* QPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4592292461ADE800FABEAF /* QPlayer.cpp */; };
 		6F511872240F9BD50013BC9E /* TDStretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117D9240F9BD40013BC9E /* TDStretch.cpp */; };
@@ -78,10 +78,10 @@
 		10A9FE1E1EA4A06B0051BDFC /* libQMediaCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libQMediaCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
 		6F049346244B1BDC00F8B73B /* EditorExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorExporter.h; sourceTree = "<group>"; };
 		6F049347244B1BDC00F8B73B /* EditorExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorExporter.cpp; sourceTree = "<group>"; };
-		6F18748F248DD3E0009C4B94 /* GcTextureNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcTextureNode.h; sourceTree = "<group>"; };
-		6F187490248DD3E0009C4B94 /* GcTextureNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GcTextureNode.cpp; sourceTree = "<group>"; };
 		6F187492248DD402009C4B94 /* GcImageNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GcImageNode.cpp; sourceTree = "<group>"; };
 		6F187493248DD402009C4B94 /* GcImageNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcImageNode.h; sourceTree = "<group>"; };
+		6F1874A12490DFF3009C4B94 /* Texture2DDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DDrawer.cpp; sourceTree = "<group>"; };
+		6F1874A22490DFF3009C4B94 /* Texture2DDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture2DDrawer.h; sourceTree = "<group>"; };
 		6F372062246934B400356951 /* AudioClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioClock.h; sourceTree = "<group>"; };
 		6F37206C2469896800356951 /* speex_stack_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_stack_alloc.h; sourceTree = "<group>"; };
 		6F37206D2469896800356951 /* speex_arch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_arch.h; sourceTree = "<group>"; };
@@ -378,8 +378,6 @@
 				6F6214542446A84900AF70A0 /* GcRenderNode.cpp */,
 				6FBD028424595CA900372404 /* GcDuplicateNode.cpp */,
 				6FBD028524595CA900372404 /* GcDuplicateNode.h */,
-				6F187490248DD3E0009C4B94 /* GcTextureNode.cpp */,
-				6F18748F248DD3E0009C4B94 /* GcTextureNode.h */,
 				6F187492248DD402009C4B94 /* GcImageNode.cpp */,
 				6F187493248DD402009C4B94 /* GcImageNode.h */,
 				6F637E8623D047790004E053 /* GcScene.cpp */,
@@ -448,6 +446,8 @@
 				6F637EC423D047790004E053 /* Texture2D.cpp */,
 				6F637E9323D047790004E053 /* Drawable2D.cpp */,
 				6F637E8E23D047790004E053 /* Drawable2D.h */,
+				6F1874A12490DFF3009C4B94 /* Texture2DDrawer.cpp */,
+				6F1874A22490DFF3009C4B94 /* Texture2DDrawer.h */,
 				6F637E8F23D047790004E053 /* FrameBuffer.cpp */,
 				6F637E9123D047790004E053 /* FrameBuffer.h */,
 				6F637EC223D047790004E053 /* ShaderProgram.cpp */,
@@ -701,7 +701,6 @@
 				6F511872240F9BD50013BC9E /* TDStretch.cpp in Sources */,
 				6FA69F95244D5DAA00BC3294 /* EffectCombiner.cpp in Sources */,
 				6F51187B240F9BD50013BC9E /* sse_optimized.cpp in Sources */,
-				6F187491248DD3E0009C4B94 /* GcTextureNode.cpp in Sources */,
 				6F637ED523D0477A0004E053 /* GLEngine.cpp in Sources */,
 				6F3720702469896800356951 /* speex_resampler.c in Sources */,
 				6F637EC523D0477A0004E053 /* GcNode.cpp in Sources */,
@@ -722,6 +721,7 @@
 				6F45922A2461ADE800FABEAF /* QPlayer.cpp in Sources */,
 				6F637ECC23D0477A0004E053 /* Vec3.cpp in Sources */,
 				6F51187A240F9BD50013BC9E /* FIFOSampleBuffer.cpp in Sources */,
+				6F1874A32490DFF3009C4B94 /* Texture2DDrawer.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

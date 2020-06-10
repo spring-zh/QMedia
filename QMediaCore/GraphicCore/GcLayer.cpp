@@ -15,7 +15,7 @@ GRAPHICCORE_BEGIN
 
 Layer::Layer(Size size):
 _framebuffer(nullptr),
-//_texture2d(nullptr),
+_texture2d(nullptr),
 _bkColor(0,0,0,1),
 _layerSize(size) {
 }
@@ -70,6 +70,12 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
     scene->popMatrix(MATRIX_STACK_MODELVIEW);
 }
 
+void Layer::duplicateDraw(GraphicCore::Scene* scene, const Mat4 & transform, const Node* displayNode) {
+    if (_texture2d && _textureDrawer) {
+        _textureDrawer->draw(_texture2d, scene, transform, displayNode);
+    }
+}
+
 void Layer::addFilter(FilterRef filter){
     
 }
@@ -82,8 +88,9 @@ bool Layer::createRes()
     _scene.setProjection(Projection::_3D);
     _framebuffer = FrameBuffer::createNew();
     _framebuffer->attachTexture2D(FrameBuffer::COLOR, _texture2d);
+    _textureDrawer = std::shared_ptr<Texture2DDrawer>(new Texture2DDrawer());
 
-    return TextureNode::createRes();
+    return RenderNode::createRes();
 }
 
 void Layer::releaseRes()
@@ -99,7 +106,8 @@ void Layer::releaseRes()
         delete _texture2d;
         _texture2d = nullptr;
     }
-    TextureNode::releaseRes();
+    _textureDrawer.reset();
+    RenderNode::releaseRes();
 }
 
 GRAPHICCORE_END

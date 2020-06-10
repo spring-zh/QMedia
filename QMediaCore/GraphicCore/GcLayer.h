@@ -9,24 +9,26 @@
 #ifndef GRAPHICCORE_LAYER_H
 #define GRAPHICCORE_LAYER_H
 
-#include "GcTextureNode.h"
+#include "GcRenderNode.h"
 #include "GcFilter.h"
 #include "opengl/GLEngine.h"
 #include "opengl/ShaderProgram.h"
+#include "opengl/Texture2DDrawer.h"
 #include <vector>
 
 GRAPHICCORE_BEGIN
 
-class Layer : public TextureNode{
+class Layer : public RenderNode{
 public:
     Layer(Size size);
     virtual ~Layer();
     
-    virtual void visit(Scene *scene, const Mat4& parentTransform, uint32_t parentFlags) override;
+    virtual void visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32_t parentFlags) override;
     
     virtual Texture2D* getDuplicateTexture() const { return _texture2d ;}
-//    virtual void duplicateDraw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* /*diaplayNode*/) override;
-    
+    //call by DuplicateNode
+    virtual void duplicateDraw(Scene* /*scene*/, const Mat4 & /*transform*/, const Node* /*displayNode*/) override ;
+
     Size getLayerSize() const { return _layerSize; }
     
     const Color4F& getBKColor() const { return _bkColor; }
@@ -46,8 +48,8 @@ protected:
 
     FrameBuffer *_framebuffer;
 
-//    Texture2D *_texture2d;
-//    ShaderProgram _shaderProgram;
+    Texture2D *_texture2d;
+    std::shared_ptr<Texture2DDrawer> _textureDrawer;
 
     std::vector<FilterRef> _fliters;
 };

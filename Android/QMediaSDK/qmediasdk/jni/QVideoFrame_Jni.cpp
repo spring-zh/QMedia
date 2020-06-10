@@ -156,11 +156,12 @@ void OESVideoFrameDrawer::drawFrame(const GraphicCore::Scene* scene, const Graph
 
         float colorArr[] = { node->getColor().r, node->getColor().g, node->getColor().b, node->getColor().a };
         _program->setUniformValue("uColor", GET_ARRAY_COUNT(colorArr), colorArr);
-        if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)) {
-            _program->enableBlend(true);
-        }
-        else
-            _program->enableBlend(false);
+        if (node->getBlendFunc() != BlendFunc::DISABLE) {
+            _program->setBlendFunc(node->getBlendFunc());
+        } else if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)){
+            _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
+        } else
+            _program->setBlendFunc(BlendFunc::DISABLE);
 
         _program->drawRect();
     }

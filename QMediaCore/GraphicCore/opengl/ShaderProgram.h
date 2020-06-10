@@ -10,6 +10,7 @@
 #define GRAPHICCORE_SHADERPROGRAM_H
 
 #include "GLMacros.h"
+#include "GraphicCore/base/ColorTypes.h"
 #include <map>
 #include <vector>
 #include <string>
@@ -146,7 +147,7 @@ public:
 //    bool setProgramLocations();
     bool use();
 
-    void enableBlend(bool bBlend){_enable_blend = bBlend;}
+    void setBlendFunc(BlendFunc blendFunc) { _blendFunc = blendFunc; }
     void enableVBO(bool bVob){_enable_vbo = bVob;}
 private:
     bool setUniformValue(Uniform& uniform, int size, int intArray[]);
@@ -159,13 +160,13 @@ private:
     std::map<std::string, Uniform > _uniform_maps;
 
     bool _enable_vbo;
-    bool _enable_blend;
 
     IndicesArray _elementIndices;
 
     GLuint _program;
     GLuint _vShader;
     GLuint _fShader;
+    BlendFunc _blendFunc;
 };
 
 GRAPHICCORE_END

@@ -46,7 +46,8 @@ Image* Image::createFromFile(FILE *filep)
 {
     Image* image = nullptr;
     int w,h,n;
-    stbi_uc *idata = stbi_load_from_file(filep, &w, &h, &n,0);
+    stbi_uc *idata = stbi_load_from_file(filep, &w, &h, &n, 4);
+    n = 4;
     if (idata == NULL) {
         return nullptr;
     }
@@ -95,8 +96,7 @@ Image* Image::createEmpty(Format format, int width, int height)
             break;
         default:
             delete image;
-            return NULL;
-            break;
+            return nullptr;
     }
     
     image->_buffer = malloc(width * height * pixel_bytes);

@@ -26,16 +26,14 @@ inline GLuint getGlDrawMode(ShaderProgram::DrawMode mode){
 }
 
 ShaderProgram::ShaderProgram():
-        _enable_vbo(true),
-        _enable_blend(false),
-        _program(0),
-        _vShader(0),
-        _fShader(0)
-{
+_enable_vbo(true),
+_blendFunc(BlendFunc::DISABLE),
+_program(0),
+_vShader(0),
+_fShader(0) {
 
 }
-ShaderProgram::~ShaderProgram()
-{
+ShaderProgram::~ShaderProgram() {
 
 }
 
@@ -416,9 +414,10 @@ bool ShaderProgram::beginDraw()
                 textureId++;
             }
         }
-        if (_enable_blend) {
+        if (_blendFunc != BlendFunc::DISABLE) {
             glEnable(GL_BLEND);
-            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+//            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+            glBlendFunc(_blendFunc.src, _blendFunc.dst);
         }else
             glDisable(GL_BLEND);
     

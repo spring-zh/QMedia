@@ -83,6 +83,12 @@ public:
 
     virtual const Color4F& getColor() const { return _realColor; }
     virtual void setColor(const Color4F& color) { _realColor = color; }
+
+    virtual const BlendFunc& getBlendFunc() const { return _blendFunc; }
+    virtual void setBlendFunc(const BlendFunc& blendFunc) { _blendFunc = blendFunc; }
+
+    virtual const Rect& getCrop() const { return _crop; }
+    virtual void setCrop(const Rect& crop) { _crop = crop; }
     
     virtual const Mat4& getNodeToParentTransform() const;
     virtual Mat4 getNodeToParentTransform(Node* ancestor) const;
@@ -135,6 +141,8 @@ protected:
     Mat4 _modelViewTransform;       ///< ModelView transform of the Node.
     
     Color4F     _realColor;
+    BlendFunc   _blendFunc;
+    Rect        _crop;
     // "cache" variables are allowed to be mutable
     mutable Mat4 _transform;        ///< transform
     mutable bool _transformDirty;   ///< transform dirty flag
