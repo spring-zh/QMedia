@@ -9,6 +9,7 @@ import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
 import android.opengl.GLES20;
+import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -388,17 +389,28 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
         @Override
         public EGLConfig chooseConfig(EGLDisplay display) {
             int attribs[] = {
-                    EGL14.EGL_RED_SIZE, 8,
-                    EGL14.EGL_GREEN_SIZE, 8,
-                    EGL14.EGL_BLUE_SIZE, 8,
-                    EGL14.EGL_DEPTH_SIZE, 16,
-                    EGL14.EGL_SAMPLE_BUFFERS, 1,
+                EGL14.EGL_RED_SIZE, 8,
+                        EGL14.EGL_GREEN_SIZE, 8,
+                        EGL14.EGL_BLUE_SIZE, 8,
+                        EGL14.EGL_DEPTH_SIZE, 16,
+                        EGL14.EGL_SAMPLE_BUFFERS, 1,
 //                    EGL14.EGL_SINGLE_BUFFER, 1,
-                    EGL14.EGL_SURFACE_TYPE, /*EGL14.EGL_PBUFFER_BIT |*/ EGL14.EGL_WINDOW_BIT,
-                    EGL_RECORDABLE_ANDROID, 1,
-                    EGL14.EGL_SAMPLES, 4,  // This is for 4x MSAA.
-                    EGL14.EGL_NONE
+                        EGL14.EGL_SURFACE_TYPE, /*EGL14.EGL_PBUFFER_BIT |*/ EGL14.EGL_WINDOW_BIT,
+                        EGL_RECORDABLE_ANDROID, 1,
+                        EGL14.EGL_SAMPLES, 4,  // This is for 4x MSAA.
+                        EGL14.EGL_NONE
             };
+            if (Build.CPU_ABI.equals("x86")) {
+                int new_attribs[] = {
+                        EGL14.EGL_RED_SIZE, 8,
+                        EGL14.EGL_GREEN_SIZE, 8,
+                        EGL14.EGL_BLUE_SIZE, 8,
+                        EGL14.EGL_DEPTH_SIZE, 16,
+                        EGL14.EGL_NONE
+                };
+                attribs = new_attribs;
+            }
+
             EGLConfig[] configs = new EGLConfig[1];
             int[] configCounts = new int[1];
             EGL14.eglChooseConfig(display, attribs, 0, configs, 0,1, configCounts, 0);
