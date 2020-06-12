@@ -23,6 +23,9 @@ void RenderNode::visit(Scene *scene, const Mat4& parentTransform, uint32_t paren
     Range<int64_t> dispRange = getRange();
     if ( dispRange.isValid() && !(scene->getDelta() >= dispRange._start && scene->getDelta() <= dispRange._end))
         return;
+
+    AnimaNode::updateAnimations(scene->getDelta() - dispRange._start);
+
     Node::visit(scene, parentTransform, parentFlags);
 }
 

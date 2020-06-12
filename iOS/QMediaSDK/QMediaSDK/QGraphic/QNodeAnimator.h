@@ -68,6 +68,7 @@ typedef NS_ENUM(NSInteger, QEaseFunction) {
 * QNodeAnimator
 */
 extern NSString* property_positionxyz;//v3
+extern NSString* property_rotation;//v1
 extern NSString* property_rotationxyz;//v3
 extern NSString* property_scalex;//v1
 extern NSString* property_scalez;//v1
@@ -78,6 +79,7 @@ extern NSString* property_contentsizeh;//v1
 extern NSString* property_contentsize;//v2
 extern NSString* property_alpha;//v1
 extern NSString* property_mixcolor;//v4
+extern NSString* property_crop;//v4 (0.0f ~ 1.0f)
 
 @interface QNodeAnimator : NSObject
 - (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat;

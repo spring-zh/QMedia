@@ -29,6 +29,8 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
     Range<int64_t> dispRange = getRange();
     if ( dispRange.isValid() && (scene->getDelta() < dispRange._start || scene->getDelta() > dispRange._end))
         return; //isn't in display time range
+
+    AnimaNode::updateAnimations(scene->getDelta() - getRange()._start);
     
     if (!_bVisible)
     {

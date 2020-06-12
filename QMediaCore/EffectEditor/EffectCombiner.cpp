@@ -54,7 +54,7 @@ bool RenderLayer::beginRender()
 void RenderLayer::render(int64_t timeStamp){
     _playerScene.setDelta(timeStamp);
     
-    AnimaNode::updateAnimations(timeStamp);
+//    AnimaNode::updateAnimations(timeStamp);
     RenderNode::visit(&_playerScene, _playerScene.getMatrix(MATRIX_STACK_MODELVIEW), 0);
 }
 

@@ -17,7 +17,15 @@
 GRAPHICCORE_BEGIN
 
 /**
- * must use in opengl thread
+ *  note: must use in opengl thread
+ *  default vertex and uniform below
+ *  ---------------------------------------------------------
+ *  addVertexAttribOption("a_position",VertexAttrib::VERTEX3);
+ *  addVertexAttribOption("a_texCoord",VertexAttrib::TEXCOORD);
+ *  addUniformOption("uMVPMatrix",Uniform::MATRIX4);
+ *  addUniformOption("uTexMatrix",Uniform::MATRIX4);
+ *  addUniformOption("uTexture",Uniform::TEXTURE);
+ *  addUniformOption("uColor",Uniform::FLOAT4);
  */
 class Texture2DDrawer {
 public:
@@ -26,7 +34,9 @@ public:
     explicit Texture2DDrawer(const char* vshader, const char* fshader);
     virtual ~Texture2DDrawer();
 
-    virtual void draw(const Texture2D* texture,const Scene* scene, const Mat4 & /*transform*/, const Node* /*displayNode*/, Drawable2D::FlipMode flipMode = Drawable2D::NONE) ;
+    ShaderProgram& getShaderProgram() { return _shaderProgram; }
+
+    virtual void draw(const Texture2D* texture,const Scene* scene, const Mat4 & /*transform*/, const Node* /*node*/, Drawable2D::FlipMode flipMode = Drawable2D::NONE) ;
 
 protected:
     ShaderProgram _shaderProgram;

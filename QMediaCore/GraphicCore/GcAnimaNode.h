@@ -122,6 +122,7 @@ public:
     bool removeAnimator(Animator* animator);
     
     //update self and sub nodes 's animations
+    virtual void updateAllAnimations(int64_t timeStamp);
     virtual void updateAnimations(int64_t timeStamp);
     
 protected:
@@ -135,13 +136,9 @@ protected:
         {
             if (_animatorList.find(animator) != _animatorList.end())
                 return false;
-            //update timeRange
-            if (_timeRange._start > animator->_timeRang._start) {
-                _timeRange._start = animator->_timeRang._start;
-            }else if (_timeRange._end < animator->_timeRang._end) {
-                _timeRange._end = animator->_timeRang._end;
-            }
             _animatorList.insert(animator);
+            _timeRange = calculateGroupRange();
+
             return true;
         }
         
@@ -149,22 +146,8 @@ protected:
             auto iter = _animatorList.find(animator);
             if( iter != _animatorList.end()) {
                 _animatorList.erase(iter);
-                
-                //calcualte new timeRange
-                Range<int64_t> timeRange(std::numeric_limits<int64_t>::max(), std::numeric_limits<int64_t>::min());//{INT_MAX,-INT_MAX};
-                for (auto &iter : _animatorList){
-                    Range<int64_t>& tRange = iter->_timeRang;
-                    if (timeRange._start > tRange._start) {
-                        timeRange._start = tRange._start;
-                    }
-                    if (timeRange._end < tRange._end) {
-                        timeRange._end = tRange._end;
-                    }
-                }
-                if (timeRange._start > timeRange._end) {
-                    timeRange = {0,0};
-                }
-                _timeRange = timeRange;
+
+                _timeRange = calculateGroupRange();
                 return true;
             }
             return false;
@@ -175,16 +158,17 @@ protected:
                 return;
             }
             
-            if (timeStamp >= _timeRange._start) {
+//            if (timeStamp >= _timeRange._start) {
                 if (timeStamp > _timeRange._end) {
                     timeStamp = _timeRange._end;
-                }
+                } else if (timeStamp < _timeRange._start)
+                    timeStamp = _timeRange._start;
                 
                 if (timeStamp != _lastTimeStamp) {
                     _updateProperty(timeStamp);
                     _lastTimeStamp = timeStamp;
                 }
-            }
+//            }
         }
     private:
         void _updateProperty(int64_t timeStamp)
@@ -198,6 +182,24 @@ protected:
                 }
             }
         }
+
+        Range<int64_t> calculateGroupRange() {
+            //calcualte new timeRange
+            Range<int64_t> timeRange(std::numeric_limits<int64_t>::max(), std::numeric_limits<int64_t>::min());//{INT_MAX,-INT_MAX};
+            for (auto &iter : _animatorList){
+                Range<int64_t>& tRange = iter->_timeRang;
+                if (timeRange._start > tRange._start) {
+                    timeRange._start = tRange._start;
+                }
+                if (timeRange._end < tRange._end) {
+                    timeRange._end = tRange._end;
+                }
+            }
+            if (timeRange._start > timeRange._end) {
+                timeRange = {0,0};
+            }
+            return timeRange;
+        }
         
         std::string _propertyName;
         std::set<Animator*> _animatorList;
@@ -208,14 +210,11 @@ protected:
     
     std::map<std::string, std::shared_ptr<PropretyGroup>> _animatorsGroup;
     
-//    std::set<Animator*> _animatorList;
-    
-//    void updateNodeProperty(int64_t timeStamp);
-    
 private:
     void updateAnimator_positionxyz(Animator* animator, float t);
     
     void updateAnimator_rotationxyz(Animator* animator, float t);
+    void updateAnimator_rotation(Animator* animator, float t);
     
     void updateAnimator_scalex(Animator* animator, float t);
     void updateAnimator_scaley(Animator* animator, float t);
@@ -229,6 +228,7 @@ private:
     
     void updateAnimator_alpha(Animator* animator, float t);
     void updateAnimator_mixcolor(Animator* animator, float t);
+    void updateAnimator_crop(Animator* animator, float t);
     
     bool checkAndSetAnimator(Animator* animator);
 };

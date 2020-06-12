@@ -32,14 +32,14 @@ Texture2DDrawer::~Texture2DDrawer() {
 }
 
 //call by DuplicateNode
-void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Mat4 & transform, const Node* displayNode, Drawable2D::FlipMode flipMode ) {
+void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Mat4 & transform, const Node* node, Drawable2D::FlipMode flipMode ) {
     //FIXME: translation of position already contain in transform matrix
     VertexAttrib::Value vertValue;
     vertValue._buffer = {
-            0, 0 , displayNode->getPositionZ(),
-            displayNode->getContentSize().width , 0 , displayNode->getPositionZ(),
-            0 , displayNode->getContentSize().height , displayNode->getPositionZ(),
-            displayNode->getContentSize().width , displayNode->getContentSize().height, displayNode->getPositionZ(),
+            0, 0 , node->getPositionZ(),
+            node->getContentSize().width , 0 , node->getPositionZ(),
+            0 , node->getContentSize().height , node->getPositionZ(),
+            node->getContentSize().width , node->getContentSize().height, node->getPositionZ(),
     };
 
     Mat4 mvpMatrix, texMatrix;
@@ -47,9 +47,9 @@ void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Ma
 
     if(_shaderProgram.use()){
 
-        if (displayNode->getBlendFunc() != BlendFunc::DISABLE) {
-            _shaderProgram.setBlendFunc(displayNode->getBlendFunc());
-        } else if ( FLOAT_ISEQUAL(displayNode->getColor().a, 1.0f)){
+        if (node->getBlendFunc() != BlendFunc::DISABLE) {
+            _shaderProgram.setBlendFunc(node->getBlendFunc());
+        } else if ( FLOAT_ISEQUAL(node->getColor().a, 1.0f)){
             _shaderProgram.setBlendFunc(BlendFunc::DISABLE);
         } else
             _shaderProgram.setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
@@ -62,7 +62,7 @@ void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Ma
 
         //set color uniform
         Uniform::Value colorVal;
-        Color4F realColor = displayNode->getColor();
+        Color4F realColor = node->getColor();
         colorVal._floatOrmatrix_array = {realColor.r,realColor.g,realColor.b,realColor.a};
         _shaderProgram.setUniformValue("uColor", colorVal);
         _shaderProgram.setUniformValue("uMVPMatrix",GET_ARRAY_COUNT(mvpMatrix.m),mvpMatrix.m);
@@ -80,7 +80,7 @@ void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Ma
                 break;
         }
 
-        Rect cropRect = displayNode->getCrop();
+        Rect cropRect = node->getCrop();
         if (! cropRect.size.equals(Size::ZERO)) {
             //TODO: need crop
             float crop[16] = {
