@@ -15,8 +15,10 @@ import android.widget.Toast;
 
 import java.io.File;
 import java.util.UUID;
+import java.util.Vector;
 
 import com.qmedia.qmediasdk.QCommon.QRange;
+import com.qmedia.qmediasdk.QCommon.QSize;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QEditor.QEditorPlayer;
@@ -51,46 +53,46 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 
 	QExporter exporter;
 
-	String[] select_images;
+	String[] media_paths;
 
-	void setEffects(QCombiner combiner) {
+	void setVideoPreview(QCombiner combiner , String video_path) {
 		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
 
 //		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
 		QMediaTrack videoTrack ;
-		if (select_images != null && select_images.length > 0) {
-			videoTrack = combiner.createVideoTrack(select_images[0], false);
+		if (video_path != null) {
+			videoTrack = combiner.createVideoTrack(video_path, false);
 		}else
 			videoTrack = combiner.createVideoTrack("test.mp4", true);
 		QMediaTrack audioTrack = combiner.createAudioTrack("LR.mp3", true);
 
 		videoTrack.getGraphic().setPosition(new QVector(targetW/4, targetH/4));
-		videoTrack.getGraphic().setContentSize(new QVector(targetW/2, targetH/2));
+		videoTrack.getGraphic().setContentSize(new QSize(targetW/2, targetH/2));
 		videoTrack.getGraphic().setAnchorPoint(new QVector(0.5f,0.5f));
 
 		QDuplicateNode duplicatenodeL = new QDuplicateNode(videoTrack.getGraphic(), combiner);
-		duplicatenodeL.setContentSize(new QVector(targetW/2, targetH/2));
+		duplicatenodeL.setContentSize(new QSize(targetW/2, targetH/2));
 		duplicatenodeL.setPosition(new QVector(0, targetH/4));
 		duplicatenodeL.setAnchorPoint(new QVector(0.5f,0.5f));
 		duplicatenodeL.setRotation3d(new QVector(0, 90, 0));
 
 		QDuplicateNode duplicatenodeR = new QDuplicateNode(videoTrack.getGraphic(), combiner);
-		duplicatenodeR.setContentSize(new QVector(targetW/2, targetH/2));
+		duplicatenodeR.setContentSize(new QSize(targetW/2, targetH/2));
 		duplicatenodeR.setPosition(new QVector(targetW/2, targetH/4));
 		duplicatenodeR.setAnchorPoint(new QVector(0.5f,0.5f));
 		duplicatenodeR.setRotation3d(new QVector(0, -90, 0));
 
 		combiner.getRootNode().setAnchorPoint(new QVector(0.5f,0.5f));
-		combiner.getRootNode().setContentSize(new QVector(targetW, targetH));
+		combiner.getRootNode().setContentSize(new QSize(targetW, targetH));
 		combiner.getRootNode().addChildNode(videoTrack.getGraphic());
 		combiner.getRootNode().addChildNode(duplicatenodeL);
 		combiner.getRootNode().addChildNode(duplicatenodeR);
 
-		String imagePath = Environment.getExternalStorageDirectory().getPath() + "/li.jpg";
-		QImageNode imageNode = new QImageNode(imagePath, false, combiner);
-		imageNode.setRenderRange(new QRange(5000, 15000));
-		imageNode.setContentSize(new QVector(320, 240));
-		combiner.getRootNode().addChildNode(imageNode);
+//		String imagePath = Environment.getExternalStorageDirectory().getPath() + "/li.jpg";
+//		QImageNode imageNode = new QImageNode(imagePath, false, combiner);
+//		imageNode.setRenderRange(new QRange(5000, 15000));
+//		imageNode.setContentSize(new QVector(320, 240));
+//		combiner.getRootNode().addChildNode(imageNode);
 
 //		QLayer layer = new QLayer(new QVector(targetW, targetH), "", combiner);
 //		layer.setContentSize(new QVector(targetW, targetH));
@@ -101,11 +103,82 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 
 
 		QNodeAnimator an1 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(0, 5000) ,
-				new QVector(0, 0, 0) , new QVector(-180, 180, 180), QNodeAnimator.Linear ,false, "");
-		QNodeAnimator an2 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(5000, 10000) ,
-				new QVector(-180, 180, 180) , new QVector(-360, 360, 360), QNodeAnimator.Linear ,false, "");
+				new QVector(0, 0, 0) , new QVector(-180, 180, 180), QNodeAnimator.Bounce_EaseOut ,false, "");
+		QNodeAnimator an2 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(5000, 15000) ,
+				new QVector(-180, 180, 180) , new QVector(-360, 360, 360), QNodeAnimator.Elastic_EaseOut ,false, "");
 		combiner.getRootNode().addAnimator(an1);
 		combiner.getRootNode().addAnimator(an2);
+	}
+
+	void setImagesPreview(QCombiner combiner , String[] images_path) {
+		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
+
+		QMediaTrack audioTrack = combiner.createAudioTrack("LR.mp3", true);
+
+		int time_position = 0;
+		int image_duration = 3000;
+
+		QNodeAnimator []animator_list1 = {
+				new QNodeAnimator(QNodeAnimator.rotationxyz,
+						new QRange(0,image_duration),new QVector(0,0,0),new QVector(0,0,360),QNodeAnimator.Linear,false, ""),
+				new QNodeAnimator(QNodeAnimator.scalexy,
+						new QRange(0,image_duration),new QVector(1,1),new QVector(1.5f,1.5f),QNodeAnimator.Quart_EaseIn,false, ""),
+				new QNodeAnimator(QNodeAnimator.alpha,
+						new QRange(0,image_duration),new QVector(1),new QVector(0.5f),QNodeAnimator.Quart_EaseIn,false, "")
+		};
+
+		QNodeAnimator []animator_list2 = {
+				new QNodeAnimator(QNodeAnimator.rotationxyz,
+						new QRange(0,image_duration/2),new QVector(0,0,260),new QVector(0,0,0),QNodeAnimator.Linear,false, ""),
+				new QNodeAnimator(QNodeAnimator.scalexy,
+						new QRange(0,image_duration/2),new QVector(1.5f,1.5f),new QVector(1,1),QNodeAnimator.Quart_EaseOut,false, ""),
+				new QNodeAnimator(QNodeAnimator.alpha,
+						new QRange(0,image_duration/2),new QVector(0.5f),new QVector(1),QNodeAnimator.Quart_EaseOut,false, ""),
+				new QNodeAnimator(QNodeAnimator.contentsize,
+						new QRange(image_duration/2,image_duration),new QVector(targetW,targetH),new QVector(targetW*2,targetH*2),QNodeAnimator.Linear,false, "")
+		};
+
+		QNodeAnimator []animator_list3 = {
+				new QNodeAnimator(QNodeAnimator.contentsize,
+						new QRange(0,image_duration/2),new QVector(targetW*2,targetH*2),new QVector(targetW,targetH),QNodeAnimator.Quart_EaseOut,false, ""),
+				new QNodeAnimator(QNodeAnimator.rotationxyz,
+						new QRange(image_duration/2,image_duration),new QVector(0,0,0),new QVector(0,90,0),QNodeAnimator.Linear,false, "")
+		};
+
+		QNodeAnimator []animator_list4 = {
+				new QNodeAnimator(QNodeAnimator.rotationxyz,
+						new QRange(0,image_duration/2),new QVector(0,270,0),new QVector(0,360,0),QNodeAnimator.Linear,false, ""),
+
+				new QNodeAnimator(QNodeAnimator.crop,
+						new QRange(image_duration/2,image_duration),new QVector(0,0,1,1),new QVector(0.25f,0.25f,0.5f,0.5f),QNodeAnimator.Quart_EaseIn,false, "")
+		};
+
+		Vector<QNodeAnimator []> animators_goup_list = new Vector<>();
+		animators_goup_list.add(animator_list1);
+		animators_goup_list.add(animator_list2);
+		animators_goup_list.add(animator_list3);
+		animators_goup_list.add(animator_list4);
+
+		int index = 0;
+
+		for (String imagepath : images_path){
+			QImageNode imageNode = new QImageNode(imagepath, false, combiner);
+			imageNode.setRenderRange(new QRange(time_position, time_position + image_duration));
+			imageNode.setAnchorPoint(new QVector(0.5f,0.5f));
+			time_position += image_duration;
+
+			if (index < animators_goup_list.size()){
+				for (QNodeAnimator animator : animators_goup_list.get(index))
+					imageNode.addAnimator(animator);
+			}
+
+			imageNode.setContentSize(new QSize(targetW, targetH));
+			combiner.getRootNode().addChildNode(imageNode);
+
+			index ++;
+		}
+
+		combiner.setValidTimeRange(new QRange(0, time_position));
 	}
 
 	@Override
@@ -114,7 +187,9 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		setContentView(R.layout.activity_reader_muxer);
 //		Log.i(TAG, "qmediasdk version: " + QMediaSDK.SDK_VERSION);
 
-		 select_images = getIntent().getStringArrayExtra("SELECT_VIDEO");
+		String lunch_mode = getIntent().getStringExtra("LAUNCH_MODE");
+
+		media_paths = getIntent().getStringArrayExtra("MEDIA_PATHS");
 
 		QMediaSDK.init(this);
 		mframeLayout = (FrameLayout) findViewById(R.id.frameLayout);
@@ -191,8 +266,15 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		});
 
 		//TODO: set resources
-		setEffects(editorPlayer);
-
+		if (lunch_mode != null && lunch_mode.equals("SELECT_IMAGES")){
+			setImagesPreview(editorPlayer, media_paths);
+		}else {
+			if (media_paths != null && media_paths.length > 0)
+				setVideoPreview(editorPlayer, media_paths[0]);
+			else
+				setVideoPreview(editorPlayer, null);
+		}
+//		editorPlayer.setValidTimeRange(new QRange(0, 10000));
 		editorPlayer.start();
 	}
 
@@ -203,7 +285,6 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		mPreviewView.onDestroy();
 		editorPlayer.stop();
 		editorPlayer.release();
-
 	}
 
 	static int runtime = 0;
@@ -241,7 +322,7 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 				if (exporter != null)
 					return;
 
-				String savePath = "/sdcard/output.mp4";
+				final String savePath = "/sdcard/output.mp4";
 				File f = new File(savePath);
 				if(f.exists()){
 					f.delete();
@@ -270,7 +351,7 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 
 					@Override
 					public void onExporterProgressUpdated(long progress) {
-						QRange range = editorPlayer.getMediaTimeRange();
+						QRange range = exporter.getMediaTimeRange();
 //						mProgressBar.setProgress((int) (exporter.getPosition() * 100 / range.getLength()));
 						mProgressBar.setText((int) (exporter.getPosition() * 100 / range.getLength()) + "%");
 					}
@@ -288,7 +369,7 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 						mProgressBar.setVisibility(View.INVISIBLE);
 						exporter.release();
 						exporter = null;
-						Toast.makeText(PreviewMuxerActivity.this, "onExporterCompleted", Toast.LENGTH_SHORT).show();
+						Toast.makeText(PreviewMuxerActivity.this, "onExporterCompleted Save Path: " + savePath, Toast.LENGTH_SHORT).show();
 					}
 				});
 //				setEffects(exporter);

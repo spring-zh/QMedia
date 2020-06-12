@@ -1,5 +1,6 @@
 package com.qmedia.qmediasdk.QGraphic;
 
+import com.qmedia.qmediasdk.QCommon.QSize;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
 
@@ -17,7 +18,7 @@ public class QImageNode extends QGraphicNode {
         this.inAsset = inAsset;
     }
 
-    public QVector getSize() {
+    public QSize getSize() {
         return native_getSize();
     }
 
@@ -29,5 +30,5 @@ public class QImageNode extends QGraphicNode {
     private boolean inAsset;
 
     protected native long native_create(String filePath, boolean inAsset);
-    protected native QVector native_getSize();
+    protected native QSize native_getSize();
 }

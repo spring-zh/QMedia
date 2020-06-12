@@ -15,7 +15,7 @@ import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 import java.nio.ByteBuffer;
 
 public class QAudioPlayer implements QAudioTarget , Runnable{
-    private final static String TAG = "AudioPlQAudioPlayerayer";
+    private final static String TAG = "QAudioPlayer";
     private QAudioRender audioRender;
     int audioDelay = 0;
     private QAudioDescribe describe;

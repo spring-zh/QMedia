@@ -25,7 +25,7 @@ public class HardwareEncoder {
     private static final String AUDIO_MIME_TYPE = "audio/mp4a-latm";
     private boolean bEncCreate = false;
     private static final String VIDEO_MIME_TYPE = "video/avc";
-    private static final int IFRAME_INTERVAL = 1;
+    private static final int IFRAME_INTERVAL = 2;
 
     private boolean mIsGOP0;
     private boolean mIsAllKeyFrame;
@@ -104,10 +104,10 @@ public class HardwareEncoder {
                 MediaCodecInfo.CodecCapabilities.COLOR_FormatSurface);
         format.setInteger(MediaFormat.KEY_BIT_RATE, bitRate);
         format.setInteger(MediaFormat.KEY_FRAME_RATE, frameRate);
-        format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, IFRAME_INTERVAL);
+        format.setInteger(MediaFormat.KEY_I_FRAME_INTERVAL, mIsAllKeyFrame? 0 : IFRAME_INTERVAL);
 
         //TODO: set profile level , bitrate mode
-//        MediaCodecInfo.CodecProfileLevel profileLevel = findNearestProfileLevel(MediaCodecInfo.CodecProfileLevel.AVCProfileMain,MediaCodecInfo.CodecProfileLevel.AVCLevel1);
+//        MediaCodecInfo.CodecProfileLevel profileLevel = findNearestProfileLevel(MediaCodecInfo.CodecProfileLevel.AVCProfileMain,MediaCodecInfo.CodecProfileLevel.AVCLevel31);
 //        if (profileLevel != null){
 //            format.setInteger(MediaFormat.KEY_PROFILE, profileLevel.profile);
 //            format.setInteger(MediaFormat.KEY_LEVEL, profileLevel.level);

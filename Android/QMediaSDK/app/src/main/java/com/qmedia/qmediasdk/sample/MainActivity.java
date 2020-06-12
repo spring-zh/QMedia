@@ -69,7 +69,7 @@ public class MainActivity extends AppCompatActivity {
 			@Override
 			public void onClick(View v) {
 				ImagePicker.getInstance()
-						.setTitle("标题")//设置标题
+						.setTitle("选择媒体")//设置标题
 						.showCamera(true)//设置是否显示拍照按钮
 						.showImage(true)//设置是否展示图片
 						.showVideo(false)//设置是否展示视频
@@ -85,20 +85,24 @@ public class MainActivity extends AppCompatActivity {
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		if ( resultCode == RESULT_OK) {
-			if (requestCode == REQUEST_SELECT_VIDEO_CODE) {
-				List<String> imagePaths = data.getStringArrayListExtra(ImagePicker.EXTRA_SELECT_IMAGES);
-				if (imagePaths.size() > 0) {
-					String[] paths = new String[imagePaths.size()];
-					for (int i=0;i<imagePaths.size();i++) {
-						paths[i] = imagePaths.get(i);
-					}
-					Intent intent = new Intent(MainActivity.this, PreviewMuxerActivity.class);
-					intent.putExtra("SELECT_VIDEO", paths);
-					Log.d(TAG, "LAUNCH_TYPE_MERGE");
-					startActivity(intent);
+			List<String> mediaPaths = data.getStringArrayListExtra(ImagePicker.EXTRA_SELECT_IMAGES);
+			String[] paths = new String[mediaPaths.size()];
+			if (mediaPaths.size() > 0) {
+				for (int i=0;i<mediaPaths.size();i++) {
+					paths[i] = mediaPaths.get(i);
 				}
-			}else if (requestCode == REQUEST_SELECT_IMAGESCODE) {
+			}
+			if (requestCode == REQUEST_SELECT_VIDEO_CODE) {
 
+				Intent intent = new Intent(MainActivity.this, PreviewMuxerActivity.class);
+				intent.putExtra("MEDIA_PATHS", paths);
+				intent.putExtra("LAUNCH_MODE", "SELECT_VIDEO");
+				startActivity(intent);
+			}else if (requestCode == REQUEST_SELECT_IMAGESCODE) {
+				Intent intent = new Intent(MainActivity.this, PreviewMuxerActivity.class);
+				intent.putExtra("MEDIA_PATHS", paths);
+				intent.putExtra("LAUNCH_MODE", "SELECT_IMAGES");
+				startActivity(intent);
 			}
 		}
 	}

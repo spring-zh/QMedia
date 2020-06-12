@@ -5,7 +5,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--XLMediaSDK-->
+        <!--QMediaSDK-->
         <scene sceneID="tne-QT-ifu">
             <objects>
                 <viewController automaticallyAdjustsScrollViewInsets="NO" id="BYZ-38-t0r" customClass="MediaMainViewController" sceneMemberID="viewController">
@@ -37,7 +37,7 @@
                     </view>
                     <extendedEdge key="edgesForExtendedLayout"/>
                     <toolbarItems/>
-                    <navigationItem key="navigationItem" title="XLMediaSDK" id="Rp8-by-K9u">
+                    <navigationItem key="navigationItem" title="QMediaSDK" id="Rp8-by-K9u">
                         <barButtonItem key="leftBarButtonItem" image="Add Icon_20x20_" id="a12-Gw-MOM">
                             <color key="tintColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                             <connections>

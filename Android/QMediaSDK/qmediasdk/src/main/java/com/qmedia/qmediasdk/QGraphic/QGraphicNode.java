@@ -1,6 +1,7 @@
 package com.qmedia.qmediasdk.QGraphic;
 
 import com.qmedia.qmediasdk.QCommon.QRange;
+import com.qmedia.qmediasdk.QCommon.QSize;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
 
@@ -149,11 +150,11 @@ public class QGraphicNode {
         native_setScaleZ(scaleZ);
     }
 
-    public QVector getContentSize() {
+    public QSize getContentSize() {
         return native_getContentSize();
     }
 
-    public void setContentSize(QVector contentSize) {
+    public void setContentSize(QSize contentSize) {
         this.contentSize = contentSize;
         native_setContentSize(contentSize);
     }
@@ -251,7 +252,7 @@ public class QGraphicNode {
     float scaleY = 1;
     float scaleZ = 1;
 
-    QVector contentSize = new QVector(0,0);
+    QSize contentSize = new QSize();
     QVector position = new QVector(0,0);;
     float positionZ = 0;
 
@@ -294,9 +295,9 @@ public class QGraphicNode {
 
     protected native void native_setScaleZ(float scaleZ);
 
-    protected native QVector native_getContentSize() ;
+    protected native QSize native_getContentSize() ;
 
-    protected native void native_setContentSize(QVector contentSize) ;
+    protected native void native_setContentSize(QSize contentSize) ;
 
     protected native QVector native_getPosition() ;
 

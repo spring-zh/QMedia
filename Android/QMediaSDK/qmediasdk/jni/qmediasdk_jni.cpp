@@ -26,6 +26,7 @@ JNIEXPORT jint JNI_OnLoad(JavaVM *vm, void *reserved) {
     JniUtils::setVM(vm);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QCommon_QRange(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QCommon_QVector(env);
+    J4A_loadClass__J4AC_com_qmedia_qmediasdk_QCommon_QSize(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QSource_QAudioDescribe(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QSource_QVideoDescribe(env);
     J4A_loadClass__J4AC_com_qmedia_qmediasdk_QAudio_QAudioFrame(env);

@@ -94,14 +94,15 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
     @Override
     public boolean stopAudio() {
         Log.i(TAG, "stopAudio");
-        if (mMuxerCore != null)
-            mMuxerCore.abortWait();
+//        if (mMuxerCore != null)
+//            mMuxerCore.abortWait();
 
         if (mAudioThread != null) {
             mAudioThread.determine();
             mAudioThread = null;
         }
         if (mVideoThread == null && mAudioThread == null && mMuxerCore != null){
+            mMuxerCore.abortWait();
             mMuxerCore.close();
             mMuxerCore = null;
         }
@@ -203,8 +204,8 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
     @Override
     public boolean stopVideo() {
         Log.i(TAG, "stopVideo");
-        if (mMuxerCore != null)
-            mMuxerCore.abortWait();
+//        if (mMuxerCore != null)
+//            mMuxerCore.abortWait();
 
         if (mVideoThread != null) {
             mVideoThread.determine();
@@ -399,11 +400,13 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
                 else //video stream end
                 {
                     Log.i(TAG,"video stream not ready or not right.");
-                    mVideoEncoder.drainEncoder(true);
+                    mVideoEncoder.drainEncoder(false);
                     break;
                 }
 
             }
+
+            mVideoEncoder.drainEncoder(true);
 
             getVideoRender().onVideoDestroy();
             releaseEGL();
@@ -495,6 +498,7 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 
             }
 
+            mAudioEncoder.drainEncoder(true);
             Log.d(TAG, "MediaStat AUDIO encoder cost=" + (System.currentTimeMillis() - begin));
         }
 

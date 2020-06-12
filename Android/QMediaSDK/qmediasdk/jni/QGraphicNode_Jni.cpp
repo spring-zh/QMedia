@@ -206,7 +206,7 @@ NATIVE_FUNCTION(jobject , native_1getContentSize)(JNIEnv *env, jobject thiz) {
     if (node_ptr) {
         contentSize = (*node_ptr)->getContentSize();
     }
-    return J4AC_com_qmedia_qmediasdk_QCommon_QVector__QVector2(env, contentSize.width, contentSize.height);
+    return J4AC_com_qmedia_qmediasdk_QCommon_QSize__QSize(env, contentSize.width, contentSize.height);
 }
 
 NATIVE_FUNCTION(void , native_1setContentSize)(JNIEnv *env, jobject thiz, jobject jcontentSize) {
@@ -214,8 +214,8 @@ NATIVE_FUNCTION(void , native_1setContentSize)(JNIEnv *env, jobject thiz, jobjec
             env, thiz));
 
     if (node_ptr) {
-        GraphicCore::Size contentSize = {J4AC_com_qmedia_qmediasdk_QCommon_QVector__v0__get(env, jcontentSize),
-                                J4AC_com_qmedia_qmediasdk_QCommon_QVector__v1__get(env, jcontentSize)};
+        GraphicCore::Size contentSize = {J4AC_com_qmedia_qmediasdk_QCommon_QSize__width__get(env, jcontentSize),
+                                         J4AC_com_qmedia_qmediasdk_QCommon_QSize__height__get(env, jcontentSize)};
         (*node_ptr)->setContentSize(contentSize);
     }
 }
