@@ -11,8 +11,8 @@
 #import "OpenGL/CCEAGLView-ios.h"
 #import "OpenGL/CCDirectorCaller-ios.h"
 #import "QGLContext.h"
-#import "IOSFastTexture.h"
-#import "IOSFastTextureDrawable.h"
+#import "IOSTexture.h"
+#import "IOSGLTextureDrawable.h"
 
 @interface QPlayerView () <GLRenderer>
 @end
@@ -25,8 +25,9 @@
     bool _bStart;
     bool _updateView;
     CGSize _viewSize;
-    IOSFastTexture *_iosTexture;
-    IOSFastTextureDrawable *_textureDrawable;
+    CGSize _targetSize;
+    id<IOSTexture> _iosTexture;
+    IOSGLTextureDrawable *_textureDrawable;
 }
 
 - (void)internalInit
@@ -48,6 +49,8 @@
     _objView =subView ;
     _viewSize.width = subView.getWidth;
     _viewSize.height = subView.getHeight;
+    _targetSize.width = 0;
+    _targetSize.height = 0;
     _bStart = false;
 }
 
@@ -87,16 +90,18 @@
     if (_bStart || _updateView) {
         _updateView = false;
         
-        if (_iosTexture) {
-            [IOSFastTextureDrawable savePrevStatus];
-            if(!_textureDrawable)
-                _textureDrawable = [[IOSFastTextureDrawable alloc] initWithTexture:_iosTexture];
+        if (_targetSize.width > 0 && _targetSize.height > 0) {
+            [IOSGLTextureDrawable savePrevStatus];
+            if(!_textureDrawable) {
+                _iosTexture = [[IOSGeneralTexture alloc] initWithSize:_targetSize];
+                _textureDrawable = [[IOSGLTextureDrawable alloc] initWithTexture:_iosTexture];
+            }
             [_textureDrawable useAsFrameBuffer];
             [_videoRender onVideoRender:-1];
-            [IOSFastTextureDrawable loadPrevStatus];
+            [IOSGLTextureDrawable loadPrevStatus];
             glFinish();
             glDisable(GL_DEPTH_TEST);
-            [_textureDrawable draw: QFilpModeV];
+            [_textureDrawable draw: QFilpV];
         }
         else
             [_videoRender onVideoRender:-1];
@@ -170,8 +175,9 @@
 
 - (bool)initVideo:(QVideoDescribe*)describe
 {
-    _iosTexture = [[IOSFastTexture alloc] initWithContext:_objView.context size:CGSizeMake(describe.width, describe.height)];
+//    _iosTexture = [[IOSFastTexture alloc] initWithContext:_objView.context size:CGSizeMake(describe.width, describe.height)];
     _describe = describe;
+    _targetSize = CGSizeMake(describe.width, describe.height);
     _updateView = true;
     return true;
 }

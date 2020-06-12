@@ -6,7 +6,58 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
-#import "IOSFastTexture.h"
+#import "IOSTexture.h"
+
+@implementation IOSGeneralTexture {
+    GLuint _glTexid;
+    GLenum _glTexTarget;
+    CGSize _size;
+}
+
+- (instancetype)initWithSize:(CGSize)size {
+    if (self = [super init]) {
+        _size = size;
+        _glTexTarget = GL_TEXTURE_2D;
+        glGenTextures(1, &_glTexid);
+        glBindTexture(_glTexTarget, _glTexid);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+        glTexImage2D(_glTexTarget, 0, GL_RGBA, size.width, size.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    }
+    return self;
+}
+
+- (void)dealloc
+{
+    NSLog(@"%@ dealloc ", self);
+    if(_glTexid) {
+        glDeleteTextures(1, &_glTexid);
+    }
+}
+
+- (GLuint)glTexid
+{
+    return _glTexid;
+}
+
+- (GLenum)glTexTarget
+{
+    return _glTexTarget;
+}
+
+- (size_t)width
+{
+    return _size.width;
+}
+
+- (size_t)height
+{
+    return _size.height;
+}
+
+@end
 
 @implementation IOSFastTexture {
     EAGLContext* _context;

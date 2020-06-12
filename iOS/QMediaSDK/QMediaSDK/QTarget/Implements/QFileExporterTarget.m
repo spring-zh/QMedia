@@ -10,7 +10,7 @@
 #import <UIKit/UIKit.h>
 #import <AVFoundation/AVFoundation.h>
 #import "QGLContext.h"
-#import "IOSFastTexture.h"
+#import "IOSTexture.h"
 
 dispatch_queue_attr_t getDefaultQueueAttribute(void)
 {
@@ -71,6 +71,7 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
 //    GraphicCore::ShaderProgram _shaderProgram;
     IOSFastTexture* _encodeTexture;
     GLuint _framebuffer;
+    GLuint _movieRenderbuffer;
     
     float _video_duration;
     int64_t _audio_write_bytes;
@@ -372,6 +373,12 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
  
         glGenFramebuffers(1, &_framebuffer);
         glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
+        if(! [QGLContext supportsFastTextureUpload]) {
+            glGenRenderbuffers(1, &_movieRenderbuffer);
+            glBindRenderbuffer(GL_RENDERBUFFER, _movieRenderbuffer);
+            glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, _videoDesc.width, _videoDesc.height);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _movieRenderbuffer);
+        }
         
         [_videoRender onVideoCreate];
         
@@ -393,6 +400,7 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
          glBindFramebuffer(GL_FRAMEBUFFER, 0);
 //             [_encodeTexture releaseTexture];
          _encodeTexture = nil;
+         if(_movieRenderbuffer)glDeleteRenderbuffers(1, &_movieRenderbuffer);
          _glContext = nil;
          [EAGLContext setCurrentContext:nil];
 
@@ -402,6 +410,7 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
 - (bool)startVideoRecording {
     __block BOOL bRet = TRUE;
     void(^videoInputReadyCallback)(void) = ^{
+        _videoEncodingIsFinished = false;
         _videoCbQueue = dispatch_queue_create("com.QMedia.MovieWriter.videoReadingQueue", getDefaultQueueAttribute());
         [_writerVideoInput requestMediaDataWhenReadyOnQueue:_videoCbQueue usingBlock:^{
             NSLog(@"video requestMediaDataWhenReadyOnQueue begin");
@@ -411,7 +420,6 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
                 }
             }
         }];
-        _videoEncodingIsFinished = false;
     };
     
     runSynchronously(_glContextQueue, _glContextQueueKey, ^{
@@ -424,6 +432,7 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
 - (bool)startAudioRecording {
     __block BOOL bRet = TRUE;
     void(^audioInputReadyCallback)(void) = ^{
+        _audioEncodingIsFinished = false;
         _audioCbQueue = dispatch_queue_create("com.QMedia.MovieWriter.audioReadingQueue", getDefaultQueueAttribute());
            [_writerAudioInput requestMediaDataWhenReadyOnQueue:_audioCbQueue usingBlock:^{
                NSLog(@"audio requestMediaDataWhenReadyOnQueue begin");
@@ -433,7 +442,6 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
                    }
                }
            }];
-        _audioEncodingIsFinished = false;
     };
     
     runSynchronously(_glContextQueue, _glContextQueueKey, ^{
@@ -529,29 +537,47 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
 - (BOOL)handleVideoRequest
 {
     __block bool bRet = false;
+    __block CVPixelBufferRef renderTarget = NULL;
     runSynchronously(_glContextQueue, _glContextQueueKey, ^{
         if(!_writerVideoInput.readyForMoreMediaData)
             return;
         [_glContext useAsCurrentContext];
         glBindFramebuffer(GL_FRAMEBUFFER, _framebuffer);
-        _encodeTexture = [[IOSFastTexture alloc] initWithContext:_glContext size:CGSizeMake(_videoDesc.width, _videoDesc.height) pool:[_writerPixelBufferInput pixelBufferPool]];
-
-        glBindTexture([_encodeTexture glTexTarget], [_encodeTexture glTexid]);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-
-        glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, [_encodeTexture glTexid],0);
+        if([QGLContext supportsFastTextureUpload]) {
+            _encodeTexture = [[IOSFastTexture alloc] initWithContext:_glContext size:CGSizeMake(_videoDesc.width, _videoDesc.height) pool:[_writerPixelBufferInput pixelBufferPool]];
+            
+            glBindTexture([_encodeTexture glTexTarget], [_encodeTexture glTexid]);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+            glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+            
+            glFramebufferTexture2D(GL_FRAMEBUFFER,GL_COLOR_ATTACHMENT0,GL_TEXTURE_2D, [_encodeTexture glTexid],0);
+            
+            glViewport(0, 0, _encodeTexture.width, _encodeTexture.height);
+        }else {
+            //TODO: bind renderbuffer
+            glBindRenderbuffer(GL_RENDERBUFFER, _movieRenderbuffer);
+            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _movieRenderbuffer);
+            glViewport(0, 0, _videoDesc.width, _videoDesc.height);
+        }
 
         const int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE)
         {
             NSAssert(NO,@"glCheckFramebufferStatus: %d", status);
         }
-
-        glViewport(0, 0, _encodeTexture.width, _encodeTexture.height);
         
         bRet = [_videoRender onVideoRender:_video_pts];
         glFinish();
+        
+        
+        if(![QGLContext supportsFastTextureUpload]) {
+        
+            CVPixelBufferPoolCreatePixelBuffer (kCFAllocatorDefault, [_writerPixelBufferInput pixelBufferPool], &renderTarget);
+            CVPixelBufferLockBaseAddress(renderTarget, 0);
+            GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(renderTarget);
+            glReadPixels(0, 0, _videoDesc.width, _videoDesc.height, GL_RGBA, GL_UNSIGNED_BYTE, pixelBufferData);
+            CVPixelBufferUnlockBaseAddress(renderTarget, 0);
+        }
         
         [EAGLContext setCurrentContext:nil];
     });
@@ -560,7 +586,21 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
         const int32_t preferredTimescale = 1000;
         CMTime frameTime = CMTimeMake(_video_pts, preferredTimescale);
         _video_pts += _video_duration;
-        if (![_writerPixelBufferInput appendPixelBuffer:_encodeTexture.pixelBuffer withPresentationTime:frameTime]){
+        
+        bool bWrite = false;
+        if([QGLContext supportsFastTextureUpload]) {
+            bWrite = [_writerPixelBufferInput appendPixelBuffer:_encodeTexture.pixelBuffer withPresentationTime:frameTime];
+        }else if(renderTarget != NULL){
+//            CVPixelBufferRef renderTarget;
+//            CVPixelBufferPoolCreatePixelBuffer (kCFAllocatorDefault, [_writerPixelBufferInput pixelBufferPool], &renderTarget);
+//            CVPixelBufferLockBaseAddress(renderTarget, 0);
+//            GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(renderTarget);
+//            glReadPixels(0, 0, _videoDesc.width, _videoDesc.height, GL_RGBA, GL_UNSIGNED_BYTE, pixelBufferData);
+//            CVPixelBufferUnlockBaseAddress(renderTarget, 0);
+            bWrite = [_writerPixelBufferInput appendPixelBuffer:renderTarget withPresentationTime:frameTime];
+            CVPixelBufferRelease(renderTarget);
+        }
+        if (!bWrite){
             NSLog(@"Problem appending pixel buffer at time: %@", CMTimeCopyDescription(kCFAllocatorDefault, frameTime));
             bRet = false;
         }else

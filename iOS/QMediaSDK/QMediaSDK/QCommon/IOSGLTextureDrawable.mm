@@ -1,12 +1,12 @@
 //
-//  IOSFastTextureDrawable.m
+//  IOSGLTextureDrawable.m
 //  QMediaSDK
 //
 //  Created by spring on 20/05/2017.
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
-#import "IOSFastTextureDrawable.h"
+#import "IOSGLTextureDrawable.h"
 #include "GraphicCore/opengl/Drawable2D.h"
 #include "GraphicCore/opengl/ShaderProgram.h"
 
@@ -57,13 +57,13 @@ static GLfloat clearColor[4];
 static int prev_view_port[4];
 static GLint prev_fbo;
 
-@implementation IOSFastTextureDrawable {
-    IOSFastTexture* _iosTexture;
+@implementation IOSGLTextureDrawable {
+    id<IOSTexture> _iosTexture;
     GLuint _glFbId;
     GraphicCore::ShaderProgram _shaderProgram;
 }
 
-- (instancetype)initWithTexture:(IOSFastTexture*)iosTexture
+- (instancetype)initWithTexture:(id<IOSTexture>)iosTexture
 {
     if (self = [super init]) {
         _iosTexture = iosTexture;
@@ -133,9 +133,9 @@ static GLint prev_fbo;
 - (bool)draw:(QFilpMode)filpMode{
     _shaderProgram.setUniformValue("inputImageTexture", (int)_iosTexture.glTexid);
     _shaderProgram.setVertexAttribValue("position", 8, Drawable2D::RECTANGLE_COORDS);
-    if (filpMode == QFilpModeH) {
+    if (filpMode == QFilpH) {
         _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS_FLIPH);
-    }else if (filpMode == QFilpModeV)
+    }else if (filpMode == QFilpV)
         _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS_FLIPV);
     else
         _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS);
