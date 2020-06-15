@@ -18,7 +18,7 @@ GRAPHICCORE_BEGIN
 class ImageNode : public RenderNode{
 public:
     explicit ImageNode(std::string filePath);
-    explicit ImageNode(uint8_t * iamge_buffer);
+    explicit ImageNode(uint8_t * iamge_buffer, int image_size);
     virtual ~ImageNode() = default;
 
     int getWidth() { return _width; }

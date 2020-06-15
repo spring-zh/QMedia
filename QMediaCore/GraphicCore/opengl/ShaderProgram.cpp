@@ -283,15 +283,15 @@ void ShaderProgram::setIndicesValue(IndicesArray &value)
     _elementIndices = std::move(value);
 }
 
-bool ShaderProgram::createProgram(const char* vshader, const char* fshader)
+bool ShaderProgram::createProgram(const char* vertex_shader, const char* fragment_shader)
 {
-    _vShader = LoadShader(GL_VERTEX_SHADER,vshader);
+    _vShader = LoadShader(GL_VERTEX_SHADER,vertex_shader);
     if (_vShader == 0) {
 //        logerror("LoadShader GL_VERTEX_SHADER faild");
         glCheckError();
         return false;
     }
-    _fShader = LoadShader(GL_FRAGMENT_SHADER,fshader);
+    _fShader = LoadShader(GL_FRAGMENT_SHADER,fragment_shader);
     if (_fShader == 0) {
 //        logerror("LoadShader GL_FRAGMENT_SHADER faild");
         return false;
@@ -368,33 +368,6 @@ bool ShaderProgram::use() {
     }
     return true;
 }
-
-#if 0
-bool ShaderProgram::setProgramLocations()
-{
-    if (use()){
-        for (auto& item : _uniform_maps) {
-            auto &binder = item.second._glbinder;
-            binder._location = glGetUniformLocation(_program, item.first.c_str());
-        }
-
-        for (auto& item : _attrib_maps){
-            auto &binder = item.second._glbinder;
-            binder._location = glGetAttribLocation(_program, item.first.c_str());
-//            if (_enable_vbo){
-//                glGenBuffers(1,&binder._buffer);
-//                glBindBuffer(GL_ARRAY_BUFFER,binder._buffer);
-//                glBufferData(GL_ARRAY_BUFFER, item.second._value._buffer.size() * sizeof(float), item.second._value._buffer.data(),GL_STATIC_DRAW);
-//                int vec_count = 3;
-//                if(item.second._type == VertexAttrib::TEXCOORD)
-//                    vec_count = 2;
-//                glVertexAttribPointer(binder._location, vec_count , GL_FLOAT, GL_TRUE, vec_count * sizeof(float), 0);
-//            }
-        }
-    }
-    return true;
-}
-#endif
 
 bool ShaderProgram::beginDraw()
 {

@@ -101,7 +101,22 @@ GRAPHICCORE_BEGIN
 #include "ccShader_LayerRadialGradient.frag"
 
 
+const char* base2dTexture_vert = R"(
+attribute vec4 a_position;
+attribute vec4 a_texCoord;
 
+#ifdef GL_ES
+varying highp vec2 textureCoordinate;
+#else
+varying vec2 textureCoordinate;
+#endif
+
+void main()
+{
+    gl_Position = a_position;
+    textureCoordinate = a_texCoord.xy;
+}
+)";
 
 const char* defaultPositionTexture_vert = R"(
 uniform mat4 uMVPMatrix;
@@ -110,7 +125,7 @@ attribute vec4 a_position;
 attribute vec4 a_texCoord;
 
 #ifdef GL_ES
-varying mediump vec2 v_texCoord;
+varying highp vec2 v_texCoord;
 #else
 varying vec2 v_texCoord;
 #endif
@@ -124,7 +139,7 @@ void main()
 
 const char* defaultPositionTexture_frag = R"(
 #ifdef GL_ES
-varying mediump vec2 v_texCoord;
+varying highp vec2 v_texCoord;
 #else
 varying vec2 v_texCoord;
 #endif

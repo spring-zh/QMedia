@@ -19,7 +19,7 @@ GRAPHICCORE_BEGIN
 
 class GlBinder{
 public:
-    GlBinder():_location(0),_buffer(0){}
+    GlBinder():_location(-1),_buffer(0){}
     GLint _location;
     GLuint _buffer;
 };
@@ -93,6 +93,8 @@ public:
 
     class Value{
     public:
+        Value():_texture(0),_textureTarget(GL_TEXTURE_2D),_int_val(0),_float_val(0) {
+        }
         void copyForm(const float * buffer, int count){
             _floatOrmatrix_array.resize(count);
             memcpy(_floatOrmatrix_array.data(), buffer, count * sizeof(float));
@@ -103,7 +105,7 @@ public:
         }
 
         unsigned int _texture;
-        GLenum _textureTarget = GL_TEXTURE_2D;
+        GLenum _textureTarget;
         int _int_val;
         std::vector<int> _int_array;
         float _float_val;
@@ -142,9 +144,9 @@ public:
     int draw(DrawMode mode, int count);
     int drawRect();
 
-    bool createProgram(const char* vshader, const char* fshader);
+    bool createProgram(const char* vertex_shader, const char* fragment_shader);
     void releaseProgram();
-//    bool setProgramLocations();
+    
     bool use();
 
     void setBlendFunc(BlendFunc blendFunc) { _blendFunc = blendFunc; }

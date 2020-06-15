@@ -78,8 +78,11 @@ void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Ma
             case Drawable2D::FlipV:
                 texMatrix = Drawable2D::MtxFlipV;
                 break;
+            default:
+                break;
         }
 
+        //TODO: check crop
         Rect cropRect = node->getCrop();
         if (! cropRect.size.equals(Size::ZERO)) {
             //TODO: need crop

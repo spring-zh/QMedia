@@ -42,38 +42,32 @@ Image::~Image()
     _buffer = NULL;
 }
 
-Image* Image::createFromFile(FILE *filep)
+Image* Image::createFromFile(const char *filename)
 {
     Image* image = nullptr;
     int w,h,n;
-    stbi_uc *idata = stbi_load_from_file(filep, &w, &h, &n, 4);
+    stbi_uc *idata = stbi_load(filename, &w, &h, &n, 4);
     n = 4;
-    if (idata == NULL) {
-        return nullptr;
+    if (idata != NULL) {
+        image = new /*(std::nothrow)*/ Image;
+        image->init(idata, w, h, n);
     }
-    image = new /*(std::nothrow)*/ Image;
-    image->_width = w;
-    image->_height = h;
-    switch (n) {
-        case STBI_grey:
-            image->_format = LUMINANCE;
-            break;
-        case STBI_grey_alpha:
-            image->_format = LUMINANCE_ALPHA;
-            break;
-        case STBI_rgb:
-            image->_format = RGB;
-            break;
-        case STBI_rgb_alpha:
-            image->_format = RGBA;
-            break;
-        default://STBI_default
-            break;
-    }
-    image->_buffer = idata;
-    image->_create_mode = 1;
     return image;
 }
+
+Image* Image::createFromBuffer(const uint8_t* buffer, int buffer_size)
+{
+    Image* image = nullptr;
+    int w,h,n;
+    stbi_uc *idata = stbi_load_from_memory(buffer, buffer_size, &w, &h, &n, 4);
+    n = 4;
+    if (idata != NULL) {
+        image = new /*(std::nothrow)*/ Image;
+        image->init(idata, w, h, n);
+    }
+    return image;
+}
+
 Image* Image::createEmpty(Format format, int width, int height)
 {
     Image* image = new /*(std::nothrow)*/ Image;
@@ -102,4 +96,29 @@ Image* Image::createEmpty(Format format, int width, int height)
     image->_buffer = malloc(width * height * pixel_bytes);
     return image;
 }
+
+bool Image::init(uint8_t* buffer, int width, int height, int count) {
+    _width = width;
+    _height = height;
+    switch (count) {
+        case STBI_grey:
+            _format = LUMINANCE;
+            break;
+        case STBI_grey_alpha:
+            _format = LUMINANCE_ALPHA;
+            break;
+        case STBI_rgb:
+            _format = RGB;
+            break;
+        case STBI_rgb_alpha:
+            _format = RGBA;
+            break;
+        default://STBI_default
+            break;
+    }
+    _buffer = buffer;
+    _create_mode = 1;
+    return true;
+}
+
 GRAPHICCORE_END

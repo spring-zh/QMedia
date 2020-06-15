@@ -18,6 +18,7 @@ public class QImageNode extends QGraphicNode {
         this.inAsset = inAsset;
     }
 
+    //get image size
     public QSize getSize() {
         return native_getSize();
     }

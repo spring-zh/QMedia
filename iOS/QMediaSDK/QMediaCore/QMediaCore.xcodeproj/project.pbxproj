@@ -10,6 +10,7 @@
 		6F049348244B1BDC00F8B73B /* EditorExporter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F049347244B1BDC00F8B73B /* EditorExporter.cpp */; };
 		6F187494248DD402009C4B94 /* GcImageNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F187492248DD402009C4B94 /* GcImageNode.cpp */; };
 		6F1874A32490DFF3009C4B94 /* Texture2DDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F1874A12490DFF3009C4B94 /* Texture2DDrawer.cpp */; };
+		6F224A1D249385DD000244FF /* PolarPixellateFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A1B249385DD000244FF /* PolarPixellateFilter.cpp */; };
 		6F3720702469896800356951 /* speex_resampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F37206F2469896800356951 /* speex_resampler.c */; };
 		6F45922A2461ADE800FABEAF /* QPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4592292461ADE800FABEAF /* QPlayer.cpp */; };
 		6F511872240F9BD50013BC9E /* TDStretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117D9240F9BD40013BC9E /* TDStretch.cpp */; };
@@ -37,7 +38,7 @@
 		6F637ECB23D0477A0004E053 /* Vec2.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E7D23D047790004E053 /* Vec2.cpp */; };
 		6F637ECC23D0477A0004E053 /* Vec3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E7F23D047790004E053 /* Vec3.cpp */; };
 		6F637ECD23D0477A0004E053 /* CCAffineTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8023D047790004E053 /* CCAffineTransform.cpp */; };
-		6F637ECE23D0477A0004E053 /* GcFilter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8323D047790004E053 /* GcFilter.cpp */; };
+		6F637ECE23D0477A0004E053 /* FilterFactory.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8323D047790004E053 /* FilterFactory.cpp */; };
 		6F637ECF23D0477A0004E053 /* GcAnimaNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8423D047790004E053 /* GcAnimaNode.cpp */; };
 		6F637ED023D0477A0004E053 /* GcLayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8523D047790004E053 /* GcLayer.cpp */; };
 		6F637ED123D0477A0004E053 /* GcScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8623D047790004E053 /* GcScene.cpp */; };
@@ -82,6 +83,8 @@
 		6F187493248DD402009C4B94 /* GcImageNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcImageNode.h; sourceTree = "<group>"; };
 		6F1874A12490DFF3009C4B94 /* Texture2DDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DDrawer.cpp; sourceTree = "<group>"; };
 		6F1874A22490DFF3009C4B94 /* Texture2DDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture2DDrawer.h; sourceTree = "<group>"; };
+		6F224A1B249385DD000244FF /* PolarPixellateFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolarPixellateFilter.cpp; sourceTree = "<group>"; };
+		6F224A1C249385DD000244FF /* PolarPixellateFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PolarPixellateFilter.h; sourceTree = "<group>"; };
 		6F372062246934B400356951 /* AudioClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioClock.h; sourceTree = "<group>"; };
 		6F37206C2469896800356951 /* speex_stack_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_stack_alloc.h; sourceTree = "<group>"; };
 		6F37206D2469896800356951 /* speex_arch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_arch.h; sourceTree = "<group>"; };
@@ -158,8 +161,8 @@
 		6F637E7F23D047790004E053 /* Vec3.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Vec3.cpp; sourceTree = "<group>"; };
 		6F637E8023D047790004E053 /* CCAffineTransform.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CCAffineTransform.cpp; sourceTree = "<group>"; };
 		6F637E8123D047790004E053 /* MathUtilNeon.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MathUtilNeon.inl; sourceTree = "<group>"; };
-		6F637E8223D047790004E053 /* GcFilter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcFilter.h; sourceTree = "<group>"; };
-		6F637E8323D047790004E053 /* GcFilter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GcFilter.cpp; sourceTree = "<group>"; };
+		6F637E8223D047790004E053 /* FilterFactory.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterFactory.h; sourceTree = "<group>"; };
+		6F637E8323D047790004E053 /* FilterFactory.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FilterFactory.cpp; sourceTree = "<group>"; };
 		6F637E8423D047790004E053 /* GcAnimaNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GcAnimaNode.cpp; sourceTree = "<group>"; };
 		6F637E8523D047790004E053 /* GcLayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GcLayer.cpp; sourceTree = "<group>"; };
 		6F637E8623D047790004E053 /* GcScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GcScene.cpp; sourceTree = "<group>"; };
@@ -296,6 +299,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		6F224A17249365D6000244FF /* texture_filter */ = {
+			isa = PBXGroup;
+			children = (
+				6F224A1B249385DD000244FF /* PolarPixellateFilter.cpp */,
+				6F224A1C249385DD000244FF /* PolarPixellateFilter.h */,
+				6F637E8323D047790004E053 /* FilterFactory.cpp */,
+				6F637E8223D047790004E053 /* FilterFactory.h */,
+			);
+			path = texture_filter;
+			sourceTree = "<group>";
+		};
 		6F5117D7240F9BD40013BC9E /* Thirdparty */ = {
 			isa = PBXGroup;
 			children = (
@@ -370,6 +384,7 @@
 				6F637E8823D047790004E053 /* base */,
 				6F637E6623D047790004E053 /* math */,
 				6F637E8C23D047790004E053 /* opengl */,
+				6F224A17249365D6000244FF /* texture_filter */,
 				6F637E6523D047790004E053 /* GcNode.h */,
 				6F637E6323D047790004E053 /* GcNode.cpp */,
 				6F637E6223D047790004E053 /* GcAnimaNode.h */,
@@ -382,8 +397,6 @@
 				6F187493248DD402009C4B94 /* GcImageNode.h */,
 				6F637E8623D047790004E053 /* GcScene.cpp */,
 				6F637E6423D047790004E053 /* GcScene.h */,
-				6F637E8323D047790004E053 /* GcFilter.cpp */,
-				6F637E8223D047790004E053 /* GcFilter.h */,
 				6F637E8523D047790004E053 /* GcLayer.cpp */,
 				6F637E8723D047790004E053 /* GcLayer.h */,
 			);
@@ -674,6 +687,7 @@
 				6F637EC723D0477A0004E053 /* CCGeometry.cpp in Sources */,
 				6F637ECF23D0477A0004E053 /* GcAnimaNode.cpp in Sources */,
 				6F511874240F9BD50013BC9E /* InterpolateShannon.cpp in Sources */,
+				6F224A1D249385DD000244FF /* PolarPixellateFilter.cpp in Sources */,
 				6F637ED023D0477A0004E053 /* GcLayer.cpp in Sources */,
 				6F5118C1240F9CCB0013BC9E /* Logger.cpp in Sources */,
 				6F637ED223D0477A0004E053 /* ColorTypes.cpp in Sources */,
@@ -709,7 +723,7 @@
 				6F637ECA23D0477A0004E053 /* Vec4.cpp in Sources */,
 				6F637EE323D9BF1D0004E053 /* ResamplerSpeex.cpp in Sources */,
 				6F637EE023D6AB8B0004E053 /* AudioProcess.cpp in Sources */,
-				6F637ECE23D0477A0004E053 /* GcFilter.cpp in Sources */,
+				6F637ECE23D0477A0004E053 /* FilterFactory.cpp in Sources */,
 				6F637ED423D0477A0004E053 /* Drawable2D.cpp in Sources */,
 				6FF02929221D01C20011E6CB /* MediaGraphicChannel.cpp in Sources */,
 				6F51187F240F9BD50013BC9E /* SoundTouch.cpp in Sources */,

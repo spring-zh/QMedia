@@ -29,6 +29,9 @@ set(GRAPHIC_CORE_HEADER
         GraphicCore/opengl/FrameBuffer.h
         GraphicCore/opengl/Texture2DDrawer.h
 
+        GraphicCore/texture_filter/FilterFactory.h
+        GraphicCore/texture_filter/PolarPixellateFilter.h
+
         GraphicCore/GcScene.h
         GraphicCore/GcNode.h
         GraphicCore/GcAnimaNode.h
@@ -36,7 +39,6 @@ set(GRAPHIC_CORE_HEADER
         GraphicCore/GcImageNode.h
         GraphicCore/GcDuplicateNode.h
         GraphicCore/GcLayer.h
-        GraphicCore/GcFilter.h
     )
 
 set(GRAPHIC_CORE_SRC
@@ -61,6 +63,9 @@ set(GRAPHIC_CORE_SRC
         GraphicCore/opengl/FrameBuffer.cpp
         GraphicCore/opengl/Texture2DDrawer.cpp
 
+        GraphicCore/texture_filter/FilterFactory.cpp
+        GraphicCore/texture_filter/PolarPixellateFilter.cpp
+
         GraphicCore/GcScene.cpp
         GraphicCore/GcNode.cpp
         GraphicCore/GcAnimaNode.cpp
@@ -68,5 +73,4 @@ set(GRAPHIC_CORE_SRC
         GraphicCore/GcImageNode.cpp
         GraphicCore/GcDuplicateNode.cpp
         GraphicCore/GcLayer.cpp
-        GraphicCore/GcFilter.cpp
     )
