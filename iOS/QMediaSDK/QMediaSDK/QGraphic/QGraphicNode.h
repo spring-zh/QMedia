@@ -12,13 +12,31 @@
 extern "C" {
 #endif
 
-//typedef QVector QColor4;
-//#define QColorMaker QVectorV4
-
 typedef struct QColor4 {
     float r, g, b, a;
 }QColor4;
-QColor4 QColorMaker(float r, float g, float b, float a);
+QColor4 QColorMake(float r, float g, float b, float a);
+
+// for blend
+extern unsigned Blend_ZERO;
+extern unsigned Blend_ONE;
+extern unsigned Blend_SRC_COLOR;
+extern unsigned Blend_ONE_MINUS_SRC_COLOR;
+extern unsigned Blend_SRC_ALPHA;
+extern unsigned Blend_ONE_MINUS_SRC_ALPHA;
+extern unsigned Blend_DST_ALPHA;
+extern unsigned Blend_ONE_MINUS_DST_ALPHA;
+
+extern unsigned Blend_DST_COLOR;
+extern unsigned Blend_ONE_MINUS_DST_COLOR;
+extern unsigned Blend_SRC_ALPHA_SATURATE;
+
+typedef struct QBlendFunc {
+    unsigned src, dst;
+}QBlendFunc;
+
+extern QBlendFunc QBlendDisable;
+QBlendFunc QBlendFuncMake(unsigned src, unsigned dst);
 
 #ifdef __cplusplus
 }
@@ -62,6 +80,7 @@ QColor4 QColorMaker(float r, float g, float b, float a);
 @property (nonatomic) float scaleY;
 @property (nonatomic) float scaleZ;
 
+//display size
 @property (nonatomic) CGSize contentSize;
 @property (nonatomic) CGPoint position;
 @property (nonatomic) float positionZ;
@@ -72,8 +91,13 @@ QColor4 QColorMaker(float r, float g, float b, float a);
  */
 @property (nonatomic) CGPoint anchorPoint;
 
-//the mix color, only effective for XMLayer
+//the mix color
 @property (nonatomic) QColor4 color4;
 @property (nonatomic) float alpha;
+
+//texture crop (0.0 ~ 1.0)
+@property (nonatomic) QVector crop;
+
+@property (nonatomic) QBlendFunc blendFunc;
 
 @end

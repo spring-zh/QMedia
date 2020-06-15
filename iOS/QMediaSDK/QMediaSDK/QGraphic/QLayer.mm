@@ -26,7 +26,7 @@
 - (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner uid:(NSString*)uid
 {
     _layer = GraphicCore::LayerRef(new GraphicCore::Layer(GraphicCore::Size(size.width,size.height)));
-    _bkColor = QColorMaker(0, 0, 0, 0);
+    _bkColor = QColorMake(0, 0, 0, 0);
     return (self = [super initWithNode:_layer combiner:combiner uid:uid]);
 }
 
@@ -40,7 +40,7 @@
 
 - (QColor4)bkColor{
     GraphicCore::Color4F color = _layer->getBKColor();
-    return QColorMaker(color.r, color.g, color.b, color.a);
+    return QColorMake(color.r, color.g, color.b, color.a);
 }
 - (void)setBkColor:(QColor4)bkColor{
     _bkColor = bkColor;

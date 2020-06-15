@@ -204,6 +204,23 @@ public class QGraphicNode {
         native_setAlpha(alpha);
     }
 
+    public QVector getCrop() {
+        return native_getCrop();
+    }
+    public void setCrop(QVector crop) {
+        this.crop = crop;
+        native_setCrop(crop);
+    }
+
+    public QBlendFunc getBlendFunc() {
+        return native_getBlendFunc();
+    }
+
+    public void setBlendFunc(QBlendFunc blendFunc) {
+        this.blendFunc = blendFunc;
+        native_setBlendFunc(blendFunc);
+    }
+
     //copy parameters from other GraphicNode
     public void copyForm(QGraphicNode from) {
         this.id = from.id;
@@ -219,6 +236,8 @@ public class QGraphicNode {
         setScaleY(from.scaleY);
         setScaleZ(from.scaleZ);
         setVisible(from.visible);
+        setCrop(from.crop);
+        setBlendFunc(from.blendFunc);
         setRenderRange(from.getRenderRange());
 
         animators.clear();
@@ -259,6 +278,8 @@ public class QGraphicNode {
     QVector anchorPoint = new QVector(0,0);;
     QVector color4 = new QVector(1,1,1,1);;
     float alpha = 1;
+    QVector crop = new QVector(0,0,0,0);
+    QBlendFunc blendFunc = QBlendFunc.DISABLE;
 
 
     //naitve
@@ -284,40 +305,37 @@ public class QGraphicNode {
     protected native  void native_setRotation(float rotation) ;
 
     protected native float native_getScaleX() ;
-
     protected native void native_setScaleX(float scaleX) ;
 
     protected native float native_getScaleY() ;
-
     protected native void native_setScaleY(float scaleY);
 
     protected native float native_getScaleZ() ;
-
     protected native void native_setScaleZ(float scaleZ);
 
     protected native QSize native_getContentSize() ;
-
     protected native void native_setContentSize(QSize contentSize) ;
 
     protected native QVector native_getPosition() ;
-
     protected native void native_setPosition(QVector position) ;
 
     protected native float native_getPositionZ();
-
     protected native void native_setPositionZ(float positionZ);
 
     protected native QVector native_getAnchorPoint() ;
-
     protected native void native_setAnchorPoint(QVector anchorPoint) ;
 
     protected native QVector native_getColor4() ;
-
     protected native void native_setColor4(QVector color4);
 
     protected native float native_getAlpha();
-
     protected native void native_setAlpha(float alpha) ;
+
+    protected native QVector native_getCrop();
+    protected native void native_setCrop(QVector crop) ;
+
+    protected native QBlendFunc native_getBlendFunc() ;
+    protected native void native_setBlendFunc(QBlendFunc blendFunc);
 
     protected native void native_release();
     //native ptr

@@ -9,17 +9,39 @@
 #import "QGraphicNode_internal.h"
 #import "QCombiner_internal.h"
 
+
+QColor4 QColorMake(float r, float g, float b, float a) {
+    QColor4 color4;
+    color4.r = r; color4.g = g; color4.b = b; color4.a = a;
+    return color4;
+}
+
+//blend
+unsigned Blend_ZERO = GL_ZERO;
+unsigned Blend_ONE = GL_ONE;
+unsigned Blend_SRC_COLOR = GL_SRC_COLOR;
+unsigned Blend_ONE_MINUS_SRC_COLOR = GL_ONE_MINUS_SRC_COLOR;
+unsigned Blend_SRC_ALPHA = GL_SRC_ALPHA;
+unsigned Blend_ONE_MINUS_SRC_ALPHA = GL_ONE_MINUS_SRC_ALPHA;
+unsigned Blend_DST_ALPHA = GL_DST_ALPHA;
+unsigned Blend_ONE_MINUS_DST_ALPHA = GL_ONE_MINUS_DST_ALPHA;
+
+unsigned Blend_DST_COLOR = GL_DST_COLOR;
+unsigned Blend_ONE_MINUS_DST_COLOR = GL_ONE_MINUS_DST_COLOR;
+unsigned Blend_SRC_ALPHA_SATURATE = GL_SRC_ALPHA_SATURATE;
+
+QBlendFunc QBlendFuncMake(unsigned src, unsigned dst) {
+    QBlendFunc blendFunc = {src , dst};
+    return blendFunc;
+}
+
+QBlendFunc QBlendDisable = {GL_ONE, GL_ZERO};
+
 using GraphicCore::AnimaNode;
 
 @interface QNodeAnimator(internal)
 @property (nonatomic, readonly) AnimaNode::Animator* native;
 @end
-
-QColor4 QColorMaker(float r, float g, float b, float a) {
-    QColor4 color4;
-    color4.r = r; color4.g = g; color4.b = b; color4.a = a;
-    return color4;
-}
 
 #pragma mark QGraphicNode
 
@@ -47,9 +69,11 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
         self.origin_position = CGPointMake(0, 0);
         self.origin_positionZ = 0;
         self.origin_anchorPoint = CGPointMake(0, 0);
-        self.origin_color4 = QColorMaker(1, 1, 1, 1);
+        self.origin_color4 = QColorMake(1, 1, 1, 1);
 //        self.origin_alpha = 1.0f;
         self.origin_visible = true;
+        self.origin_crop = QVectorV4(0,0,0,0);
+        self.origin_blendFunc = QBlendDisable;
     }
     return self;
 }
@@ -202,6 +226,8 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     self.scaleZ = fromNode.origin_scaleZ;
     self.visible = fromNode.origin_visible;
     self.renderRange = fromNode.renderRange;
+    self.crop = fromNode.origin_crop;
+    self.blendFunc = fromNode.origin_blendFunc;
     
     [_animators removeAllObjects];
     for (QNodeAnimator* animator in fromNode.animators) {
@@ -309,7 +335,7 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
 
 - (QColor4)color4{
     GraphicCore::Color4F color = _graphicNode->getColor();
-    return QColorMaker(color.r, color.g, color.b, color.a);
+    return QColorMake(color.r, color.g, color.b, color.a);
 }
 - (void)setColor4:(QColor4)color4{
     self.origin_color4 = color4;
@@ -328,6 +354,24 @@ QColor4 QColorMaker(float r, float g, float b, float a) {
     
     GraphicCore::Color4F color = {qcolor.r, qcolor.g, qcolor.b, qcolor.a};
     _graphicNode->setColor(color);
+}
+
+- (QVector)crop {
+    GraphicCore::Rect crop = _graphicNode->getCrop();
+    return QVectorV4(crop.getMaxX(), crop.getMaxY(), crop.getMaxX(), crop.getMaxY());
+}
+- (void)setCrop:(QVector)crop {
+    self.origin_crop = crop;
+    _graphicNode->setCrop(GraphicCore::Rect(crop.v0,crop.v1, crop.v2 - crop.v0, crop.v3 - crop.v1));
+}
+
+- (QBlendFunc)blendFunc {
+    return QBlendFuncMake(_graphicNode->getBlendFunc().src, _graphicNode->getBlendFunc().dst);
+}
+- (void)setBlendFunc:(QBlendFunc)blendFunc {
+    self.origin_blendFunc = blendFunc;
+    GraphicCore::BlendFunc blend_func = {blendFunc.src, blendFunc.dst};
+    _graphicNode->setBlendFunc(blend_func);
 }
 
 @end

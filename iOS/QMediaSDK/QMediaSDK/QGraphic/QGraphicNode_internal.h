@@ -27,6 +27,8 @@
 @property (nonatomic, assign) CGPoint origin_anchorPoint;
 @property (nonatomic, assign) QColor4 origin_color4;
 //@property (nonatomic, assign) float origin_alpha;
+@property (nonatomic, assign) QVector origin_crop;
+@property (nonatomic, assign) QBlendFunc origin_blendFunc;
 @end
 
 @interface QGraphicNode(internal)
