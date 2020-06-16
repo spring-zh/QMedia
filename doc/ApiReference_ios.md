@@ -10,8 +10,14 @@ sdk提供了一套比较自由的渲染框架。图形渲染引擎是基于 **QG
 ```objc
 const int targetW = 640;
 const int targetH = 480;
+
+QPlayerView *renderView = ... 获取渲染view
     
 QEditorPlayer* player = [[QEditorPlayer alloc] init]; //新建预览播放器
+
+player.playerView = renderView; //设置预览view
+player.rootNode.color4 = QColorMake(0, 0, 1, 1); //设置最终预览背景色
+
 [player addObserver:self]; //设置回调
 
 QVideoDescribe* vdesc = [[QVideoDescribe alloc] initWithParamenters:QVideoCodecH264 framerate:25 width:targetW height:targetH bitrate:2*1024*1024]; //视频描述
