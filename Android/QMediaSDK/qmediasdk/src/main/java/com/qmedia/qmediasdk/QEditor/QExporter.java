@@ -38,6 +38,15 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
             mCbHandler = cbHandler;
     }
 
+    //for child class
+    protected QExporter(Handler cbHandler) {
+        mPtr = native_create(rootNode);
+        if (cbHandler == null)
+            mCbHandler = new Handler(Looper.getMainLooper());
+        else
+            mCbHandler = cbHandler;
+    }
+
     public void setObserver(Observer observer) {
         mObserver = observer;
     }

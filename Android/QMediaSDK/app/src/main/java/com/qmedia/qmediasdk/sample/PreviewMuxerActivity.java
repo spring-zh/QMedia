@@ -23,6 +23,7 @@ import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QEditor.QEditorPlayer;
 import com.qmedia.qmediasdk.QEditor.QExporter;
+import com.qmedia.qmediasdk.QEditor.QFileExporter;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
 import com.qmedia.qmediasdk.QGraphic.QImageNode;
 import com.qmedia.qmediasdk.QGraphic.QLayer;
@@ -30,7 +31,6 @@ import com.qmedia.qmediasdk.QGraphic.QNodeAnimator;
 import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
 import com.qmedia.qmediasdk.QSource.QVideoDescribe;
-import com.qmedia.qmediasdk.QTarget.Implements.QFileExporterTarget;
 import com.qmedia.qmediasdk.QTarget.Implements.QPlayerView;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 import com.qmedia.qmediasdk.sample.R;
@@ -51,7 +51,7 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 
 	QEditorPlayer editorPlayer = new QEditorPlayer();
 
-	QExporter exporter;
+	QFileExporter exporter;
 
 	String[] media_paths;
 
@@ -328,9 +328,7 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 					f.delete();
 				}
 
-				QFileExporterTarget fileExporterTarget = new QFileExporterTarget(savePath);
-				fileExporterTarget.setEnableAudio(true);
-				exporter = new QExporter(fileExporterTarget,fileExporterTarget);
+				exporter = new QFileExporter(savePath);
 				exporter.setAudioConfig(new QAudioDescribe(QAudioDescribe.QAudioCodecAAC, QAudioDescribe.QRawAudioFormatS16,
 						44100, 2, 64000));
 				exporter.setVideoConfig(new QVideoDescribe(QVideoDescribe.QVideoCodecH264, QVideoDescribe.QRawVideoFormatHardware,

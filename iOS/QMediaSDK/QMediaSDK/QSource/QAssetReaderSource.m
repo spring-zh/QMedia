@@ -118,7 +118,7 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
         if ([[filePath lowercaseString] hasPrefix:@"file:"]) {
             _url = [NSURL URLWithString:filePath];
         }
-        _video_frame_format = kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange;
+        _video_frame_format = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange;
         _isInit = false;
         _isStarted = false;
         _media_duration = 0;

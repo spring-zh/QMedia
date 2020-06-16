@@ -20,7 +20,7 @@
 @property (nonatomic) IBOutlet UIView* playerViewContainer;
 @property (nonatomic) IBOutlet UIActivityIndicatorView* activityIndicator;
 @property (nonatomic, strong) AVPlayerViewController* playerCtrl;
-@property (nonatomic, strong) QExporter* exporter;
+@property (nonatomic, strong) QFileExporter* exporter;
 @property (nonatomic, copy) NSString* filePath;
 @end
 
@@ -45,9 +45,8 @@
     self.buttonLayer.hidden = YES;
     QVideoDescribe* vdesc = [[QVideoDescribe alloc] initWithParamenters:QVideoCodecH264 framerate:25 width:640 height:480 bitrate:2*1024*1024];
     QAudioDescribe* adesc = [[QAudioDescribe alloc] initWithParamenters:QAudioCodecAAC rawFormat:QRawAudioFormatS16 samplerate:44100 nchannel:2 bitrate:128000];
-    QFileExporterTarget* exporterTarget = [[QFileExporterTarget alloc] initWithPath:self.filePath];
 
-    self.exporter = [[QExporter alloc] initWithTarget:exporterTarget audioTarget:exporterTarget];
+    self.exporter = [[QFileExporter alloc] initWithPath:self.filePath];
     [self.exporter addObserver:self];
     [self.exporter setAudioConfig:adesc];
     [self.exporter setVideoConfig:vdesc];

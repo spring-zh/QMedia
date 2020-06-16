@@ -10,6 +10,8 @@
 #import "QGraphicNode_internal.h"
 #include "GraphicCore/GcLayer.h"
 
+using namespace GraphicCore;
+
 @implementation QLayer {
     QColor4 _bkColor;
     GraphicCore::LayerRef _layer;
@@ -27,6 +29,8 @@
 {
     _layer = GraphicCore::LayerRef(new GraphicCore::Layer(GraphicCore::Size(size.width,size.height)));
     _bkColor = QColorMake(0, 0, 0, 0);
+//    TextureFilter* textureFilter = TextureFilterFactory::createFilter(FilterType::POLARPIXELLATE);
+//    _layer->addFilter(Layer::FilterObjectRef(new Layer::FilterObject(textureFilter, Range<int64_t>(0, 10000))));
     return (self = [super initWithNode:_layer combiner:combiner uid:uid]);
 }
 

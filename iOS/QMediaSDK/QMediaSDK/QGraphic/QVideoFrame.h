@@ -11,9 +11,9 @@
 #include <memory>
 #include <CoreVideo/CoreVideo.h>
 #include <CoreMedia/CoreMedia.h>
-#include "../GraphicCore/opengl/ShaderProgram.h"
-#include "../MediaCore/mediadef/VideoFrame.h"
-#include "../EffectEditor/VideoFrameDrawer.h"
+#include "GraphicCore/opengl/Texture2DDrawer.h"
+#include "MediaCore/mediadef/VideoFrame.h"
+#include "EffectEditor/VideoFrameDrawer.h"
 
 using GraphicCore::ShaderProgram;
 
@@ -91,8 +91,6 @@ private:
     GLuint _textures;
     GLfloat *_colorConversionMatrix;
     
-    std::shared_ptr<ShaderProgram> _program;
-    
-//    //
-//    std::shared_ptr<GraphicCore::DuplicateTexture2D> _shareTexture;
+    std::shared_ptr<GraphicCore::Texture2DDrawer> _textureDrawer;
+    GraphicCore::DuplicateTexture2D _duplicateTexture;
 };

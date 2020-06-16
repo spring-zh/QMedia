@@ -58,8 +58,8 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
     private QVideoDescribe mVideoConfig = null;
     private QAudioDescribe mAudioConfig = null;
 
-    QAudioRender mAudioRender = null;
-    QVideoRender mVideoRender = null;
+    WeakReference<QAudioRender> mAudioRender = null;
+    WeakReference<QVideoRender> mVideoRender = null;
 
     public void setKeyFrameMode(boolean isAllKeyFrame)
     {
@@ -173,12 +173,12 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 
     @Override
     public void setAudioRender(QAudioRender audioRender) {
-        mAudioRender = audioRender;
+        mAudioRender = new WeakReference<>(audioRender);
     }
 
     @Override
     public QAudioRender getAudioRender() {
-        return mAudioRender;
+        return mAudioRender.get();
     }
 
     @Override
@@ -258,12 +258,12 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
 
     @Override
     public void setVideoRender(QVideoRender videoRender) {
-        mVideoRender = videoRender;
+        mVideoRender = new WeakReference<>(videoRender);
     }
 
     @Override
     public QVideoRender getVideoRender() {
-        return mVideoRender;
+        return mVideoRender.get();
     }
 
     class VideoThread extends Thread implements HardwareEncoder.Listener{
