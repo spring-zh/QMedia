@@ -65,6 +65,7 @@ QFileExporter* exporter = [[QFileExporter alloc] initWithPath:filePath]; //新�
 ## [QFileExporter](class_ios/QFileExporter_ios.md)
 ## [QMediaTrack](class_ios/QMediaTrack_ios.md)
 ## [QGraphicNode以及媒体渲染](class_ios/QGraphicNode_ios.md)
+## [QNodeAnimator](class_ios/QNodeAnimator_ios.md)
 ## [QAudioTrackNode](class_ios/QAudioTrackNode_ios.md)
 
 
