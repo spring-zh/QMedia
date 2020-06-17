@@ -45,8 +45,8 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    const int targetW = 1280;
-    const int targetH = 720;
+    const int targetW = 640;
+    const int targetH = 480;
     
     self.player.playerView = _renderView;
     self.player.rootNode.color4 = QColorMake(0, 0, 1, 1);

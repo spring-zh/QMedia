@@ -70,11 +70,6 @@ static GLint prev_fbo;
         if (!_shaderProgram.createProgram(kGPUImageVertexShaderString.c_str(), kGPUImagePassthroughFragmentShaderString.c_str())) {
             return nil;
         }
-        if (_shaderProgram.use()) {
-            _shaderProgram.addVertexAttribOption("position", VertexAttrib::VERTEX2);
-            _shaderProgram.addVertexAttribOption("inputTextureCoordinate", VertexAttrib::TEXCOORD);
-            _shaderProgram.addUniformOption("inputImageTexture", Uniform::TEXTURE);
-        }
         
         glGenFramebuffers(1, &_glFbId);
         glBindFramebuffer(GL_FRAMEBUFFER, _glFbId);
@@ -131,16 +126,19 @@ static GLint prev_fbo;
 }
 
 - (bool)draw:(QFilpMode)filpMode{
-    _shaderProgram.setUniformValue("inputImageTexture", (int)_iosTexture.glTexid);
-    _shaderProgram.setVertexAttribValue("position", 8, Drawable2D::RECTANGLE_COORDS);
-    if (filpMode == QFilpH) {
-        _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS_FLIPH);
-    }else if (filpMode == QFilpV)
-        _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS_FLIPV);
-    else
-        _shaderProgram.setVertexAttribValue("inputTextureCoordinate", 8, Drawable2D::RECTANGLE_TEX_COORDS);
-    
-    return _shaderProgram.drawRect() == 0;
+    if (_shaderProgram.use()) {
+        _shaderProgram.setUniformValue("inputImageTexture", Uniform::TEXTURE, (int)_iosTexture.glTexid);
+        _shaderProgram.setVertexAttribValue("position", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_COORDS, 8);
+        if (filpMode == QFilpH) {
+            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_TEX_COORDS_FLIPH, 8);
+        }else if (filpMode == QFilpV)
+            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_TEX_COORDS_FLIPV, 8);
+        else
+            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_TEX_COORDS, 8);
+        
+        return _shaderProgram.drawRectangle() == 0;
+    }
+    return false;
 }
 
 + (void)savePrevStatus

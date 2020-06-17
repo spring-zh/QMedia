@@ -292,19 +292,7 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
     
     if (!_program) {
         _program = std::shared_ptr<ShaderProgram>(new ShaderProgram());
-        if(_program->createProgram(defaultPositionTexture_vert, PositionTextureNV12_frag)){
-            if(_program->use()){
-                _program->addVertexAttribOption("a_position",VertexAttrib::VERTEX3);
-                _program->addVertexAttribOption("a_texCoord",VertexAttrib::TEXCOORD);
-                _program->addUniformOption("SamplerY",Uniform::TEXTURE);
-                _program->addUniformOption("SamplerUV",Uniform::TEXTURE);
-                _program->addUniformOption("uMVPMatrix",Uniform::MATRIX4);
-                _program->addUniformOption("uTexMatrix",Uniform::MATRIX4);
-                _program->addUniformOption("colorConversionMatrix",Uniform::MATRIX3);
-                _program->addUniformOption("uColor", Uniform::FLOAT4);
-               
-            }
-        }
+        _program->createProgram(defaultPositionTexture_vert, PositionTextureNV12_frag);
     }
     
     return true;
@@ -321,16 +309,28 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
             node->getContentSize().width, node->getContentSize().height, 0
         };
         
-        _program->setVertexAttribValue("a_texCoord", GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS), Drawable2D::RECTANGLE_TEX_COORDS);
-        _program->setVertexAttribValue("a_position", GET_ARRAY_COUNT(posArray) ,posArray);
-        _program->setUniformValue("SamplerY",(int)_textures[0]);
-        _program->setUniformValue("SamplerUV",(int)_textures[1]);
+        _program->setVertexAttribValue("a_texCoord", VertexAttrib::TEXCOORD, Drawable2D::RECTANGLE_TEX_COORDS, GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS));
+        _program->setVertexAttribValue("a_position", VertexAttrib::VERTEX3 ,posArray, GET_ARRAY_COUNT(posArray));
+        
+        if(_lumaTexture) {
+            Uniform::Value texture_y;
+            texture_y._texture = CVOpenGLESTextureGetName(_lumaTexture);
+            texture_y._textureTarget = CVOpenGLESTextureGetTarget(_lumaTexture);
+            _program->setUniformValue("SamplerY", Uniform::TEXTURE, texture_y);
+        }
+        if (_chromaTexture) {
+            Uniform::Value texture_uv;
+            texture_uv._texture = CVOpenGLESTextureGetName(_chromaTexture);
+            texture_uv._textureTarget = CVOpenGLESTextureGetTarget(_chromaTexture);
+            _program->setUniformValue("SamplerUV", Uniform::TEXTURE, texture_uv);
+        }
+        
         GraphicCore::Mat4 mvpMatrix;
         GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
         GraphicCore::Mat4 texMatrix;
-        _program->setUniformValue("uTexMatrix", 16, texMatrix.m/*Drawable2D::MtxFlipV*/);
-        _program->setUniformValue("uMVPMatrix", 16, mvpMatrix.m);
-        _program->setUniformValue("colorConversionMatrix", 16, _colorConversionMatrix);
+        _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m, 16);
+        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, mvpMatrix.m, 16);
+        _program->setUniformValue("colorConversionMatrix", Uniform::MATRIX3, _colorConversionMatrix, 9);
         
         Uniform::Value colorVal;
         colorVal._floatOrmatrix_array = {
@@ -338,7 +338,7 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
             node->getColor().g,
             node->getColor().b,
             node->getColor().a};
-        _program->setUniformValue("uColor", colorVal);
+        _program->setUniformValue("uColor", Uniform::FLOAT4, colorVal);
         if (node->getBlendFunc() != BlendFunc::DISABLE) {
             _program->setBlendFunc(node->getBlendFunc());
         } else if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)){
@@ -346,7 +346,7 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
         } else
             _program->setBlendFunc(BlendFunc::DISABLE);
         
-        _program->drawRect();
+        _program->drawRectangle();
     }
 }
 

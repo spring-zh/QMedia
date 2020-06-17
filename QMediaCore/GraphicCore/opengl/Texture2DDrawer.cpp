@@ -16,15 +16,7 @@ Texture2DDrawer::Texture2DDrawer(): Texture2DDrawer(defaultPositionTexture_vert,
 }
 
 Texture2DDrawer::Texture2DDrawer(const char* vshader, const char* fshader) {
-    if(_shaderProgram.createProgram(vshader,
-                                    fshader)){
-        _shaderProgram.addVertexAttribOption("a_position",VertexAttrib::VERTEX3);
-        _shaderProgram.addVertexAttribOption("a_texCoord",VertexAttrib::TEXCOORD);
-        _shaderProgram.addUniformOption("uMVPMatrix",Uniform::MATRIX4);
-        _shaderProgram.addUniformOption("uTexMatrix",Uniform::MATRIX4);
-        _shaderProgram.addUniformOption("uTexture",Uniform::TEXTURE);
-        _shaderProgram.addUniformOption("uColor",Uniform::FLOAT4);
-    }
+    _shaderProgram.createProgram(vshader, fshader);
 }
 
 Texture2DDrawer::~Texture2DDrawer() {
@@ -58,17 +50,17 @@ void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Ma
         Uniform::Value texVal;
         texVal._textureTarget = texture->getTextureTarget();
         texVal._texture = texture->getTextureId();
-        _shaderProgram.setUniformValue("uTexture",texVal);
+        _shaderProgram.setUniformValue("uTexture", Uniform::TEXTURE, texVal);
 
         //set color uniform
         Uniform::Value colorVal;
         Color4F realColor = node->getColor();
         colorVal._floatOrmatrix_array = {realColor.r,realColor.g,realColor.b,realColor.a};
-        _shaderProgram.setUniformValue("uColor", colorVal);
-        _shaderProgram.setUniformValue("uMVPMatrix",GET_ARRAY_COUNT(mvpMatrix.m),mvpMatrix.m);
+        _shaderProgram.setUniformValue("uColor", Uniform::FLOAT4 ,colorVal);
+        _shaderProgram.setUniformValue("uMVPMatrix", Uniform::MATRIX4 ,mvpMatrix.m, GET_ARRAY_COUNT(mvpMatrix.m));
 
-        _shaderProgram.setVertexAttribValue("a_position", vertValue);
-        _shaderProgram.setVertexAttribValue("a_texCoord", 8, Drawable2D::RECTANGLE_TEX_COORDS);
+        _shaderProgram.setVertexAttribValue("a_position", VertexAttrib::VERTEX3, vertValue);
+        _shaderProgram.setVertexAttribValue("a_texCoord", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_TEX_COORDS, 8);
 
         //TODO: check filp mode
         switch (flipMode) {
@@ -95,8 +87,8 @@ void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Ma
             texMatrix.multiply(crop);
         }
 
-        _shaderProgram.setUniformValue("uTexMatrix",GET_ARRAY_COUNT(texMatrix.m),texMatrix.m);
-        _shaderProgram.drawRect();
+        _shaderProgram.setUniformValue("uTexMatrix", Uniform::MATRIX4,texMatrix.m, GET_ARRAY_COUNT(texMatrix.m));
+        _shaderProgram.drawRectangle();
     }
 }
 

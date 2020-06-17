@@ -40,9 +40,6 @@ public:
 
 class VertexAttrib {
 public:
-    VertexAttrib(){}
-    ~VertexAttrib(){}
-
     enum Type{
         NONE = 0,
         VERTEX2 = 1,
@@ -51,8 +48,10 @@ public:
         TEXCOORD = VERTEX2,
         NORMAL = 1 << 3
     };
-
     using Value = BufferArray<float> ;
+    
+    VertexAttrib() = default;
+    ~VertexAttrib() = default;
 
     Type _type;
     GlBinder _glbinder;
@@ -129,20 +128,24 @@ public:
     ShaderProgram();
     ~ShaderProgram();
 
-    void addVertexAttribOption(const char* key, VertexAttrib::Type type);
-    void addUniformOption(const char* key, Uniform::Type type);
-    bool setVertexAttribValue(const char* key, VertexAttrib::Value &value);
-    bool setVertexAttribValue(const char* key, int size, float floatArray[]);
-    bool setUniformValue(const char* key, Uniform::Value &value);
-    bool setUniformValue(const char* key, int iValue);
-    bool setUniformValue(const char* key, float fValue);
-    bool setUniformValue(const char* key, int size, int intArray[]);
-    bool setUniformValue(const char* key, int size, float floatArray[]);
+    // setVertexAttribValue
+    void setVertexAttribValue(const char* key, VertexAttrib::Type type, VertexAttrib::Value &value);
+    void setVertexAttribValue(const char* key, VertexAttrib::Type type, float value[], int size);
+    
+    // setUniformValue
+    void setUniformValue(const char* key, Uniform::Type type, Uniform::Value &value);
+    void setUniformValue(const char* key, Uniform::Type type, int value);
+    void setUniformValue(const char* key, Uniform::Type type, float value);
+    void setUniformValue(const char* key, Uniform::Type type, int value[], int size);
+    void setUniformValue(const char* key, Uniform::Type type, float value[], int size);
+    
+    //set draw index array
     void setIndicesValue(IndicesArray &value);
+    void setIndicesValue(unsigned int value[], int size);
 
     int drawIndices(DrawMode mode, int count);
     int draw(DrawMode mode, int count);
-    int drawRect();
+    int drawRectangle();
 
     bool createProgram(const char* vertex_shader, const char* fragment_shader);
     void releaseProgram();
@@ -150,24 +153,24 @@ public:
     bool use();
 
     void setBlendFunc(BlendFunc blendFunc) { _blendFunc = blendFunc; }
-    void enableVBO(bool bVob){_enable_vbo = bVob;}
+    void enableVBO(bool bVbo){_enable_vbo = bVbo;}
 private:
-    bool setUniformValue(Uniform& uniform, int size, int intArray[]);
-    bool setUniformValue(Uniform& uniform, int size, float floatArray[]);
+    
     static GLuint LoadShader(GLenum type, const char* shaderSrc);
 
+    bool prepareUniform(Uniform& uniform, unsigned int& texture_idx);
+    bool prepareVertexAttrib(VertexAttrib& attrib);
     bool beginDraw();
 
     std::map<std::string, VertexAttrib > _attrib_maps;
     std::map<std::string, Uniform > _uniform_maps;
 
-    bool _enable_vbo;
-
     IndicesArray _elementIndices;
 
     GLuint _program;
-    GLuint _vShader;
-    GLuint _fShader;
+    GLuint _vShader, _fShader;
+    
+    bool _enable_vbo;
     BlendFunc _blendFunc;
 };
 

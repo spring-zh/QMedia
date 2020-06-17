@@ -1,5 +1,5 @@
 //
-//  ShaderProgram.cpp
+//  ShaderProgram2.cpp
 //  QMediaCore
 //
 //  Created by spring on 20/05/2019.
@@ -26,261 +26,189 @@ inline GLuint getGlDrawMode(ShaderProgram::DrawMode mode){
 }
 
 ShaderProgram::ShaderProgram():
-_enable_vbo(true),
+_enable_vbo(false),
 _blendFunc(BlendFunc::DISABLE),
 _program(0),
-_vShader(0),
-_fShader(0) {
+_vShader(0), _fShader(0) {
 
 }
 ShaderProgram::~ShaderProgram() {
 
 }
 
-void ShaderProgram::addVertexAttribOption(const char* key, VertexAttrib::Type type)
-{
-    VertexAttrib value;
-    value._type = type;
-    value._glbinder._location = glGetAttribLocation(_program, key);
-    glCheckError();
-//            if (_enable_vbo){
-//                glGenBuffers(1,&binder._buffer);
-//                glBindBuffer(GL_ARRAY_BUFFER,binder._buffer);
-//                glBufferData(GL_ARRAY_BUFFER, item.second._value._buffer.size() * sizeof(float), item.second._value._buffer.data(),GL_STATIC_DRAW);
-//                int vec_count = 3;
-//                if(item.second._type == VertexAttrib::TEXCOORD)
-//                    vec_count = 2;
-//                glVertexAttribPointer(binder._location, vec_count , GL_FLOAT, GL_TRUE, vec_count * sizeof(float), 0);
-//            }
-    _attrib_maps.insert(std::make_pair(key,value));
-}
-void ShaderProgram::addUniformOption(const char* key, Uniform::Type type)
-{
-    Uniform value;
-    value._type = type;
-    value._glbinder._location = glGetUniformLocation(_program, key);
-    glCheckError();
-    _uniform_maps.insert(std::make_pair(key,value));
-}
-
-bool ShaderProgram::setVertexAttribValue(const char* key, VertexAttrib::Value &value)
-{
+void ShaderProgram::setVertexAttribValue(const char* key, VertexAttrib::Type type, VertexAttrib::Value &value) {
     auto iter = _attrib_maps.find(key);
-    if (iter != _attrib_maps.end()){
-        iter->second._value = std::move(value);
-        auto &attrib = iter->second;
-//        attrib._glbinder._location = glGetAttribLocation(_program, item.first.c_str());
-        int vec_count = 3;
-        if(attrib._type == VertexAttrib::VERTEX3)
-            vec_count = 3;
-        else if(attrib._type == VertexAttrib::VERTEX4)
-            vec_count = 4;
-        else if(attrib._type == VertexAttrib::TEXCOORD)
-            vec_count = 2;
-        glVertexAttribPointer(attrib._glbinder._location, vec_count , GL_FLOAT, GL_TRUE, vec_count * sizeof(float), attrib._value._buffer.data());
-
-        return true;
-    }
-    return false;
-}
-
-bool ShaderProgram::setVertexAttribValue(const char* key, int size, float floatArray[])
-{
-    auto iter = _attrib_maps.find(key);
-    if (iter != _attrib_maps.end()){
-        auto &attrib = iter->second;
-//        attrib._glbinder._location = glGetAttribLocation(_program, item.first.c_str());
-        int vec_count = 3;
-        if(attrib._type == VertexAttrib::VERTEX3)
-            vec_count = 3;
-        else if(attrib._type == VertexAttrib::VERTEX4)
-            vec_count = 4;
-        else if(attrib._type == VertexAttrib::TEXCOORD)
-            vec_count = 2;
-        glVertexAttribPointer(attrib._glbinder._location, vec_count , GL_FLOAT, GL_TRUE, vec_count * sizeof(float), floatArray);
-
-        return true;
-    }
-    return false;
-}
-
-bool ShaderProgram::setUniformValue(const char* key, Uniform::Value &value)
-{
-    auto iter = _uniform_maps.find(key);
-    if (iter != _uniform_maps.end()){
-        iter->second._value = std::move(value);
-        auto &uniform = iter->second;
-        auto &int_array = uniform._value._int_array;
-        auto &float_array = uniform._value._floatOrmatrix_array;
-        switch (uniform._type){
-            case Uniform::INT:
-                glUniform1i(uniform._glbinder._location, uniform._value._int_val);
-                break;
-            case Uniform::INTV:
-                glUniform1iv(uniform._glbinder._location, int_array.size() ,int_array.data());
-                break;
-            case Uniform::INT2:
-                glUniform2i(uniform._glbinder._location, int_array.data()[0] ,int_array.data()[1]);
-                break;
-            case Uniform::INT2V:
-                glUniform2iv(uniform._glbinder._location, int_array.size() /2 ,int_array.data());
-                break;
-            case Uniform::INT3:
-                glUniform3i(uniform._glbinder._location, int_array.data()[0] ,int_array.data()[1],int_array.data()[2]);
-                break;
-            case Uniform::INT3V:
-                glUniform3iv(uniform._glbinder._location, int_array.size() /3 ,int_array.data());
-                break;
-            case Uniform::INT4:
-                glUniform4i(uniform._glbinder._location, int_array.data()[0] ,int_array.data()[1],int_array.data()[2],int_array.data()[3]);
-                break;
-            case Uniform::INT4V:
-                glUniform4iv(uniform._glbinder._location, int_array.size() /4 ,int_array.data());
-                break;
-            case Uniform::FLOAT:
-                glUniform1f(uniform._glbinder._location, uniform._value._float_val);
-                break;
-            case Uniform::FLOATV:
-                glUniform1fv(uniform._glbinder._location, float_array.size() ,float_array.data());
-                break;
-            case Uniform::FLOAT2:
-                glUniform2f(uniform._glbinder._location, float_array.data()[0] ,float_array.data()[1]);
-                break;
-            case Uniform::FLOAT2V:
-                glUniform2fv(uniform._glbinder._location, float_array.size() /2 ,float_array.data());
-                break;
-            case Uniform::FLOAT3:
-                glUniform3f(uniform._glbinder._location, float_array.data()[0] ,float_array.data()[1],float_array.data()[2]);
-                break;
-            case Uniform::FLOAT3V:
-                glUniform3fv(uniform._glbinder._location, float_array.size() /3 ,float_array.data());
-                break;
-            case Uniform::FLOAT4:
-                glUniform4f(uniform._glbinder._location, float_array.data()[0] ,float_array.data()[1],float_array.data()[2],float_array.data()[3]);
-                break;
-            case Uniform::FLOAT4V:
-                glUniform4fv(uniform._glbinder._location, float_array.size() /4 ,float_array.data());
-                break;
-            case Uniform::MATRIX3V:
-                glUniformMatrix3fv(uniform._glbinder._location, float_array.size() / 9 , GL_FALSE ,float_array.data());
-                break;
-            case Uniform::MATRIX4V:
-                glUniformMatrix4fv(uniform._glbinder._location, float_array.size() / 16 , GL_FALSE ,float_array.data());
-                break;
+    if (iter == _attrib_maps.end()) { //first set
+        VertexAttrib attrib;
+        attrib._type = type;
+        attrib._value = value;
+        attrib._glbinder._location = glGetAttribLocation(_program, key);
+        if (_enable_vbo){
+            glGenBuffers(1,&attrib._glbinder._buffer);
+            glBindBuffer(GL_ARRAY_BUFFER, attrib._glbinder._buffer);
+            glBufferData(GL_ARRAY_BUFFER, attrib._value._buffer.size() * sizeof(float), attrib._value._buffer.data(), GL_DYNAMIC_DRAW);
         }
-
-        return true;
+        _attrib_maps.insert(std::make_pair(key, std::move(attrib)));
+    }else { //update attrib value
+        VertexAttrib& attrib = iter->second;
+        attrib._value = value;
+        attrib._type = type;
+        if (_enable_vbo && attrib._glbinder._buffer) {
+            glBindBuffer(GL_ARRAY_BUFFER, attrib._glbinder._buffer);
+            glBufferSubData(GL_ARRAY_BUFFER, 0, attrib._value._buffer.size() * sizeof(float), attrib._value._buffer.data());
+        }
     }
-    return false;
 }
 
-bool ShaderProgram::setUniformValue(const char* key, int iValue){
-    return setUniformValue(key, 1, (int*)&iValue);
-}
-bool ShaderProgram::setUniformValue(const char* key, float fValue){
-    return setUniformValue(key, 1, (float*)&fValue);
+void ShaderProgram::setVertexAttribValue(const char* key, VertexAttrib::Type type, float value[], int size) {
+    VertexAttrib::Value attrib;
+    attrib.copyForm(value, size);
+    setVertexAttribValue(key, type, attrib);
 }
 
-bool ShaderProgram::setUniformValue(const char* key, int size, int intArray[]){
+void ShaderProgram::setUniformValue(const char* key, Uniform::Type type, Uniform::Value &value) {
     auto iter = _uniform_maps.find(key);
-    if (iter != _uniform_maps.end()){
-        return setUniformValue(iter->second, size, intArray);
+    if (iter == _uniform_maps.end()) { //first set
+        Uniform uniform;
+        uniform._type = type;
+        uniform._value = value;
+        uniform._glbinder._location = glGetUniformLocation(_program, key);
+        
+        _uniform_maps.insert(std::make_pair(key, std::move(uniform)));
+    }else {  //update uniform value
+        Uniform& uniform = iter->second;
+        uniform._value = value;
+        uniform._type = type;
     }
-    return false;
-}
-bool ShaderProgram::setUniformValue(const char* key, int size, float floatArray[]){
-    auto iter = _uniform_maps.find(key);
-    if (iter != _uniform_maps.end()){
-        return setUniformValue(iter->second, size, floatArray);
-    }
-    return false;
 }
 
-bool ShaderProgram::setUniformValue(Uniform& uniform, int size, int intArray[]){
-    GLint location = uniform._glbinder._location;
-    Uniform::Type type = uniform._type;
-    switch (type){
-    case Uniform::TEXTURE:
-        uniform._value._texture = intArray[0];
-        return true;
+void ShaderProgram::setUniformValue(const char* key, Uniform::Type type, int value) {
+    Uniform::Value uniform_val;
+    if (type == Uniform::TEXTURE) {
+        uniform_val._texture = value;
+    }
+    uniform_val._int_val = value;
+    setUniformValue(key, type, uniform_val);
+}
+void ShaderProgram::setUniformValue(const char* key, Uniform::Type type, float value) {
+    Uniform::Value uniform_val;
+    uniform_val._float_val = value;
+    setUniformValue(key, type, uniform_val);
+}
+void ShaderProgram::setUniformValue(const char* key, Uniform::Type type, int value[], int size) {
+    Uniform::Value uniform_val;
+    uniform_val.copyForm(value, size);
+    setUniformValue(key, type, uniform_val);
+}
+void ShaderProgram::setUniformValue(const char* key, Uniform::Type type, float value[], int size) {
+    Uniform::Value uniform_val;
+    uniform_val.copyForm(value, size);
+    setUniformValue(key, type, uniform_val);
+}
+    
+bool ShaderProgram::prepareUniform(Uniform& uniform, unsigned int& texture_idx) {
+    auto& int_array = uniform._value._int_array;
+    GLsizei int_size = static_cast<GLsizei>(int_array.size());
+    auto& float_array = uniform._value._floatOrmatrix_array;
+    GLsizei float_size = static_cast<GLsizei>(float_array.size());
+    switch (uniform._type){
     case Uniform::INT:
-        uniform._value._int_val = intArray[0];
-        glUniform1i(location, intArray[0]);
-        return true;
+        glUniform1i(uniform._glbinder._location, uniform._value._int_val);
+        break;
     case Uniform::INTV:
-        glUniform1iv(location, size, intArray);
-        return true;
+        glUniform1iv(uniform._glbinder._location, int_size ,int_array.data());
+        break;
     case Uniform::INT2:
-        glUniform2i(location, intArray[0] ,intArray[1]);
-        return true;
+        glUniform2i(uniform._glbinder._location, int_array.data()[0] ,int_array.data()[1]);
+        break;
     case Uniform::INT2V:
-        glUniform2iv(location, size /2 ,intArray);
-        return true;
+        glUniform2iv(uniform._glbinder._location, int_size /2 ,int_array.data());
+        break;
     case Uniform::INT3:
-        glUniform3i(location, intArray[0] ,intArray[1],intArray[2]);
-        return true;
+        glUniform3i(uniform._glbinder._location, int_array.data()[0] ,int_array.data()[1],int_array.data()[2]);
+        break;
     case Uniform::INT3V:
-        glUniform3iv(location, size /3 ,intArray);
-        return true;
+        glUniform3iv(uniform._glbinder._location, int_size /3 ,int_array.data());
+        break;
     case Uniform::INT4:
-        glUniform4i(location, intArray[0] ,intArray[1],intArray[2],intArray[3]);
-        return true;
+        glUniform4i(uniform._glbinder._location, int_array.data()[0] ,int_array.data()[1],int_array.data()[2],int_array.data()[3]);
+        break;
     case Uniform::INT4V:
-        glUniform4iv(location, size /4 ,intArray);
-        return true;
-    }
-    std::copy(intArray, intArray + size, uniform._value._int_array.begin());
-    return false;
-}
-bool ShaderProgram::setUniformValue(Uniform& uniform, int size, float floatArray[]){
-    GLint location = uniform._glbinder._location;
-    Uniform::Type type = uniform._type;
-    switch (type){
+        glUniform4iv(uniform._glbinder._location, int_size /4 ,int_array.data());
+        break;
     case Uniform::FLOAT:
-        uniform._value._float_val = floatArray[0];
-        glUniform1f(location, floatArray[0]);
-        return true;
+        glUniform1f(uniform._glbinder._location, uniform._value._float_val);
+        break;
     case Uniform::FLOATV:
-        glUniform1fv(location, size, floatArray);
-        return true;
+        glUniform1fv(uniform._glbinder._location, float_size ,float_array.data());
+        break;
     case Uniform::FLOAT2:
-        glUniform2f(location, floatArray[0] ,floatArray[1]);
-        return true;
+        glUniform2f(uniform._glbinder._location, float_array.data()[0] ,float_array.data()[1]);
+        break;
     case Uniform::FLOAT2V:
-        glUniform2fv(location, size /2 ,floatArray);
-        return true;
+        glUniform2fv(uniform._glbinder._location, float_size /2 ,float_array.data());
+        break;
     case Uniform::FLOAT3:
-        glUniform3i(location, floatArray[0] ,floatArray[1],floatArray[2]);
-        return true;
+        glUniform3f(uniform._glbinder._location, float_array.data()[0] ,float_array.data()[1],float_array.data()[2]);
+        break;
     case Uniform::FLOAT3V:
-        glUniform3fv(location, size /3 ,floatArray);
-        return true;
+        glUniform3fv(uniform._glbinder._location, float_size /3 ,float_array.data());
+        break;
     case Uniform::FLOAT4:
-        glUniform4f(location, floatArray[0] ,floatArray[1],floatArray[2],floatArray[3]);
-        return true;
+        glUniform4f(uniform._glbinder._location, float_array.data()[0] ,float_array.data()[1],float_array.data()[2],float_array.data()[3]);
+        break;
     case Uniform::FLOAT4V:
-        glUniform4fv(location, size /4 ,floatArray);
-        return true;
+        glUniform4fv(uniform._glbinder._location, float_size /4 ,float_array.data());
+        break;
     case Uniform::MATRIX3:
-        glUniformMatrix3fv(location, 1, GL_FALSE, floatArray);
-        return true;
     case Uniform::MATRIX3V:
-        glUniformMatrix3fv(location, size/9 , GL_FALSE, floatArray);
-        return true;
+        glUniformMatrix3fv(uniform._glbinder._location, float_size / 9 , GL_FALSE ,float_array.data());
+        break;
     case Uniform::MATRIX4:
-        glUniformMatrix4fv(location, 1 , GL_FALSE, floatArray);
-        return true;
     case Uniform::MATRIX4V:
-        glUniformMatrix3fv(location, size/16 , GL_FALSE, floatArray);
-        return true;
+        glUniformMatrix4fv(uniform._glbinder._location, float_size / 16 , GL_FALSE ,float_array.data());
+        break;
+    case Uniform::TEXTURE:
+        {
+            glActiveTexture(GL_TEXTURE0 + texture_idx);
+            glBindTexture(uniform._value._textureTarget, uniform._value._texture);
+            glUniform1i(uniform._glbinder._location, texture_idx);
+            texture_idx++;
+        }
+        break;
+    default:
+        return false;
     }
-    std::copy(floatArray, floatArray + size, uniform._value._floatOrmatrix_array.begin());
-    return false;
+    return true;
+}
+bool ShaderProgram::prepareVertexAttrib(VertexAttrib& attrib) {
+    int vec_count = 3;
+    if(attrib._type == VertexAttrib::VERTEX3)
+        vec_count = 3;
+    else if(attrib._type == VertexAttrib::VERTEX4)
+        vec_count = 4;
+    else if(attrib._type == VertexAttrib::TEXCOORD)
+        vec_count = 2;
+    glEnableVertexAttribArray(attrib._glbinder._location);
+    if (_enable_vbo && (attrib._glbinder._buffer > 0)) {
+        glBindBuffer(GL_ARRAY_BUFFER, attrib._glbinder._buffer);
+//        glBufferData(GL_ARRAY_BUFFER, attrib._value._buffer.size() * sizeof(float), attrib._value._buffer.data(), GL_DYNAMIC_DRAW);
+        glVertexAttribPointer(attrib._glbinder._location, vec_count , GL_FLOAT, GL_TRUE, vec_count * sizeof(float), (GLvoid*)0);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }else {
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+        glVertexAttribPointer(attrib._glbinder._location, vec_count , GL_FLOAT, GL_TRUE, vec_count * sizeof(float), attrib._value._buffer.data());
+    }
+    return true;
 }
 
 void ShaderProgram::setIndicesValue(IndicesArray &value)
 {
     _elementIndices = std::move(value);
+}
+void ShaderProgram::setIndicesValue(unsigned int value[], int size) {
+    IndicesArray indices_array;
+    indices_array.copyForm(value, size);
 }
 
 bool ShaderProgram::createProgram(const char* vertex_shader, const char* fragment_shader)
@@ -324,19 +252,19 @@ void ShaderProgram::releaseProgram()
 {
     for(auto& item : _attrib_maps){
         auto& binder = item.second._glbinder;
-        if (binder._buffer){
+        if (_enable_vbo && binder._buffer){
             glDeleteBuffers(1,&binder._buffer);
             binder._buffer = 0;
         }
-        binder._location = 0;
+        binder._location = -1;
     }
     for(auto& item : _uniform_maps){
         auto& binder = item.second._glbinder;
-        if (binder._buffer){
+        if (_enable_vbo && binder._buffer){
             glDeleteBuffers(1,&binder._buffer);
             binder._buffer = 0;
         }
-        binder._location = 0;
+        binder._location = -1;
     }
     glUseProgram(0);
     if (_program){
@@ -372,31 +300,26 @@ bool ShaderProgram::use() {
 bool ShaderProgram::beginDraw()
 {
     if(use()){
-        for (auto &item : _attrib_maps) {
-            glEnableVertexAttribArray(item.second._glbinder._location);
-        }
-
-        int textureId = 0;
-        for (auto &item : _uniform_maps) {
-            auto &uniform = item.second;
-            if (uniform._type == Uniform::TEXTURE){
-                glActiveTexture(GL_TEXTURE0 + textureId);
-                glBindTexture(uniform._value._textureTarget, uniform._value._texture);
-                glUniform1i(uniform._glbinder._location, textureId);
-
-                textureId++;
-            }
-        }
+        //set blend mode and BlendFunc
         if (_blendFunc != BlendFunc::DISABLE) {
             glEnable(GL_BLEND);
-//            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
             glBlendFunc(_blendFunc.src, _blendFunc.dst);
         }else
             glDisable(GL_BLEND);
-    
+        
+        //set vertexattrib values
+        for (auto &item : _attrib_maps) {
+            prepareVertexAttrib(item.second);
+        }
+        
+        //set uniform values
+        unsigned int texture_count = 0;
+        for (auto &item : _uniform_maps) {
+            prepareUniform(item.second, texture_count);
+        }
         return true;
-    }
-    LOGE("ShaderProgram::beginDraw failed..");
+    }else
+        LOGE("ShaderProgram::beginDraw failed..");
     return false;
 }
 
@@ -459,7 +382,7 @@ int ShaderProgram::draw(DrawMode mode, int count)
 
     return -1;
 }
-int ShaderProgram::drawRect()
+int ShaderProgram::drawRectangle()
 {
     if (beginDraw()){
         glDrawArrays(GL_TRIANGLE_STRIP, 0, 4);
