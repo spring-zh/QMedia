@@ -18,6 +18,14 @@
     id<QAudioTarget> _audioTarget;
     std::shared_ptr<VideoTarget> _videoTargetAdapter;
     std::shared_ptr<AudioTarget> _audioTargetAdapter;
+    __weak QCombiner* _combiner;
+}
+
+- (instancetype)initWithCombiner:(QCombiner*)combiner {
+    if ((self = [super init]) != nil) {
+        _combiner = combiner;
+    }
+    return self;
 }
 
 - (void)dealloc {
@@ -51,26 +59,6 @@
 {
     return _audioTargetAdapter.get();
 }
-
-//+ (instancetype)sharedInstance {
-//    static id instance = nil;
-//    static dispatch_once_t onceToken;
-//    dispatch_once(&onceToken, ^{
-//        instance = [[super allocWithZone:NULL] init];
-//    });
-//    return instance;
-//}
-
-//- (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audio:(id<QAudioTarget>)audioTarget
-//{
-//    if ((self = [super init]) != nil) {
-//        _videoTarget = videoTarget;
-//        _audioTarget = audioTarget;
-//        _videoTargetAdapter = std::shared_ptr<VideoTargetAdapter>(new VideoTargetAdapter(_videoTarget));
-//        _audioTargetAdapter = std::shared_ptr<AudioTargetAdapter>(new AudioTargetAdapter(_audioTarget));
-//    }
-//    return self;
-//}
 
 - (QMediaTrack*)createVideoTrack:(NSString *)filePath combiner:(QCombiner*)combiner
 {

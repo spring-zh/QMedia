@@ -15,7 +15,9 @@
 #import "QMediaTrack_internal.h"
 #import "QMediaFactory_internal.h"
 #import "QAudioTrackNode_internal.h"
+#import "QEffect_internal.h"
 #import "SerializeSetting.h"
+#import "QEffectManage.h"
 
 extern const struct VideoDescribe XMToVideoDescribe(QVideoDescribe* xmdesc);
 extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
@@ -161,6 +163,15 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     return true;
 }
 
+- (bool)attachEffect:(QLayer*)layer effect:(QEffect*)effect {
+    _combiner->attachEffect(std::dynamic_pointer_cast<GraphicCore::Layer>(layer.native), effect.native);
+    return true;
+}
+- (bool)detachEffect:(QLayer*)layer effect:(QEffect*)effect {
+    _combiner->detachEffect(std::dynamic_pointer_cast<GraphicCore::Layer>(layer.native), effect.native);
+    return true;
+}
+
 - (bool)attachAudioNode:(QAudioTrackNode*)child parent:(QAudioTrackNode*)parent {
     _combiner->attachAudioNode(child.native, nullptr);
     return true;
@@ -236,6 +247,11 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
             QLayer* fromLayer = (QLayer*)fromNode;
             QLayer* layer = [[QLayer alloc] initWithSize:fromLayer.layerSize combiner:self uid:fromLayer.uid];
             layer.bkColor = fromLayer.bkColor;
+            for (QEffect* effect in fromLayer.effects) {
+                QEffect* newEffect = [QEffectManage createFilter:effect.name];
+                newEffect.renderRange = effect.renderRange;
+                [layer addEffect:newEffect];
+            }
             newNode = layer;
         }else if ([fromNode isKindOfClass:QImageNode.class]) {
             QImageNode* fromImageNode = (QImageNode*)fromNode;

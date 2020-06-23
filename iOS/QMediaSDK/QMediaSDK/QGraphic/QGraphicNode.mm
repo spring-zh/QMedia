@@ -136,10 +136,13 @@ using GraphicCore::AnimaNode;
     return _uid;
 }
 
+#pragma mark - private function //
 - (GraphicCore::RenderNodeRef)native {
     return _graphicNode;
 }
-#pragma mark - private function //
+- (QCombiner*)combiner {
+    return _combiner;
+}
 
 - (void)setName:(NSString *)name {
     _nodeName = [name copy];

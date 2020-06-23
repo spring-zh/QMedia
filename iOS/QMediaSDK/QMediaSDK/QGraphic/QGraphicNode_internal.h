@@ -35,8 +35,6 @@
 - (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode combiner:(QCombiner*)combiner;
 - (instancetype)initWithNode:(GraphicCore::RenderNodeRef)graphicNode combiner:(QCombiner*)combiner uid:(NSString*)uid;
 @property (nonatomic, readonly) GraphicCore::RenderNodeRef native;
-//
-//- (bool)addChildNodeDirect:(QGraphicNode*)childNode;
-//- (bool)removeChildNodeDirect:(QGraphicNode*)childNode;
+@property (readonly, weak) QCombiner* combiner;
 
 @end
