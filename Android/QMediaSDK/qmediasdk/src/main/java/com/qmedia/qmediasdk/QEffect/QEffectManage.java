@@ -25,7 +25,7 @@ public class QEffectManage {
             return null;
     }
 
-    public static native QEffectConfig[] native_getAllEffectConfig();
-    public static native boolean native_addFilterConfig(String json_config);
-    public static native long native_createEffect(String effect_name);
+    private static native QEffectConfig[] native_getAllEffectConfig();
+    private static native boolean native_addFilterConfig(String json_config);
+    private static native long native_createEffect(String effect_name);
 }
