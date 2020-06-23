@@ -15,7 +15,7 @@ GRAPHICCORE_BEGIN
 
 Layer::Layer(Size size):
 _framebuffer(nullptr),
-//_texture2d(nullptr),
+_texture_first(nullptr),_texture_second(nullptr),
 _bkColor(0,0,0,1),
 _layerSize(size) {
 }
@@ -29,6 +29,8 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
     Range<int64_t> dispRange = getRange();
     if ( dispRange.isValid() && (scene->getDelta() < dispRange._start || scene->getDelta() > dispRange._end))
         return; //isn't in display time range
+
+    AnimaNode::updateAnimations(scene->getDelta() - getRange()._start);
     
     if (!_bVisible)
     {
@@ -48,7 +50,7 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
     gle->saveStatus();
     // draw layer
     gle->setCurrentFrameBuffer(_framebuffer);
-    Rect layerViewPort(0, 0,_texture2d->width(),_texture2d->height()) , prevViewPort;
+    Rect layerViewPort(0, 0,_texture_first->width(),_texture_first->height());
     gle->setViewPort(layerViewPort);
     gle->setClearColor(_bkColor);
     gle->clearByColor();
@@ -70,36 +72,84 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
     scene->popMatrix(MATRIX_STACK_MODELVIEW);
 }
 
-void Layer::addFilter(FilterRef filter){
-    
+void Layer::draw(GraphicCore::Scene* scene, const Mat4 & transform, uint32_t flags) {
+    #define NEXT_TEXTURE (current==_texture_first? _texture_second : _texture_first)
+    if (_texture_first && _textureDrawer) {
+        
+        int64_t duration = scene->getDelta() - _renderRange._start;
+        Texture2D* current = _texture_first;
+        
+        if (_effect_group.size() > 0) {
+            GLEngine *gle = scene->getGLEngine();
+            gle->saveStatus();
+            //TODO: draw filters
+            if (_texture_second == nullptr) {
+                _texture_second = GeneralTexture2D::createTexture(Texture2D::RGBA, _layerSize.width,_layerSize.height);
+            }
+            for (auto& effect : _effect_group) {
+                if (effect->_timeRange.isContain(duration)) {
+                    Texture2D * next = NEXT_TEXTURE;
+                    gle->setCurrentFrameBuffer(_framebuffer);
+                    _framebuffer->attachTexture2D(FrameBuffer::COLOR, next);
+                    Rect layerViewPort(0, 0,next->width(),next->height());
+                    gle->setViewPort(layerViewPort);
+                    effect->drawEffect(duration, current, gle);
+                    current = next;
+                }
+            }
+            gle->recoverStatus();
+        }
+        
+        _textureDrawer->draw(current, scene, transform, this);
+    }
+}
+
+void Layer::duplicateDraw(GraphicCore::Scene* scene, const Mat4 & transform, const Node* displayNode)
+{
+    if (_texture_first && _textureDrawer) {
+        _textureDrawer->draw(_texture_first, scene, transform, displayNode);
+    }
+}
+
+void Layer::addEffect(EffectRef effectRef) {
+    _effect_group.push_back(effectRef);
+}
+void Layer::removeEffect(EffectRef effectRef) {
+    std::remove(_effect_group.begin(), _effect_group.end(), effectRef);
 }
 
 bool Layer::createRes()
 {
-    _texture2d = GeneralTexture2D::createTexture(Texture2D::RGBA, _layerSize.width,_layerSize.height);
-    Rect svp = Rect(0,0,_texture2d->width(),_texture2d->height());
+    _texture_first = GeneralTexture2D::createTexture(Texture2D::RGBA, _layerSize.width,_layerSize.height);
+    Rect svp = Rect(0,0,_texture_first->width(),_texture_first->height());
     _scene.setViewPort(svp);
     _scene.setProjection(Projection::_3D);
     _framebuffer = FrameBuffer::createNew();
-    _framebuffer->attachTexture2D(FrameBuffer::COLOR, _texture2d);
+    _framebuffer->attachTexture2D(FrameBuffer::COLOR, _texture_first);
+    _textureDrawer = std::shared_ptr<Texture2DDrawer>(new Texture2DDrawer());
 
-    return TextureNode::createRes();
+    return RenderNode::createRes();
 }
 
 void Layer::releaseRes()
 {
-//    _shaderProgram.releaseProgram();
     if (_framebuffer) {
 //        _framebuffer->attachTexture2D(FrameBuffer::COLOR, nullptr);
         _framebuffer->release();
         delete _framebuffer;
     }
-    if (_texture2d) {
-        _texture2d->release();
-        delete _texture2d;
-        _texture2d = nullptr;
+    if (_texture_first) {
+        _texture_first->release();
+        delete _texture_first;
+        _texture_first = nullptr;
     }
-    TextureNode::releaseRes();
+    if (_texture_second) {
+        _texture_second->release();
+        delete _texture_second;
+        _texture_second = nullptr;
+    }
+    _textureDrawer.reset();
+    RenderNode::releaseRes();
 }
 
 GRAPHICCORE_END

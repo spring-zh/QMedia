@@ -206,7 +206,7 @@ NATIVE_FUNCTION(jobject , native_1getContentSize)(JNIEnv *env, jobject thiz) {
     if (node_ptr) {
         contentSize = (*node_ptr)->getContentSize();
     }
-    return J4AC_com_qmedia_qmediasdk_QCommon_QVector__QVector2(env, contentSize.width, contentSize.height);
+    return J4AC_com_qmedia_qmediasdk_QCommon_QSize__QSize(env, contentSize.width, contentSize.height);
 }
 
 NATIVE_FUNCTION(void , native_1setContentSize)(JNIEnv *env, jobject thiz, jobject jcontentSize) {
@@ -214,8 +214,8 @@ NATIVE_FUNCTION(void , native_1setContentSize)(JNIEnv *env, jobject thiz, jobjec
             env, thiz));
 
     if (node_ptr) {
-        GraphicCore::Size contentSize = {J4AC_com_qmedia_qmediasdk_QCommon_QVector__v0__get(env, jcontentSize),
-                                J4AC_com_qmedia_qmediasdk_QCommon_QVector__v1__get(env, jcontentSize)};
+        GraphicCore::Size contentSize = {J4AC_com_qmedia_qmediasdk_QCommon_QSize__width__get(env, jcontentSize),
+                                         J4AC_com_qmedia_qmediasdk_QCommon_QSize__height__get(env, jcontentSize)};
         (*node_ptr)->setContentSize(contentSize);
     }
 }
@@ -326,6 +326,54 @@ NATIVE_FUNCTION(void , native_1setAlpha)(JNIEnv *env, jobject thiz, jfloat jalph
         GraphicCore::Color4F color4 = (*node_ptr)->getColor();
         color4.a = jalpha;
         (*node_ptr)->setColor(color4);
+    }
+}
+
+#pragma mark Crop
+NATIVE_FUNCTION(jobject , native_1getCrop)(JNIEnv *env, jobject thiz) {
+    GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
+            env, thiz));
+    GraphicCore::Rect crop;
+    if (node_ptr) {
+        crop = (*node_ptr)->getCrop();
+    }
+    return J4AC_com_qmedia_qmediasdk_QCommon_QVector__QVector4(env, crop.getMinX(),crop.getMinY(),crop.getMaxX(),crop.getMaxY());
+}
+
+NATIVE_FUNCTION(void , native_1setCrop)(JNIEnv *env, jobject thiz, jobject jcrop) {
+    GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
+            env, thiz));
+    if (node_ptr) {
+        float l = J4AC_com_qmedia_qmediasdk_QCommon_QVector__v0__get(env, jcrop);
+        float t = J4AC_com_qmedia_qmediasdk_QCommon_QVector__v1__get(env, jcrop);
+        float r = J4AC_com_qmedia_qmediasdk_QCommon_QVector__v2__get(env, jcrop);
+        float b = J4AC_com_qmedia_qmediasdk_QCommon_QVector__v3__get(env, jcrop);
+        GraphicCore::Color4F color4 = (*node_ptr)->getColor();
+        (*node_ptr)->setCrop(GraphicCore::Rect(l, t, r-l, b-t));
+    }
+}
+
+#pragma mark BlendFunc
+NATIVE_FUNCTION(jobject , native_1getBlendFunc)(JNIEnv *env, jobject thiz) {
+    GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
+            env, thiz));
+    GraphicCore::BlendFunc blendFunc;
+    if (node_ptr) {
+        blendFunc = (*node_ptr)->getBlendFunc();
+    }
+    return J4AC_com_qmedia_qmediasdk_QGraphic_QBlendFunc__QBlendFunc(env, blendFunc.src, blendFunc.dst);
+}
+
+NATIVE_FUNCTION(void , native_1setBlendFunc)(JNIEnv *env, jobject thiz, jobject jblendFunc) {
+    GraphicCore::RenderNodeRef *node_ptr = reinterpret_cast<GraphicCore::RenderNodeRef *>(JniUtils::getObjectPtr(
+            env, thiz));
+    if (node_ptr) {
+        GraphicCore::BlendFunc blendFunc = {
+                static_cast<GLenum>(J4AC_com_qmedia_qmediasdk_QGraphic_QBlendFunc__src__get(env,
+                                                                                            jblendFunc)),
+                static_cast<GLenum>(J4AC_com_qmedia_qmediasdk_QGraphic_QBlendFunc__dst__get(env,
+                                                                                            jblendFunc))};
+        (*node_ptr)->setBlendFunc(blendFunc);
     }
 }
 

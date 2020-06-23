@@ -54,7 +54,7 @@ bool RenderLayer::beginRender()
 void RenderLayer::render(int64_t timeStamp){
     _playerScene.setDelta(timeStamp);
     
-    AnimaNode::updateAnimations(timeStamp);
+//    AnimaNode::updateAnimations(timeStamp);
     RenderNode::visit(&_playerScene, _playerScene.getMatrix(MATRIX_STACK_MODELVIEW), 0);
 }
 
@@ -290,6 +290,19 @@ void EffectCombiner::_detachRenderNode(GraphicCore::RenderNodeRef current)
     current->releaseRes();
 }
 
+void EffectCombiner::_attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
+    if (layer) {
+        effect->load();
+        layer->addEffect(effect);
+    }
+}
+void EffectCombiner::_detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
+    if (layer) {
+        layer->removeEffect(effect);
+        effect->unload();
+    }
+}
+
 void EffectCombiner::_attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent)
 {
     _addMediaAudioChannel(child);
@@ -469,6 +482,13 @@ void EffectCombiner::detachRenderNode(GraphicCore::RenderNodeRef current)
 void EffectCombiner::attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent) {
     postAudioTask(&EffectCombiner::_attachAudioNode, this, child, parent);
 }
+void EffectCombiner::attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
+    postRenderTask(&EffectCombiner::_attachEffect, this, layer, effect);
+}
+void EffectCombiner::detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
+    postRenderTask(&EffectCombiner::_detachEffect, this, layer, effect);
+}
+
 void EffectCombiner::detachAudioNode(MediaAudioChannelRef current) {
     postAudioTask(&EffectCombiner::_detachAudioNode, this, current);
 }

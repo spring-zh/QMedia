@@ -34,7 +34,7 @@ Texture2D* GeneralTexture2D::createFromImage(const Image* image)
         default://STBI_default
             break;
     }
-    
+    texture->_gl_format = gl_format;
     glGenTextures(1, &texture->_textureid);
     glBindTexture(GL_TEXTURE_2D, texture->_textureid);
     glTexImage2D(GL_TEXTURE_2D, 0 ,gl_format, image->width() , image->height() , 0, gl_format, GL_UNSIGNED_BYTE, image->getBuffer());

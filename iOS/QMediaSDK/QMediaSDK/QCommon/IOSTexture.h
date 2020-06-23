@@ -9,10 +9,28 @@
 #import <CoreVideo/CoreVideo.h>
 #import <CoreGraphics/CoreGraphics.h>
 #import "QGLContext.h"
-#include <OpenGLES/ES2/gl.h>
-#include <OpenGLES/ES2/glext.h>
 
-@interface IOSFastTexture : NSObject
+@protocol IOSTexture <NSObject>
+@property (nonatomic, readonly) GLuint glTexid;
+@property (nonatomic, readonly) GLenum glTexTarget;
+@property (nonatomic, readonly) size_t width;
+@property (nonatomic, readonly) size_t height;
+@end
+
+#pragma mark -----IOSGeneralTexture------
+@interface IOSGeneralTexture : NSObject <IOSTexture>
+
+- (instancetype)initWithSize:(CGSize)size;
+
+@property (nonatomic, readonly) GLuint glTexid;
+@property (nonatomic, readonly) GLenum glTexTarget;
+@property (nonatomic, readonly) size_t width;
+@property (nonatomic, readonly) size_t height;
+
+@end
+
+#pragma mark -----IOSFastTexture------
+@interface IOSFastTexture : NSObject <IOSTexture>
 
 - (instancetype)initWithContext:(QGLContext*)context size:(CGSize)size pool:(CVPixelBufferPoolRef)bufferPool;
 - (instancetype)initWithContext:(EAGLContext*)context size:(CGSize)size;

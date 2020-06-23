@@ -11,11 +11,8 @@
 #import "QVideoTarget.h"
 
 @interface QFileExporterTarget : NSObject <QAudioTarget, QVideoTarget>
-//@property (nonatomic, copy) XMVideoDescribe* videoDesc;
-//@property (nonatomic, copy) XMAudioDescribe* audioDesc;
 
 - (instancetype)initWithPath:(NSString*)filePath;
-//- (instancetype)initWithDescribe:(XMVideoDescribe*)videoDesc audioDesc:(XMAudioDescribe*)audioDesc;
 - (bool)startAudio;
 - (bool)stopAudio;
 - (bool)startVideo;

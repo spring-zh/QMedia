@@ -20,6 +20,8 @@ _scaleX(1.0f),
 _scaleY(1.0f),
 _scaleZ(1.0f),
 _realColor(1, 1, 1, 1),
+_blendFunc(BlendFunc::DISABLE),
+_crop(Rect(0,0,0,0)),
 _bVisible(true),
 _parent(nullptr),
 _additionalTransform(nullptr)

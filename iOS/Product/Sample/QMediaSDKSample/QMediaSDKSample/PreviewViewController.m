@@ -48,24 +48,14 @@
     const int targetW = 640;
     const int targetH = 480;
     
-//    QLayer *layer = [[QLayer alloc] initWithSize:CGSizeMake(640, 480) name:@"haha"];
-//    [self.player addGraphicNode:layer];
-//    layer.color4 = QColorMaker(1, 1, 1, 0.8);
-//    layer.bkColor = QColorMaker(1, 0, 1, 1);
-//    layer.position = CGPointMake(100, 50);
-//    layer.anchorPoint = CGPointMake(0.5, 0.5);
-//    layer.contentSize = CGSizeMake(640, 480);
-//    layer.scaleX = 0.6f;
-//    layer.scaleY = 0.6f;
-//    layer.rotation = 30.0f;
-//    layer.renderRange = NSMakeRange(0, 10000);
-    
     self.player.playerView = _renderView;
-    self.player.rootNode.color4 = QColorMaker(0, 0, 1, 1);
-//    self.player.graphicLayer.color4 = XMColorMaker(1, 0.5, 0.5, 0.5);
-//    self.player.rootNode.rotation = 30;
-//    self.player.rootNode.position = CGPointMake(-100, -100);
-//    self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
+    self.player.rootNode.color4 = QColorMake(0, 0, 1, 1);
+
+    QVideoDescribe* vdesc = [[QVideoDescribe alloc] initWithParamenters:QVideoCodecH264 framerate:25 width:targetW height:targetH bitrate:2*1024*1024];
+    QAudioDescribe* adesc = [[QAudioDescribe alloc] initWithParamenters:QAudioCodecAAC rawFormat:QRawAudioFormatS16 samplerate:44100 nchannel:2 bitrate:128000];
+    
+    [self.player setAudioConfig:adesc];
+    [self.player setVideoConfig:vdesc];
     NSString* testVideoFile2 = [QFileUtils getFileFromMainbundleAbsolutePath:@"video/test.mp4"];
     NSString* testAudioFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"audio/LR.mp3"];
     
@@ -77,7 +67,7 @@
         videoTrack.graphic.position = CGPointMake(targetW/4, targetH/4);
         videoTrack.graphic.contentSize = CGSizeMake(targetW/2, targetH/2);//self.player.layerSize;
         //    videoTrack.graphic.color4 = XMColorMaker(1, 1, 1, 0.5);
-        videoTrack.graphic.anchorPoint = CGPointMake(0.5, 0.5);
+//        videoTrack.graphic.anchorPoint = CGPointMake(0.5, 0.5);
 //        videoTrack.graphic.rotation = -30.0f;
     //    videoTrack.graphic.scaleX = 0.4f;
     //    videoTrack.graphic.scaleY = 0.4f;
@@ -113,7 +103,7 @@
     [self.player addMediaTrack:audioTrack];
     
     QGraphicNode* composeNode = [[QGraphicNode alloc] initWithName:@"composeNode" combiner:self.player];
-    composeNode.contentSize = CGSizeMake(640, 480);
+    composeNode.contentSize = CGSizeMake(targetW, targetH);
     composeNode.anchorPoint = CGPointMake(0.5, 0.5);
     QNodeAnimator * an1 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:NSMakeRange(0, 5000) begin:QVectorV3(0, 0, 0) end:QVectorV3(-180, 180, 180) functype:Linear repleat:false];
     [composeNode addAnimator:an1];
@@ -123,13 +113,21 @@
     [composeNode addChildNode:duplicatenodeL];
     [composeNode addChildNode:duplicatenodeR];
     
+    QLayer *layer = [[QLayer alloc] initWithSize:CGSizeMake(320, 240) combiner:self.player];
+    layer.color4 = QColorMake(1, 1, 1, 0.8);
+    layer.bkColor = QColorMake(1, 0, 1, 1);
+    layer.anchorPoint = CGPointMake(0.5, 0.5);
+    layer.contentSize = CGSizeMake(320, 240);
+    layer.renderRange = NSMakeRange(0, 10000);
+    layer.rotation = 60;
     NSString* testImageFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"image/li.jpg"];
     QImageNode* imageNode = [[QImageNode alloc] initWithPath:testImageFile combiner:self.player];
     imageNode.contentSize = CGSizeMake(320, 240);
-    imageNode.renderRange = NSMakeRange(2000, 10000);
+    imageNode.renderRange = NSMakeRange(0, 10000);
     imageNode.alpha = 0.8;
     
-    [self.player.rootNode addChildNode:imageNode];
+    [layer addChildNode:imageNode];
+    [self.player.rootNode addChildNode:layer];
     [self.player.rootNode addChildNode:composeNode];
     
     self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);

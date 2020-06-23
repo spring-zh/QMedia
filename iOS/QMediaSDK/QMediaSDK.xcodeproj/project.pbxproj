@@ -19,6 +19,13 @@
 		6F049354244C2A2600F8B73B /* QMediaDescribe.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F049353244C2A2600F8B73B /* QMediaDescribe.mm */; };
 		6F187497248E5C4B009C4B94 /* QImageNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F187495248E5C4B009C4B94 /* QImageNode.mm */; };
 		6F187498248E5C4B009C4B94 /* QImageNode.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F187496248E5C4B009C4B94 /* QImageNode.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F224A2524977114000244FF /* QFileExporter.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A2324977114000244FF /* QFileExporter.mm */; };
+		6F224A2624977114000244FF /* QFileExporter.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F224A2424977114000244FF /* QFileExporter.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F224A42249B9587000244FF /* QEffect.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A41249B9587000244FF /* QEffect.mm */; };
+		6F224A44249B95AF000244FF /* QEffect.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F224A43249B95AF000244FF /* QEffect.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F224A47249B981F000244FF /* QEffectManage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A45249B981F000244FF /* QEffectManage.mm */; };
+		6F224A48249B981F000244FF /* QEffectManage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F224A46249B981F000244FF /* QEffectManage.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		6F224A4A249C5533000244FF /* QEffect_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F224A49249C5532000244FF /* QEffect_internal.h */; };
 		6F372074246A7B0300356951 /* SerializeSetting.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F372073246A7B0300356951 /* SerializeSetting.mm */; };
 		6F372076246A879B00356951 /* SerializeSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F372075246A879A00356951 /* SerializeSetting.h */; };
 		6F45921024614EAF00FABEAF /* libQMediaCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4592072461479300FABEAF /* libQMediaCore.a */; };
@@ -48,8 +55,8 @@
 		6F6214522445DE6E00AF70A0 /* QGraphicNode_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6214512445DE6E00AF70A0 /* QGraphicNode_internal.h */; };
 		6F6E97E72419E35A00992B9D /* QGLContext.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F6E97E52419E35900992B9D /* QGLContext.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F6E97E82419E35A00992B9D /* QGLContext.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F6E97E62419E35900992B9D /* QGLContext.m */; };
-		6FA69F98244E8E3700BC3294 /* IOSFastTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FA69F96244E8E3700BC3294 /* IOSFastTexture.h */; };
-		6FA69F99244E8E3700BC3294 /* IOSFastTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FA69F97244E8E3700BC3294 /* IOSFastTexture.m */; };
+		6FA69F98244E8E3700BC3294 /* IOSTexture.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FA69F96244E8E3700BC3294 /* IOSTexture.h */; };
+		6FA69F99244E8E3700BC3294 /* IOSTexture.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FA69F97244E8E3700BC3294 /* IOSTexture.m */; };
 		6FACC4352462564A008F1B41 /* QCommon.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FACC42D2462564A008F1B41 /* QCommon.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FACC4362462564A008F1B41 /* QObserverHoster.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FACC42E2462564A008F1B41 /* QObserverHoster.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FACC4372462564A008F1B41 /* QFileUtils.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FACC42F2462564A008F1B41 /* QFileUtils.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -81,8 +88,8 @@
 		6FACC46E24625EB3008F1B41 /* QMediaMerge.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FACC46A24625EB3008F1B41 /* QMediaMerge.h */; };
 		6FACC46F24625EB3008F1B41 /* QSourceFileForMerge.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FACC46B24625EB3008F1B41 /* QSourceFileForMerge.h */; };
 		6FACC47124625F08008F1B41 /* QMediaSDKTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FACC47024625F08008F1B41 /* QMediaSDKTests.m */; };
-		6FBD026024552F0F00372404 /* IOSFastTextureDrawable.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD025E24552F0F00372404 /* IOSFastTextureDrawable.mm */; };
-		6FBD026124552F0F00372404 /* IOSFastTextureDrawable.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FBD025F24552F0F00372404 /* IOSFastTextureDrawable.h */; };
+		6FBD026024552F0F00372404 /* IOSGLTextureDrawable.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD025E24552F0F00372404 /* IOSGLTextureDrawable.mm */; };
+		6FBD026124552F0F00372404 /* IOSGLTextureDrawable.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FBD025F24552F0F00372404 /* IOSGLTextureDrawable.h */; };
 		6FBD02642455705700372404 /* VideoCaptureSession.m in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD02622455705700372404 /* VideoCaptureSession.m */; };
 		6FBD02652455705700372404 /* VideoCaptureSession.h in Headers */ = {isa = PBXBuildFile; fileRef = 6FBD02632455705700372404 /* VideoCaptureSession.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6FBD02682455895200372404 /* QCaptureSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD02662455895200372404 /* QCaptureSource.mm */; };
@@ -156,6 +163,13 @@
 		6F049353244C2A2600F8B73B /* QMediaDescribe.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QMediaDescribe.mm; sourceTree = "<group>"; };
 		6F187495248E5C4B009C4B94 /* QImageNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QImageNode.mm; sourceTree = "<group>"; };
 		6F187496248E5C4B009C4B94 /* QImageNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QImageNode.h; sourceTree = "<group>"; };
+		6F224A2324977114000244FF /* QFileExporter.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QFileExporter.mm; sourceTree = "<group>"; };
+		6F224A2424977114000244FF /* QFileExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QFileExporter.h; sourceTree = "<group>"; };
+		6F224A41249B9587000244FF /* QEffect.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = QEffect.mm; sourceTree = "<group>"; };
+		6F224A43249B95AF000244FF /* QEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEffect.h; sourceTree = "<group>"; };
+		6F224A45249B981F000244FF /* QEffectManage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QEffectManage.mm; sourceTree = "<group>"; };
+		6F224A46249B981F000244FF /* QEffectManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEffectManage.h; sourceTree = "<group>"; };
+		6F224A49249C5532000244FF /* QEffect_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEffect_internal.h; sourceTree = "<group>"; };
 		6F372073246A7B0300356951 /* SerializeSetting.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SerializeSetting.mm; sourceTree = "<group>"; };
 		6F372075246A879A00356951 /* SerializeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerializeSetting.h; sourceTree = "<group>"; };
 		6F47DD0C2463A05E0045C9DC /* QCombiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCombiner.h; sourceTree = "<group>"; };
@@ -184,8 +198,8 @@
 		6F6214512445DE6E00AF70A0 /* QGraphicNode_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QGraphicNode_internal.h; sourceTree = "<group>"; };
 		6F6E97E52419E35900992B9D /* QGLContext.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QGLContext.h; sourceTree = "<group>"; };
 		6F6E97E62419E35900992B9D /* QGLContext.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QGLContext.m; sourceTree = "<group>"; };
-		6FA69F96244E8E3700BC3294 /* IOSFastTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSFastTexture.h; sourceTree = "<group>"; };
-		6FA69F97244E8E3700BC3294 /* IOSFastTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IOSFastTexture.m; sourceTree = "<group>"; };
+		6FA69F96244E8E3700BC3294 /* IOSTexture.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSTexture.h; sourceTree = "<group>"; };
+		6FA69F97244E8E3700BC3294 /* IOSTexture.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IOSTexture.m; sourceTree = "<group>"; };
 		6FACC42D2462564A008F1B41 /* QCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCommon.h; sourceTree = "<group>"; };
 		6FACC42E2462564A008F1B41 /* QObserverHoster.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QObserverHoster.h; sourceTree = "<group>"; };
 		6FACC42F2462564A008F1B41 /* QFileUtils.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QFileUtils.h; sourceTree = "<group>"; };
@@ -217,8 +231,8 @@
 		6FACC46A24625EB3008F1B41 /* QMediaMerge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMediaMerge.h; sourceTree = "<group>"; };
 		6FACC46B24625EB3008F1B41 /* QSourceFileForMerge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSourceFileForMerge.h; sourceTree = "<group>"; };
 		6FACC47024625F08008F1B41 /* QMediaSDKTests.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = QMediaSDKTests.m; sourceTree = "<group>"; };
-		6FBD025E24552F0F00372404 /* IOSFastTextureDrawable.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IOSFastTextureDrawable.mm; sourceTree = "<group>"; };
-		6FBD025F24552F0F00372404 /* IOSFastTextureDrawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSFastTextureDrawable.h; sourceTree = "<group>"; };
+		6FBD025E24552F0F00372404 /* IOSGLTextureDrawable.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = IOSGLTextureDrawable.mm; sourceTree = "<group>"; };
+		6FBD025F24552F0F00372404 /* IOSGLTextureDrawable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IOSGLTextureDrawable.h; sourceTree = "<group>"; };
 		6FBD02622455705700372404 /* VideoCaptureSession.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = VideoCaptureSession.m; sourceTree = "<group>"; };
 		6FBD02632455705700372404 /* VideoCaptureSession.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoCaptureSession.h; sourceTree = "<group>"; };
 		6FBD02662455895200372404 /* QCaptureSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QCaptureSource.mm; sourceTree = "<group>"; };
@@ -284,6 +298,7 @@
 			isa = PBXGroup;
 			children = (
 				6FACC42C24625615008F1B41 /* QCommon */,
+				6F224A40249B951D000244FF /* QEffect */,
 				6F5117A22409F7F20013BC9E /* QTarget */,
 				6F5117CE240E75260013BC9E /* QAudio */,
 				6F5117C4240D4FC90013BC9E /* QGraphic */,
@@ -334,6 +349,18 @@
 			path = QSource;
 			sourceTree = "<group>";
 		};
+		6F224A40249B951D000244FF /* QEffect */ = {
+			isa = PBXGroup;
+			children = (
+				6F224A49249C5532000244FF /* QEffect_internal.h */,
+				6F224A43249B95AF000244FF /* QEffect.h */,
+				6F224A41249B9587000244FF /* QEffect.mm */,
+				6F224A46249B981F000244FF /* QEffectManage.h */,
+				6F224A45249B981F000244FF /* QEffectManage.mm */,
+			);
+			path = QEffect;
+			sourceTree = "<group>";
+		};
 		6F4592032461479300FABEAF /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -363,10 +390,6 @@
 				6F6E97E62419E35900992B9D /* QGLContext.m */,
 				6F5117CA240E74E20013BC9E /* QVideoFrame.h */,
 				6F5117CB240E74E20013BC9E /* QVideoFrame.mm */,
-				6FA69F96244E8E3700BC3294 /* IOSFastTexture.h */,
-				6FA69F97244E8E3700BC3294 /* IOSFastTexture.m */,
-				6FBD025F24552F0F00372404 /* IOSFastTextureDrawable.h */,
-				6FBD025E24552F0F00372404 /* IOSFastTextureDrawable.mm */,
 				6F47DD1A24659AD10045C9DC /* QNodeAnimator.h */,
 				6F47DD1924659AD10045C9DC /* QNodeAnimator.mm */,
 				6F6214512445DE6E00AF70A0 /* QGraphicNode_internal.h */,
@@ -420,6 +443,10 @@
 				6FACC4342462564A008F1B41 /* QFileUtils.m */,
 				6FACC42E2462564A008F1B41 /* QObserverHoster.h */,
 				6FACC4332462564A008F1B41 /* QObserverHoster.m */,
+				6FA69F96244E8E3700BC3294 /* IOSTexture.h */,
+				6FA69F97244E8E3700BC3294 /* IOSTexture.m */,
+				6FBD025F24552F0F00372404 /* IOSGLTextureDrawable.h */,
+				6FBD025E24552F0F00372404 /* IOSGLTextureDrawable.mm */,
 			);
 			path = QCommon;
 			sourceTree = "<group>";
@@ -434,6 +461,8 @@
 				6FACC45F24625AB0008F1B41 /* QEditorPlayer.mm */,
 				6FACC46224625AB0008F1B41 /* QExporter.h */,
 				6FACC46024625AB0008F1B41 /* QExporter.mm */,
+				6F224A2424977114000244FF /* QFileExporter.h */,
+				6F224A2324977114000244FF /* QFileExporter.mm */,
 				6F372075246A879A00356951 /* SerializeSetting.h */,
 				6F372073246A7B0300356951 /* SerializeSetting.mm */,
 			);
@@ -497,12 +526,13 @@
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6FBD026124552F0F00372404 /* IOSFastTextureDrawable.h in Headers */,
+				6FBD026124552F0F00372404 /* IOSGLTextureDrawable.h in Headers */,
 				6F5117D3240E756F0013BC9E /* QAudioTrackNode.h in Headers */,
 				6F5117CC240E74E20013BC9E /* QVideoFrame.h in Headers */,
 				6FBD027A245926CF00372404 /* QMediaFactory_internal.h in Headers */,
 				6F5117A92409F94F0013BC9E /* QVideoTarget.h in Headers */,
-				6FA69F98244E8E3700BC3294 /* IOSFastTexture.h in Headers */,
+				6FA69F98244E8E3700BC3294 /* IOSTexture.h in Headers */,
+				6F224A4A249C5533000244FF /* QEffect_internal.h in Headers */,
 				6F47DD18246546450045C9DC /* QVideoTrackNode.h in Headers */,
 				6F52F332240155040030B238 /* QMediaTrack.h in Headers */,
 				6F62144E2445D76700AF70A0 /* QLayer.h in Headers */,
@@ -513,6 +543,7 @@
 				6FACC45724625A94008F1B41 /* CCESRenderer-ios.h in Headers */,
 				6FACC4372462564A008F1B41 /* QFileUtils.h in Headers */,
 				6FACC44B24625983008F1B41 /* QFileExporterTarget.h in Headers */,
+				6F224A48249B981F000244FF /* QEffectManage.h in Headers */,
 				6FACC46524625AB0008F1B41 /* QEditorPlayer.h in Headers */,
 				6FACC44924625983008F1B41 /* QAudioPlayer.h in Headers */,
 				6FACC44724625983008F1B41 /* QPlayerView.h in Headers */,
@@ -520,9 +551,11 @@
 				6FACC4362462564A008F1B41 /* QObserverHoster.h in Headers */,
 				6FACC45824625A94008F1B41 /* CCES2Renderer-ios.h in Headers */,
 				6FACC4352462564A008F1B41 /* QCommon.h in Headers */,
+				6F224A44249B95AF000244FF /* QEffect.h in Headers */,
 				6F47DD0E2463A05E0045C9DC /* QCombiner.h in Headers */,
 				6F04934D244BF21A00F8B73B /* QAudioTarget.h in Headers */,
 				6F47DD1C24659AD10045C9DC /* QNodeAnimator.h in Headers */,
+				6F224A2624977114000244FF /* QFileExporter.h in Headers */,
 				6F187498248E5C4B009C4B94 /* QImageNode.h in Headers */,
 				6FACC45924625A94008F1B41 /* OpenGL_Internal-ios.h in Headers */,
 				6F049352244C227700F8B73B /* QMediaDescribe.h in Headers */,
@@ -686,6 +719,7 @@
 				6FBD02722456F5B700372404 /* QAssetReaderSource.m in Sources */,
 				6FACC45C24625A94008F1B41 /* CCEAGLView-ios.m in Sources */,
 				6F47DD1B24659AD10045C9DC /* QNodeAnimator.mm in Sources */,
+				6F224A2524977114000244FF /* QFileExporter.mm in Sources */,
 				6FACC46D24625EB3008F1B41 /* QSourceFileForMerge.m in Sources */,
 				6F049350244BF21A00F8B73B /* QAudioTarget.mm in Sources */,
 				6F47DD0F2463A05E0045C9DC /* QCombiner.mm in Sources */,
@@ -707,17 +741,19 @@
 				6FACC46424625AB0008F1B41 /* QExporter.mm in Sources */,
 				6FBD028A245A8B4D00372404 /* QDuplicateNode.mm in Sources */,
 				6F5117D6240E756F0013BC9E /* QAudioFrame.mm in Sources */,
-				6FA69F99244E8E3700BC3294 /* IOSFastTexture.m in Sources */,
+				6FA69F99244E8E3700BC3294 /* IOSTexture.m in Sources */,
 				6FEA149F242798E100758ACD /* QMediaFactory.mm in Sources */,
 				6FACC45B24625A94008F1B41 /* CCES2Renderer-ios.m in Sources */,
 				6F187497248E5C4B009C4B94 /* QImageNode.mm in Sources */,
-				6FBD026024552F0F00372404 /* IOSFastTextureDrawable.mm in Sources */,
+				6FBD026024552F0F00372404 /* IOSGLTextureDrawable.mm in Sources */,
 				6F049354244C2A2600F8B73B /* QMediaDescribe.mm in Sources */,
 				6FACC43C2462564A008F1B41 /* QFileUtils.m in Sources */,
 				6F5117D5240E756F0013BC9E /* QAudioTrackNode.mm in Sources */,
 				6FACC43B2462564A008F1B41 /* QObserverHoster.m in Sources */,
 				6FACC44824625983008F1B41 /* QFileExporterTarget.m in Sources */,
+				6F224A42249B9587000244FF /* QEffect.mm in Sources */,
 				6FACC4392462564A008F1B41 /* QCommon.m in Sources */,
+				6F224A47249B981F000244FF /* QEffectManage.mm in Sources */,
 				6FACC46324625AB0008F1B41 /* QEditorPlayer.mm in Sources */,
 				6F6E97E82419E35A00992B9D /* QGLContext.m in Sources */,
 				6F47DD17246546450045C9DC /* QVideoTrackNode.mm in Sources */,

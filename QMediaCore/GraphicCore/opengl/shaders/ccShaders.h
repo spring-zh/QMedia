@@ -100,7 +100,8 @@ extern const GLchar* ccETC1ASPositionTextureGray_frag;
 extern const GLchar* ccPosition_vert;
 extern const GLchar* ccShader_LayerRadialGradient_frag;
 
-
+//custom
+extern const GLchar* base2dTexture_vert;
 extern const GLchar* defaultPositionTexture_vert;
 extern const GLchar* defaultPositionTexture_frag;
 

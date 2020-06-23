@@ -28,5 +28,5 @@ NATIVE_FUNCTION(jobject , native_1getSize)(JNIEnv *env, jobject thiz)
         width = (*imageNode_ptr)->getWidth();
         height = (*imageNode_ptr)->getHeight();
     }
-    return J4AC_com_qmedia_qmediasdk_QCommon_QVector__QVector2(env, width, height);
+    return J4AC_com_qmedia_qmediasdk_QCommon_QSize__QSize(env, width, height);
 }

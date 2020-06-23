@@ -24,7 +24,8 @@ public:
         LUMINANCE_ALPHA
     };
     
-    static Image* createFromFile(FILE *filep);
+    static Image* createFromFile(const char *filename);
+    static Image* createFromBuffer(const uint8_t* buffer, int buffer_size);
     static Image* createEmpty(Format format, int width, int height);
     
     virtual ~Image();
@@ -36,6 +37,7 @@ public:
     
 protected:
     Image();
+    bool init(uint8_t* buffer, int width, int height, int count);
     
     void *_buffer;
     Format _format;

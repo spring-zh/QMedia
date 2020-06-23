@@ -8,6 +8,7 @@ public class QNodeAnimator {
     //@property
     public static final String positionxyz = "positionxyz";//v3
     public static final String rotationxyz = "rotationxyz";//v3
+    public static final String rotation = "rotation";//v1
     public static final String scalex = "scalex";//v1
     public static final String scalez = "scalez";//v1
     public static final String scalexy = "scalexy";//v2
@@ -17,6 +18,7 @@ public class QNodeAnimator {
     public static final String contentsize = "contentsize";//v2
     public static final String alpha = "alpha";//v1
     public static final String mixcolor = "mixcolor";//v4
+    public static final String crop = "crop";//v4
 
     //@EaseFunction
     public static final int CUSTOM_EASING = -1;

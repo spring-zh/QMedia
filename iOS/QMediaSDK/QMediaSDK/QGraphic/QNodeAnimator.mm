@@ -21,6 +21,7 @@ AnimaNode::AnimatorRef QNodeAnimatorToCPP(QNodeAnimator* animator){
 
 #pragma mark QNodeAnimator
 NSString* property_positionxyz = @"positionxyz";
+NSString* property_rotation = @"rotation";
 NSString* property_rotationxyz = @"rotationxyz";
 NSString* property_scalex = @"scalex";
 NSString* property_scalez = @"scalez";
@@ -31,6 +32,7 @@ NSString* property_contentsizeh = @"contentsizeh";
 NSString* property_contentsize = @"contentsize";
 NSString* property_alpha = @"alpha";
 NSString* property_mixcolor = @"mixcolor";
+NSString* property_crop = @"crop";
 
 @implementation QNodeAnimator {
     AnimaNode::AnimatorRef _animator;

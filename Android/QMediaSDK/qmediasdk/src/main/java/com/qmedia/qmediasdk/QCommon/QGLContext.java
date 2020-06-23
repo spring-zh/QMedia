@@ -50,7 +50,7 @@ public class QGLContext {
     }
 
     private QGLContext() {
-        eglCore = new EglCore();
+        eglCore = new EglCore(null, EglCore.FLAG_RECORDABLE);
         eglSurface = eglCore.createOffscreenSurface(1,1);
     }
     static QGLContext qglContext = new QGLContext();

@@ -35,7 +35,7 @@
 
 - (QColor4)bkColor{
     GraphicCore::Color4F color = _duplicateNode->getBKColor();
-    return QColorMaker(color.r, color.g, color.g, color.b);
+    return QColorMake(color.r, color.g, color.g, color.b);
 }
 - (void)setBkColor:(QColor4)bkColor{
     GraphicCore::Color4F color(bkColor.r,bkColor.g,bkColor.b,bkColor.a);

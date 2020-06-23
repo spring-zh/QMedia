@@ -9,6 +9,7 @@ import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
 import android.opengl.GLES20;
+import android.os.Build;
 import android.support.annotation.AttrRes;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -18,6 +19,7 @@ import android.util.Log;
 import com.qmedia.qmediasdk.QCommon.GLSurfaceView14;
 import com.qmedia.qmediasdk.QCommon.QAspectLayout;
 import com.qmedia.qmediasdk.QCommon.QGLContext;
+import com.qmedia.qmediasdk.QCommon.QSize;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QCommon.gles.FullFrameRect;
 import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
@@ -43,8 +45,7 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
     private static final boolean VERBOSE = false;
 
     protected GLSurfaceView14 mGLSurfaceView;
-    private int mPreviewWidth;
-    private int mPreviewHeight;
+    private QSize previewSize = new QSize();
 
     public enum DisplayMode {
         Stretch,
@@ -224,17 +225,17 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
         mGLSurfaceView.queueEvent(new Runnable() {
             @Override
             public void run() {
-                ByteBuffer captureBuffer = ByteBuffer.allocateDirect(mPreviewWidth * mPreviewHeight * 4);
-                Bitmap bmp = Bitmap.createBitmap(mPreviewWidth, mPreviewHeight, Bitmap.Config.ARGB_8888);
+                ByteBuffer captureBuffer = ByteBuffer.allocateDirect((int) (previewSize.width * previewSize.height * 4));
+                Bitmap bmp = Bitmap.createBitmap((int)previewSize.width, (int)previewSize.height, Bitmap.Config.ARGB_8888);
                 captureBuffer.rewind();
-                GLES20.glReadPixels(0, 0, mPreviewWidth, mPreviewHeight, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE,
+                GLES20.glReadPixels(0, 0, (int)previewSize.width, (int)previewSize.height, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE,
                         captureBuffer);
                 captureBuffer.rewind();
                 bmp.copyPixelsFromBuffer(captureBuffer);
                 float[] floats = new float[] { 1f, 0f, 0f, 0f, -1f, 0f, 0f, 0f, 1f };
                 Matrix matrix = new Matrix();
                 matrix.setValues(floats);
-                Bitmap dstbitmap = Bitmap.createBitmap(bmp,0, 0, mPreviewWidth, mPreviewHeight, matrix, true);
+                Bitmap dstbitmap = Bitmap.createBitmap(bmp,0, 0, (int)previewSize.width, (int)previewSize.height, matrix, true);
                 bmp.recycle();
                 ByteArrayOutputStream bos = new ByteArrayOutputStream();
                 dstbitmap.compress(Bitmap.CompressFormat.JPEG, 90, bos);
@@ -340,8 +341,8 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
 
     @Override
     public void onSurfaceChanged(int width, int height) {
-        mPreviewWidth = width;
-        mPreviewHeight = height;
+        previewSize.width = width;
+        previewSize.height = height;
 
         GLES20.glGetIntegerv(GLES20.GL_VIEWPORT, viewPort, 0);
 
@@ -361,7 +362,7 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
 
                 GLES20.glDisable(GLES20.GL_DEPTH_TEST);
 
-                QVector viewVec = calculateViewPort(displayMode, mVideodescribe.width, mVideodescribe.height, mPreviewWidth, mPreviewHeight);
+                QVector viewVec = calculateViewPort(displayMode, mVideodescribe.width, mVideodescribe.height, (int)previewSize.width, (int)previewSize.height);
                 GLES20.glViewport((int)viewVec.v0, (int)viewVec.v1, (int)(viewVec.v2 - viewVec.v0), (int)(viewVec.v3 - viewVec.v1));
                 GLES20.glClearColor(bkcolors[0],bkcolors[1],bkcolors[2],bkcolors[3]);
                 GLES20.glClear(GLES20.GL_COLOR_BUFFER_BIT | GLES20.GL_DEPTH_BUFFER_BIT);
@@ -388,17 +389,28 @@ public class QPlayerView extends QAspectLayout implements GLSurfaceView14.Render
         @Override
         public EGLConfig chooseConfig(EGLDisplay display) {
             int attribs[] = {
-                    EGL14.EGL_RED_SIZE, 8,
-                    EGL14.EGL_GREEN_SIZE, 8,
-                    EGL14.EGL_BLUE_SIZE, 8,
-                    EGL14.EGL_DEPTH_SIZE, 16,
-                    EGL14.EGL_SAMPLE_BUFFERS, 1,
+                EGL14.EGL_RED_SIZE, 8,
+                        EGL14.EGL_GREEN_SIZE, 8,
+                        EGL14.EGL_BLUE_SIZE, 8,
+                        EGL14.EGL_DEPTH_SIZE, 16,
+                        EGL14.EGL_SAMPLE_BUFFERS, 1,
 //                    EGL14.EGL_SINGLE_BUFFER, 1,
-                    EGL14.EGL_SURFACE_TYPE, /*EGL14.EGL_PBUFFER_BIT |*/ EGL14.EGL_WINDOW_BIT,
-                    EGL_RECORDABLE_ANDROID, 1,
-                    EGL14.EGL_SAMPLES, 4,  // This is for 4x MSAA.
-                    EGL14.EGL_NONE
+                        EGL14.EGL_SURFACE_TYPE, /*EGL14.EGL_PBUFFER_BIT |*/ EGL14.EGL_WINDOW_BIT,
+                        EGL_RECORDABLE_ANDROID, 1,
+                        EGL14.EGL_SAMPLES, 4,  // This is for 4x MSAA.
+                        EGL14.EGL_NONE
             };
+            if (Build.CPU_ABI.equals("x86")) {
+                int new_attribs[] = {
+                        EGL14.EGL_RED_SIZE, 8,
+                        EGL14.EGL_GREEN_SIZE, 8,
+                        EGL14.EGL_BLUE_SIZE, 8,
+                        EGL14.EGL_DEPTH_SIZE, 16,
+                        EGL14.EGL_NONE
+                };
+                attribs = new_attribs;
+            }
+
             EGLConfig[] configs = new EGLConfig[1];
             int[] configCounts = new int[1];
             EGL14.eglChooseConfig(display, attribs, 0, configs, 0,1, configCounts, 0);

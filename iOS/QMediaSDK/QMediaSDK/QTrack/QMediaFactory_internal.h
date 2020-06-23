@@ -13,7 +13,7 @@
 #include "MediaCore/output/AudioTarget.h"
 
 @interface QMediaFactory(internal)
-//- (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audio:(id<QAudioTarget>)audioTarget;
+- (instancetype)initWithCombiner:(QCombiner*)combiner;
 
 - (void)setVideoTarget:(id<QVideoTarget>)videoTarget;
 - (void)setAudioTarget:(id<QAudioTarget>)audioTarget;

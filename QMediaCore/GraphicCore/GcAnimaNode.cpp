@@ -487,8 +487,8 @@ T calculateTweenValue(const T& start,const T& end, float t, float (*tweenfunctio
 
 #pragma mark - AnimaNode
 
-static std::vector<std::string> propertys = {"positionxyz" , "rotationxyz", "scalex",
-    "scaley", "scalexy", "scalexyz", "contentsize", "alpha", "mixcolor" };
+static std::vector<std::string> propertys = {"positionxyz" , "position" , "rotationxyz", "scalex",
+    "scaley", "scalexy", "scalexyz", "contentsize", "alpha", "mixcolor", "crop" };
 
 AnimaNode::AnimaNode()
 {
@@ -521,7 +521,7 @@ bool AnimaNode::removeAnimator(Animator* animator)
     return false;
 }
 
-void AnimaNode::updateAnimations(int64_t timeStamp)
+void AnimaNode::updateAllAnimations(int64_t timeStamp)
 {
     if(!_children.empty()){
         for (auto& node : _children) {
@@ -537,20 +537,12 @@ void AnimaNode::updateAnimations(int64_t timeStamp)
     }
 }
 
-//void AnimaNode::updateNodeProperty(int64_t timeStamp)
-//{
-//    const int diff = 50;
-//    for (auto& animator : _animatorList) {
-//        Range<int64_t>& timeRang = animator->_timeRang;
-//        if ((timeStamp >= timeRang._start - diff) &&
-//            (timeStamp <= timeRang._end + diff)) {
-//            float t = (float)(timeStamp - timeRang._start)/(timeRang._end - timeRang._start);
-//            if(t > 1.0f) t = 1.0f;
-//            else if(t < 0.0f) t = 0.0f;
-//            (animator->_update)(animator,t);
-//        }
-//    }
-//}
+void AnimaNode::updateAnimations(int64_t timeStamp)
+{
+    for (auto& group : _animatorsGroup) {
+        group.second->updateProperty(timeStamp);
+    }
+}
 
 void AnimaNode::updateAnimator_positionxyz(Animator* animator, float t)
 {
@@ -564,6 +556,12 @@ void AnimaNode::updateAnimator_rotationxyz(Animator* animator, float t)
     Vec3 value = calculateTweenValue(animator->_beginValue._v3,animator->_endValue._v3,t,animator->_ease_function);
     
     setRotation3D(value);
+}
+
+void AnimaNode::updateAnimator_rotation(Animator* animator, float t)
+{
+    float value = calculateTweenValue(animator->_beginValue._v1,animator->_endValue._v1,t,animator->_ease_function);
+    setRotation(value);
 }
 
 void AnimaNode::updateAnimator_scalex(Animator* animator, float t)
@@ -633,6 +631,13 @@ void AnimaNode::updateAnimator_mixcolor(Animator* animator, float t)
     setColor(Color4F(value.x,value.y,value.z,value.w));
 }
 
+void AnimaNode::updateAnimator_crop(Animator* animator, float t)
+{
+    Vec4 value = calculateTweenValue(animator->_beginValue._v4,animator->_endValue._v4,t,animator->_ease_function);
+
+    setCrop(Rect(value.x,value.y,value.z,value.w));
+}
+
 bool AnimaNode::checkAndSetAnimator(Animator* animator) {
     #define CHECK_AND_SET_PROPERTY_FUNCTION(proprety_compare) \
     if (animator->_property.compare(#proprety_compare) == 0) { \
@@ -646,6 +651,7 @@ bool AnimaNode::checkAndSetAnimator(Animator* animator) {
         CHECK_AND_SET_PROPERTY_FUNCTION(positionxyz)
         
         CHECK_AND_SET_PROPERTY_FUNCTION(rotationxyz)
+        CHECK_AND_SET_PROPERTY_FUNCTION(rotation)
         
         CHECK_AND_SET_PROPERTY_FUNCTION(scalex)
         CHECK_AND_SET_PROPERTY_FUNCTION(scaley)
@@ -658,6 +664,7 @@ bool AnimaNode::checkAndSetAnimator(Animator* animator) {
         
         CHECK_AND_SET_PROPERTY_FUNCTION(alpha)
         CHECK_AND_SET_PROPERTY_FUNCTION(mixcolor)
+        CHECK_AND_SET_PROPERTY_FUNCTION(crop)
     }while (0);
     
     animator->_ease_function = getTweenFunctionByType(animator->_functionType);
