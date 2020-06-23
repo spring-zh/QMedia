@@ -20,6 +20,6 @@
 + (NSArray<QEffectConfig*>*)getAllEffectConfig;
 + (bool)addFilterConfig:(NSString*)json_config;
 
-+ (QEffect*)createFilter:(NSString*)name;
++ (QEffect*)createEffect:(NSString*)name;
 
 @end

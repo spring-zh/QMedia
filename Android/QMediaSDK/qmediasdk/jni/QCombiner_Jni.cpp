@@ -85,6 +85,29 @@ NATIVE_FUNCTION(jboolean , native_1detachRenderNode)(JNIEnv *env, jobject thiz, 
     return JNI_FALSE;
 }
 
+NATIVE_FUNCTION(jboolean , native_1attachEffect)(JNIEnv *env, jobject thiz, jobject jlayer, jobject jeffect)
+{
+    EffectCombinerRef * combiner_ptr = reinterpret_cast<EffectCombinerRef *>(JniUtils::getObjectPtr(env, thiz));
+    GraphicCore::LayerRef * layer_ptr = reinterpret_cast<GraphicCore::LayerRef *>(JniUtils::getObjectPtr(env, jlayer));
+    GraphicCore::EffectRef * effect_ptr = reinterpret_cast<GraphicCore::EffectRef *>(JniUtils::getObjectPtr(env, jeffect));
+    if (combiner_ptr && layer_ptr && effect_ptr) {
+        (*combiner_ptr)->attachEffect(*layer_ptr, *effect_ptr);
+        return JNI_TRUE;
+    }
+    return JNI_FALSE;
+}
+NATIVE_FUNCTION(jboolean , native_1detachEffect)(JNIEnv *env, jobject thiz, jobject jlayer, jobject jeffect)
+{
+    EffectCombinerRef * combiner_ptr = reinterpret_cast<EffectCombinerRef *>(JniUtils::getObjectPtr(env, thiz));
+    GraphicCore::LayerRef * layer_ptr = reinterpret_cast<GraphicCore::LayerRef *>(JniUtils::getObjectPtr(env, jlayer));
+    GraphicCore::EffectRef * effect_ptr = reinterpret_cast<GraphicCore::EffectRef *>(JniUtils::getObjectPtr(env, jeffect));
+    if (combiner_ptr && layer_ptr && effect_ptr) {
+        (*combiner_ptr)->detachEffect(*layer_ptr, *effect_ptr);
+        return JNI_TRUE;
+    }
+    return JNI_FALSE;
+}
+
 NATIVE_FUNCTION(jboolean , native_1attachAudioNode)(JNIEnv *env, jobject thiz, jobject jchild, jobject jparent)
 {
     EffectCombinerRef * combiner_ptr = reinterpret_cast<EffectCombinerRef *>(JniUtils::getObjectPtr(env, thiz));

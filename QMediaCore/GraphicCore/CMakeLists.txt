@@ -29,8 +29,12 @@ set(GRAPHIC_CORE_HEADER
         GraphicCore/opengl/FrameBuffer.h
         GraphicCore/opengl/Texture2DDrawer.h
 
-        GraphicCore/texture_filter/FilterFactory.h
-        GraphicCore/texture_filter/PolarPixellateFilter.h
+        GraphicCore/effect/Effect.h
+        GraphicCore/effect/EffectManage.h
+
+        GraphicCore/filter/Filter.h
+        GraphicCore/filter/FilterConfig.h
+        GraphicCore/filter/FilterDrawer.h
 
         GraphicCore/GcScene.h
         GraphicCore/GcNode.h
@@ -63,8 +67,16 @@ set(GRAPHIC_CORE_SRC
         GraphicCore/opengl/FrameBuffer.cpp
         GraphicCore/opengl/Texture2DDrawer.cpp
 
-        GraphicCore/texture_filter/FilterFactory.cpp
-        GraphicCore/texture_filter/PolarPixellateFilter.cpp
+        GraphicCore/effect/EffectManage.cpp
+
+        GraphicCore/filter/Filter.cpp
+        GraphicCore/filter/FilterConfig.cpp
+        GraphicCore/filter/FilterDrawer.cpp
+        GraphicCore/filter/ColorInvertConfig.cpp
+        GraphicCore/filter/WhiteBalanceConfig.cpp
+        GraphicCore/filter/SobelEdgeDetectionConfig.cpp
+        GraphicCore/filter/ToonConfig.cpp
+        GraphicCore/filter/PolarPixellateConfig.cpp
 
         GraphicCore/GcScene.cpp
         GraphicCore/GcNode.cpp

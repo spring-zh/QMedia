@@ -254,10 +254,10 @@ public class QGraphicNode {
     }
 
 
-    private WeakReference<QCombiner> weakCombiner = null;
-    private QGraphicNode parent = null;
-    private ArrayList<QGraphicNode> childrens = new ArrayList();
-    private ArrayList<QNodeAnimator> animators = new ArrayList();
+    protected WeakReference<QCombiner> weakCombiner = null;
+    protected QGraphicNode parent = null;
+    protected ArrayList<QGraphicNode> childrens = new ArrayList();
+    protected ArrayList<QNodeAnimator> animators = new ArrayList();
 
     protected String id;
     String name = "";

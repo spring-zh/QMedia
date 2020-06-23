@@ -10,7 +10,6 @@
 
 GRAPHICCORE_BEGIN
 
-#pragma mark FilterObject
 void Filter::setIntValue(const char* key, int value) {
     Uniform::Value uniform_val;
     uniform_val._int_val = value;

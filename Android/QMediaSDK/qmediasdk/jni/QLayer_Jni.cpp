@@ -11,8 +11,8 @@ extern "C" JNIEXPORT retT JNICALL Java_com_qmedia_qmediasdk_QGraphic_QLayer_##na
 
 NATIVE_FUNCTION(jlong, native_1create)(JNIEnv *env, jobject thiz, jobject jsize)
 {
-    GraphicCore::Size size(J4AC_com_qmedia_qmediasdk_QCommon_QVector__v0__get(env, jsize),
-                           J4AC_com_qmedia_qmediasdk_QCommon_QVector__v1__get(env, jsize));
+    GraphicCore::Size size(J4AC_com_qmedia_qmediasdk_QCommon_QSize__width__get(env, jsize),
+                           J4AC_com_qmedia_qmediasdk_QCommon_QSize__height__get(env, jsize));
     GraphicCore::LayerRef * layer_ptr = new GraphicCore::LayerRef(new GraphicCore::Layer(size));
 
     return reinterpret_cast<jlong>(layer_ptr);

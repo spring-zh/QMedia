@@ -41,7 +41,7 @@ using EffectManage = GraphicCore::EffectManage;
 + (NSArray<QEffectConfig*>*)getAllEffectConfig {
     NSMutableArray<QEffectConfig*>* nsconfigs = [NSMutableArray new];
     auto allConfig = EffectManage::instance()->getAllEffectConfig();
-    for (auto config : allConfig) {
+    for (auto& config : allConfig) {
         NSString* name = [NSString stringWithUTF8String:config->name.c_str()];
         NSString* describe = [NSString stringWithUTF8String:config->describe.c_str()];
         NSString* type = [NSString stringWithUTF8String:config->describe.c_str()];
@@ -56,7 +56,7 @@ using EffectManage = GraphicCore::EffectManage;
     return true;
 }
 
-+ (QEffect*)createFilter:(NSString*)name {
++ (QEffect*)createEffect:(NSString*)name {
     GraphicCore::Effect* effect = EffectManage::instance()->createEffect([name UTF8String]);
     if (effect) {
         return [[QEffect alloc] initWithNative:GraphicCore::EffectRef(effect)];

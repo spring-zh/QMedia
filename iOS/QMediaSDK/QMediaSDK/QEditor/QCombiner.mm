@@ -248,7 +248,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
             QLayer* layer = [[QLayer alloc] initWithSize:fromLayer.layerSize combiner:self uid:fromLayer.uid];
             layer.bkColor = fromLayer.bkColor;
             for (QEffect* effect in fromLayer.effects) {
-                QEffect* newEffect = [QEffectManage createFilter:effect.name];
+                QEffect* newEffect = [QEffectManage createEffect:effect.name];
                 newEffect.renderRange = effect.renderRange;
                 [layer addEffect:newEffect];
             }

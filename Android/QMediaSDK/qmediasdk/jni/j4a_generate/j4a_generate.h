@@ -15,6 +15,7 @@ extern "C" {
 #include "j4a_generate/QVector.h"
 #include "j4a_generate/QSize.h"
 #include "j4a_generate/QBlendFunc.h"
+#include "j4a_generate/QEffectConfig.h"
 #include "j4a_generate/QVideoFrame.h"
 #include "j4a_generate/QAudioFrame.h"
 #include "j4a_generate/QNodeAnimator.h"
