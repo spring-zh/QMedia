@@ -139,6 +139,9 @@ public:
     void setUniformValue(const char* key, Uniform::Type type, int value[], int size);
     void setUniformValue(const char* key, Uniform::Type type, float value[], int size);
     
+    //update existing uniform
+    void updateUniformValue(const char* key, Uniform::Value &value);
+    
     //set draw index array
     void setIndicesValue(IndicesArray &value);
     void setIndicesValue(unsigned int value[], int size);

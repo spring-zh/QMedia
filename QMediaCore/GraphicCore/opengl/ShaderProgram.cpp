@@ -105,6 +105,14 @@ void ShaderProgram::setUniformValue(const char* key, Uniform::Type type, float v
     uniform_val.copyForm(value, size);
     setUniformValue(key, type, uniform_val);
 }
+
+void ShaderProgram::updateUniformValue(const char* key, Uniform::Value &value) {
+    auto iter = _uniform_maps.find(key);
+    if (iter != _uniform_maps.end()) { //first set
+        Uniform& uniform = iter->second;
+        uniform._value = value;
+    }
+}
     
 bool ShaderProgram::prepareUniform(Uniform& uniform, unsigned int& texture_idx) {
     auto& int_array = uniform._value._int_array;

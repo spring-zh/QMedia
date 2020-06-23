@@ -132,6 +132,9 @@ public:
     void attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent);
     void detachRenderNode(GraphicCore::RenderNodeRef current);
     
+    void attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect);
+    void detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect);
+    
     void attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent);
     void detachAudioNode(MediaAudioChannelRef current);
     
@@ -161,6 +164,9 @@ protected:
     
     void _attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent);
     void _detachRenderNode(GraphicCore::RenderNodeRef current);
+    void _attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect);
+    void _detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect);
+    
     void _attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent);
     void _detachAudioNode(MediaAudioChannelRef current);
         

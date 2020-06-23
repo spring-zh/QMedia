@@ -10,7 +10,7 @@
 #define GRAPHICCORE_LAYER_H
 
 #include "GcRenderNode.h"
-#include "texture_filter/FilterFactory.h"
+#include "effect/Effect.h"
 #include "opengl/GLEngine.h"
 #include "opengl/ShaderProgram.h"
 #include "opengl/Texture2DDrawer.h"
@@ -42,17 +42,8 @@ public:
     virtual bool createRes() override;
     virtual void releaseRes() override;
     
-    class FilterObject {
-    public:
-        FilterObject():_filter(nullptr), _range(0,0) {}
-        FilterObject(TextureFilter* filter, Range<int64_t> range):_filter(filter), _range(range) {}
-        TextureFilter* _filter;
-        Range<int64_t> _range;
-    };
-    
-    using FilterObjectRef = std::shared_ptr<FilterObject>;
-    
-    void addFilter(FilterObjectRef filterObjectRef);
+    void addEffect(EffectRef effectRef);
+    void removeEffect(EffectRef effectRef);
 protected:
     
     GraphicCore::Scene _scene;
@@ -64,7 +55,7 @@ protected:
     Texture2D *_texture_first, *_texture_second;
     std::shared_ptr<Texture2DDrawer> _textureDrawer;
 
-    std::vector<FilterObjectRef> _fliter_group;
+    std::vector<EffectRef> _effect_group;
 };
 
 using LayerRef = std::shared_ptr<Layer>;

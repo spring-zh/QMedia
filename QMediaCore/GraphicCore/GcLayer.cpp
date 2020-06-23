@@ -79,21 +79,21 @@ void Layer::draw(GraphicCore::Scene* scene, const Mat4 & transform, uint32_t fla
         int64_t duration = scene->getDelta() - _renderRange._start;
         Texture2D* current = _texture_first;
         
-        if (_fliter_group.size() > 0) {
+        if (_effect_group.size() > 0) {
             GLEngine *gle = scene->getGLEngine();
             gle->saveStatus();
             //TODO: draw filters
             if (_texture_second == nullptr) {
                 _texture_second = GeneralTexture2D::createTexture(Texture2D::RGBA, _layerSize.width,_layerSize.height);
             }
-            for (auto& fliter_object : _fliter_group) {
-                if (fliter_object->_range.isContain(duration)) {
+            for (auto& effect : _effect_group) {
+                if (effect->_timeRange.isContain(duration)) {
                     Texture2D * next = NEXT_TEXTURE;
                     gle->setCurrentFrameBuffer(_framebuffer);
                     _framebuffer->attachTexture2D(FrameBuffer::COLOR, next);
                     Rect layerViewPort(0, 0,next->width(),next->height());
                     gle->setViewPort(layerViewPort);
-                    fliter_object->_filter->drawFilter(duration, current, 0);
+                    effect->drawEffect(duration, current, gle);
                     current = next;
                 }
             }
@@ -111,8 +111,11 @@ void Layer::duplicateDraw(GraphicCore::Scene* scene, const Mat4 & transform, con
     }
 }
 
-void Layer::addFilter(FilterObjectRef filterObjectRef){
-    _fliter_group.push_back(filterObjectRef);
+void Layer::addEffect(EffectRef effectRef) {
+    _effect_group.push_back(effectRef);
+}
+void Layer::removeEffect(EffectRef effectRef) {
+    std::remove(_effect_group.begin(), _effect_group.end(), effectRef);
 }
 
 bool Layer::createRes()
@@ -124,19 +127,12 @@ bool Layer::createRes()
     _framebuffer = FrameBuffer::createNew();
     _framebuffer->attachTexture2D(FrameBuffer::COLOR, _texture_first);
     _textureDrawer = std::shared_ptr<Texture2DDrawer>(new Texture2DDrawer());
-    
-    for (auto& fliter_object : _fliter_group) {
-        fliter_object->_filter->create();
-    }
 
     return RenderNode::createRes();
 }
 
 void Layer::releaseRes()
 {
-    for (auto& fliter_object : _fliter_group) {
-        fliter_object->_filter->release();
-    }
     if (_framebuffer) {
 //        _framebuffer->attachTexture2D(FrameBuffer::COLOR, nullptr);
         _framebuffer->release();
