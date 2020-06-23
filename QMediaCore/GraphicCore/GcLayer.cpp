@@ -97,6 +97,7 @@ void Layer::draw(GraphicCore::Scene* scene, const Mat4 & transform, uint32_t fla
                     current = next;
                 }
             }
+            _framebuffer->attachTexture2D(FrameBuffer::COLOR, _texture_first);
             gle->recoverStatus();
         }
         
