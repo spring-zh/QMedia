@@ -10,7 +10,7 @@
 #define GRAPHICCORE_FLASHEFFECT_H
 
 #include "Effect.h"
-#include "Filter.h"
+#include "GraphicCore/filter/Filter.h"
 
 GRAPHICCORE_BEGIN
 
@@ -29,12 +29,7 @@ public:
     void drawEffect(int64_t duration, const Texture2D *inputTexture, GraphicCore::GLEngine* gle) override {
         int n = duration / _duration;
         float t = (float)duration/_duration - n;
-        float val;
-        if (n & 1) {
-            val = 1.f - t*2;
-        }else {
-            val = t*2 - 1.f;
-        }
+        float val = (n & 1)?(1.f - t*2):(t*2 - 1.f);
         Mat4 transform;
         std::map<std::string, Uniform::Value> parameters;
         Uniform::Value uniform_val;
@@ -57,7 +52,7 @@ public:
     }
     
     static EffectConfig* createConfig() {
-        static char * describe = R"({ "duration": {"type":"INT", "default": 60, "max": 200 , "min": 10} })";
+        static const char * describe = R"({ "duration": {"type":"INT", "default": 60, "max": 200 , "min": 10} })";
         EffectConfig* effectConfig = new EffectConfig("FlashEffect",describe,"effect");
         effectConfig->effect_create = []()->Effect*{ return new FlashEffect(); };
         return effectConfig;

@@ -29,6 +29,7 @@ set(GRAPHIC_CORE_HEADER
         GraphicCore/opengl/FrameBuffer.h
         GraphicCore/opengl/Texture2DDrawer.h
 
+        GraphicCore/effect/FlashEffect.h
         GraphicCore/effect/Effect.h
         GraphicCore/effect/EffectManage.h
 
