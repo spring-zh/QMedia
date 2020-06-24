@@ -104,6 +104,7 @@
 		6F224A5A24A04C38000244FF /* Effect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Effect.h; sourceTree = "<group>"; };
 		6F224A5C24A0B997000244FF /* EffectManage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectManage.cpp; sourceTree = "<group>"; };
 		6F224A5D24A0B997000244FF /* EffectManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectManage.h; sourceTree = "<group>"; };
+		6F224A6224A2084C000244FF /* FlashEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashEffect.h; sourceTree = "<group>"; };
 		6F372062246934B400356951 /* AudioClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioClock.h; sourceTree = "<group>"; };
 		6F37206C2469896800356951 /* speex_stack_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_stack_alloc.h; sourceTree = "<group>"; };
 		6F37206D2469896800356951 /* speex_arch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_arch.h; sourceTree = "<group>"; };
@@ -337,6 +338,7 @@
 		6F224A5824A04C07000244FF /* effect */ = {
 			isa = PBXGroup;
 			children = (
+				6F224A6224A2084C000244FF /* FlashEffect.h */,
 				6F224A5A24A04C38000244FF /* Effect.h */,
 				6F224A5C24A0B997000244FF /* EffectManage.cpp */,
 				6F224A5D24A0B997000244FF /* EffectManage.h */,

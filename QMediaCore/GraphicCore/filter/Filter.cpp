@@ -104,6 +104,15 @@ std::vector<FilterConfig*> FilterFactory::getAllFilterConfig() {
     return filterlists;
 }
 
+FilterDrawer* FilterFactory::getFilterDrawer(const char* filter_name) {
+    FilterDrawer* drawer = nullptr;
+    auto iter = _filterConfigs.find(filter_name);
+    if (iter != _filterConfigs.end()) {
+        drawer = getFilterDrawer(iter->second.get());
+    }
+    return drawer;
+}
+
 FilterDrawer* FilterFactory::getFilterDrawer(FilterConfig* config) {
     auto iter = _filterDrawers.find(config->name);
     FilterDrawer* retDrawer;

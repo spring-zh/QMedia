@@ -73,7 +73,7 @@ const char * WhiteBalanceFragmentShaderString = R"(
 )";
 #endif
 
-const char * WhiteBalanceDescribe = "uniform:{@temperature(FLOAT),@tint(FLOAT)}";
+const char * WhiteBalanceDescribe = R"({ "temperature": {"type":"FLOAT", "default": 0, "max": 0.15 , "min": -1.0} })";
 
 FilterConfigRef createWhiteBalanceConfig() {
     

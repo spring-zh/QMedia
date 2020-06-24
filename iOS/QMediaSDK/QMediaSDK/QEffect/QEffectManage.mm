@@ -44,7 +44,7 @@ using EffectManage = GraphicCore::EffectManage;
     for (auto& config : allConfig) {
         NSString* name = [NSString stringWithUTF8String:config->name.c_str()];
         NSString* describe = [NSString stringWithUTF8String:config->describe.c_str()];
-        NSString* type = [NSString stringWithUTF8String:config->describe.c_str()];
+        NSString* type = [NSString stringWithUTF8String:config->effect_type.c_str()];
         [nsconfigs addObject:[[QEffectConfig alloc] initWith:name describe:describe type:type]];
     }
     return nsconfigs;

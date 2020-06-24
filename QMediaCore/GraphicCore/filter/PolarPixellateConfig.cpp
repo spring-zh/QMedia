@@ -50,7 +50,7 @@ const char * PolarPixellateFragmentShaderString = R"(
  }
 )";
 
-const char * PolarPixellateDescribe = "uniform:{@center(FLOAT2), @pixelSize(FLOAT2)}";
+const char * PolarPixellateDescribe = R"({ "pixelSize": {"type":"FLOAT2", "default": [0.05, 0.05], "max": [0.1, 0.1] , "min": [-0.1, -0.1]} })";
 
 FilterConfigRef createPolarPixellateConfig() {
     
@@ -77,7 +77,7 @@ FilterConfigRef createPolarPixellateConfig() {
     FilterConfig::UniformConfig pixelSizeUC;
     pixelSizeUC.key = "pixelSize";
     pixelSizeUC.type = Uniform::FLOAT2;
-    pixelSizeUC.value._floatOrmatrix_array = {0.1f, 0.1f};
+    pixelSizeUC.value._floatOrmatrix_array = {0.05f, 0.05f};
     
     config->_vertexConfig.push_back(std::move(positionVC));
     config->_vertexConfig.push_back(std::move(texCoordVC));

@@ -58,6 +58,7 @@ public:
     Filter* createFilter(const char* filter_name);
     //release all gl filter resource
     void clearTextureFilters();
+    FilterDrawer* getFilterDrawer(const char* filter_name);
 
 private:
     FilterFactory();

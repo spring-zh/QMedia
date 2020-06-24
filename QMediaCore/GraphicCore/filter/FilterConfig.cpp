@@ -155,8 +155,9 @@ FilterConfigRef createLuminanceConfig() {
     return config;
 }
 
+const char* BrightnessDescribe = R"({ "brightness": {"type":"FLOAT", "default": 0, "max": 1.0 , "min": -1.0} })";
 FilterConfigRef createBrightnessConfig() {
-    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("Brightness", "uniform:{@brightness(FLOAT:-1.0 ~ 1.0)}"));
+    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("Brightness", BrightnessDescribe));
     config->vertex_sh = DefaultFilterVertexShaderString;
     config->fragment_sh = BrightnessFragmentShaderString;
     
@@ -185,8 +186,9 @@ FilterConfigRef createBrightnessConfig() {
     return config;
 }
 
+const char* LuminanceDescribe = R"({ "threshold": {"type":"FLOAT", "default": 0.5, "max": 1.0 , "min": 0.0} })";
 FilterConfigRef createLuminanceThresholdConfig() {
-    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("LuminanceThreshold", "uniform:{@threshold(FLOAT)}"));
+    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("LuminanceThreshold", LuminanceDescribe));
     config->vertex_sh = DefaultFilterVertexShaderString;
     config->fragment_sh = LuminanceThresholdFragmentShaderString;
     
@@ -215,8 +217,9 @@ FilterConfigRef createLuminanceThresholdConfig() {
     return config;
 }
 
+const char* ContrastDescribe = R"({ "contrast": {"type":"FLOAT", "default": 1.0, "max": 4.0 , "min": 0.0} })";
 FilterConfigRef createContrastConfig() {
-    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("Contrast", "uniform:{@contrast(FLOAT)}"));
+    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("Contrast", ContrastDescribe));
     config->vertex_sh = DefaultFilterVertexShaderString;
     config->fragment_sh = ContrastFragmentShaderString;
     

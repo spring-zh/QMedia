@@ -14,6 +14,8 @@
 
 GRAPHICCORE_BEGIN
 
+typedef Effect* (*effect_create)();
+
 using EffectConfigRef = std::shared_ptr<EffectConfig>;
 
 class EffectManage {
@@ -31,7 +33,8 @@ public:
     Effect* createEffect(const char* effect_name);
     
 private:
-    EffectManage() {} ;
+    void addEffectConfig(EffectConfig* config);
+    EffectManage();
     std::mutex _config_mutex;
     std::map<std::string , EffectConfigRef> _effectConfigs;
 };
