@@ -54,6 +54,7 @@ FilterFactory::FilterFactory() {
     addNewConfig(createToonConfig());
     addNewConfig(createLuminanceConfig());
     addNewConfig(createBrightnessConfig());
+    addNewConfig(createRGBAConfig());
     addNewConfig(createSobelEdgeDetectionConfig());
     addNewConfig(createWhiteBalanceConfig());
     addNewConfig(createLuminanceThresholdConfig());

@@ -54,6 +54,7 @@ extern const char* DefaultFilterVertexShaderString;
 
 FilterConfigRef createLuminanceConfig();
 FilterConfigRef createBrightnessConfig();
+FilterConfigRef createRGBAConfig();
 FilterConfigRef createLuminanceThresholdConfig();
 FilterConfigRef createContrastConfig();
 FilterConfigRef createColorInvertConfig();
