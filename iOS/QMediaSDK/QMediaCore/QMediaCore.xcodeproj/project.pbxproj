@@ -19,6 +19,7 @@
 		6F224A54249CBE93000244FF /* SobelEdgeDetectionConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A53249CBE93000244FF /* SobelEdgeDetectionConfig.cpp */; };
 		6F224A57249CEEF7000244FF /* WhiteBalanceConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A56249CEEF7000244FF /* WhiteBalanceConfig.cpp */; };
 		6F224A5E24A0B997000244FF /* EffectManage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A5C24A0B997000244FF /* EffectManage.cpp */; };
+		6F224A6724A89C85000244FF /* EffectGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A6524A89C85000244FF /* EffectGroup.cpp */; };
 		6F3720702469896800356951 /* speex_resampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F37206F2469896800356951 /* speex_resampler.c */; };
 		6F45922A2461ADE800FABEAF /* QPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4592292461ADE800FABEAF /* QPlayer.cpp */; };
 		6F511872240F9BD50013BC9E /* TDStretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117D9240F9BD40013BC9E /* TDStretch.cpp */; };
@@ -105,6 +106,8 @@
 		6F224A5C24A0B997000244FF /* EffectManage.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectManage.cpp; sourceTree = "<group>"; };
 		6F224A5D24A0B997000244FF /* EffectManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectManage.h; sourceTree = "<group>"; };
 		6F224A6224A2084C000244FF /* FlashEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashEffect.h; sourceTree = "<group>"; };
+		6F224A6524A89C85000244FF /* EffectGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectGroup.cpp; sourceTree = "<group>"; };
+		6F224A6624A89C85000244FF /* EffectGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectGroup.h; sourceTree = "<group>"; };
 		6F372062246934B400356951 /* AudioClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioClock.h; sourceTree = "<group>"; };
 		6F37206C2469896800356951 /* speex_stack_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_stack_alloc.h; sourceTree = "<group>"; };
 		6F37206D2469896800356951 /* speex_arch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_arch.h; sourceTree = "<group>"; };
@@ -340,6 +343,8 @@
 			children = (
 				6F224A6224A2084C000244FF /* FlashEffect.h */,
 				6F224A5A24A04C38000244FF /* Effect.h */,
+				6F224A6524A89C85000244FF /* EffectGroup.cpp */,
+				6F224A6624A89C85000244FF /* EffectGroup.h */,
 				6F224A5C24A0B997000244FF /* EffectManage.cpp */,
 				6F224A5D24A0B997000244FF /* EffectManage.h */,
 			);
@@ -747,6 +752,7 @@
 				6F224A5E24A0B997000244FF /* EffectManage.cpp in Sources */,
 				6F51187C240F9BD50013BC9E /* cpu_detect_x86.cpp in Sources */,
 				6F511873240F9BD50013BC9E /* RateTransposer.cpp in Sources */,
+				6F224A6724A89C85000244FF /* EffectGroup.cpp in Sources */,
 				6FF02925221BFEE50011E6CB /* VideoFrame.cpp in Sources */,
 				6F637ED323D0477A0004E053 /* FrameBuffer.cpp in Sources */,
 				6F637ECD23D0477A0004E053 /* CCAffineTransform.cpp in Sources */,

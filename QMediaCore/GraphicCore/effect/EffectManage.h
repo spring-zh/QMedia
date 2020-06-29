@@ -14,8 +14,6 @@
 
 GRAPHICCORE_BEGIN
 
-typedef Effect* (*effect_create)();
-
 using EffectConfigRef = std::shared_ptr<EffectConfig>;
 
 class EffectManage {

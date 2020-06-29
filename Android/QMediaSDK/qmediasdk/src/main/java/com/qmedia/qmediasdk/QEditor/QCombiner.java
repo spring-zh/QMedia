@@ -6,12 +6,11 @@ import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEffect.QEffect;
-import com.qmedia.qmediasdk.QEffect.QEffectManage;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
 import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QGraphic.QImageNode;
-import com.qmedia.qmediasdk.QGraphic.QLayer;
 import com.qmedia.qmediasdk.QGraphic.QVideoTrackNode;
+import com.qmedia.qmediasdk.QGraphic.QLayer;
 import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QSource.QAudioDescribe;
 import com.qmedia.qmediasdk.QSource.QMediaExtractorSource;
@@ -83,12 +82,12 @@ public class QCombiner extends QMediaFactory{
         return native_detachRenderNode(current);
     }
 
-    public boolean attachEffect(QLayer layer, QEffect effect) {
-        return native_attachEffect(layer, effect);
+    public boolean attachEffect(QGraphicNode node, QEffect effect) {
+        return native_attachEffect(node, effect);
     }
 
-    public boolean detachEffect(QLayer layer, QEffect effect) {
-        return native_detachEffect(layer, effect);
+    public boolean detachEffect(QGraphicNode node, QEffect effect) {
+        return native_detachEffect(node, effect);
     }
 
     public boolean attachAudioNode(QAudioTrackNode child, QAudioTrackNode parent) {
@@ -165,11 +164,6 @@ public class QCombiner extends QMediaFactory{
                 QLayer fromLayer = (QLayer)fromNode;
                 QLayer layer = new QLayer(fromLayer.getLayerSize(),"", this, fromNode.getId());
                 layer.setBkColor(fromLayer.getBkColor());
-                for (QEffect effect : fromLayer.getEffects()) {
-                    QEffect newEffect = QEffectManage.createEffect(effect.getName());
-                    newEffect.setRenderRange(effect.getRenderRange());
-                    layer.addEffect(newEffect);
-                }
                 newNode = layer;
             }else if (fromNode instanceof QImageNode) {
                 QImageNode fromImage = (QImageNode)fromNode;
@@ -240,8 +234,8 @@ public class QCombiner extends QMediaFactory{
     protected native void native_removeMediaTrack(QMediaTrack track);
     protected native boolean native_attachRenderNode(QGraphicNode child, QGraphicNode parent);
     protected native boolean native_detachRenderNode(QGraphicNode current);
-    protected native boolean native_attachEffect(QLayer layer, QEffect effect);
-    protected native boolean native_detachEffect(QLayer layer, QEffect effect);
+    protected native boolean native_attachEffect(QGraphicNode node, QEffect effect);
+    protected native boolean native_detachEffect(QGraphicNode node, QEffect effect);
     protected native boolean native_attachAudioNode(QAudioTrackNode child, QAudioTrackNode parent);
     protected native boolean native_detachAudioNode(QAudioTrackNode current);
     protected native long native_getPosition();

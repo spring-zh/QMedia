@@ -7,6 +7,7 @@
 //
 
 #import "QNodeAnimator.h"
+#import "QEffect.h"
 
 #ifdef __cplusplus
 extern "C" {
@@ -64,6 +65,12 @@ QBlendFunc QBlendFuncMake(unsigned src, unsigned dst);
 - (bool)addAnimator:(QNodeAnimator*)animator;
 - (bool)removeAnimator:(QNodeAnimator*)animator;
 - (void)clearAllAnimators;
+
+//effects
+@property (nonatomic, readonly) NSArray<QEffect*>* effects;
+- (void)addEffect:(QEffect*)effect;
+- (void)removeEffect:(QEffect*)effect;
+- (void)removeAllEffect;
 
 - (void)copyFrom:(QGraphicNode*)fromNode;
 

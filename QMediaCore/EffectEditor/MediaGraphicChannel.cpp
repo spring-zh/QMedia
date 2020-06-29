@@ -20,7 +20,19 @@ MediaGraphicChannel::~MediaGraphicChannel()
 
 void MediaGraphicChannel::draw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, uint32_t flags)
 {
-    duplicateDraw(scene, transform, this);
+    bool bReadEnd = false;
+    VideoFrame video_frame = _mediaTrack->getVideoFrame(scene->getDelta(), bReadEnd);
+    if (!bReadEnd && video_frame.video_frame_buffer()) {
+        _drawer->setFrame(video_frame);
+    }
+    
+    int64_t duration = scene->getDelta() - _renderRange._start;
+    if (_effect_group.has_effect() && _drawer->getOutputTexture()) {
+        const GraphicCore::Texture2D* texture = _drawer->getOutputTexture();
+        RenderNode::drawEffects(duration, scene, transform, texture);
+    }else {
+        _drawer->drawFrame(scene,transform, this);
+    }
 }
 
 void MediaGraphicChannel::duplicateDraw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* diaplayNode)

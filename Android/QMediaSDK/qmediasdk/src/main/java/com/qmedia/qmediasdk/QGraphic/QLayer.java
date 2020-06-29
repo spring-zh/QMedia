@@ -3,10 +3,6 @@ package com.qmedia.qmediasdk.QGraphic;
 import com.qmedia.qmediasdk.QCommon.QSize;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
-import com.qmedia.qmediasdk.QEffect.QEffect;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class QLayer extends QGraphicNode {
@@ -35,26 +31,6 @@ public class QLayer extends QGraphicNode {
         native_setBkColor(bkColor);
     }
 
-    public List<QEffect> getEffects() {
-        return effects;
-    }
-
-    public void addEffect(QEffect effect) {
-        effects.add(effect);
-        weakCombiner.get().attachEffect(this, effect);
-    }
-    public void removeEffect(QEffect effect) {
-        effects.remove(effect);
-        weakCombiner.get().detachEffect(this, effect);
-    }
-    public void removeAllEffect() {
-        for (QEffect effect : effects) {
-            weakCombiner.get().detachEffect(this, effect);
-        }
-        effects.clear();
-    }
-
-    private List<QEffect> effects = new ArrayList<>();
     private QSize layerSize;
     private QVector bkColor;
     //TODO: native

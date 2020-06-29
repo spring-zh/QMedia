@@ -23,9 +23,13 @@ public:
 
     int getWidth() { return _width; }
     int getHeight() { return _height; }
+    
+    virtual void draw(Scene* scene, const Mat4 & transform, uint32_t flags) override ;
 
     //call by DuplicateNode
     virtual void duplicateDraw(Scene* /*scene*/, const Mat4 & /*transform*/, const Node* /*displayNode*/) override ;
+    
+    virtual const Texture2D* getOutputTexture() override;
     
     // create/release gl resource
     virtual bool createRes() override ;
@@ -33,8 +37,7 @@ public:
 
 private:
     std::shared_ptr<Image> _image;
-    Texture2D *_texture2d;
-    std::shared_ptr<Texture2DDrawer> _textureDrawer;
+    std::shared_ptr<Texture2D> _texture2d;
     int _width;
     int _height;
 };

@@ -80,6 +80,7 @@ public:
 
     virtual bool setFrame(const VideoFrame& videoFrame) override;
     virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) override;
+    const GraphicCore::Texture2D* getOutputTexture() override;
     virtual void release() override ;
 private:
     

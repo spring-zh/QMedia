@@ -10,6 +10,8 @@
 #define GRAPHICCORE_RENDERNODE_H
 
 #include "GcAnimaNode.h"
+#include "effect/EffectGroup.h"
+#include "opengl/Texture2DDrawer.h"
 
 GRAPHICCORE_BEGIN
 
@@ -26,9 +28,13 @@ public:
     
     //call by DuplicateNode
     virtual void duplicateDraw(Scene* /*scene*/, const Mat4 & /*transform*/, const Node* /*displayNode*/) {}
+    virtual const Texture2D* getOutputTexture() { return nullptr; }
     
     virtual const Range<int64_t> getRange() { return _renderRange; }
     virtual void setRange(Range<int64_t> range) { _renderRange = range; }
+    
+    void addEffect(EffectRef effectRef);
+    void removeEffect(EffectRef effectRef);
     
     // create/release gl resource
     virtual bool createRes();
@@ -37,6 +43,10 @@ public:
 protected:
     Range<int64_t> _renderRange;
     
+    //effects
+    bool drawEffects(int64_t duration, const Scene *scene, const Mat4 & transform, const Texture2D *inputTexture );
+    std::shared_ptr<Texture2DDrawer> _textureDrawer;
+    EffectGroup _effect_group;
 };
 
 using RenderNodeRef = std::shared_ptr<RenderNode>;

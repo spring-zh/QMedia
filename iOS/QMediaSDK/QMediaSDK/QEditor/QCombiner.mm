@@ -163,12 +163,12 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     return true;
 }
 
-- (bool)attachEffect:(QLayer*)layer effect:(QEffect*)effect {
-    _combiner->attachEffect(std::dynamic_pointer_cast<GraphicCore::Layer>(layer.native), effect.native);
+- (bool)attachEffect:(QGraphicNode*)graphic effect:(QEffect*)effect {
+    _combiner->attachEffect(graphic.native, effect.native);
     return true;
 }
-- (bool)detachEffect:(QLayer*)layer effect:(QEffect*)effect {
-    _combiner->detachEffect(std::dynamic_pointer_cast<GraphicCore::Layer>(layer.native), effect.native);
+- (bool)detachEffect:(QGraphicNode*)graphic effect:(QEffect*)effect {
+    _combiner->detachEffect(graphic.native, effect.native);
     return true;
 }
 
@@ -222,6 +222,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
         if ([fromTrack.source isKindOfClass:QAssetReaderSource.class]) {
             QAssetReaderSource* fromSource = (QAssetReaderSource*)fromTrack.source;
             QAssetReaderSource* mediaSource = [[QAssetReaderSource alloc] initWithFilePath:fromSource.filePath audio:fromSource.enableAudio video:fromSource.enableVideo];
+            mediaSource.video_frame_format = fromSource.video_frame_format;
             [mediaSource setVideoTarget:_mediaFactory.videoTarget];
             [mediaSource setAudioTarget:_mediaFactory.audioTarget];
             QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:mediaSource uid:fromTrack.uid];
@@ -247,11 +248,6 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
             QLayer* fromLayer = (QLayer*)fromNode;
             QLayer* layer = [[QLayer alloc] initWithSize:fromLayer.layerSize combiner:self uid:fromLayer.uid];
             layer.bkColor = fromLayer.bkColor;
-            for (QEffect* effect in fromLayer.effects) {
-                QEffect* newEffect = [QEffectManage createEffect:effect.name];
-                newEffect.renderRange = effect.renderRange;
-                [layer addEffect:newEffect];
-            }
             newNode = layer;
         }else if ([fromNode isKindOfClass:QImageNode.class]) {
             QImageNode* fromImageNode = (QImageNode*)fromNode;

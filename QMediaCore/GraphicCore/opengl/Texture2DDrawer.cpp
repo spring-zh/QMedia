@@ -23,7 +23,6 @@ Texture2DDrawer::~Texture2DDrawer() {
     _shaderProgram.releaseProgram();
 }
 
-//call by DuplicateNode
 void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Mat4 & transform, const Node* node, Drawable2D::FlipMode flipMode ) {
     //FIXME: translation of position already contain in transform matrix
     VertexAttrib::Value vertValue;

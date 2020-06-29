@@ -8,6 +8,7 @@
 
 #import "QGraphicNode_internal.h"
 #import "QCombiner_internal.h"
+#import "QEffectManage.h"
 
 
 QColor4 QColorMake(float r, float g, float b, float a) {
@@ -51,6 +52,7 @@ using GraphicCore::AnimaNode;
     GraphicCore::RenderNodeRef _graphicNode;
     NSMutableArray* _childrens;
     NSMutableArray* _animators;
+    NSMutableArray* _effects;
     __weak QCombiner* _combiner;
 }
 
@@ -97,6 +99,7 @@ using GraphicCore::AnimaNode;
         _graphicNode->setName(s_name);
         _childrens = [[NSMutableArray alloc] init];
         _animators = [[NSMutableArray alloc] init];
+        _effects = [NSMutableArray new];
         _parent = nil;
         
         [_combiner addGraphicNodeIndex:self];
@@ -125,6 +128,7 @@ using GraphicCore::AnimaNode;
         _nodeName = [NSString stringWithUTF8String:graphicNode->getName().c_str()];
         _childrens = [[NSMutableArray alloc] init];
         _animators = [[NSMutableArray alloc] init];
+        _effects = [NSMutableArray new];
         _parent = nil;
         
         [_combiner addGraphicNodeIndex:self];
@@ -154,6 +158,7 @@ using GraphicCore::AnimaNode;
     _parent = parent;
 }
 
+#pragma mark Children Nodes
 - (NSArray*)childrens{
     return _childrens;
 }
@@ -189,10 +194,10 @@ using GraphicCore::AnimaNode;
     [_childrens removeAllObjects];
 }
 
+#pragma mark Aninmators
 - (NSArray*)animators{
     return _animators;
 }
-
 - (bool)addAnimator:(QNodeAnimator*)animator {
     if([_animators containsObject:animator])
         return true;
@@ -215,6 +220,28 @@ using GraphicCore::AnimaNode;
     [_animators removeAllObjects];
 }
 
+#pragma mark Effects
+- (NSArray<QEffect *> *)effects {
+    return _effects;
+}
+
+- (void)addEffect:(QEffect*)effect {
+    [_effects addObject:effect];
+    [_combiner attachEffect:self effect:effect];
+}
+
+- (void)removeEffect:(QEffect*)effect {
+    [_effects removeObject:effect];
+    [_combiner detachEffect:self effect:effect];
+}
+
+- (void)removeAllEffect {
+    for (QEffect* effect in _effects) {
+        [_combiner detachEffect:self effect:effect];
+    }
+    [_effects removeAllObjects];
+}
+
 - (void)copyFrom:(QGraphicNode*)fromNode {
     _uid = fromNode.uid;
     [self setName:fromNode.name];
@@ -235,6 +262,13 @@ using GraphicCore::AnimaNode;
     [_animators removeAllObjects];
     for (QNodeAnimator* animator in fromNode.animators) {
         [self addAnimator:[[QNodeAnimator alloc] initWith:animator.property range:animator.timeRang begin:animator.beginPoint end:animator.endPoint functype:animator.functionType repleat:animator.repleat]];
+    }
+    
+    [self removeAllEffect];
+    for (QEffect* effect in fromNode.effects) {
+        QEffect* newEffect = [QEffectManage createEffect:effect.name];
+        newEffect.renderRange = effect.renderRange;
+        [self addEffect:newEffect];
     }
 }
 

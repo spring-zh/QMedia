@@ -10,9 +10,6 @@
 #define GRAPHICCORE_LAYER_H
 
 #include "GcRenderNode.h"
-#include "effect/Effect.h"
-#include "opengl/GLEngine.h"
-#include "opengl/ShaderProgram.h"
 #include "opengl/Texture2DDrawer.h"
 #include <vector>
 
@@ -25,12 +22,12 @@ public:
     
     virtual void visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32_t parentFlags) override;
     
-    virtual Texture2D* getDuplicateTexture() const { return _texture_first ;}
-    
     virtual void draw(Scene* scene, const Mat4 & transform, uint32_t flags) override ;
     
     //call by DuplicateNode
     virtual void duplicateDraw(Scene* /*scene*/, const Mat4 & /*transform*/, const Node* /*displayNode*/) override ;
+    
+    const Texture2D* getOutputTexture() override { return _texture.get(); }
 
     Size getLayerSize() const { return _layerSize; }
     
@@ -42,20 +39,15 @@ public:
     virtual bool createRes() override;
     virtual void releaseRes() override;
     
-    void addEffect(EffectRef effectRef);
-    void removeEffect(EffectRef effectRef);
 protected:
     
     GraphicCore::Scene _scene;
     Color4F _bkColor;
     Size _layerSize;
 
-    FrameBuffer *_framebuffer;
+    std::shared_ptr<FrameBuffer> _framebuffer;
 
-    Texture2D *_texture_first, *_texture_second;
-    std::shared_ptr<Texture2DDrawer> _textureDrawer;
-
-    std::vector<EffectRef> _effect_group;
+    std::shared_ptr<Texture2D> _texture;
 };
 
 using LayerRef = std::shared_ptr<Layer>;

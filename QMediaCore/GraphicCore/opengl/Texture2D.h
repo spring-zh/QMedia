@@ -50,7 +50,7 @@ protected:
 
 class GeneralTexture2D : public Texture2D{
 public:
-    ~GeneralTexture2D() {}
+    ~GeneralTexture2D() { release(); }
     
     static Texture2D* createFromImage(const Image* image);
     static Texture2D* createTexture(Format format, int width, int height);

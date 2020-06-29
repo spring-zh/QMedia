@@ -52,6 +52,7 @@ public:
     const EffectConfig* getConfig() const { return _config; }
     Range<int64_t> _timeRange; //display time range
 protected:
+    friend class EffectManage;
     EffectConfig* _config;
 };
 

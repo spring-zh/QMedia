@@ -32,7 +32,7 @@ _useMultisample(false)
 }
 FrameBuffer::~FrameBuffer()
 {
-
+    release();
 }
 
 FrameBuffer* FrameBuffer::createNew()
@@ -75,7 +75,7 @@ void FrameBuffer::release()
     }
 }
 
-bool FrameBuffer::attachTexture2D(AttachMode mode, Texture2D *texture2D)
+bool FrameBuffer::attachTexture2D(AttachMode mode, const Texture2D *texture2D)
 {
     use();
     GLuint attachment;

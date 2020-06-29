@@ -290,15 +290,15 @@ void EffectCombiner::_detachRenderNode(GraphicCore::RenderNodeRef current)
     current->releaseRes();
 }
 
-void EffectCombiner::_attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
-    if (layer) {
+void EffectCombiner::_attachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
+    if (renderNode) {
         effect->load();
-        layer->addEffect(effect);
+        renderNode->addEffect(effect);
     }
 }
-void EffectCombiner::_detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
-    if (layer) {
-        layer->removeEffect(effect);
+void EffectCombiner::_detachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
+    if (renderNode) {
+        renderNode->removeEffect(effect);
         effect->unload();
     }
 }
@@ -482,11 +482,11 @@ void EffectCombiner::detachRenderNode(GraphicCore::RenderNodeRef current)
 void EffectCombiner::attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent) {
     postAudioTask(&EffectCombiner::_attachAudioNode, this, child, parent);
 }
-void EffectCombiner::attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
-    postRenderTask(&EffectCombiner::_attachEffect, this, layer, effect);
+void EffectCombiner::attachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
+    postRenderTask(&EffectCombiner::_attachEffect, this, renderNode, effect);
 }
-void EffectCombiner::detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
-    postRenderTask(&EffectCombiner::_detachEffect, this, layer, effect);
+void EffectCombiner::detachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
+    postRenderTask(&EffectCombiner::_detachEffect, this, renderNode, effect);
 }
 
 void EffectCombiner::detachAudioNode(MediaAudioChannelRef current) {

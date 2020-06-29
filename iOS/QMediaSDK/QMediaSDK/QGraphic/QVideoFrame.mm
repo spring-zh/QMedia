@@ -473,6 +473,10 @@ void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const Grap
     }
 }
 
+const GraphicCore::Texture2D* PixelFrameBGRADrawer::getOutputTexture() {
+    return &_duplicateTexture;
+}
+
 void PixelFrameBGRADrawer::release()
 {
     if (_textureDrawer) {

@@ -54,6 +54,7 @@ Effect* EffectManage::createEffect(const char* effect_name) {
         auto iter = _effectConfigs.find(effect_name);
         if (iter != _effectConfigs.end()) {
             effect = (*iter->second->effect_create)();
+            effect->_config = iter->second.get();
         }
     }
     return effect;
