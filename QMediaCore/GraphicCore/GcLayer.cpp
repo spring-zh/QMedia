@@ -17,7 +17,8 @@ Layer::Layer(Size size):
 _framebuffer(nullptr),
 _texture(nullptr),
 _bkColor(0,0,0,1),
-_layerSize(size) {
+_layerSize(size),
+_enable3d(false){
 }
 
 Layer::~Layer(){
@@ -79,7 +80,7 @@ void Layer::draw(GraphicCore::Scene* scene, const Mat4 & transform, uint32_t fla
         if (_effect_group.has_effect()) {
             RenderNode::drawEffects(duration, scene, transform, _texture.get());
         }else {
-            _textureDrawer->draw(_texture.get(), scene, transform, this);
+            _textureDrawer->draw(_texture.get(), scene, transform, this, _flipMode);
         }
     }
 }
@@ -87,7 +88,7 @@ void Layer::draw(GraphicCore::Scene* scene, const Mat4 & transform, uint32_t fla
 void Layer::duplicateDraw(GraphicCore::Scene* scene, const Mat4 & transform, const Node* displayNode)
 {
     if (_texture && _textureDrawer) {
-        _textureDrawer->draw(_texture.get(), scene, transform, displayNode);
+        _textureDrawer->draw(_texture.get(), scene, transform, displayNode, _flipMode);
     }
 }
 
@@ -99,6 +100,10 @@ bool Layer::createRes()
     _scene.setProjection(Projection::_3D);
     _framebuffer = std::shared_ptr<FrameBuffer>(FrameBuffer::createNew());
     _framebuffer->attachTexture2D(FrameBuffer::COLOR, _texture.get());
+    if (_enable3d) {
+        _depth_texture = std::shared_ptr<Texture2D>(GeneralTexture2D::createTexture(Texture2D::DEPTH, _layerSize.width,_layerSize.height));
+        _framebuffer->attachTexture2D(FrameBuffer::DEPTH, _depth_texture.get());
+    }
 
     return RenderNode::createRes();
 }
@@ -107,6 +112,7 @@ void Layer::releaseRes()
 {
     _framebuffer.reset();
     _texture.reset();
+    _depth_texture.reset();
     
     RenderNode::releaseRes();
 }

@@ -10,7 +10,7 @@
 
 GRAPHICCORE_BEGIN
 
-RenderNode::RenderNode(){
+RenderNode::RenderNode():_flipMode(Drawable2D::NONE){
     
 }
 
@@ -29,10 +29,10 @@ void RenderNode::visit(Scene *scene, const Mat4& parentTransform, uint32_t paren
     Node::visit(scene, parentTransform, parentFlags);
 }
 
-bool RenderNode::drawEffects(int64_t duration, const Scene *scene, const Mat4 & transform, const Texture2D *inputTexture ) {
+bool RenderNode::drawEffects(int64_t duration, const Scene *scene, const Mat4 & transform, const Texture2D *inputTexture) {
     const Texture2D *output = _effect_group.drawEffects(duration, scene->getGLEngine(), inputTexture);
     if (output) {
-        _textureDrawer->draw(output, scene, transform, this);
+        _textureDrawer->draw(output, scene, transform, this, _flipMode);
         return true;
     }
     return false;

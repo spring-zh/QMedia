@@ -34,6 +34,9 @@ public:
     const Color4F& getBKColor() const { return _bkColor; }
     void setBKColor(const Color4F& color) { _bkColor = color; }
     
+    void setEnable3d(bool enable3d) { _enable3d = enable3d; }
+    bool getEnable3d() { return _enable3d; }
+    
     const Scene* Scene() const {return &_scene;}
     
     virtual bool createRes() override;
@@ -44,10 +47,12 @@ protected:
     GraphicCore::Scene _scene;
     Color4F _bkColor;
     Size _layerSize;
+    bool _enable3d;
 
     std::shared_ptr<FrameBuffer> _framebuffer;
 
     std::shared_ptr<Texture2D> _texture;
+    std::shared_ptr<Texture2D> _depth_texture;
 };
 
 using LayerRef = std::shared_ptr<Layer>;

@@ -139,17 +139,16 @@ void main()
 
 const char* defaultPositionTexture_frag = R"(
 #ifdef GL_ES
-varying highp vec2 v_texCoord;
-#else
-varying vec2 v_texCoord;
+  precision highp float;
 #endif
+varying vec2 v_texCoord;
 
 uniform sampler2D uTexture;
-uniform highp vec4 uColor;
+uniform vec4 uColor;
 
 void main()
 {
-//    highp vec4 value = texture2D(uTexture, v_texCoord);
+//    vec4 value = texture2D(uTexture, v_texCoord);
 //    value = dot(value , uColor);
     gl_FragColor = texture2D(uTexture, v_texCoord) * uColor;
 }

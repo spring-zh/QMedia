@@ -17,9 +17,9 @@ class Drawable2D {
 public:
     
     enum FlipMode {
-        NONE,
-        FlipH,
-        FlipV
+        NONE = 0,
+        FlipH = 1,
+        FlipV = 2
     };
     
     static float RECTANGLE_COORDS[8];

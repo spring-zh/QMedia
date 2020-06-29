@@ -248,6 +248,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
             QLayer* fromLayer = (QLayer*)fromNode;
             QLayer* layer = [[QLayer alloc] initWithSize:fromLayer.layerSize combiner:self uid:fromLayer.uid];
             layer.bkColor = fromLayer.bkColor;
+            layer.enable3d = fromLayer.enable3d;
             newNode = layer;
         }else if ([fromNode isKindOfClass:QImageNode.class]) {
             QImageNode* fromImageNode = (QImageNode*)fromNode;

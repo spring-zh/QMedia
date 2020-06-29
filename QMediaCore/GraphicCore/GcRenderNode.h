@@ -36,6 +36,9 @@ public:
     void addEffect(EffectRef effectRef);
     void removeEffect(EffectRef effectRef);
     
+    void setFlipMode(Drawable2D::FlipMode flipMode) { _flipMode = flipMode; }
+    Drawable2D::FlipMode getFlipMode() { return _flipMode; }
+    
     // create/release gl resource
     virtual bool createRes();
     virtual void releaseRes();
@@ -43,8 +46,10 @@ public:
 protected:
     Range<int64_t> _renderRange;
     
+    Drawable2D::FlipMode _flipMode;
+    
     //effects
-    bool drawEffects(int64_t duration, const Scene *scene, const Mat4 & transform, const Texture2D *inputTexture );
+    bool drawEffects(int64_t duration, const Scene *scene, const Mat4 & transform, const Texture2D *inputTexture);
     std::shared_ptr<Texture2DDrawer> _textureDrawer;
     EffectGroup _effect_group;
 };
