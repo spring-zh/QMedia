@@ -27,6 +27,35 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 @end
 
 @implementation QDisplayLayer
+- (void)setRenderRange:(NSRange)renderRange {}
+
+- (void)setVisible:(bool)visible{}
+
+- (void)setRotation:(float)rotation{}
+
+- (void)setRotation3d:(QVector)rotation3d {}
+
+- (void)setScaleX:(float)scaleX{}
+
+- (void)setScaleY:(float)scaleY{}
+
+- (void)setScaleZ:(float)scaleZ{}
+
+- (void)setContentSize:(CGSize)contentSize{}
+
+- (void)setPosition:(CGPoint)position{}
+
+- (void)setPositionZ:(float)positionZ{}
+
+- (void)setAnchorPoint:(CGPoint)anchorPoint{}
+
+- (void)setColor4:(QColor4)color4{}
+
+- (void)setAlpha:(float)alpha{}
+
+- (void)setCrop:(QVector)crop {}
+
+- (void)setBlendFunc:(QBlendFunc)blendFunc {}
 @end
 
 @implementation QCombiner {

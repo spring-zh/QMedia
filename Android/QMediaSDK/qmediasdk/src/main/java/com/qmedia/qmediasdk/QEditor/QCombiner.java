@@ -4,7 +4,10 @@ import android.util.Log;
 
 import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
+import com.qmedia.qmediasdk.QCommon.QSize;
+import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEffect.QEffect;
+import com.qmedia.qmediasdk.QGraphic.QBlendFunc;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
 import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QGraphic.QImageNode;
@@ -23,6 +26,42 @@ import java.util.HashMap;
 
 public class QCombiner extends QMediaFactory{
     private static final String TAG = "QCombiner";
+
+    public class QDisplayLayer extends QLayer {
+        QDisplayLayer() {
+            super(QCombiner.this, "0");
+        }
+        @Override
+        public void setRenderRange(QRange renderRange) { }
+        @Override
+        public void setVisible(boolean visible) { }
+        @Override
+        public void setRotation3d(QVector rotation3d) { }
+        @Override
+        public void setRotation(float rotation) { }
+        @Override
+        public void setScaleX(float scaleX) { }
+        @Override
+        public void setScaleY(float scaleY) { }
+        @Override
+        public void setScaleZ(float scaleZ) { }
+        @Override
+        public void setContentSize(QSize contentSize) { }
+        @Override
+        public void setPosition(QVector position) { }
+        @Override
+        public void setPositionZ(float positionZ) { }
+        @Override
+        public void setAnchorPoint(QVector anchorPoint) { }
+        @Override
+        public void setColor4(QVector color4) { }
+        @Override
+        public void setAlpha(float alpha) { }
+        @Override
+        public void setCrop(QVector crop) { }
+        @Override
+        public void setBlendFunc(QBlendFunc blendFunc) { }
+    }
 
     protected QDisplayLayer rootNode = new QDisplayLayer();
 
@@ -103,13 +142,6 @@ public class QCombiner extends QMediaFactory{
     }
     public QRange getMediaTimeRange() {
         return native_getMediaTimeRange();
-    }
-
-
-    public class QDisplayLayer extends QLayer {
-        QDisplayLayer() {
-            super(QCombiner.this, "0");
-        }
     }
 
     public void copyForm(QCombiner from) {
