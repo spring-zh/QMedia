@@ -38,6 +38,8 @@ public:
 
     //draw with node's settings
     virtual void draw(const Texture2D* texture,const Scene* scene, const Mat4 & /*transform*/, const Node* /*node*/, Drawable2D::FlipMode flipMode = Drawable2D::NONE) ;
+    
+    virtual void drawDirect(const Texture2D* texture,const GraphicCore::Scene* /*scene*/, const GraphicCore::Rect & /*region*/, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode);
 
 protected:
     ShaderProgram _shaderProgram;

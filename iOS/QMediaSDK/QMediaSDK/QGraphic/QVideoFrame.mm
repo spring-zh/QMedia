@@ -217,8 +217,6 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
     }
     CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
     
-    //TODO: need to add BGRA pixelbuffer supported
-    
     if (_lumaTexture) {
         CFRelease(_lumaTexture);
         _lumaTexture = NULL;
@@ -328,6 +326,18 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
         GraphicCore::Mat4 mvpMatrix;
         GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
         GraphicCore::Mat4 texMatrix;
+        //TODO: check crop
+        GraphicCore::Rect cropRect = node->getCrop();
+        if (! cropRect.size.equals(GraphicCore::Size::ZERO)) {
+            //TODO: need crop
+            float crop[16] = {
+                    cropRect.size.width, 0, 0, 0,
+                    0, cropRect.size.height, 0, 0,
+                    0, 0, 1, 0,
+                    cropRect.getMinX(), cropRect.getMinY(), 0, 1,
+            };
+            texMatrix.multiply(crop);
+        }
         _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m, 16);
         _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, mvpMatrix.m, 16);
         _program->setUniformValue("colorConversionMatrix", Uniform::MATRIX3, _colorConversionMatrix, 9);
@@ -342,6 +352,65 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
         if (node->getBlendFunc() != BlendFunc::DISABLE) {
             _program->setBlendFunc(node->getBlendFunc());
         } else if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)){
+            _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
+        } else
+            _program->setBlendFunc(BlendFunc::DISABLE);
+        
+        _program->drawRectangle();
+    }
+}
+
+void PixelFrameNV12Drawer::drawFrameDirect(const GraphicCore::Scene* scene, const GraphicCore::Rect & region, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode) {
+    if (_program && _program->use()) {
+        GLfloat posArray[] = {
+            region.getMinX(), region.getMinY(), 0,
+            region.getMaxX(), region.getMinY(), 0,
+            region.getMinX(), region.getMaxY(), 0,
+            region.getMaxX(), region.getMaxY(), 0
+        };
+        
+        _program->setVertexAttribValue("a_texCoord", VertexAttrib::TEXCOORD, Drawable2D::RECTANGLE_TEX_COORDS, GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS));
+        _program->setVertexAttribValue("a_position", VertexAttrib::VERTEX3 ,posArray, GET_ARRAY_COUNT(posArray));
+        
+        if(_lumaTexture) {
+            Uniform::Value texture_y;
+            texture_y._texture = CVOpenGLESTextureGetName(_lumaTexture);
+            texture_y._textureTarget = CVOpenGLESTextureGetTarget(_lumaTexture);
+            _program->setUniformValue("SamplerY", Uniform::TEXTURE, texture_y);
+        }
+        if (_chromaTexture) {
+            Uniform::Value texture_uv;
+            texture_uv._texture = CVOpenGLESTextureGetName(_chromaTexture);
+            texture_uv._textureTarget = CVOpenGLESTextureGetTarget(_chromaTexture);
+            _program->setUniformValue("SamplerUV", Uniform::TEXTURE, texture_uv);
+        }
+        
+        GraphicCore::Mat4 mvpMatrix = scene->getMatrix(MATRIX_STACK_PROJECTION);
+//        GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+        GraphicCore::Mat4 texMatrix;
+        //TODO: check crop
+        if (! crop.size.equals(GraphicCore::Size::ZERO)) {
+            //TODO: need crop
+            float crop_arr[16] = {
+                    crop.size.width, 0, 0, 0,
+                    0, crop.size.height, 0, 0,
+                    0, 0, 1, 0,
+                    crop.getMinX(), crop.getMinY(), 0, 1,
+            };
+            texMatrix.multiply(crop_arr);
+        }
+        _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m, 16);
+        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, mvpMatrix.m, 16);
+        _program->setUniformValue("colorConversionMatrix", Uniform::MATRIX3, _colorConversionMatrix, 9);
+        
+        Uniform::Value colorVal;
+        colorVal._floatOrmatrix_array = {
+            color.r,
+            color.g,
+            color.b,
+            color.a};
+        _program->setUniformValue("uColor", Uniform::FLOAT4, colorVal);
+        if (! FLOAT_ISEQUAL(color.a, 1.0f)){
             _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
         } else
             _program->setBlendFunc(BlendFunc::DISABLE);
@@ -418,8 +487,6 @@ bool PixelFrameBGRADrawer::setFrame(const VideoFrame& videoFrame)
     }
     CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
     
-    //TODO: need to add BGRA pixelbuffer supported
-    
     if (_textureRef) {
         CFRelease(_textureRef);
         _textureRef = NULL;
@@ -470,6 +537,13 @@ void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const Grap
 {
     if (_textureDrawer) {
         _textureDrawer->draw(&_duplicateTexture, scene, transform, node);
+    }
+}
+
+void PixelFrameBGRADrawer::drawFrameDirect(const GraphicCore::Scene* scene, const GraphicCore::Rect & region, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode)
+{
+    if (_textureDrawer) {
+        _textureDrawer->drawDirect(&_duplicateTexture, scene, region, crop, color, flipMode);
     }
 }
 

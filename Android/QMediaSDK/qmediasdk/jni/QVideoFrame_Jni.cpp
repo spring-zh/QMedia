@@ -70,7 +70,7 @@ int JavaVideoFrameBuffer::StrideV() const {
 
 void *JavaVideoFrameBuffer::native_handle() const {
     JNIEnv* env = JniUtils::getEnv();
-    return (void *)J4AC_com_qmedia_qmediasdk_QGraphic_QVideoFrame__textureid(env, _object);
+    return reinterpret_cast<void *>(J4AC_com_qmedia_qmediasdk_QGraphic_QVideoFrame__textureid(env, _object));
 }
 
 std::shared_ptr<VideoFrameBuffer> JavaVideoFrameBuffer::NativeToI420Buffer() {
@@ -156,6 +156,40 @@ void OESVideoFrameDrawer::drawFrame(const GraphicCore::Scene* scene, const Graph
         _program->drawRectangle();
     }
 }
+
+void OESVideoFrameDrawer::drawFrameDirect(const GraphicCore::Scene* scene, const GraphicCore::Rect & region, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode)
+{
+    if (_program && _program->use()) {
+        GLfloat posArray[] = {
+                region.getMinX(), region.getMinY(), 0,
+                region.getMaxX(), region.getMinY(), 0,
+                region.getMinX(), region.getMaxY(), 0,
+                region.getMaxX(), region.getMaxY(), 0
+        };
+
+        _program->setVertexAttribValue("a_texCoord", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_TEX_COORDS, GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS));
+        _program->setVertexAttribValue("a_position", VertexAttrib::VERTEX3 ,posArray, GET_ARRAY_COUNT(posArray));
+        Uniform::Value textureVal;
+        textureVal._textureTarget = GL_TEXTURE_EXTERNAL_OES;
+        textureVal._texture = _textureid;
+        _program->setUniformValue("uTexture", Uniform::TEXTURE, textureVal);
+        GraphicCore::Mat4 mvpMatrix = scene->getMatrix(MATRIX_STACK_PROJECTION);
+//        GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+        GraphicCore::Mat4 texMatrix;
+        _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m/*Drawable2D::MtxFlipV*/, 16);
+        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, mvpMatrix.m, 16);
+
+        float colorArr[] = { color.r, color.g, color.b, color.a };
+        _program->setUniformValue("uColor", Uniform::FLOAT4, colorArr, GET_ARRAY_COUNT(colorArr));
+        if (! FLOAT_ISEQUAL(color.a, 1.0f)){
+            _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
+        } else
+            _program->setBlendFunc(BlendFunc::DISABLE);
+
+        _program->drawRectangle();
+    }
+}
+
 void OESVideoFrameDrawer::release()
 {
     if (_program) {

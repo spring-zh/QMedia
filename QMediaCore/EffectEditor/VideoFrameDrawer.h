@@ -22,6 +22,7 @@ public:
 
     virtual bool setFrame(const VideoFrame& videoFrame) = 0;
     virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) = 0;
+    virtual void drawFrameDirect(const GraphicCore::Scene* /*scene*/, const GraphicCore::Rect & /*region*/, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode) = 0;
     virtual const GraphicCore::Texture2D* getOutputTexture() { return nullptr; }
     virtual void release() = 0;
     
