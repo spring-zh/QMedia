@@ -32,6 +32,12 @@ using namespace GraphicCore;
     return self = [super initWithNode:_layer combiner:combiner uid:uid];
 }
 
+- (instancetype)initWithNative:(GraphicCore::LayerRef)layer combiner:(QCombiner*)combiner uid:(NSString*)uid
+{
+    _layer = layer;
+    return self = [super initWithNode:_layer combiner:combiner uid:uid];
+}
+
 - (void)dealloc {
     NSLog(@"QLayer dealloc");
 }

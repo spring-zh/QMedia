@@ -11,6 +11,7 @@
 
 #include <stdint.h>
 #include "GLMacros.h"
+#include "GraphicCore/opengl/Drawable2D.h"
 #include "GraphicCore/base/Image.h"
 
 GRAPHICCORE_BEGIN

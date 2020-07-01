@@ -39,18 +39,14 @@ public:
     Color4F getClearColor();
     void setClearColor(Color4F color);
     void clearByColor();
-    void enableDepthTest(bool enable);
+    void setEnableDepthTest(bool enable);
+    bool enableDepthTest() {return _enableDepthTest; }
     
     // save/recover previous render status
     void saveStatus();
     void recoverStatus();
 
     static bool checkSupportExtension(const char* extension);
-    
-    //FIXME:
-    Texture2D* getImageTexture(const char* name, const uint8_t* buffer, int buffersize);
-    Texture2D* getTexture2D(Texture2D::Format format, int width, int height);
-    void releaseTexture(Texture2D* texture);
 
     FrameBuffer* getFramebuffer(const char* name);
     void releaseFramebuffer(FrameBuffer *frameBuffer);
@@ -64,7 +60,7 @@ public:
     void releaseAll();
 
 protected:
-    
+    bool _enableDepthTest;
     std::stack<Rect> _viewPortStack;
     std::stack<Color4F> _colorStack;
     std::stack<FrameBuffer*> _framebufferStack;

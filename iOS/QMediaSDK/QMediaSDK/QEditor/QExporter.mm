@@ -159,6 +159,10 @@ private:
     return ((VideoRender*)_exporter.get())->onVideoRender(wantTime);
 }
 
+- (void)setDisplayMode:(QDisplayMode)mode viewW:(int)viewW viewH:(int)viewH {
+    return ((VideoRender*)_exporter.get())->setDisplayMode((DisplayMode)mode, viewW, viewH);
+}
+
 - (bool)onAudioRender:(uint8_t *const)buffer needBytes:(unsigned int)needBytes wantTime:(int64_t)wantTime {
     return ((AudioRender*)_exporter.get())->onAudioRender(buffer, needBytes, wantTime);
 }

@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
-import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEffect.QEffect;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
 import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
@@ -20,14 +19,12 @@ import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
 
 public class QCombiner extends QMediaFactory{
     private static final String TAG = "QCombiner";
 
-    protected DisplayRootNode rootNode = new DisplayRootNode();
+    protected QDisplayLayer rootNode = new QDisplayLayer();
 
     protected QCombiner() {
         super.setCombiner(this);
@@ -51,7 +48,7 @@ public class QCombiner extends QMediaFactory{
         native_setAudioConfig(describe);
     }
 
-    public DisplayRootNode getRootNode() {
+    public QDisplayLayer getRootNode() {
         return rootNode;
     }
 
@@ -109,21 +106,20 @@ public class QCombiner extends QMediaFactory{
     }
 
 
-    public class DisplayRootNode extends QGraphicNode {
-        DisplayRootNode() {
-            super(QCombiner.this, UUID.randomUUID().toString());
-        }
-
-        public void setBKColor(QVector color) {
-            setColor4(color);
+    public class QDisplayLayer extends QLayer {
+        QDisplayLayer() {
+            super(QCombiner.this, "0");
         }
     }
 
     public void copyForm(QCombiner from) {
         setValidTimeRange(from.getMediaTimeRange());
-        //copy rootNode
+
         graphicNodes.clear();
+        //copy rootNode
         rootNode.copyForm(from.rootNode);
+        rootNode.setEnable3d(from.rootNode.isEnable3d());
+        rootNode.setBkColor(from.rootNode.getBkColor());
         super.addGraphicNodeIndex(rootNode);
 
         //copy mediaTracks
@@ -152,7 +148,7 @@ public class QCombiner extends QMediaFactory{
         for (HashMap.Entry<String, QGraphicNode> entry: from.graphicNodes.entrySet()) {
             QGraphicNode newNode;
             QGraphicNode fromNode = entry.getValue();
-            if (fromNode instanceof DisplayRootNode) {
+            if (fromNode instanceof QDisplayLayer) {
                 continue;
             }else if (fromNode instanceof QVideoTrackNode) {
                 //TODO: set QVideoTrackNode

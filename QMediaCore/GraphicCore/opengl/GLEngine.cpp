@@ -18,7 +18,8 @@ GRAPHICCORE_BEGIN
 
 GLEngine::GLEngine():
 _currentFramebuffer(nullptr),
-_defaultFramebuffer(nullptr)
+_defaultFramebuffer(nullptr),
+_enableDepthTest(false)
 {
 
 }
@@ -55,8 +56,9 @@ void GLEngine::clearByColor()
 //    glClearColor(r,g,b,a);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-void GLEngine::enableDepthTest(bool enable)
+void GLEngine::setEnableDepthTest(bool enable)
 {
+    _enableDepthTest = enable;
     glDepthFunc(GL_LEQUAL);
     glDepthRangef(0, 1);
     glClearDepthf(1.0f);
@@ -130,51 +132,6 @@ void GLEngine::useAsDefaultFrameBuffer()
     }
     _defaultFramebuffer = FrameBuffer::createExist(currentfbo);
     _currentFramebuffer = _defaultFramebuffer;
-}
-
-Texture2D* GLEngine::getImageTexture(const char* name, const uint8_t* buffer, int buffersize)
-{
-    Texture2D* texture = nullptr;
-//    auto item = _imagTextures.find(name);
-//    if (item == _imagTextures.end()){
-//        texture = GeneralTexture2D::createFromImage(buffer,buffersize);
-//        if(texture)
-//            _imagTextures.insert(std::make_pair(name,texture));
-//    } else
-//        texture = item->second;
-
-    return texture;
-
-}
-Texture2D* GLEngine::getTexture2D(Texture2D::Format format, int width, int height)
-{
-//    for (auto& item : _cacheTextures) {
-//        if (item->width() == width &&
-//                item->height() == height &&
-//                item->getFormat() == format)
-//        {
-//            item->addRef();
-//            return item;
-//        }
-//    }
-
-    Texture2D* texture = GeneralTexture2D::createTexture(format,width,height);
-    _cacheTextures.push_back(texture);
-    return texture;
-}
-void GLEngine::releaseTexture(Texture2D* texture)
-{
-    if(texture == nullptr)
-        return;
-    auto i_find = std::find(_cacheTextures.begin(),_cacheTextures.end(),texture);
-    if (i_find != _cacheTextures.end()){
-//        if (texture) {
-//            texture->releaseRef();
-        _cacheTextures.erase(i_find);
-            texture->release();
-//        }
-        return;
-    }
 }
 
 FrameBuffer* GLEngine::getFramebuffer(const char* name)

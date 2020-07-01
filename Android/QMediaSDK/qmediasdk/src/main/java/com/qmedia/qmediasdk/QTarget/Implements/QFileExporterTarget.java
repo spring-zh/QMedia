@@ -315,52 +315,15 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
             mVideoEncoder.release();
         }
 
-        void createTextureTarget(){
-            mFullScreen = new FullFrameRect(
-                    new Texture2dProgram(Texture2dProgram.ProgramType.TEXTURE_2D));
-            targetTexure[0] = mFullScreen.createTextureObject();
-            GLES20.glTexImage2D(GLES20.GL_TEXTURE_2D, /*level*/ 0, GLES20.GL_RGBA,
-                    mWidth, mHeight, /*border*/ 0, GLES20.GL_RGBA, GLES20.GL_UNSIGNED_BYTE, null);
-            GlUtil.checkGlError("loadImageTexture");
-            GLES20.glGenFramebuffers(1, targetFrameBuffer,0);
-        }
-
-        void releaseTextureTarget() {
-            GLES20.glDeleteTextures(1,targetTexure, 0);
-            GLES20.glDeleteFramebuffers(1, targetFrameBuffer, 0);
-            if (mFullScreen != null) {
-                mFullScreen.release(false);
-                mFullScreen = null;
-            }
-        }
-
-        void setRenderTexture(int texId) {
-            if (texId > 0) {
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, targetFrameBuffer[0]);
-                GLES20.glFramebufferTexture2D(GLES20.GL_FRAMEBUFFER, GLES20.GL_COLOR_ATTACHMENT0,
-                        GLES20.GL_TEXTURE_2D, texId, 0);
-            }else {
-                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
-            }
-
-            int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
-            if (status != GLES20.GL_FRAMEBUFFER_COMPLETE)
-            {
-                GlUtil.checkGlError("glCheckFramebufferStatus: " +  status);
-            }
-        }
-
         private void prepareEGL(EGLContext sharedContext) {
 
             mEglCore = new EglCore(sharedContext, EglCore.FLAG_RECORDABLE);
             mInputWindowSurface = new WindowSurface(mEglCore, mVideoEncoder.getInputSurface(), true);
             mInputWindowSurface.makeCurrent();
             Log.i(TAG, "GL_EXTENSIONS : " + GLES20.glGetString(GLES20.GL_EXTENSIONS));
-            createTextureTarget();
         }
         private void releaseEGL() {
 
-            releaseTextureTarget();
             if (mInputWindowSurface != null) {
                 mInputWindowSurface.release();
                 mInputWindowSurface = null;
@@ -379,6 +342,7 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
             GLES20.glViewport(0,0,mWidth,mHeight);
             GlUtil.checkGlError("after prepareEGL");
 
+            getVideoRender().setDisplayMode(0,mWidth,mHeight);
             getVideoRender().onVideoCreate();
 
             while (mThreadRuning){
@@ -386,12 +350,16 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
                 mVideoEncoder.drainEncoder(false);
 
                 GlUtil.checkGlError("onVideoRender before");
-                setRenderTexture(targetTexure[0]);
+                GLES20.glBindFramebuffer(GLES20.GL_FRAMEBUFFER, 0);
+                int status = GLES20.glCheckFramebufferStatus(GLES20.GL_FRAMEBUFFER);
+                if (status != GLES20.GL_FRAMEBUFFER_COMPLETE)
+                {
+                    GlUtil.checkGlError("glCheckFramebufferStatus: " +  status);
+                }
+                GLES20.glViewport(0,0,mWidth,mHeight);
                 if (getVideoRender().onVideoRender(timestampUs / 1000))
                 {
                     GlUtil.checkGlError("onVideoRender after");
-                    setRenderTexture(0);
-                    mFullScreen.drawFrame(targetTexure[0], null);
                     mInputWindowSurface.setPresentationTime((timestampUs + 10)*1000);
                     mInputWindowSurface.swapBuffers();
 //                    mVideoEncoder.requireKeyFrame();
@@ -484,8 +452,8 @@ public class QFileExporterTarget implements QVideoTarget, QAudioTarget {
                 if(getAudioRender().onAudioRender(byteBuffer.array(), requestSize, mAudioTimestampUs/1000))
                 {
                     //Log.e(TAG,"GETAV_AUDIO readLen " + readLen[0] + " pts " + timeUs[0]);
-                    boolean bufput;
                     byteBuffer.rewind();
+                    boolean bufput;
                     do {
                         bufput = mAudioEncoder.encodeData(byteBuffer, requestSize , mAudioTimestampUs);
                     }while (!bufput && mThreadRuning);

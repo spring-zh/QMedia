@@ -10,12 +10,19 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "QMediaDescribe.h"
 
+typedef NS_ENUM(NSInteger, QDisplayMode) {
+    DisplayStretch = 0,
+    DisplayAdaptive,
+    DisplayClip
+};
+
 @protocol QVideoRender <NSObject>
 @required
 - (bool)onVideoRender:(int64_t)wantTime;
 - (bool)onVideoCreate;
 - (void)onVideoDestroy;
 
+- (void)setDisplayMode:(QDisplayMode)mode viewW:(int)viewW viewH:(int)viewH;
 @end
 
 @protocol QVideoTarget <NSObject>

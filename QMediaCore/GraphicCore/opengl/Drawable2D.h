@@ -16,7 +16,7 @@ GRAPHICCORE_BEGIN
 class Drawable2D {
 public:
     
-    enum FlipMode {
+    enum FlipMode : int {
         NONE = 0,
         FlipH = 1,
         FlipV = 2

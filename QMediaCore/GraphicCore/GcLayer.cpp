@@ -49,6 +49,8 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
 
     GLEngine *gle = scene->getGLEngine();
     gle->saveStatus();
+    bool isDepthTest = gle->enableDepthTest();
+    gle->setEnableDepthTest(_enable3d);
     // draw layer
     gle->setCurrentFrameBuffer(_framebuffer.get());
     Rect layerViewPort(0, 0,_texture->width(),_texture->height());
@@ -67,7 +69,7 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
         }
     }
     gle->recoverStatus();
-
+    gle->setEnableDepthTest(isDepthTest);
     this->draw(scene, _modelViewTransform, parentFlags);
     
     scene->popMatrix(MATRIX_STACK_MODELVIEW);

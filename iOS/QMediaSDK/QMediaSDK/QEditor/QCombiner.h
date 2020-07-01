@@ -8,10 +8,9 @@
 
 #import "QMediaDescribe.h"
 #import "QMediaFactory.h"
-#import "QGraphicNode.h"
+#import "QLayer.h"
 
-@interface DisplayRootNode : QGraphicNode
-@property (nonatomic) QColor4 bkColor;
+@interface QDisplayLayer : QLayer
 @end
 
 @interface QCombiner : NSObject <Serializable>
@@ -24,7 +23,7 @@
 @property (nonatomic, readonly) NSDictionary<NSString*, QGraphicNode*>* graphicNodes;
 @property (nonatomic, readonly) NSDictionary<NSString*, QGraphicNode*>* duplicateNodes;
 
-@property (nonatomic, readonly) DisplayRootNode* rootNode;
+@property (nonatomic, readonly) QDisplayLayer* rootNode;
 @property (nonatomic, readonly) QMediaFactory* mediaFactory;
 
 // set the video/audio output target config

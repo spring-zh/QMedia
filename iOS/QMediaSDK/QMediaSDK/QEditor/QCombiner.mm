@@ -22,16 +22,11 @@
 extern const struct VideoDescribe XMToVideoDescribe(QVideoDescribe* xmdesc);
 extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 
-@implementation DisplayRootNode
+@interface QLayer(internal)
+- (instancetype)initWithNative:(GraphicCore::LayerRef)layer combiner:(QCombiner*)combiner uid:(NSString*)uid;
+@end
 
-- (QColor4)bkColor {
-    return [self color4];
-}
-
-- (void)setBkColor:(QColor4)bkColor {
-    [self setColor4:bkColor];
-}
-
+@implementation QDisplayLayer
 @end
 
 @implementation QCombiner {
@@ -40,7 +35,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     NSMutableDictionary<NSString*, QGraphicNode*>* _duplicateNodesArray;
     EffectCombiner* _combiner;
     QMediaFactory *_mediaFactory;
-    DisplayRootNode* _rootNode;
+    QDisplayLayer* _rootNode;
 }
 
 - (instancetype)initWithNative:(EffectCombiner* )combiner_native
@@ -51,7 +46,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
         _subObjectArray = [NSMutableDictionary new];
         _graphicNodesArray = [NSMutableDictionary new];
         _duplicateNodesArray = [NSMutableDictionary new];
-        _rootNode = [[DisplayRootNode alloc] initWithNode:_combiner->getRootNode() combiner:self];
+        _rootNode = [[QDisplayLayer alloc] initWithNative:_combiner->getRootNode() combiner:self uid:@"0"];
     }
     return self;
 }
@@ -195,7 +190,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     return nsRange;
 }
 
-- (DisplayRootNode*)rootNode {
+- (QDisplayLayer*)rootNode {
     return _rootNode;
 }
 
@@ -212,9 +207,13 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 #pragma mark copy settings
 - (void)copyFrom:(QCombiner*)from {
     self.mediaTimeRange = from.mediaTimeRange;
-    //copy rootNode
+    
     [_graphicNodesArray removeAllObjects];
+    //copy rootNode
     [_rootNode copyFrom:from.rootNode];
+    _rootNode.bkColor = from.rootNode.bkColor;
+//    _rootNode.flipMode = from.rootNode.flipMode;
+    _rootNode.enable3d = from.rootNode.enable3d;
     [self addGraphicNodeIndex:_rootNode];
     
     //copy mediaTracks
@@ -240,7 +239,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     //copy graphic nodes
     for (QGraphicNode *fromNode in from.graphicNodes.allValues) {
         QGraphicNode* newNode;
-        if ([fromNode isKindOfClass:DisplayRootNode.class]) {
+        if ([fromNode isKindOfClass:QDisplayLayer.class]) {
             continue;
         }else if ([fromNode isKindOfClass:QVideoTrackNode.class]) {
             continue;

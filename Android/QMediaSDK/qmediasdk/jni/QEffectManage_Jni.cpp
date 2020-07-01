@@ -48,5 +48,5 @@ NATIVE_FUNCTION(jlong , native_1createEffect)(JNIEnv *env, jobject thiz, jstring
     if (effect) {
         return reinterpret_cast<jlong>(new GraphicCore::EffectRef(effect));
     } else
-        return NULL;
+        return 0;
 }

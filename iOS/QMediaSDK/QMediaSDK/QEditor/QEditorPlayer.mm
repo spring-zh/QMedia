@@ -151,6 +151,7 @@ private:
         id<QAudioTarget> audioTarget = [[QAudioPlayer alloc] init];
         [audioTarget setAudioRender:self];
         super.audioTarget = audioTarget;
+        super.rootNode.flipMode = QFlipV;
         _cbQueue = cbQueue;
     }
     return self;
@@ -253,6 +254,10 @@ private:
 
 - (bool)onVideoRender:(int64_t)wantTime {
     return ((VideoRender*)_pPlayer.get())->onVideoRender(wantTime);
+}
+
+- (void)setDisplayMode:(QDisplayMode)mode viewW:(int)viewW viewH:(int)viewH {
+    return ((VideoRender*)_pPlayer.get())->setDisplayMode((DisplayMode)mode, viewW, viewH);
 }
 
 - (bool)onAudioRender:(uint8_t *const)buffer needBytes:(unsigned int)needBytes wantTime:(int64_t)wantTime {
