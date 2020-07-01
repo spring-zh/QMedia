@@ -49,13 +49,3 @@ public:
     
     __weak id<QVideoTarget> _ocTarget;
 };
-
-
-#pragma mark QVideoTarget is deprecated
-@interface QVideoTarget : NSObject <QVideoRender>
-
--(instancetype)initWithTarget:(id<QVideoTarget>)target;
-@property (nonatomic, readonly) id<QVideoTarget> ocTarget;
-@property (nonatomic, readonly) VideoTarget* native;
-
-@end
