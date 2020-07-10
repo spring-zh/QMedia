@@ -7,7 +7,7 @@
 //
 
 #import "QMediaDescribe.h"
-#include "MediaCore/mediadef/MediaComm.h"
+#include "MediaCore/core/MediaComm.h"
 
 QVideoDescribe* videoDescribeToXM(struct VideoDescribe desc)
 {

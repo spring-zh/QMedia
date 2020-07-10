@@ -12,10 +12,16 @@
 
 #include "speex_resampler/speex_resampler.h"
 
-static int FormatBytes[] = {2, 1, 4, 0};
+//static __always_inline const int16_t av_clip_int16_c(int a)
+//{
+//    if ((a+0x8000U) & ~0xFFFF) return (a>>31) ^ 0x7FFF;
+//    else                      return a;
+//}
+//
+//#define OUT(d, v) d = av_clip_int16((v + (1 << 14)) >> 15)
+//#define DBL_TO_FELEM(d, v) d = av_clip_int16(lrint(v * (1 << 15)))
 
-//#define GET_FORMAT_BYTES(format) \
-//    ((format == FT_FLOAT)?4:2)
+static int FormatBytes[] = {2, 1, 4, 0};
 
 ResamplerSpeex::ResamplerSpeex():
         _isinit(false),
@@ -110,14 +116,24 @@ int ResamplerSpeex::process(void *indata, unsigned int inBytes, std::vector<uint
     int maxResampleSamples = maxResampleBytes / (FormatBytes[_inFormat] * _inChannels);
     int outSamples = resample(indata, inSamples, _tmpBuffer.data(), maxResampleSamples);
     int outBytes = outSamples * _outChannels * FormatBytes[_outFormat];
-    if (_inChannels != _outChannels) {
-        if (_outChannels == 1) {
-            mergeChannel<int16_t>(_tmpBuffer, outPut, outSamples);
-        }else if(_outChannels == 2)
-            expandChannel<int16_t>(_tmpBuffer, outPut, outSamples);
-    }else {
-        outPut.assign(_tmpBuffer.begin(), _tmpBuffer.begin() + outBytes);
+    if (_inFormat == FT_FLOAT) {
+        if (_inChannels != _outChannels) {
+            if (_outChannels == 1) {
+                mergeChannel<float , int16_t>(_tmpBuffer, outPut, outSamples);
+            } else
+                expandChannel<float , int16_t>(_tmpBuffer, outPut, outSamples);
+        } else
+            copyOutput<float , int16_t >(_tmpBuffer, outPut, outSamples * _outChannels);
+    } else {
+        if (_inChannels != _outChannels) {
+            if (_outChannels == 1) {
+                mergeChannel<int16_t , int16_t>(_tmpBuffer, outPut, outSamples);
+            } else
+                expandChannel<int16_t , int16_t>(_tmpBuffer, outPut, outSamples);
+        } else
+            copyOutput<int16_t, int16_t>(_tmpBuffer, outPut, outSamples * _outChannels);
     }
+
     return outBytes;
 }
 

@@ -9,7 +9,7 @@
 #pragma once
 
 #include "OutputTarget.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/VideoFrame.h"
 
 enum class DisplayMode : int{
     Stretch = 0,

@@ -12,6 +12,54 @@
 #include <stdint.h>
 #include <vector>
 
+template <typename IT, typename OT>
+inline OT convert(IT in) { return in; }
+
+template <> inline int16_t convert<float , int16_t>(float in) { return static_cast<int16_t>(in * 32767.0f); }
+template <> inline float convert<int16_t , float >(int16_t in) { return (float)in / 32767.0f; }
+
+//merge channel 2 to 1
+template <typename IT, typename OT>
+void mergeChannel(const std::vector<uint8_t>& inPut, std::vector<uint8_t>& outPut, int samples) {
+    outPut.resize(samples * sizeof(OT));
+    const IT* inPtr = (IT*)inPut.data();
+    OT* outPtr = (OT*)outPut.data();
+    OT* outEndPtr = outPtr + samples;
+    for (; outPtr < outEndPtr; ++outEndPtr ) {
+        *outPtr = convert<IT,OT>(*(inPtr++)) / 2;
+        *outPtr += convert<IT,OT>(*(inPtr++)) / 2;
+    }
+}
+//expand channel 1 to 2
+template <typename IT, typename OT>
+void expandChannel(const std::vector<uint8_t>& inPut, std::vector<uint8_t>& outPut, int samples) {
+    outPut.resize(samples * sizeof(OT) * 2);
+    const IT* inPtr = (IT*)inPut.data();
+    OT* outPtr = (OT*)outPut.data();
+    const IT* inEndPtr = inPtr + samples;
+    for (; inPtr < inEndPtr; ++inPtr ) {
+        *(outPtr++) = convert<IT,OT>(*inPtr);
+        *(outPtr++) = convert<IT,OT>(*inPtr);
+    }
+}
+
+template <typename IT, typename OT>
+void copyOutput(const std::vector<uint8_t>& inPut, std::vector<uint8_t>& outPut, int conut) {
+    outPut.resize(conut * sizeof(OT));
+    const IT* inPtr = (IT*)inPut.data();
+    OT* outPtr = (OT*)outPut.data();
+    const IT* inEndPtr = inPtr + conut;
+    for (; inPtr < inEndPtr; ++inPtr ) {
+        *(outPtr++) = convert<IT,OT>(*inPtr);
+    }
+}
+
+//template <typename IT>
+//void copyOutput<IT,IT>(const std::vector<uint8_t>& inPut, std::vector<uint8_t>& outPut, int conut) {
+//    outPut.assign(inPut.begin(),inPut.begin() + conut * sizeof(IT));
+//}
+
+
 struct SpeexResamplerState_;
 
 class ResamplerSpeex {
@@ -43,30 +91,6 @@ public:
     int64_t getPredictedOutputByte(int64_t inbytes);
 private:
     int64_t getPredictedResmapleByte(int64_t inbytes);
-    //merge channel 2 to 1
-    template <typename T>
-    void mergeChannel(const std::vector<uint8_t>& inPut, std::vector<uint8_t>& outPut, int samples) {
-        outPut.resize(samples * sizeof(T));
-        T* inPtr = (T*)inPut.data();
-        T* outPtr = (T*)outPut.data();
-        T* outEndPtr = outPtr + samples;
-        for (; outPtr < outEndPtr; ++outEndPtr ) {
-            *outPtr = (*(inPtr++)) / 2;
-            *outPtr += (*(inPtr++)) / 2;
-        }
-    }
-    //expand channel 1 to 2
-    template <typename T>
-    void expandChannel(const std::vector<uint8_t>& inPut, std::vector<uint8_t>& outPut, int samples) {
-        outPut.resize(samples * sizeof(T) * 2);
-        T* inPtr = (T*)inPut.data();
-        T* outPtr = (T*)outPut.data();
-        T* inEndPtr = inPtr + samples;
-        for (; inPtr < inEndPtr; ++inPtr ) {
-            *(outPtr++) = *inPtr;
-            *(outPtr++) = *inPtr;
-        }
-    }
 
     struct SpeexResamplerState_ *_resampler;
     bool _isinit;

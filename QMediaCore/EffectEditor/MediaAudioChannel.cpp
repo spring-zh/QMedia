@@ -64,10 +64,7 @@ const AudioSampleCache* MediaAudioChannel::getAudioSample(int64_t mSec) {
                     
                 }else {
                     cacheLen = nativebuffer->Size();
-                    if (_cacheBuffer.size() < cacheLen) {
-                        _cacheBuffer.resize(cacheLen);
-                    }
-                    std::memcpy(_cacheBuffer.data(), nativebuffer->Data(), cacheLen);
+                    _cacheBuffer.assign(nativebuffer->Data(), nativebuffer->Data() + cacheLen);
                 }
             }else {
                 //fill empty buffer

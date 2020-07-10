@@ -8,7 +8,7 @@
 
 #pragma once
 
-enum class MediaType { Video = 1 , Audio = 2 , Subtitle = 4 };
+enum class MediaType {Unkonw = 0,  Video = 1 , Audio = 2 , Subtitle = 4 };
 
 // Raw video format
 enum class RawVideoFormat {
@@ -31,7 +31,7 @@ enum class RawVideoFormat {
 };
 
 // Video codec types
-enum class VideoCodecType {
+enum class VideoCodecType : int{
 	kUnknown = 0,
 	kVP8,
 	kVP9,
@@ -39,6 +39,8 @@ enum class VideoCodecType {
 	kH264,
 	kH265,
 	kI420,
+
+	MAX_NUM
 };
 
 // enum for clockwise rotation.
@@ -74,13 +76,17 @@ enum class RawAudioFormat {
 };
 
 // Audio codec types
-enum class AudioCodecType {
+enum class AudioCodecType : int{
 	kUnknown = 0,
 	kAAC,
 	kOpus,
 	kPcmA,
 	kPcmU,
 	kG722,
+    kAAC_LATM,
+	kMP3,
+
+    MAX_NUM
 };
 
 // TODO(mgraczyk): Remove once all methods that use ChannelLayout are gone.

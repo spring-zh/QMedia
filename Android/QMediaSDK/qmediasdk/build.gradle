@@ -3,9 +3,7 @@ apply plugin: 'com.android.library'
 def SdkVersionName = "1.5"
 
 android {
-//    if (isDebugMode()){
-//        publishNonDefault  true
-//    }
+
     compileSdkVersion 25
     buildToolsVersion "27.0.3"
 
@@ -28,8 +26,8 @@ android {
         externalNativeBuild {
             cmake {
                 arguments '-DANDROID_PLATFORM=android-18',
-                        "-DANDROID_ARM_NEON=TRUE" ,
-                        //"-DANDROID_TOOLCHAIN=gcc",
+                        '-DANDROID_ARM_NEON=TRUE' ,
+                        "-DANDROID_TOOLCHAIN=clang",
                         '-DANDROID_STL=c++_static'
 //                        '-DCMAKE_BUILD_TYPE=Debug'
                 cppFlags "-std=c++11 -frtti -fexceptions"
@@ -109,27 +107,3 @@ tasks.withType(JavaCompile) {
 }
 
 //copyAAR.dependsOn "assemble"
-
-
-boolean isDebugMode() {
-    boolean ret = false
-    try {
-        Properties properties = new Properties()
-        File file = project.rootProject.file('local.properties')
-        if (!file.exists()) {
-            return false
-        }
-        properties.load(file.newDataInputStream())
-        String debugStr = properties.getProperty("DebugMode")
-        if (debugStr != null && debugStr.length() > 0) {
-            ret = debugStr.toBoolean()
-        }
-
-    } catch (Throwable throwable) {
-        throwable.printStackTrace()
-        ret = false
-    }
-    project.logger.error("[${project.name}]Debug:${ret}")
-
-    return ret
-}

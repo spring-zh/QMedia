@@ -8,10 +8,12 @@ import com.qmedia.qmediasdk.QSource.QMediaSource;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
+import com.qmedia.qmediasdk.QTrack.QMultiMediaTrack;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class QMediaFactory {
@@ -142,6 +144,19 @@ public class QMediaFactory {
             return mediaTrack;
         }else {
             mediaTrack.release();
+            return null;
+        }
+    }
+
+    public QMultiMediaTrack createMultiVideoTrack(List<String> filePaths) {
+        QMultiMediaTrack multiMediaTrack = new QMultiMediaTrack(filePaths, weakCombiner.get());
+        if (multiMediaTrack.prepare()) {
+            weakCombiner.get().addMediaTrack(multiMediaTrack);
+            multiMediaTrack.generateVideoTrackNode(weakCombiner.get());
+            multiMediaTrack.generateAudioTrackNode(weakCombiner.get());
+            return multiMediaTrack;
+        }else {
+            multiMediaTrack.release();
             return null;
         }
     }

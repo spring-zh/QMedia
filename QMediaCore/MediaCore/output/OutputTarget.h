@@ -9,12 +9,12 @@
 #ifndef MEDIACORE_OUTPUTTARGET_H
 #define MEDIACORE_OUTPUTTARGET_H
 
-#include "MediaCore/mediadef/MediaComm.h"
+#include "MediaCore/core/MediaComm.h"
 
 class OutputTarget {
 public:
-    constexpr OutputTarget() = default;
-    virtual ~OutputTarget(){}
+    OutputTarget() {}
+    virtual ~OutputTarget() {}
     virtual bool start() = 0;
     virtual bool stop() = 0;
     virtual void pause(bool isPause) = 0;

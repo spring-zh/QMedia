@@ -7,7 +7,7 @@
 
 #include "JniUtils.h"
 #include "GraphicCore/opengl/ShaderProgram.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/VideoFrame.h"
 #include "EffectEditor/VideoFrameDrawer.h"
 
 using GraphicCore::ShaderProgram;

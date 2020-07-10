@@ -6,7 +6,9 @@ import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QGraphic.QVideoTrackNode;
+import com.qmedia.qmediasdk.QSource.QAudioDescribe;
 import com.qmedia.qmediasdk.QSource.QMediaSource;
+import com.qmedia.qmediasdk.QSource.QVideoDescribe;
 
 import java.util.UUID;
 
@@ -22,6 +24,12 @@ public class QMediaTrack {
         this.id = id;
         this.mediaSource = mediaSource;
         mPtr = native_create(mediaSource);
+    }
+
+    //construct this for children class
+    protected QMediaTrack(String id) {
+        this.id = id;
+        this.mediaSource = null;
     }
 
     public String getId() {
@@ -40,17 +48,14 @@ public class QMediaTrack {
         return audio;
     }
 
+    public QVideoDescribe getVideoDescribe() {
+        return mediaSource.getVideoDescribe();
+    }
+    public QAudioDescribe getAudioDescribe() {
+        return mediaSource.getAudioDescribe();
+    }
+
     public boolean prepare() {
-//        if (native_prepare()) {
-//            if (mediaSource.getVideoDescribe() != null)
-//                graphic = new QVideoTrackNode(this, combiner);
-//            if (mediaSource.getAudioDescribe() != null)
-//                audio = new QAudioTrackNode(this, combiner);
-//            return true;
-//        }else {
-//            Log.e(TAG, "QMediaTrack prepare failed..");
-//            return false;
-//        }
         return native_prepare();
     }
 
@@ -146,5 +151,5 @@ public class QMediaTrack {
     protected native void native_release();
 
     //native ptr
-    private long mPtr = 0;
+    protected long mPtr = 0;
 }

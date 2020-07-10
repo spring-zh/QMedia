@@ -9,7 +9,7 @@
 #pragma once
 
 #include <CoreMedia/CoreMedia.h>
-#include "MediaCore/mediadef/AudioFrame.h"
+#include "MediaCore/core/AudioFrame.h"
 
 //AudioFrameBuffer implemention
 class BlockFrameBuffer: public AudioFrameBuffer {

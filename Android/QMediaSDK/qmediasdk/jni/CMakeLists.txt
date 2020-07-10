@@ -10,16 +10,9 @@ cmake_minimum_required(VERSION 3.4.1)
 # You can define multiple libraries, and CMake builds them for you.
 # Gradle automatically packages shared libraries with your APK.
 
-# set(OpenCV_DIR /Users/ts/Downloads/OpenCV-android-sdk/sdk/native/jni)
-# find_package(OpenCV REQUIRED)
 
-#thirdparty module
-#ffmpeg
-# set(FFMPEG_PATH /Users/spring/Desktop/ffmpeg-build/ffmpeg-3.2.4/android)
-# add_definitions(-D__STDC_CONSTANT_MACROS)
-# include_directories( ${FFMPEG_PATH}/${ANDROID_ABI}/include )
-# link_directories( ${FFMPEG_PATH}/${ANDROID_ABI}/lib )
 set(CMAKE_BUILD_TYPE Debug CACHE STRING "set build type to debug")
+option(ENABLE_FFMPEG "set ffmpeg enable" ON)
 
 include_directories(
         ${CMAKE_CURRENT_SOURCE_DIR})
@@ -49,9 +42,10 @@ add_library( # Sets the name of the library.
 
 # link_directories( ${CORE_DIR}/Video/thirdparty/ffmpeg/lib/android )
 
-if("${ANDROID_ABI}" STREQUAL "armeabi-v7a")
+if(("${ANDROID_ABI}" STREQUAL "armeabi-v7a") OR ("${ANDROID_ABI}" STREQUAL "x86"))
     set (CMAKE_SHARED_LINKER_FLAGS "${CMAKE_SHARED_LINKER_FLAGS} -Wl,--no-warn-shared-textrel")
 endif()
+
 target_link_libraries( # Specifies the target library.
                        qmediasdk
 

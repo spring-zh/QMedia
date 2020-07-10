@@ -20,6 +20,8 @@
 		6F224A57249CEEF7000244FF /* WhiteBalanceConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A56249CEEF7000244FF /* WhiteBalanceConfig.cpp */; };
 		6F224A5E24A0B997000244FF /* EffectManage.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A5C24A0B997000244FF /* EffectManage.cpp */; };
 		6F224A6724A89C85000244FF /* EffectGroup.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A6524A89C85000244FF /* EffectGroup.cpp */; };
+		6F224A7424AEDDBF000244FF /* VideoFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A6C24AEDDBF000244FF /* VideoFrame.cpp */; };
+		6F224A7524AEDDBF000244FF /* AudioFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A7124AEDDBF000244FF /* AudioFrame.cpp */; };
 		6F3720702469896800356951 /* speex_resampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F37206F2469896800356951 /* speex_resampler.c */; };
 		6F45922A2461ADE800FABEAF /* QPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4592292461ADE800FABEAF /* QPlayer.cpp */; };
 		6F511872240F9BD50013BC9E /* TDStretch.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117D9240F9BD40013BC9E /* TDStretch.cpp */; };
@@ -63,8 +65,6 @@
 		6FA69F95244D5DAA00BC3294 /* EffectCombiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA69F94244D5DAA00BC3294 /* EffectCombiner.cpp */; };
 		6FBD028624595CA900372404 /* GcDuplicateNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD028424595CA900372404 /* GcDuplicateNode.cpp */; };
 		6FBD028F24607B0B00372404 /* Image.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD028D24607B0B00372404 /* Image.cpp */; };
-		6FF02924221BFEE50011E6CB /* AudioFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FF02912221BFEE40011E6CB /* AudioFrame.cpp */; };
-		6FF02925221BFEE50011E6CB /* VideoFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FF02914221BFEE40011E6CB /* VideoFrame.cpp */; };
 		6FF02926221BFEE50011E6CB /* MediaTrackImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FF02920221BFEE40011E6CB /* MediaTrackImpl.cpp */; };
 		6FF02929221D01C20011E6CB /* MediaGraphicChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FF02927221D01C20011E6CB /* MediaGraphicChannel.cpp */; };
 		6FF0292C221D28A50011E6CB /* MediaAudioChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0292A221D28A50011E6CB /* MediaAudioChannel.cpp */; };
@@ -108,6 +108,14 @@
 		6F224A6224A2084C000244FF /* FlashEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FlashEffect.h; sourceTree = "<group>"; };
 		6F224A6524A89C85000244FF /* EffectGroup.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EffectGroup.cpp; sourceTree = "<group>"; };
 		6F224A6624A89C85000244FF /* EffectGroup.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EffectGroup.h; sourceTree = "<group>"; };
+		6F224A6C24AEDDBF000244FF /* VideoFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoFrame.cpp; sourceTree = "<group>"; };
+		6F224A6D24AEDDBF000244FF /* MediaComm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaComm.h; sourceTree = "<group>"; };
+		6F224A6E24AEDDBF000244FF /* DecodedFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecodedFrame.h; sourceTree = "<group>"; };
+		6F224A6F24AEDDBF000244FF /* VideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFrame.h; sourceTree = "<group>"; };
+		6F224A7024AEDDBF000244FF /* AudioFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFrame.h; sourceTree = "<group>"; };
+		6F224A7124AEDDBF000244FF /* AudioFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioFrame.cpp; sourceTree = "<group>"; };
+		6F224A7224AEDDBF000244FF /* CodecSpecificInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodecSpecificInfo.h; sourceTree = "<group>"; };
+		6F224A7324AEDDBF000244FF /* EncodedPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncodedPacket.h; sourceTree = "<group>"; };
 		6F372062246934B400356951 /* AudioClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioClock.h; sourceTree = "<group>"; };
 		6F37206C2469896800356951 /* speex_stack_alloc.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_stack_alloc.h; sourceTree = "<group>"; };
 		6F37206D2469896800356951 /* speex_arch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = speex_arch.h; sourceTree = "<group>"; };
@@ -263,13 +271,6 @@
 		6FBD028E24607B0B00372404 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
 		6FF0290D221BFEE40011E6CB /* DecodedFrameQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecodedFrameQueue.h; sourceTree = "<group>"; };
 		6FF0290E221BFEE40011E6CB /* SteadyClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SteadyClock.h; sourceTree = "<group>"; };
-		6FF02910221BFEE40011E6CB /* CodecSpecificInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CodecSpecificInfo.h; sourceTree = "<group>"; };
-		6FF02911221BFEE40011E6CB /* VideoFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFrame.h; sourceTree = "<group>"; };
-		6FF02912221BFEE40011E6CB /* AudioFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioFrame.cpp; sourceTree = "<group>"; };
-		6FF02913221BFEE40011E6CB /* MediaComm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaComm.h; sourceTree = "<group>"; };
-		6FF02914221BFEE40011E6CB /* VideoFrame.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoFrame.cpp; sourceTree = "<group>"; };
-		6FF02915221BFEE40011E6CB /* EncodedPacket.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EncodedPacket.h; sourceTree = "<group>"; };
-		6FF02916221BFEE40011E6CB /* AudioFrame.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioFrame.h; sourceTree = "<group>"; };
 		6FF02918221BFEE40011E6CB /* AudioDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioDecoder.h; sourceTree = "<group>"; };
 		6FF02919221BFEE40011E6CB /* VideoDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoDecoder.h; sourceTree = "<group>"; };
 		6FF0291B221BFEE40011E6CB /* VideoTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTarget.h; sourceTree = "<group>"; };
@@ -568,7 +569,6 @@
 			isa = PBXGroup;
 			children = (
 				6FF0290C221BFEE40011E6CB /* core */,
-				6FF0290F221BFEE40011E6CB /* mediadef */,
 				6FF02917221BFEE40011E6CB /* decoder */,
 				6FF0291A221BFEE40011E6CB /* output */,
 				6F372062246934B400356951 /* AudioClock.h */,
@@ -582,6 +582,14 @@
 		6FF0290C221BFEE40011E6CB /* core */ = {
 			isa = PBXGroup;
 			children = (
+				6F224A6D24AEDDBF000244FF /* MediaComm.h */,
+				6F224A7124AEDDBF000244FF /* AudioFrame.cpp */,
+				6F224A7024AEDDBF000244FF /* AudioFrame.h */,
+				6F224A6C24AEDDBF000244FF /* VideoFrame.cpp */,
+				6F224A6F24AEDDBF000244FF /* VideoFrame.h */,
+				6F224A6E24AEDDBF000244FF /* DecodedFrame.h */,
+				6F224A7324AEDDBF000244FF /* EncodedPacket.h */,
+				6F224A7224AEDDBF000244FF /* CodecSpecificInfo.h */,
 				6F637EE223D9BF1D0004E053 /* ResamplerSpeex.cpp */,
 				6F637EE123D9BF1C0004E053 /* ResamplerSpeex.h */,
 				6F637EDE23D6AB8B0004E053 /* AudioProcess.cpp */,
@@ -590,20 +598,6 @@
 				6FF0290E221BFEE40011E6CB /* SteadyClock.h */,
 			);
 			path = core;
-			sourceTree = "<group>";
-		};
-		6FF0290F221BFEE40011E6CB /* mediadef */ = {
-			isa = PBXGroup;
-			children = (
-				6FF02910221BFEE40011E6CB /* CodecSpecificInfo.h */,
-				6FF02911221BFEE40011E6CB /* VideoFrame.h */,
-				6FF02914221BFEE40011E6CB /* VideoFrame.cpp */,
-				6FF02916221BFEE40011E6CB /* AudioFrame.h */,
-				6FF02912221BFEE40011E6CB /* AudioFrame.cpp */,
-				6FF02913221BFEE40011E6CB /* MediaComm.h */,
-				6FF02915221BFEE40011E6CB /* EncodedPacket.h */,
-			);
-			path = mediadef;
 			sourceTree = "<group>";
 		};
 		6FF02917221BFEE40011E6CB /* decoder */ = {
@@ -726,7 +720,9 @@
 			files = (
 				6FBD028624595CA900372404 /* GcDuplicateNode.cpp in Sources */,
 				6FF02926221BFEE50011E6CB /* MediaTrackImpl.cpp in Sources */,
+				6F224A7424AEDDBF000244FF /* VideoFrame.cpp in Sources */,
 				6F637EC723D0477A0004E053 /* CCGeometry.cpp in Sources */,
+				6F224A7524AEDDBF000244FF /* AudioFrame.cpp in Sources */,
 				6F637ECF23D0477A0004E053 /* GcAnimaNode.cpp in Sources */,
 				6F511874240F9BD50013BC9E /* InterpolateShannon.cpp in Sources */,
 				6F224A1D249385DD000244FF /* PolarPixellateConfig.cpp in Sources */,
@@ -745,7 +741,6 @@
 				6F637EC623D0477A0004E053 /* MathUtil.cpp in Sources */,
 				6F224A39249B0FC3000244FF /* FilterDrawer.cpp in Sources */,
 				6FF0292C221D28A50011E6CB /* MediaAudioChannel.cpp in Sources */,
-				6FF02924221BFEE50011E6CB /* AudioFrame.cpp in Sources */,
 				6FBD028F24607B0B00372404 /* Image.cpp in Sources */,
 				6F049348244B1BDC00F8B73B /* EditorExporter.cpp in Sources */,
 				6F224A34249A3C8E000244FF /* FilterConfig.cpp in Sources */,
@@ -753,7 +748,6 @@
 				6F51187C240F9BD50013BC9E /* cpu_detect_x86.cpp in Sources */,
 				6F511873240F9BD50013BC9E /* RateTransposer.cpp in Sources */,
 				6F224A6724A89C85000244FF /* EffectGroup.cpp in Sources */,
-				6FF02925221BFEE50011E6CB /* VideoFrame.cpp in Sources */,
 				6F637ED323D0477A0004E053 /* FrameBuffer.cpp in Sources */,
 				6F637ECD23D0477A0004E053 /* CCAffineTransform.cpp in Sources */,
 				6F6214552446A84900AF70A0 /* GcRenderNode.cpp in Sources */,

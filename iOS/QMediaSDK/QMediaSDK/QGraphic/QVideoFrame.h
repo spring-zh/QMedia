@@ -12,7 +12,7 @@
 #include <CoreVideo/CoreVideo.h>
 #include <CoreMedia/CoreMedia.h>
 #include "GraphicCore/opengl/Texture2DDrawer.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/VideoFrame.h"
 #include "EffectEditor/VideoFrameDrawer.h"
 
 using GraphicCore::ShaderProgram;

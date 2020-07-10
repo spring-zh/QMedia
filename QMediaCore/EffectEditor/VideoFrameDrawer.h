@@ -12,7 +12,7 @@
 #include "Utils/Comm.h"
 #include "GraphicCore/opengl/Texture2D.h"
 #include "GraphicCore/GcNode.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/VideoFrame.h"
 #include "MediaCore/output/VideoTarget.h"
 
 class VideoFrameDrawer{
