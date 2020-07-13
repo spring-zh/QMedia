@@ -11,7 +11,6 @@ import com.qmedia.qmediasdk.QTrack.QMediaTrack;
 import com.qmedia.qmediasdk.QTrack.QMultiMediaTrack;
 
 import java.lang.ref.WeakReference;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;

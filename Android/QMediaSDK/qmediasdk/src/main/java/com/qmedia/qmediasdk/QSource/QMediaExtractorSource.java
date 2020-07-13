@@ -9,10 +9,10 @@ import android.opengl.GLES20;
 import android.view.Surface;
 
 import com.qmedia.qmediasdk.QAudio.QAudioFrame;
+import com.qmedia.qmediasdk.QCommon.QGLContext;
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
 import com.qmedia.qmediasdk.QCommon.media.HardwareDecoder;
-import com.qmedia.qmediasdk.QCommon.QGLContext;
 import com.qmedia.qmediasdk.QGraphic.QVideoFrame;
 import com.qmedia.qmediasdk.QMediaSDK;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;

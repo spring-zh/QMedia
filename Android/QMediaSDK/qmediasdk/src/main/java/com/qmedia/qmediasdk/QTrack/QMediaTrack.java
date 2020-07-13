@@ -1,7 +1,5 @@
 package com.qmedia.qmediasdk.QTrack;
 
-import android.util.Log;
-
 import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QEditor.QCombiner;

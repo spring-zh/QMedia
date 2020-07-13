@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
 import android.opengl.EGL14;
-
 import android.opengl.EGLConfig;
 import android.opengl.EGLContext;
 import android.opengl.EGLDisplay;
@@ -20,10 +19,6 @@ import com.qmedia.qmediasdk.QCommon.GLSurfaceView14;
 import com.qmedia.qmediasdk.QCommon.QAspectLayout;
 import com.qmedia.qmediasdk.QCommon.QGLContext;
 import com.qmedia.qmediasdk.QCommon.QSize;
-import com.qmedia.qmediasdk.QCommon.QVector;
-import com.qmedia.qmediasdk.QCommon.gles.FullFrameRect;
-import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
-import com.qmedia.qmediasdk.QCommon.gles.Texture2dProgram;
 import com.qmedia.qmediasdk.QSource.QVideoDescribe;
 import com.qmedia.qmediasdk.QTarget.QVideoRender;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;

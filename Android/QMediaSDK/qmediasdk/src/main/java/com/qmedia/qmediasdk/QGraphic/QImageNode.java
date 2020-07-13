@@ -1,7 +1,6 @@
 package com.qmedia.qmediasdk.QGraphic;
 
 import com.qmedia.qmediasdk.QCommon.QSize;
-import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
 
 import java.util.UUID;

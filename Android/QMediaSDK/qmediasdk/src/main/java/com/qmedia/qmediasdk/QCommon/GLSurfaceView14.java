@@ -18,7 +18,11 @@ package com.qmedia.qmediasdk.QCommon;
 
 import android.content.Context;
 import android.opengl.EGL14;
+import android.opengl.EGLConfig;
+import android.opengl.EGLContext;
+import android.opengl.EGLDisplay;
 import android.opengl.EGLExt;
+import android.opengl.EGLSurface;
 import android.os.Trace;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -28,11 +32,6 @@ import android.view.SurfaceView;
 import java.io.Writer;
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
-
-import android.opengl.EGLConfig;
-import android.opengl.EGLContext;
-import android.opengl.EGLDisplay;
-import android.opengl.EGLSurface;
 
 /**
  * An implementation of SurfaceView that uses the dedicated surface for

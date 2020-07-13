@@ -4,16 +4,13 @@ package com.qmedia.qmediasdk.QTarget.Implements;
 import android.media.MediaCodec;
 import android.media.MediaFormat;
 import android.opengl.EGLContext;
-import android.opengl.GLES10Ext;
 import android.opengl.GLES20;
 import android.util.Log;
 
 import com.qmedia.qmediasdk.QCommon.QGLContext;
-import com.qmedia.qmediasdk.QCommon.gles.Drawable2d;
 import com.qmedia.qmediasdk.QCommon.gles.EglCore;
 import com.qmedia.qmediasdk.QCommon.gles.FullFrameRect;
 import com.qmedia.qmediasdk.QCommon.gles.GlUtil;
-import com.qmedia.qmediasdk.QCommon.gles.Texture2dProgram;
 import com.qmedia.qmediasdk.QCommon.gles.WindowSurface;
 import com.qmedia.qmediasdk.QCommon.media.HardwareEncoder;
 import com.qmedia.qmediasdk.QCommon.media.MuxerCore;
@@ -27,9 +24,6 @@ import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 import java.io.IOException;
 import java.lang.ref.WeakReference;
 import java.nio.ByteBuffer;
-
-import javax.microedition.khronos.opengles.GL11Ext;
-import javax.microedition.khronos.opengles.GL11ExtensionPack;
 
 /**
  * Created by spring on 2017/5/8.

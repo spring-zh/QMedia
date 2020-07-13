@@ -1,17 +1,12 @@
 package com.qmedia.qmediasdk.QEditor;
 
+import android.os.Handler;
 import android.os.Looper;
 
-import com.qmedia.qmediasdk.QCommon.QVector;
-import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QTarget.Implements.QAudioPlayer;
 import com.qmedia.qmediasdk.QTarget.QAudioRender;
 import com.qmedia.qmediasdk.QTarget.QVideoRender;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
-
-import android.os.Handler;
-
-import java.nio.ByteBuffer;
 
 public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRender{
 
