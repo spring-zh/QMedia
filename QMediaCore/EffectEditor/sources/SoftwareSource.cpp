@@ -11,6 +11,9 @@
 #include "MediaCore/demuxer/GeneralDemuxer.h"
 #include "SoftwareFrameDrawer.h"
 
+#include "MediaCore/core/SteadyClock.h"
+#include "Utils/Logger.h"
+
 void SoftwareSource::run() {
 
     if (_demuxerIndex < 0 && _demuxerIndex < _demuxerList.size()) {
@@ -26,23 +29,20 @@ void SoftwareSource::run() {
         }
 
         if (bPacketOverCache) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(200));
+            std::this_thread::sleep_for(std::chrono::milliseconds(20));
             continue;
         }
 
-        //synchronize
+        //demuxer is read end,  wait for seek or stop
         std::unique_lock<std::mutex> lock(_mutex);
-        if (_demuxerIndex >= _demuxerList.size()) {
-            //wait for decode finished
+        while (_isStarted && _demuxerIndex >= _demuxerList.size()) {
+            //send empty packet to finish decode
             for (auto&  stream : _mediaStreams) {
-                if (!stream->isEnd() && stream->getEncodedPacketQueue().size() == 0) {
-                    EncodedPacket empty_packet(nullptr,_duration_offset);
-                    stream->getEncodedPacketQueue().addPacket(empty_packet);
-                }
+                EncodedPacket empty_packet(nullptr,std::numeric_limits<int64_t >::max());
+                stream->getEncodedPacketQueue().addPacket(empty_packet);
             }
-
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
-            continue;
+            LOGI("source read end and wait");
+            _condition.wait(lock);
         }
 
         EncodedPacket packet(nullptr,0);
@@ -149,6 +149,11 @@ bool SoftwareSource::start(int64_t startMSec, int64_t endMSec) {
 void SoftwareSource::stop() {
     if (_isStarted) {
         _isStarted = false;
+        {
+            std::unique_lock<std::mutex> lock(_mutex);
+            _condition.notify_one();
+        }
+
         if (_processThread.joinable())
             _processThread.join();
 
@@ -164,7 +169,7 @@ void SoftwareSource::stop() {
 bool SoftwareSource::seekTo(int64_t mSec) {
     if (! _isStarted)
         return false;
-    if (mSec >= _media_time_range._end) {
+    if (mSec > _media_time_range._end) {
         return false;
     }
     int64_t duration_offset;
@@ -180,50 +185,81 @@ bool SoftwareSource::seekTo(int64_t mSec) {
 }
 
 bool SoftwareSource::decodeTo(int64_t mSec, bool precise) {
-    bool bRet = false;
-    int flush_packet_count = 2;
-    Demuxer* demuxer_seek = _demuxerList[_demuxerIndex].get();
+
+    //check if deocde finish
+    auto check_frame_output = [this]()->bool{
+        bool bRet = false;
+        if (_videoStreamIndex >= 0) { //wait for first video decodeframe
+            bRet = _mediaStreams[_stream_map[_videoStreamIndex]]->getDecodedFrameQueue().length() > 0;
+        } else { //wait for first decodeframe
+            for (auto& stream : _mediaStreams) {
+                bRet |= stream->getDecodedFrameQueue().length() > 0;
+            }
+        }
+        return bRet;
+    };
 
     std::unique_lock<std::mutex> lock(_mutex);
+    _condition.notify_one();
     //clear all stream cache
     for (auto& stream : _mediaStreams){
         stream->getDecodedFrameQueue().setAbort(false);
         stream->flush();
     }
 
-    demuxer_seek->setIgnoreBFrame(true);
+    bool bRet = false;
+    auto& demuxer_seek = _demuxerList[_demuxerIndex];
     demuxer_seek->Seek(mSec - _duration_offset, _videoStreamIndex != -1 ? 0 : 1);
+    demuxer_seek->setIgnoreBFrame(true);
 
     for (auto& stream : _mediaStreams) {
         stream->waitForFlush();
         stream->setStartTimeLimit(precise? mSec : -1);
     }
 
+    int flush_packet_count = 1;
     //decode and wait for frame output
     while (flush_packet_count > 0) {
+
         if (_demuxerIndex >= _demuxerList.size()) { //file lists end
-            //wait for decode finished
-            for (auto&  stream : _mediaStreams) {
-                if (!stream->isEnd() && stream->getEncodedPacketQueue().size() == 0) {
-                    EncodedPacket empty_packet(nullptr,_duration_offset);
-                    stream->getEncodedPacketQueue().addPacket(empty_packet);
-                }
-            }
             flush_packet_count --;
-            std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+            //wait for decode finished
+            if (_videoStreamIndex >= 0)
+                _mediaStreams[_stream_map[_videoStreamIndex]]->getDecodedFrameQueue().peekFrame();
+            else if (_audioStreamIndex >= 0)
+                _mediaStreams[_stream_map[_audioStreamIndex]]->getDecodedFrameQueue().peekFrame();
+            break;
+        }
+
+        //check break condition
+        bRet = check_frame_output();
+        if (bRet) break;
+
+        //check Packet OverCache condition
+        bool bPacketOverCache = true;
+        for(auto& stream : _mediaStreams) {
+            bPacketOverCache &= (stream->getEncodedPacketQueue().size() >= _packetCacheConut);
+        }
+        if (bPacketOverCache) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(5));
             continue;
         }
 
+        //read new packet
         EncodedPacket packet(nullptr,0);
-        Demuxer* demuxer = _demuxerList[_demuxerIndex].get();
-        int readRet = demuxer->ReadPacket(packet);
-        if (readRet >= 0) {
+        auto& demuxer = _demuxerList[_demuxerIndex];
+        if (demuxer->ReadPacket(packet) >= 0) {
             int media_stream_idx = _stream_map[packet.getEncodedBuffer()->stream_id()];
             if (media_stream_idx >= 0) {
                 MediaStream *stream = _mediaStreams[media_stream_idx].get();
                 if (stream) {
-                    packet.set_ntp_time_ms(packet.ntp_time_ms() + _duration_offset);
+                    //packet pts add duration_offset
+                    int64_t new_pts = packet.ntp_time_ms() + _duration_offset;
+                    packet.set_ntp_time_ms(new_pts);
                     stream->getEncodedPacketQueue().addPacket(packet);
+                    //check if ignore b frame
+                    if (new_pts >= mSec - 10) demuxer_seek->setIgnoreBFrame(false);
                 }
             }
         } else if(demuxer->IsEOF()) {
@@ -232,29 +268,17 @@ bool SoftwareSource::decodeTo(int64_t mSec, bool precise) {
             _duration_offset += demuxer->getDuration();
             if (_demuxerIndex < _demuxerList.size())
                 _demuxerList[_demuxerIndex]->Seek(0, _videoStreamIndex != -1 ? 0 : 1);
-        }
-
-        //check if deocde finish
-        if (_videoStreamIndex >= 0) { //wait for first video decodeframe
-            if (_mediaStreams[_stream_map[_videoStreamIndex]]->getDecodedFrameQueue().length() > 0) {
-                bRet = true;
-                break;
-            }
-        } else { //wait for first decodeframe
-            bool hasDecFrame = false;
-            for (auto& stream : _mediaStreams) {
-                hasDecFrame |= stream->getDecodedFrameQueue().length() > 0;
-            }
-            if (hasDecFrame){
-                bRet = true;
-                break;
+            else {
+                //send empty packet to finish decode
+                for (auto&  stream : _mediaStreams) {
+                    EncodedPacket empty_packet(nullptr,std::numeric_limits<int64_t >::max());
+                    stream->getEncodedPacketQueue().addPacket(empty_packet);
+                }
             }
         }
-
     }
 
     demuxer_seek->setIgnoreBFrame(false);
-
     return bRet;
 }
 

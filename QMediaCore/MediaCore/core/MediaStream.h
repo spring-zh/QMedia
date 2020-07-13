@@ -98,6 +98,7 @@ private:
 
     EncodedPacketQueue _encodedPacketQueue;
     DecodedFrameQueue<DecodedFrame> _decodedFrameQueue;
+	DecodedFrame _lastDropFrame;
 
     int _maxOutputFrameNum;
     int64_t _timeLimit;

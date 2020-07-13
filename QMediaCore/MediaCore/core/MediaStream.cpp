@@ -76,6 +76,7 @@ void EncodedPacketQueue::clearAll() {
 
 #pragma mark ---------- MediaStream --------------
 MediaStream::MediaStream(const MediaStreamDescribe& streamDescribe, DecoderFactory* decoderFactory ):
+_lastDropFrame(nullptr,0),
 _streamDescribe(streamDescribe),
 _isStarted(false),
 _need_flush(false),
@@ -126,14 +127,22 @@ void MediaStream::waitForFlush(){
 
 int32_t MediaStream::OnDecoded(DecodedFrame& decodedFrame) {
     if (decodedFrame.render_time_ms() >= _timeLimit - 20) {
+        _lastDropFrame = DecodedFrame(nullptr, 0);
         _decodedFrameQueue.pushFrame(decodedFrame);
         return 0;
+    } else {
+        _lastDropFrame = decodedFrame;
     }
     return -1;
 }
 
 void MediaStream::OnDecodedEnd() {
     _isEnd = true;
+    if (_lastDropFrame.frame_buffer_ != nullptr) {
+        _decodedFrameQueue.pushFrame(_lastDropFrame);
+        _lastDropFrame = DecodedFrame(nullptr, 0);
+    }
+    _decodedFrameQueue.setAbort(true);
 }
 
 void MediaStream::run() {
@@ -141,10 +150,12 @@ void MediaStream::run() {
 
     while (_isStarted) {
         {
+            //TODO: ckeck flush flag
             std::unique_lock<std::mutex> lock(_flush_mutex);
             if (_need_flush)
             {
                 _decodedFrameQueue.clearAll();
+                _lastDropFrame = DecodedFrame(nullptr, 0);
                 _encodedPacketQueue.clearAll();
                 _decoder->Flush();
                 _need_flush = false;

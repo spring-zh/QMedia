@@ -52,6 +52,7 @@ private:
     bool _enableVideo;
     bool _enableAudio;
     std::mutex _mutex;
+    std::condition_variable _condition;
     std::vector<std::string> _fileList;
     std::vector<DemuxerRef> _demuxerList;
 

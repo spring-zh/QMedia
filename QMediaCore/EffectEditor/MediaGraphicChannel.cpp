@@ -9,7 +9,7 @@
 #include "MediaGraphicChannel.h"
 #include "MediaTrack.h"
 
-MediaGraphicChannel::MediaGraphicChannel(MediaTrack* mediaTrack):_mediaTrack(mediaTrack)
+MediaGraphicChannel::MediaGraphicChannel(MediaTrack* mediaTrack):_mediaTrack(mediaTrack), _lastUpdateTime(-1)
 {
     _drawer = std::unique_ptr<VideoFrameDrawer>(mediaTrack->createVideoFrameDrawer());
 }
@@ -20,11 +20,7 @@ MediaGraphicChannel::~MediaGraphicChannel()
 
 void MediaGraphicChannel::draw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, uint32_t flags)
 {
-    bool bReadEnd = false;
-    VideoFrame video_frame = _mediaTrack->getVideoFrame(scene->getDelta(), bReadEnd);
-    if (!bReadEnd && video_frame.video_frame_buffer()) {
-        _drawer->setFrame(video_frame);
-    }
+    updateFrame(scene->getDelta());
     
     int64_t duration = scene->getDelta() - _renderRange._start;
     if (_effect_group.has_effect() && _drawer->getOutputTexture()) {
@@ -37,13 +33,20 @@ void MediaGraphicChannel::draw(GraphicCore::Scene* scene, const GraphicCore::Mat
 
 void MediaGraphicChannel::duplicateDraw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* diaplayNode)
 {
-    bool bReadEnd = false;
-    VideoFrame video_frame = _mediaTrack->getVideoFrame(scene->getDelta(), bReadEnd);
-    if (!bReadEnd && video_frame.video_frame_buffer()) {
-        _drawer->setFrame(video_frame);
-    }
+    updateFrame(scene->getDelta());
     
     _drawer->drawFrame(scene,transform, diaplayNode);
+}
+
+void MediaGraphicChannel::updateFrame(int64_t time_ms) {
+    if (_lastUpdateTime != time_ms) {
+        _lastUpdateTime = time_ms;
+        bool bReadEnd = false;
+        VideoFrame video_frame = _mediaTrack->getVideoFrame(time_ms, bReadEnd);
+        if (!bReadEnd && video_frame.video_frame_buffer()) {
+            _drawer->setFrame(video_frame);
+        }
+    }
 }
 
 const Range<int64_t> MediaGraphicChannel::getRange()

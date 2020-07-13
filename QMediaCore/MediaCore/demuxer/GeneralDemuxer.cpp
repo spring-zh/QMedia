@@ -287,7 +287,7 @@ int32_t GeneralDemuxer::ReadPacket(EncodedPacket& packet) {
 
 int32_t GeneralDemuxer::Seek(int64_t seek_time, int flags) {
     _isEOF = false;
-    return avformat_seek_file(_formatContext, -1, INT64_MIN, seek_time * 1000, INT64_MAX, flags == 1 ? AVSEEK_FLAG_ANY : 0);
+    return avformat_seek_file(_formatContext, -1, INT64_MIN, seek_time * 1000, INT64_MAX, flags == 1 ? AVSEEK_FLAG_ANY : AVSEEK_FLAG_BACKWARD);
 }
 
 int32_t GeneralDemuxer::Flush() {
