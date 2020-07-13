@@ -21,8 +21,10 @@ import com.qmedia.qmediasdk.QSource.QVideoDescribe;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
+import com.qmedia.qmediasdk.QTrack.QMultiMediaTrack;
 
 import java.util.HashMap;
+import java.util.List;
 
 public class QCombiner extends QMediaFactory{
     private static final String TAG = "QCombiner";
@@ -158,21 +160,28 @@ public class QCombiner extends QMediaFactory{
         for (HashMap.Entry<String, QMediaTrack> entry : from.mediaTracks.entrySet()) {
             QMediaTrack fromTrack = entry.getValue();
             QMediaSource fromSource = fromTrack.getMediaSource();
-            if (fromSource instanceof QMediaExtractorSource) {
-                QMediaExtractorSource fromExtractorSource = (QMediaExtractorSource)fromSource;
-                QMediaSource mediaSource = new QMediaExtractorSource(fromExtractorSource.getFileName(),
-                        fromExtractorSource.enableVideo(), fromExtractorSource.enableAudio(), fromExtractorSource.readInAsset());
-                mediaSource.setVideoTarget(videoTarget);
-                mediaSource.setAudioTarget(audioTarget);
-                QMediaTrack mediaTrack = new QMediaTrack(mediaSource, fromTrack.getId());
-                if (mediaTrack.prepare()) {
-                    this.addMediaTrack(mediaTrack);
-                    if (fromTrack.getGraphic() != null) {
-                        mediaTrack.generateVideoTrackNode(this, fromTrack.getGraphic().getId());
-                        mediaTrack.getGraphic().copyForm(fromTrack.getGraphic());
-                    }
-                    mediaTrack.generateAudioTrackNode(this);
+            QMediaTrack mediaTrack = null;
+            if (fromTrack instanceof QMultiMediaTrack) {
+                List<String> fromFileList = ((QMultiMediaTrack)fromTrack).getFileList();
+                mediaTrack = new QMultiMediaTrack(fromFileList, this, fromTrack.getId());
+            }else {
+                if (fromSource instanceof QMediaExtractorSource) {
+                    QMediaExtractorSource fromExtractorSource = (QMediaExtractorSource)fromSource;
+                    QMediaSource mediaSource = new QMediaExtractorSource(fromExtractorSource.getFileName(),
+                            fromExtractorSource.enableVideo(), fromExtractorSource.enableAudio(), fromExtractorSource.readInAsset());
+                    mediaSource.setVideoTarget(videoTarget);
+                    mediaSource.setAudioTarget(audioTarget);
+                    mediaTrack = new QMediaTrack(mediaSource, fromTrack.getId());
                 }
+            }
+
+            if (mediaTrack.prepare()) {
+                this.addMediaTrack(mediaTrack);
+                if (fromTrack.getGraphic() != null) {
+                    mediaTrack.generateVideoTrackNode(this, fromTrack.getGraphic().getId());
+                    mediaTrack.getGraphic().copyForm(fromTrack.getGraphic());
+                }
+                mediaTrack.generateAudioTrackNode(this);
             }
         }
 

@@ -45,6 +45,9 @@ void SoftwareSource::run() {
             _condition.wait(lock);
         }
 
+        if (!_isStarted)
+            break;
+
         EncodedPacket packet(nullptr,0);
         Demuxer* demuxer = _demuxerList[_demuxerIndex].get();
         int readRet = demuxer->ReadPacket(packet);
