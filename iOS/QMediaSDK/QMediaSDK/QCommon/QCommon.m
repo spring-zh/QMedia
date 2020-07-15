@@ -37,10 +37,19 @@ QVector QVectorV4(float v0, float v1, float v2, float v3) {
     return value;
 }
 
-QTimeRange QTimeRangeMake(CGFloat startPoint, CGFloat duration)
+QTimeRange QTimeRangeMake(int64_t startPoint, int64_t endPoint)
 {
-    QTimeRange range = {startPoint, duration};
+    QTimeRange range = {startPoint, endPoint};
     return range;
+}
+bool QTimeRangeIsVaild(QTimeRange qrange)
+{
+    return QTimeRangeGetLenght(qrange) > 0;
+}
+
+int64_t QTimeRangeGetLenght(QTimeRange qrange)
+{
+    return qrange.endPoint - qrange.startPoint;
 }
 
 #define XM_SDK_VERSION "1.3"

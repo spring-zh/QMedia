@@ -493,10 +493,9 @@ void EffectCombiner::stop()
 }
 
 Range<int64_t> EffectCombiner::getValidTimeRange() {
-    if ( _validTimeRange.isValid())
-        return _validTimeRange;
-    else
-        return getMediaTimeRange();
+    if (! _validTimeRange.isValid())
+        _validTimeRange = getMediaTimeRange();
+    return _validTimeRange;
 }
 
 void EffectCombiner::addMediaTrack(MediaTrackRef mediaTrack)

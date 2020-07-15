@@ -15,6 +15,8 @@
 - (instancetype)initWithPreset:(AVCaptureSessionPreset)preset position:(AVCaptureDevicePosition)position;
 @property (nonatomic, readonly) VideoCaptureSession* captureSession;
 
+@property (nonatomic, assign) NSString* name;
+
 /**output target
  * MediaSource can adaptive by output target
  */

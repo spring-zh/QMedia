@@ -16,7 +16,7 @@
 extern "C" {
 #endif
 
-
+//QVector
 typedef struct QVector {
     float v0, v1, v2, v3;
 }QVector;
@@ -25,12 +25,15 @@ QVector QVectorV2(float v0, float v1);
 QVector QVectorV3(float v0, float v1, float v2);
 QVector QVectorV4(float v0, float v1, float v2, float v3);
     
+//QTimeRange
 typedef struct QTimeRange{
-    CGFloat startPoint;
-    CGFloat duration;
+    int64_t startPoint;
+    int64_t endPoint;
 } QTimeRange;
 
-QTimeRange QTimeRangeMake(CGFloat startPoint, CGFloat duration);
+QTimeRange QTimeRangeMake(int64_t startPoint, int64_t endPoint);
+bool QTimeRangeIsVaild(QTimeRange qrange);
+int64_t QTimeRangeGetLenght(QTimeRange qrange);
 
 NSString * QGetMediaSDKVersion();
     

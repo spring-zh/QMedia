@@ -51,7 +51,12 @@ bool MediaTrackImpl::mapTimeToMediaSource(int64_t mSec, int64_t& outmSec) const
             distance -= _sourceRange.getLength();
             loop--;
         }
-        outmSec = _sourceRange._start + distance;
+        if(distance <= _sourceRange.getLength()) {
+            outmSec = _sourceRange._start + distance;
+            return true;
+        }
+    }else if(mSec < displayRange._start) {
+        outmSec = _sourceRange._start;
         return true;
     }
     return false;

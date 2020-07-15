@@ -118,29 +118,25 @@
     return _uid;
 }
 
-- (NSRange)sourceRange{
+- (QTimeRange)sourceRange{
     auto range = _mediaTrackNative->getSourceRange();
-    NSRange nsRange;
-    nsRange.location = (NSUInteger)range._start;
-    nsRange.length = (NSUInteger)range.getLength();
-    return nsRange;
+    QTimeRange qRange = {range._start, range._end};
+    return qRange;
 }
 
-- (void)setDisplayRange:(NSRange)range{
-    Range<int64_t> displayRange((int64_t)range.location,(int64_t)(range.location + range.length));
+- (void)setDisplayRange:(QTimeRange)range{
+    Range<int64_t> displayRange(range.startPoint,range.endPoint);
     _mediaTrackNative->setDisplayTrackRange(displayRange);
 }
 
-- (NSRange)displayRange{
+- (QTimeRange)displayRange{
     auto range = _mediaTrackNative->getDisplayTrackRange();
-    NSRange nsRange;
-    nsRange.location = (NSUInteger)range._start;
-    nsRange.length = (NSUInteger)range.getLength();
-    return nsRange;
+    QTimeRange qRange = {range._start, range._end};
+    return qRange;
 }
 
-- (void)setSourceRange:(NSRange)range{
-    Range<int64_t> selectSourceRange((int64_t)range.location,(int64_t)(range.location + range.length));
+- (void)setSourceRange:(QTimeRange)range{
+    Range<int64_t> selectSourceRange(range.startPoint,range.endPoint);
     _mediaTrackNative->setSourceRange(selectSourceRange);
 }
 

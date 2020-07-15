@@ -206,17 +206,15 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     return true;
 }
 
-- (void)setMediaTimeRange:(NSRange)timeRange {
-    Range<int64_t> tRange = {static_cast<int64_t>(timeRange.location) , static_cast<int64_t>(timeRange.location + timeRange.length)};
+- (void)setMediaTimeRange:(QTimeRange)timeRange {
+    Range<int64_t> tRange = {timeRange.startPoint , timeRange.endPoint};
     _combiner->setValidTimeRange(tRange);
 }
-- (NSRange)mediaTimeRange
+- (QTimeRange)mediaTimeRange
 {
-    NSRange nsRange;
     Range<int64_t> tRange = _combiner->getValidTimeRange();
-    nsRange.location = static_cast<NSUInteger>(tRange._start);
-    nsRange.length = static_cast<NSUInteger>(tRange.getLength());
-    return nsRange;
+    QTimeRange qRange = {tRange._start, tRange._end};
+    return qRange;
 }
 
 - (QDisplayLayer*)rootNode {
@@ -254,6 +252,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
             [mediaSource setVideoTarget:_mediaFactory.videoTarget];
             [mediaSource setAudioTarget:_mediaFactory.audioTarget];
             QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:mediaSource uid:fromTrack.uid];
+            mediaTrack.displayRange = fromTrack.displayRange;
             if ([mediaTrack prepare]) {
                 [self addMediaTrack:mediaTrack];
                 if (fromTrack.graphic) {

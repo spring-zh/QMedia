@@ -77,7 +77,7 @@ QBlendFunc QBlendFuncMake(unsigned src, unsigned dst);
 //uuid for index
 @property (nonatomic, readonly) NSString* uid;
 //display and render time range
-@property (nonatomic) NSRange renderRange;
+@property (nonatomic) QTimeRange renderRange;
 
 //transform propertys setting
 @property (nonatomic) bool visible;

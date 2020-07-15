@@ -39,14 +39,15 @@ void MediaGraphicChannel::duplicateDraw(GraphicCore::Scene* scene, const Graphic
 }
 
 void MediaGraphicChannel::updateFrame(int64_t time_ms) {
-    if (_lastUpdateTime != time_ms) {
-        _lastUpdateTime = time_ms;
+    //FIXME: if time_ms equal to _lastUpdateTime, do not need get new video frame
+//    if (_lastUpdateTime != time_ms) {
+//        _lastUpdateTime = time_ms;
         bool bReadEnd = false;
         VideoFrame video_frame = _mediaTrack->getVideoFrame(time_ms, bReadEnd);
         if (!bReadEnd && video_frame.video_frame_buffer()) {
             _drawer->setFrame(video_frame);
         }
-    }
+//    }
 }
 
 const Range<int64_t> MediaGraphicChannel::getRange()

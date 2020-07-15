@@ -60,7 +60,7 @@ using GraphicCore::AnimaNode;
 
 - (instancetype)init{
     if ((self = [super init]) != nil) {
-        self.origin_renderRange = NSMakeRange(0, 0);
+        self.origin_renderRange = QTimeRangeMake(0, 0);
         self.origin_visible = false;
 //        self.origin_rotation = 0;
         self.origin_rotation3d = QVectorV3(0, 0, 0);
@@ -277,14 +277,14 @@ using GraphicCore::AnimaNode;
     return _nodeName;
 }
 
-- (NSRange)renderRange {
+- (QTimeRange)renderRange {
     auto range = _graphicNode->getRange();
-    return NSMakeRange(range._start, range._end - range._start);
+    return QTimeRangeMake(range._start, range._end);
 }
 
-- (void)setRenderRange:(NSRange)renderRange {
+- (void)setRenderRange:(QTimeRange)renderRange {
     self.origin_renderRange = renderRange;
-    _graphicNode->setRange(Range<int64_t>(renderRange.location, renderRange.location + renderRange.length));
+    _graphicNode->setRange(Range<int64_t>(renderRange.startPoint, renderRange.endPoint));
 }
 
 - (bool)visible{
