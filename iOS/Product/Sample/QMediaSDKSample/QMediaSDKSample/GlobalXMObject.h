@@ -15,6 +15,9 @@
 @property (nonatomic) NSInteger selectedPixelSizeIndex;
 @property (nonatomic, strong) QEditorPlayer* player;
 
+@property (nonatomic) NSMutableArray<QMediaTrack*>* mediaTracks;
+@property (nonatomic) NSMutableArray<QGraphicNode*>* externNodes;
+
 + (instancetype)sharedInstance;
 
 @end

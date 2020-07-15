@@ -355,36 +355,6 @@
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" red="0.31372549020000001" green="0.52156862749999999" blue="0.92156862750000001" alpha="1" colorSpace="calibratedRGB"/>
                             </view>
-                            <view alpha="0.59999999999999998" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="XYr-Ry-SDv">
-                                <rect key="frame" x="295" y="0.0" width="80" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <view alpha="0.59999999999999998" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gR3-dI-q9O">
-                                <rect key="frame" x="0.0" y="0.0" width="80" height="32"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                                <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
-                            </view>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CNh-7m-iYy">
-                                <rect key="frame" x="403" y="-1" width="12" height="36"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
-                                <gestureRecognizers/>
-                                <inset key="imageEdgeInsets" minX="4" minY="13" maxX="4" maxY="13"/>
-                                <state key="normal" image="Video Trimmer - Right Arrow_8x16_" backgroundImage="Video Trimmer - Right Handle_24x76_"/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="Ar1-DA-Gfa" appends="YES" id="2xg-vk-c8N"/>
-                                </connections>
-                            </button>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="QUd-i7-qXE">
-                                <rect key="frame" x="-1" y="-1" width="12" height="36"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" heightSizable="YES"/>
-                                <gestureRecognizers/>
-                                <inset key="imageEdgeInsets" minX="4" minY="13" maxX="4" maxY="13"/>
-                                <state key="normal" image="Video Trimmer - Left Arrow_8x16_" backgroundImage="Video Trimmer - Left Handle_24x76_"/>
-                                <connections>
-                                    <outletCollection property="gestureRecognizers" destination="nXh-GA-zTg" appends="YES" id="hWx-Cq-DAt"/>
-                                </connections>
-                            </button>
                             <label opaque="NO" userInteractionEnabled="NO" alpha="0.80000001192092896" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="01:02.35" textAlignment="right" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="9oc-dr-PVK">
                                 <rect key="frame" x="345" y="5" width="58" height="21"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
@@ -427,10 +397,6 @@
                         <outlet property="minTrackView" destination="fcZ-Ns-iFz" id="lH0-GN-D3d"/>
                         <outlet property="rightTimeLabel" destination="9oc-dr-PVK" id="EfW-t0-SjH"/>
                         <outlet property="thumbnailView" destination="jRt-xp-Xx7" id="Wvs-HL-ZIb"/>
-                        <outlet property="trimLeftHandleView" destination="QUd-i7-qXE" id="sLz-cr-eEC"/>
-                        <outlet property="trimLeftTrackView" destination="gR3-dI-q9O" id="uYO-Wn-aQS"/>
-                        <outlet property="trimRightHandleView" destination="CNh-7m-iYy" id="Gl8-ss-mse"/>
-                        <outlet property="trimRightTrackView" destination="XYr-Ry-SDv" id="m75-k5-RzH"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="W9T-Km-RwG" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -453,7 +419,7 @@
                     </connections>
                 </panGestureRecognizer>
             </objects>
-            <point key="canvasLocation" x="2841.304347826087" y="-201.5625"/>
+            <point key="canvasLocation" x="2840.579710144928" y="-201.5625"/>
         </scene>
         <!--Res Track Table View Controller-->
         <scene sceneID="suS-vY-3ZQ">
@@ -950,9 +916,5 @@
         <image name="Settings_20x20_" width="20" height="20"/>
         <image name="Share Icon_16x24_" width="16" height="24"/>
         <image name="Slider Thumbnail_24x24_" width="24" height="24"/>
-        <image name="Video Trimmer - Left Arrow_8x16_" width="8" height="16"/>
-        <image name="Video Trimmer - Left Handle_24x76_" width="24" height="76"/>
-        <image name="Video Trimmer - Right Arrow_8x16_" width="8" height="16"/>
-        <image name="Video Trimmer - Right Handle_24x76_" width="24" height="76"/>
     </resources>
 </document>

@@ -13,7 +13,10 @@
 @property (nonatomic, weak) PixelSizeManager* pixelSizeMngr;
 @end
 
-@implementation GlobalXMObject
+@implementation GlobalXMObject {
+    NSMutableArray<QMediaTrack*>* _mediaTracks;
+    NSMutableArray<QGraphicNode*>* _externNodes;
+}
 
 + (instancetype)sharedInstance
 {
@@ -23,8 +26,18 @@
         object = [GlobalXMObject new];
 //        object.pixelSizeMngr = [PixelSizeManager sharedInstance];
         object.player = [[QEditorPlayer alloc] init];
+        object.mediaTracks = [NSMutableArray new];
+        object.externNodes = [NSMutableArray new];
     });
     return object;
+}
+
+- (NSMutableArray<QMediaTrack *> *)mediaTracks {
+    return _mediaTracks;
+}
+
+- (NSMutableArray<QGraphicNode *> *)externNodes {
+    return _externNodes;
 }
 
 - (void)setSelectedPixelSizeIndex:(NSInteger)selectedPixelSizeIndex

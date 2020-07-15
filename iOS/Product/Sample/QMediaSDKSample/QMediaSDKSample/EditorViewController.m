@@ -74,15 +74,17 @@
 
 - (void)resetTrimLeftAndTrimRightState
 {
-//    XMObject* objectToPlay = self.player.objectToPlay;
-//    self.sliderBarCtrl.totalTimeLength = objectToPlay.duration;
-//    if (self.sliderBarCtrl.totalTimeLength == 0) {
-//        self.sliderBarCtrl.trimLeftProgress = 0;
-//        self.sliderBarCtrl.trimRightProgress = 0;
-//        return ;
-//    }
-//    self.sliderBarCtrl.trimLeftProgress = objectToPlay.timeLayout.fileStartTime/self.sliderBarCtrl.totalTimeLength;
-//    self.sliderBarCtrl.trimRightProgress = (self.sliderBarCtrl.totalTimeLength-objectToPlay.layoutedEndTime+objectToPlay.timeLayout.startTime-objectToPlay.timeLayout.fileStartTime)/self.sliderBarCtrl.totalTimeLength;
+    float fileStartTime = self.player.mediaTimeRange.startPoint/1000.0f;
+    float fileEndTime = self.player.mediaTimeRange.endPoint/1000.0f;
+    float fileTotalTime = QTimeRangeGetLenght(self.player.mediaTimeRange)/1000.0f;
+    self.sliderBarCtrl.totalTimeLength = fileEndTime;
+    if (self.sliderBarCtrl.totalTimeLength == 0) {
+        self.sliderBarCtrl.trimLeftProgress = 0;
+        self.sliderBarCtrl.trimRightProgress = 0;
+        return ;
+    }
+    self.sliderBarCtrl.trimLeftProgress = fileStartTime/self.sliderBarCtrl.totalTimeLength;
+    self.sliderBarCtrl.trimRightProgress = (self.sliderBarCtrl.totalTimeLength-fileStartTime)/self.sliderBarCtrl.totalTimeLength;
 }
 
 - (void)onPrepare
@@ -99,16 +101,8 @@
 {
     if(_isDraging)
         return;
-    NSArray<QMediaTrack*>* subObjects = self.player.subObjects;
     CGFloat currentTime = [cgfTime floatValue];
-    NSRange timeRange = _player.mediaTimeRange;
-    self.sliderBarCtrl.progress = (float)_player.position/timeRange.length;
-//    if (objectToPlay.layoutedEndTime-objectToPlay.timeLayout.startTime > 0) {
-//        self.sliderBarCtrl.progress = (currentTime-objectToPlay.timeLayout.startTime)/(objectToPlay.layoutedEndTime-objectToPlay.timeLayout.startTime);
-//    }
-//    else {
-//        self.sliderBarCtrl.progress = 0;
-//    }
+    self.sliderBarCtrl.progress = (float)_player.position/QTimeRangeGetLenght(_player.mediaTimeRange);
 }
 -(void)onCompleted
 {
@@ -128,7 +122,7 @@
 
 - (void)onPreviewSliderBarControllerProgressChanged:(PreviewSliderBarController*)sliderBarCtrl
 {
-    float seekTime = self.sliderBarCtrl.progress * self.player.mediaTimeRange.length;
+    float seekTime = self.sliderBarCtrl.progress * QTimeRangeGetLenght(_player.mediaTimeRange);
     [self.player seekTo:seekTime :0];
 //    [self.player seekTo:self.sliderBarCtrl.progress*((self.player.objectToPlay.layoutedEndTime-self.player.objectToPlay.timeLayout.startTime))+self.player.objectToPlay.timeLayout.startTime :0];
 
@@ -136,7 +130,7 @@
 
 - (void)onPreviewSliderBarControllerProgressRelease:(PreviewSliderBarController*)sliderBarCtrl
 {
-    float seekTime = self.sliderBarCtrl.progress * self.player.mediaTimeRange.length;
+    float seekTime = self.sliderBarCtrl.progress * QTimeRangeGetLenght(_player.mediaTimeRange);
     [self.player seekTo:seekTime :1];
 //    [self.player seekTo:self.sliderBarCtrl.progress*((self.player.objectToPlay.layoutedEndTime-self.player.objectToPlay.timeLayout.startTime))+self.player.objectToPlay.timeLayout.startTime :1];
     _isDraging = FALSE;

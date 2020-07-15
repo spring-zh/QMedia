@@ -45,11 +45,18 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
+    NSArray<QEffectConfig*>* filterConfigs = [QEffectManage getAllEffectConfig];
+    QEffect* colorInvert = [QEffectManage createEffect:@"FlashEffect"];
+    QEffect* polarPixellate = [QEffectManage createEffect:@"SobelEdgeDetection"];
+    [polarPixellate setFloatValue:@"edgeStrength" value:2];
+    colorInvert.renderRange = NSMakeRange(0, 5000);
+    polarPixellate.renderRange = NSMakeRange(3000, 10000);
+    
     const int targetW = 640;
     const int targetH = 480;
     
     self.player.playerView = _renderView;
-    self.player.rootNode.color4 = QColorMake(0, 0, 1, 1);
+//    self.player.rootNode.color4 = QColorMake(0, 0, 1, 1);
 
     QVideoDescribe* vdesc = [[QVideoDescribe alloc] initWithParamenters:QVideoCodecH264 framerate:25 width:targetW height:targetH bitrate:2*1024*1024];
     QAudioDescribe* adesc = [[QAudioDescribe alloc] initWithParamenters:QAudioCodecAAC rawFormat:QRawAudioFormatS16 samplerate:44100 nchannel:2 bitrate:128000];
@@ -61,6 +68,7 @@
     
     QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2 combiner:self.player];
     QMediaTrack* audioTrack = [self.player.mediaFactory createAudioTrack:testAudioFile combiner:self.player];
+
 //    XMVideoTrack* videoTrack = [self.player.mediaFactory createOldVideoTrack:testVideoFile2];
 
 //    QVideoTrackNode *videoNode = [[QVideoTrackNode alloc] initFromTrack:videoTrack];
@@ -105,31 +113,43 @@
     QGraphicNode* composeNode = [[QGraphicNode alloc] initWithName:@"composeNode" combiner:self.player];
     composeNode.contentSize = CGSizeMake(targetW, targetH);
     composeNode.anchorPoint = CGPointMake(0.5, 0.5);
-    QNodeAnimator * an1 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:NSMakeRange(0, 5000) begin:QVectorV3(0, 0, 0) end:QVectorV3(-180, 180, 180) functype:Linear repleat:false];
+    QNodeAnimator * an1 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:QTimeRangeMake(0, 5000) begin:QVectorV3(0, 0, 0) end:QVectorV3(-180, 180, 180) functype:Linear repleat:false];
     [composeNode addAnimator:an1];
-    QNodeAnimator * an2 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:NSMakeRange(5000, 5000) begin:QVectorV3(-180, 180, 180) end:QVectorV3(-360, 360, 360) functype:Linear repleat:false];
+    QNodeAnimator * an2 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:QTimeRangeMake(5000, 10000) begin:QVectorV3(-180, 180, 180) end:QVectorV3(-360, 360, 360) functype:Linear repleat:false];
     [composeNode addAnimator:an2];
     [composeNode addChildNode:videoTrack.graphic];
     [composeNode addChildNode:duplicatenodeL];
     [composeNode addChildNode:duplicatenodeR];
     
-    QLayer *layer = [[QLayer alloc] initWithSize:CGSizeMake(320, 240) combiner:self.player];
-    layer.color4 = QColorMake(1, 1, 1, 0.8);
-    layer.bkColor = QColorMake(1, 0, 1, 1);
-    layer.anchorPoint = CGPointMake(0.5, 0.5);
-    layer.contentSize = CGSizeMake(320, 240);
-    layer.renderRange = NSMakeRange(0, 10000);
-    layer.rotation = 60;
+//    QLayer *layer = [[QLayer alloc] initWithSize:CGSizeMake(targetW, targetH) combiner:self.player];
+//    layer.color4 = QColorMake(1, 1, 1, 0.8);
+//    layer.bkColor = QColorMake(1, 0, 1, 1);
+//    layer.enable3d = true;
+//    layer.anchorPoint = CGPointMake(0.5, 0.5);
+//    layer.contentSize = CGSizeMake(targetW, targetH);
+//    layer.renderRange = NSMakeRange(0, 10000);
+//    layer.rotation = 60;
+//    layer.positionZ = 10;
+    
     NSString* testImageFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"image/li.jpg"];
     QImageNode* imageNode = [[QImageNode alloc] initWithPath:testImageFile combiner:self.player];
-    imageNode.contentSize = CGSizeMake(320, 240);
-    imageNode.renderRange = NSMakeRange(0, 10000);
-    imageNode.alpha = 0.8;
+    imageNode.contentSize = CGSizeMake(480, 360);
+    imageNode.anchorPoint = CGPointMake(0.5, 0.5);
+    imageNode.renderRange = QTimeRangeMake(0, 10000);
+    imageNode.rotation = 60;
+    imageNode.positionZ = 10;
+//    [layer addEffect:colorInvert];
+//    [layer addEffect:polarPixellate];
+//    layer.bkColor = QColorMake(1, 0, 1, 1);
     
-    [layer addChildNode:imageNode];
-    [self.player.rootNode addChildNode:layer];
+//    [layer addChildNode:imageNode];
+//    [self.player.rootNode addChildNode:imageNode];
+//    [layer addChildNode:composeNode];
+//    [self.player.rootNode addChildNode:layer];
+    self.player.rootNode.enable3d = true;
+//    [self.player.rootNode addEffect:colorInvert];
+    [self.player.rootNode addEffect:polarPixellate];
     [self.player.rootNode addChildNode:composeNode];
-    
     self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
     
     [self.player start];
