@@ -13,8 +13,6 @@
 - (instancetype)initWithFilePath:(NSString *)filePath;
 - (instancetype)initWithFilePath:(NSString *)filePath audio:(bool)enableAudio video:(bool)enableVideo;
 
-@property (nonatomic, assign) NSString* name;
-
 /**output target
  * MediaSource can adaptive by output target
  */

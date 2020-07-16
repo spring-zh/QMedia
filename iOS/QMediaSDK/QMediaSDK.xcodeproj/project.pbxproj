@@ -25,6 +25,7 @@
 		6F224A47249B981F000244FF /* QEffectManage.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A45249B981F000244FF /* QEffectManage.mm */; };
 		6F224A48249B981F000244FF /* QEffectManage.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F224A46249B981F000244FF /* QEffectManage.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F224A4A249C5533000244FF /* QEffect_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F224A49249C5532000244FF /* QEffect_internal.h */; };
+		6F224A7924BFF6EE000244FF /* QTrack.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F224A7824BFF6EE000244FF /* QTrack.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F372074246A7B0300356951 /* SerializeSetting.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F372073246A7B0300356951 /* SerializeSetting.mm */; };
 		6F372076246A879B00356951 /* SerializeSetting.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F372075246A879A00356951 /* SerializeSetting.h */; };
 		6F45921024614EAF00FABEAF /* libQMediaCore.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4592072461479300FABEAF /* libQMediaCore.a */; };
@@ -167,6 +168,7 @@
 		6F224A45249B981F000244FF /* QEffectManage.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QEffectManage.mm; sourceTree = "<group>"; };
 		6F224A46249B981F000244FF /* QEffectManage.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEffectManage.h; sourceTree = "<group>"; };
 		6F224A49249C5532000244FF /* QEffect_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEffect_internal.h; sourceTree = "<group>"; };
+		6F224A7824BFF6EE000244FF /* QTrack.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = QTrack.h; sourceTree = "<group>"; };
 		6F372073246A7B0300356951 /* SerializeSetting.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = SerializeSetting.mm; sourceTree = "<group>"; };
 		6F372075246A879A00356951 /* SerializeSetting.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SerializeSetting.h; sourceTree = "<group>"; };
 		6F47DD0C2463A05E0045C9DC /* QCombiner.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QCombiner.h; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 		6F52F32E240155030030B238 /* QTrack */ = {
 			isa = PBXGroup;
 			children = (
+				6F224A7824BFF6EE000244FF /* QTrack.h */,
 				6FBD0279245926CF00372404 /* QMediaFactory_internal.h */,
 				6FEA149C242798E100758ACD /* QMediaFactory.h */,
 				6FEA149D242798E100758ACD /* QMediaFactory.mm */,
@@ -551,6 +554,7 @@
 				6F47DD1C24659AD10045C9DC /* QNodeAnimator.h in Headers */,
 				6F224A2624977114000244FF /* QFileExporter.h in Headers */,
 				6F187498248E5C4B009C4B94 /* QImageNode.h in Headers */,
+				6F224A7924BFF6EE000244FF /* QTrack.h in Headers */,
 				6FACC45924625A94008F1B41 /* OpenGL_Internal-ios.h in Headers */,
 				6F049352244C227700F8B73B /* QMediaDescribe.h in Headers */,
 				6F47DD222468FD0A0045C9DC /* QAudioTrackNode_internal.h in Headers */,

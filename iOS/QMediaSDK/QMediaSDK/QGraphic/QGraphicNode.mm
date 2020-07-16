@@ -60,7 +60,7 @@ using GraphicCore::AnimaNode;
 
 - (instancetype)init{
     if ((self = [super init]) != nil) {
-        self.origin_renderRange = QTimeRangeMake(0, 0);
+        self.origin_displayRange = QTimeRangeMake(0, 0);
         self.origin_visible = false;
 //        self.origin_rotation = 0;
         self.origin_rotation3d = QVectorV3(0, 0, 0);
@@ -138,6 +138,10 @@ using GraphicCore::AnimaNode;
 
 - (NSString*)uid {
     return _uid;
+}
+
+- (NSString *)displayName {
+    return _nodeName;
 }
 
 #pragma mark - private function //
@@ -255,7 +259,7 @@ using GraphicCore::AnimaNode;
     self.scaleY = fromNode.origin_scaleY;
     self.scaleZ = fromNode.origin_scaleZ;
     self.visible = fromNode.origin_visible;
-    self.renderRange = fromNode.renderRange;
+    self.displayRange = fromNode.displayRange;
     self.crop = fromNode.origin_crop;
     self.blendFunc = fromNode.origin_blendFunc;
     
@@ -277,14 +281,19 @@ using GraphicCore::AnimaNode;
     return _nodeName;
 }
 
-- (QTimeRange)renderRange {
+- (QTimeRange)sourceRange {
     auto range = _graphicNode->getRange();
     return QTimeRangeMake(range._start, range._end);
 }
 
-- (void)setRenderRange:(QTimeRange)renderRange {
-    self.origin_renderRange = renderRange;
-    _graphicNode->setRange(Range<int64_t>(renderRange.startPoint, renderRange.endPoint));
+- (QTimeRange)displayRange {
+    auto range = _graphicNode->getRange();
+    return QTimeRangeMake(range._start, range._end);
+}
+
+- (void)setDisplayRange:(QTimeRange)displayRange {
+    self.origin_displayRange = displayRange;
+    _graphicNode->setRange(Range<int64_t>(displayRange.startPoint, displayRange.endPoint));
 }
 
 - (bool)visible{

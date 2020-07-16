@@ -7,12 +7,13 @@
 //
 
 #import "QMediaSource.h"
+#import "QTrack.h"
 #import "QVideoTrackNode.h"
 #import "QAudioTrackNode.h"
 
 @class QCombiner;
 
-@interface QMediaTrack : NSObject
+@interface QMediaTrack : NSObject <QTrack>
 
 - (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource;
 - (bool) prepare;
@@ -34,5 +35,8 @@
 @property (nonatomic, readonly) id<QMediaSource> source;
 @property (nonatomic, readonly) QVideoTrackNode* graphic;
 @property (nonatomic, readonly) QAudioTrackNode* audio;
+
+@property (nonatomic, readonly) NSString* displayName;
+- (void)setDisplayName:(NSString*)displayName;
 
 @end

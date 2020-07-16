@@ -165,6 +165,15 @@
     return _audio;
 }
 
+@synthesize displayName = _displayName;
+- (NSString *)displayName {
+    return _displayName;
+}
+
+- (void)setDisplayName:(NSString*)displayName {
+    _displayName = [displayName copy];
+}
+
 - (MediaTrackRef)native
 {
     return _mediaTrackNative;

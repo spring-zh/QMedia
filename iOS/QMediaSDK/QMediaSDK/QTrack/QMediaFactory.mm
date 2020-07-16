@@ -64,7 +64,6 @@
 - (QMediaTrack*)createVideoTrack:(NSString *)filePath combiner:(QCombiner*)combiner
 {
     QAssetReaderSource* readerSource = [[QAssetReaderSource alloc] initWithFilePath:filePath];
-    readerSource.name = [QFileUtils fileComponentOfPath:filePath];
     readerSource.videoTarget = _videoTarget;
     readerSource.audioTarget = _audioTarget;
 //    readerSource.video_frame_format = kCVPixelFormatType_32BGRA;
@@ -79,7 +78,6 @@
 - (QMediaTrack*)createAudioTrack:(NSString *)filePath combiner:(QCombiner*)combiner
 {
     QAssetReaderSource* readerSource = [[QAssetReaderSource alloc] initWithFilePath:filePath audio:true video:false];
-    readerSource.name = [QFileUtils fileComponentOfPath:filePath];
     readerSource.videoTarget = _videoTarget;
     readerSource.audioTarget = _audioTarget;
 //    readerSource.video_frame_format = kCVPixelFormatType_32BGRA;

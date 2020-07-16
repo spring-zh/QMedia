@@ -7,6 +7,7 @@
 //
 
 #import "QNodeAnimator.h"
+#import "QTrack.h"
 #import "QEffect.h"
 
 #ifdef __cplusplus
@@ -46,11 +47,11 @@ QBlendFunc QBlendFuncMake(unsigned src, unsigned dst);
 @class QCombiner;
 
 // QGraphicNode
-@interface QGraphicNode : NSObject
+@interface QGraphicNode : NSObject <QTrack>
 
 - (instancetype)initWithName:(NSString*)name combiner:(QCombiner*)combiner;
 - (instancetype)initWithName:(NSString*)name combiner:(QCombiner*)combiner uid:(NSString*)uid;
-@property (nonatomic, readonly) NSString* name;
+@property (nonatomic) NSString* name;
 
 @property (nonatomic, weak, readonly) QGraphicNode* parent;
 //for children nodes
@@ -74,10 +75,11 @@ QBlendFunc QBlendFuncMake(unsigned src, unsigned dst);
 
 - (void)copyFrom:(QGraphicNode*)fromNode;
 
-//uuid for index
+//QTrack
 @property (nonatomic, readonly) NSString* uid;
-//display and render time range
-@property (nonatomic) QTimeRange renderRange;
+@property (nonatomic, readonly) NSString* displayName;
+@property (nonatomic) QTimeRange sourceRange;
+@property (nonatomic) QTimeRange displayRange;
 
 //transform propertys setting
 @property (nonatomic) bool visible;
