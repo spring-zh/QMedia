@@ -67,7 +67,9 @@
     NSString* testAudioFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"audio/LR.mp3"];
     
     QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2 combiner:self.player];
+    videoTrack.displayName = [QFileUtils fileComponentOfPath:testVideoFile2];
     QMediaTrack* audioTrack = [self.player.mediaFactory createAudioTrack:testAudioFile combiner:self.player];
+    audioTrack.displayName = [QFileUtils fileComponentOfPath:testAudioFile];
 
 //    XMVideoTrack* videoTrack = [self.player.mediaFactory createOldVideoTrack:testVideoFile2];
 
@@ -94,12 +96,14 @@
 #endif
     
     QDuplicateNode* duplicatenodeL = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic combiner:self.player];
+    duplicatenodeL.name = @"videoTrack Copy Left";
     duplicatenodeL.contentSize = CGSizeMake(targetW/2, targetH/2);
     duplicatenodeL.position = CGPointMake(0, targetH/4);
     duplicatenodeL.anchorPoint = CGPointMake(0.5, 0.5);
     duplicatenodeL.rotation3d = QVectorV3(0, 90, 0);
 
     QDuplicateNode* duplicatenodeR = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic combiner:self.player];
+    duplicatenodeR.name = @"videoTrack Copy Right";
     duplicatenodeR.contentSize = CGSizeMake(targetW/2, targetH/2);
     duplicatenodeR.position = CGPointMake(targetW/2, targetH/4);
     duplicatenodeR.anchorPoint = CGPointMake(0.5, 0.5);
@@ -109,6 +113,13 @@
     [self.player addMediaTrack:videoTrack];
     //add audioTrack
     [self.player addMediaTrack:audioTrack];
+    
+    /*--------------------  GlobalXMObject  -----------------------*/
+    [[GlobalXMObject sharedInstance] addTrack:videoTrack];
+    [[GlobalXMObject sharedInstance] addTrack:audioTrack];
+    [[GlobalXMObject sharedInstance] addTrack:duplicatenodeL];
+    [[GlobalXMObject sharedInstance] addTrack:duplicatenodeR];
+    /*--------------------  GlobalXMObject  -----------------------*/
     
     QGraphicNode* composeNode = [[QGraphicNode alloc] initWithName:@"composeNode" combiner:self.player];
     composeNode.contentSize = CGSizeMake(targetW, targetH);
@@ -135,7 +146,7 @@
     QImageNode* imageNode = [[QImageNode alloc] initWithPath:testImageFile combiner:self.player];
     imageNode.contentSize = CGSizeMake(480, 360);
     imageNode.anchorPoint = CGPointMake(0.5, 0.5);
-    imageNode.renderRange = QTimeRangeMake(0, 10000);
+    imageNode.displayRange = QTimeRangeMake(0, 10000);
     imageNode.rotation = 60;
     imageNode.positionZ = 10;
 //    [layer addEffect:colorInvert];

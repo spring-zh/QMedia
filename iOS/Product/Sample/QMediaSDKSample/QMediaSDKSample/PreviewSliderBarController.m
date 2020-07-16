@@ -11,7 +11,7 @@
 #import "CommonKits.h"
 #import "GlobalXMObject.h"
 
-@interface PreviewSliderBarController () <UIGestureRecognizerDelegate, QEditorPlayerObserver>
+@interface PreviewSliderBarController () <UIGestureRecognizerDelegate, GlobalMeidaManageObserver>
 
 @property (nonatomic) IBOutlet UIView *minTrackView;
 
@@ -44,6 +44,9 @@
     
     self.floatingTimeView = [FloatingTimeView floatingTimeView];
     
+    UITapGestureRecognizer *tapGesturRecognizer=[[UITapGestureRecognizer alloc]initWithTarget:self action:@selector(tapAction:)];
+    [self.view addGestureRecognizer:tapGesturRecognizer];
+    
     self.progress = 0.0;
     self.trimLeftProgress = 0.0;
     self.trimRightProgress = 0.0;
@@ -54,6 +57,8 @@
     if (self.disableProgress) {
         self.thumbnailView.hidden = YES;
     }
+    
+    [[GlobalXMObject sharedInstance].observers addObject:self];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -94,6 +99,23 @@
         }
     });
 }
+
+
+-(void)onSelectTrackAtIndex:(NSInteger)index {
+    if (index != -1) {
+        self.view.backgroundColor = nil;
+        self.view.layer.borderColor = nil;
+        self.view.layer.borderWidth = 0;
+    }
+}
+
+-(void)tapAction:(id)tap
+ {
+     [GlobalXMObject sharedInstance].selectTrackIndex = -1;
+     self.view.backgroundColor = [UIColor greenColor];
+     self.view.layer.borderColor = [UIColor cyanColor].CGColor;
+     self.view.layer.borderWidth = 2;
+ }
 
 //- (void)setTrimLeftProgress:(CGFloat)trimLeftProgress
 //{

@@ -14,8 +14,8 @@
 @end
 
 @implementation GlobalXMObject {
-    NSMutableArray<QMediaTrack*>* _mediaTracks;
-    NSMutableArray<QGraphicNode*>* _externNodes;
+    NSMutableArray<id<QTrack>>* _tracks;
+    NSMutableArray<id<GlobalMeidaManageObserver>>* _observers;
 }
 
 + (instancetype)sharedInstance
@@ -24,86 +24,71 @@
     static dispatch_once_t onceToken;
     dispatch_once(&onceToken, ^{
         object = [GlobalXMObject new];
-//        object.pixelSizeMngr = [PixelSizeManager sharedInstance];
-        object.player = [[QEditorPlayer alloc] init];
-        object.mediaTracks = [NSMutableArray new];
-        object.externNodes = [NSMutableArray new];
     });
     return object;
 }
 
-- (NSMutableArray<QMediaTrack *> *)mediaTracks {
-    return _mediaTracks;
+- (instancetype)init {
+    if (self = [super init]) {
+        _player = [[QEditorPlayer alloc] init];
+        _tracks = [NSMutableArray new];
+        _observers = [NSMutableArray new];
+        self.pixelSizeMngr = [PixelSizeManager sharedInstance];
+    }
+    return self;
 }
 
-- (NSMutableArray<QGraphicNode *> *)externNodes {
-    return _externNodes;
+- (void)notifyTrackChange {
+    for (id<GlobalMeidaManageObserver> observer in _observers) {
+        if ([observer respondsToSelector:@selector(onTrackChange)]) {
+            [observer onTrackChange];
+        }
+    }
+}
+
+- (void)notifySelectTrackChange:(NSInteger)index {
+    for (id<GlobalMeidaManageObserver> observer in _observers) {
+        if ([observer respondsToSelector:@selector(onSelectTrackAtIndex:)]) {
+            [observer onSelectTrackAtIndex:index];
+        }
+    }
+}
+
+- (void)addTrack:(id<QTrack>)track {
+    [_tracks addObject:track];
+    [self notifyTrackChange];
+}
+- (void)removeTrack:(id<QTrack>)track {
+    [_tracks removeObject:track];
+    [self notifyTrackChange];
+}
+- (void)clearAllTrack {
+    [_tracks removeAllObjects];
+    [self notifyTrackChange];
+}
+
+- (NSMutableArray<id<QTrack>> *)tracks {
+    return _tracks;
+}
+
+- (void)setSelectTrackIndex:(NSInteger)index {
+    _selectedPixelSizeIndex = index;
+    [self notifySelectTrackChange:index];
 }
 
 - (void)setSelectedPixelSizeIndex:(NSInteger)selectedPixelSizeIndex
 {
-//    if (selectedPixelSizeIndex < 0 || selectedPixelSizeIndex > self.pixelSizeMngr.allPixelSizes.count-1) {
-//        return ;
-//    }
-//    if (CGSizeEqualToSize(self.pixelSize, self.pixelSizeMngr.allPixelSizes[selectedPixelSizeIndex].size)) {
-//        return ;
-//    }
-//    _selectedPixelSizeIndex = selectedPixelSizeIndex;
-//
-//    self.pixelSize = self.pixelSizeMngr.allPixelSizes[_selectedPixelSizeIndex].size;
-//    self.layout.frameSize = self.pixelSize;
-//    self.layout.centerPoint = CGPointMake(self.pixelSize.width/2, self.pixelSize.height/2);
-//
-//    [[NSNotificationCenter defaultCenter] postNotificationName:kGlobalXMObjectPixelSizeChanged object:self];
-}
+    if (selectedPixelSizeIndex < 0 || selectedPixelSizeIndex > self.pixelSizeMngr.allPixelSizes.count-1) {
+        return ;
+    }
+    if (CGSizeEqualToSize(self.pixelSize, self.pixelSizeMngr.allPixelSizes[selectedPixelSizeIndex].size)) {
+        return ;
+    }
+    _selectedPixelSizeIndex = selectedPixelSizeIndex;
 
-//- (BOOL)addSubObject:(XMObject *)subObject
-//{
-////    BOOL ret = [super addSubObject:subObject];
-////    if (ret) {
-////        [[NSNotificationCenter defaultCenter] postNotificationName:kGlobalXMObjectSubObjectArrayChanged object:self];
-////    }
-////    return ret;
-//    return FALSE;
-//}
+    self.pixelSize = self.pixelSizeMngr.allPixelSizes[_selectedPixelSizeIndex].size;
 
-//- (BOOL)removeSubObject:(XMObject *)subObject
-//{
-////    BOOL ret = [super removeSubObject:subObject];
-////    if (ret) {
-////        [[NSNotificationCenter defaultCenter] postNotificationName:kGlobalXMObjectSubObjectArrayChanged object:self];
-////    }
-////    return ret;
-//    return FALSE;
-//}
-
-- (BOOL)removeSubObjectAtIndex:(NSInteger)index
-{
-//    BOOL ret = [super removeSubObjectAtIndex:index];
-//    if (ret) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kGlobalXMObjectSubObjectArrayChanged object:self];
-//    }
-//    return ret;
-    return FALSE;
-}
-
-- (void)removeAllSubObjects
-{
-//    NSUInteger originalCount = [super subObjects].count;
-//    [super removeAllSubObjects];
-//    if (originalCount != [super subObjects].count) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kGlobalXMObjectSubObjectArrayChanged object:self];
-//    }
-}
-
-- (BOOL)moveSubObjectFromIndex:(NSInteger)fromIndex toIndex:(NSInteger)toIndex
-{
-//    BOOL ret = [super moveSubObjectFromIndex:fromIndex toIndex:toIndex];
-//    if (ret) {
-//        [[NSNotificationCenter defaultCenter] postNotificationName:kGlobalXMObjectSubObjectArrayChanged object:self];
-//    }
-//    return ret;
-    return FALSE;
+    [[NSNotificationCenter defaultCenter] postNotificationName:kGlobalXMObjectPixelSizeChanged object:self];
 }
 
 @end

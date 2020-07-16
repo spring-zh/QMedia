@@ -19,10 +19,11 @@
 
 //#import "XMCommon.h"
 
-@interface MediaMainViewController () <QEditorPlayerObserver, UINavigationControllerDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, VideoRecorderViewControllerDelegate>
+@interface MediaMainViewController () <GlobalMeidaManageObserver, UINavigationControllerDelegate, UIImagePickerControllerDelegate, MPMediaPickerControllerDelegate, VideoRecorderViewControllerDelegate>
 @property (nonatomic, weak) QEditorPlayer *player;
 @property (nonatomic, weak) IBOutlet UINavigationItem *naviItem;
 @property (nonatomic, retain) UINavigationItem *naviItemBack;
+
 
 //@property (nonatomic, strong) XMFilter *particleFilter;
 
@@ -345,7 +346,7 @@
 //        [self.player addMediaTrack:videoTrack];
 //        self.player = [XMPlayer sharedInstance];
 //        self.player.objectToPlay = composedObject;
-        [self.player addObserver:self];
+        [[GlobalXMObject sharedInstance].observers addObject:self];
         self.player.loopPlay = YES;
         
         //
@@ -450,6 +451,9 @@
 //    return object;
 //}
 
+-(void)onTrackChange {
+    
+}
 
 - (void)onPlayerChangedObjectToPlay
 {
@@ -567,9 +571,13 @@
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         NSLog(@"%@", videoURL);
         
-//        XMVideoTrack* videoTrack = [[XMMediaFactory sharedInstance] createVideoTrack:self.player filePath:videoURL.absoluteString];
         QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:videoURL.absoluteString combiner:self.player];
+        videoTrack.graphic.contentSize = CGSizeMake([self.player.videoTarget getWidth]/2, [self.player.videoTarget getHeight]/2);
+        [self.player.rootNode addChildNode:videoTrack.graphic];
+        
+        videoTrack.displayName = [QFileUtils fileComponentOfPath:videoURL.absoluteString];
         [self.player addMediaTrack:videoTrack];
+        [[GlobalXMObject sharedInstance] addTrack:videoTrack];
 //        CGFloat duration = [self getVideoLength:videoURL];
 //        CGSize dspSize = [GlobalXMObject sharedInstance].pixelSize;
 //        XMObject* videoObject = [self addXMObjectOfTypeClass:[XMVideoObject class]
