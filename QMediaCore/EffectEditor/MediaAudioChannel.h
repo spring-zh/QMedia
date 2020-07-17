@@ -30,7 +30,7 @@ public:
     void setEnable(bool enable) { _bEnable = enable; }
 private:
     
-    std::shared_ptr<ResamplerSpeex> _resampler;
+    ResamplerSpeex _resampler;
     
     AudioSampleCache _sampleCache;
     std::vector<uint8_t> _cacheBuffer;
