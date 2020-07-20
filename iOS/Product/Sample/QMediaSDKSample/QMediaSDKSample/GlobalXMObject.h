@@ -30,6 +30,8 @@
 - (void)removeTrack:(id<QTrack>)track;
 - (void)clearAllTrack;
 
+- (void)updateDisplay;
+
 + (instancetype)sharedInstance;
 
 @end

@@ -16,6 +16,7 @@
 @implementation GlobalXMObject {
     NSMutableArray<id<QTrack>>* _tracks;
     NSMutableArray<id<GlobalMeidaManageObserver>>* _observers;
+    NSInteger _selectedPixelSizeIndex;
 }
 
 + (instancetype)sharedInstance
@@ -33,6 +34,7 @@
         _player = [[QEditorPlayer alloc] init];
         _tracks = [NSMutableArray new];
         _observers = [NSMutableArray new];
+        _selectedPixelSizeIndex = -1;
         self.pixelSizeMngr = [PixelSizeManager sharedInstance];
     }
     return self;
@@ -67,8 +69,16 @@
     [self notifyTrackChange];
 }
 
+- (void)updateDisplay {
+    [_player seekTo:_player.position :0];
+}
+
 - (NSMutableArray<id<QTrack>> *)tracks {
     return _tracks;
+}
+
+- (NSInteger)selectTrackIndex {
+    return _selectedPixelSizeIndex;
 }
 
 - (void)setSelectTrackIndex:(NSInteger)index {
