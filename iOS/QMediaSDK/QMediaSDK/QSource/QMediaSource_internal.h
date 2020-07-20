@@ -21,7 +21,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 #pragma mark QMediaSource(object-c) to MediaSource(c++)
 class MediaSourceAdapter : public MediaSource {
 public:
-    explicit MediaSourceAdapter(id<QMediaSource> source):_source(source){
+    explicit MediaSourceAdapter(id<QMediaSource> source):_source(source), _rotation(kVideoRotation_0){
         
     }
     ~MediaSourceAdapter() {
@@ -51,6 +51,7 @@ public:
                 mediaDescribe.mediatype_ = MediaType::Video;
                 mediaDescribe._videodesc = XMToVideoDescribe(_source.videoDesc);
                 _mediaDescs.push_back(mediaDescribe);
+                _rotation = mediaDescribe._videodesc.rotation;
             }
             if (_source.audioDesc) {
                 MediaDescribe mediaDescribe;
@@ -125,7 +126,7 @@ protected:
     inline VideoFrame makeVideoFrame(CMSampleBufferRef sampleBuffer, bool invalid_pts) {
         PixelFrameBuffer* pixelFB = new PixelFrameBuffer(sampleBuffer);
         VideoFrame videoFrame(std::shared_ptr<VideoFrameBuffer>(pixelFB), pixelFB->_time_stamp,
-                              invalid_pts? -1 : pixelFB->_time_stamp);
+                              invalid_pts? -1 : pixelFB->_time_stamp, _rotation);
         return videoFrame;
     }
     
@@ -140,5 +141,6 @@ protected:
     
     std::shared_ptr<VideoTarget> _videoTargetProprety;
     std::shared_ptr<AudioTarget> _audioTargetProprety;
+    VideoRotation _rotation;
 };
 

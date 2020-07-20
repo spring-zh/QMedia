@@ -55,12 +55,13 @@ _combiner(combiner),
 _displayMode(DisplayMode::Adaptive)
 {
     _playerScene.setGLEngine(&_gle);
+    _renderRange = Range<int64_t>(0, std::numeric_limits<int64_t>::max());
     _isInit = false;
 }
 
 const Range<int64_t> DisplayLayer::getRange()
 {
-    return _combiner->getMediaTimeRange();
+    return _combiner->getValidTimeRange();
 }
 
 void DisplayLayer::releaseRes()
@@ -257,7 +258,7 @@ EffectCombiner::RetCode EffectCombiner::_addMediaTrack(MediaTrackRef mediaTrack)
             _mediaTracks.insert(mediaTrack);
 
             if (STATE_ISRUNING(_state)) {
-                mediaTrack->setPositionTo(getPosition());
+                mediaTrack->setPositionTo(0);
             }
         }else
             return RetCode::e_state;

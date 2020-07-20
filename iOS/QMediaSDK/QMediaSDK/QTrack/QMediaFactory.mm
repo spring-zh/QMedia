@@ -80,7 +80,6 @@
     QAssetReaderSource* readerSource = [[QAssetReaderSource alloc] initWithFilePath:filePath audio:true video:false];
     readerSource.videoTarget = _videoTarget;
     readerSource.audioTarget = _audioTarget;
-//    readerSource.video_frame_format = kCVPixelFormatType_32BGRA;
     QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:readerSource];
     if (mediaTrack) {
         [mediaTrack generateAudioTrackNode:combiner];

@@ -23,6 +23,7 @@ const struct VideoDescribe XMToVideoDescribe(QVideoDescribe* xmdesc)
     videoDesc.width = xmdesc.width;
     videoDesc.height = xmdesc.height;
     videoDesc.bitrate = xmdesc.bitrate;
+    videoDesc.timeScale = xmdesc.timeScale;
     return videoDesc;
 }
 

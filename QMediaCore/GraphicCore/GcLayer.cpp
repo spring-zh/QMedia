@@ -52,6 +52,11 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
     bool isDepthTest = gle->enableDepthTest();
     gle->setEnableDepthTest(_enable3d);
     // draw layer
+    if ((int)_layerSize.width != _texture->width() || (int)_layerSize.height != _texture->height()) {
+        //TODO: reset layer size
+        _texture.reset();
+        _texture = std::shared_ptr<Texture2D>(GeneralTexture2D::createTexture(Texture2D::RGBA, _layerSize.width,_layerSize.height));
+    }
     gle->setCurrentFrameBuffer(_framebuffer.get());
     Rect layerViewPort(0, 0,_texture->width(),_texture->height());
     gle->setViewPort(layerViewPort);

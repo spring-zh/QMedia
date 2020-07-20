@@ -72,6 +72,8 @@ private:
     GLfloat *_colorConversionMatrix;
     
     std::shared_ptr<ShaderProgram> _program;
+    
+    VideoRotation _rotation;
 };
 
 class PixelFrameBGRADrawer: public VideoFrameDrawer {
@@ -96,4 +98,6 @@ private:
     
     std::shared_ptr<GraphicCore::Texture2DDrawer> _textureDrawer;
     GraphicCore::DuplicateTexture2D _duplicateTexture;
+    
+    VideoRotation _rotation;
 };

@@ -196,6 +196,7 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
     if (!videoFrame.is_texture()) {
         return false;
     }
+    _rotation = videoFrame.rotation();
     EAGLContext* context = [EAGLContext currentContext];
     if (context == nil) {
         return false;
@@ -307,7 +308,23 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
             node->getContentSize().width, node->getContentSize().height, 0
         };
         
-        _program->setVertexAttribValue("a_texCoord", VertexAttrib::TEXCOORD, Drawable2D::RECTANGLE_TEX_COORDS, GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS));
+        float *texArray = Drawable2D::RECTANGLE_TEX_COORDS;
+        switch (_rotation) {
+            case kVideoRotation_90:
+                texArray = Drawable2D::RECTANGLE_TEX_COORDS90;
+                break;
+            case kVideoRotation_180:
+                texArray = Drawable2D::RECTANGLE_TEX_COORDS180;
+                break;
+            case kVideoRotation_270:
+                texArray = Drawable2D::RECTANGLE_TEX_COORDS270;
+                break;
+            default:
+                texArray = Drawable2D::RECTANGLE_TEX_COORDS;
+                break;
+
+        }
+        _program->setVertexAttribValue("a_texCoord", VertexAttrib::TEXCOORD, texArray, 8);
         _program->setVertexAttribValue("a_position", VertexAttrib::VERTEX3 ,posArray, GET_ARRAY_COUNT(posArray));
         
         if(_lumaTexture) {

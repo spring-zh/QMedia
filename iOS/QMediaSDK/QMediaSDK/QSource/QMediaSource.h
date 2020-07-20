@@ -28,7 +28,6 @@ typedef struct SampleBufferFrame {
 
 @protocol QMediaSource <NSObject>
 @required
-@property (nonatomic, assign) NSString* name;
 //output target
 @property (nonatomic, weak) id<QVideoTarget> videoTarget;
 @property (nonatomic, weak) id<QAudioTarget> audioTarget;

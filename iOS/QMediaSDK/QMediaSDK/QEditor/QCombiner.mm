@@ -137,8 +137,10 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 - (void)removeMediaTrack:(QMediaTrack*)track
 {
     if ([_subObjectArray objectForKey:track.uid]) {
-        [self detachRenderNode:track.graphic];
-        _combiner->detachAudioNode(track.audio.native);
+        if(track.graphic != nil)
+            [self detachRenderNode:track.graphic];
+        if(track.audio != nil)
+            _combiner->detachAudioNode(track.audio.native);
         _combiner->removeMediaTrack(track.native);
         [_subObjectArray removeObjectForKey:track.uid];
     }
@@ -252,8 +254,12 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
             [mediaSource setVideoTarget:_mediaFactory.videoTarget];
             [mediaSource setAudioTarget:_mediaFactory.audioTarget];
             QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:mediaSource uid:fromTrack.uid];
-            mediaTrack.displayRange = fromTrack.displayRange;
             if ([mediaTrack prepare]) {
+                mediaTrack.displayRange = fromTrack.displayRange;
+                mediaTrack.sourceRange = fromTrack.sourceRange;
+                mediaTrack.timeScale = fromTrack.timeScale;
+                mediaTrack.repeatTimes = fromTrack.repeatTimes;
+                
                 [self addMediaTrack:mediaTrack];
                 if (fromTrack.graphic) {
                     [mediaTrack generateVideoTrackNode:self uid:fromTrack.graphic.uid];
