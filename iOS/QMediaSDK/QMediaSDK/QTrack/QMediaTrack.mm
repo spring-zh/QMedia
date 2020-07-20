@@ -118,6 +118,14 @@
     return _uid;
 }
 
+- (QVideoDescribe *)videoDesc {
+    return _mediaSource.videoDesc;
+}
+
+- (QAudioDescribe *)audioDesc {
+    return _mediaSource.audioDesc;
+}
+
 - (QTimeRange)sourceRange{
     auto range = _mediaTrackNative->getSourceRange();
     QTimeRange qRange = {range._start, range._end};

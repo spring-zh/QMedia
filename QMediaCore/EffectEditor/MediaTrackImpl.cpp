@@ -55,9 +55,6 @@ bool MediaTrackImpl::mapTimeToMediaSource(int64_t mSec, int64_t& outmSec) const
             outmSec = _sourceRange._start + distance;
             return true;
         }
-    }else if(mSec < displayRange._start) {
-        outmSec = _sourceRange._start;
-        return true;
     }
     return false;
 }
@@ -92,6 +89,10 @@ bool MediaTrackImpl::setPositionTo(int64_t mSec)
     wrlock_guard wrlock(_rwlock);
     int64_t remap_time;
     bool bRet = false;
+    
+    if(mSec < getDisplayTrackRange()._start) {
+        mSec = getDisplayTrackRange()._start;
+    }
     
     if(mapTimeToMediaSource(mSec, remap_time))
     {

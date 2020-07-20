@@ -28,6 +28,10 @@
 - (bool)generateVideoTrackNode:(QCombiner*)combiner;
 
 @property (nonatomic, readonly) NSString* uid;
+//media source describe
+@property (nonatomic, readonly) QVideoDescribe* videoDesc;
+@property (nonatomic, readonly) QAudioDescribe* audioDesc;
+
 @property (nonatomic) QTimeRange sourceRange;
 @property (nonatomic) QTimeRange displayRange;
 @property (nonatomic) float timeScale;

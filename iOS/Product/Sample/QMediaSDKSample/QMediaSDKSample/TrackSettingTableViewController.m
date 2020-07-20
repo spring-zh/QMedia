@@ -10,6 +10,7 @@
 #import "GlobalXMObject.h"
 
 @interface TrackSettingTableViewController() <UITextFieldDelegate>
+@property (weak, nonatomic) IBOutlet UILabel *titleLB;
 @property (weak, nonatomic) IBOutlet UITableViewCell *trackInfoCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *renderCell;
 @property (weak, nonatomic) IBOutlet UILabel *mediaDurationLB;
@@ -20,6 +21,10 @@
 
 @property (weak, nonatomic) IBOutlet UISlider *speedSlider;
 @property (weak, nonatomic) IBOutlet UILabel *speedTF;
+@property (weak, nonatomic) IBOutlet UILabel *videoInfoLB;
+@property (weak, nonatomic) IBOutlet UILabel *audioInfoLB;
+
+
 @property (weak, nonatomic) IBOutlet UITextField *positionX;
 @property (weak, nonatomic) IBOutlet UITextField *positionY;
 @property (weak, nonatomic) IBOutlet UITextField *contentSizeX;
@@ -186,12 +191,26 @@
             _sourceStartTF.enabled = true;
             _sourceEndTF.enabled = true;
             _mediaDurationLB.text = [NSString stringWithFormat:@"媒体原始时长: %lld 毫秒", mediaTrack.getSourceDuration];
+            if (mediaTrack.videoDesc) {
+                _videoInfoLB.text = [NSString stringWithFormat:@"%d x %d", mediaTrack.videoDesc.width, mediaTrack.videoDesc.height];
+            }else {
+                _videoInfoLB.text = @"--";
+            }
+            
+            if (mediaTrack.audioDesc) {
+                _audioInfoLB.text = [NSString stringWithFormat:@"采样率: %d 通道: %d", mediaTrack.audioDesc.samplerate, mediaTrack.audioDesc.nchannel];
+            }else {
+                _audioInfoLB.text = @"--";
+            }
+            
         }else if ([_track isKindOfClass:QGraphicNode.class]) {
             graphicNode = _track;
             _speedSlider.enabled = false;
             _sourceStartTF.enabled = false;
             _sourceEndTF.enabled = false;
             _mediaDurationLB.text = @"";
+            _videoInfoLB.text = @"--";
+            _audioInfoLB.text = @"--";
         }
         
         if (graphicNode != nil) {
@@ -210,6 +229,8 @@
             _renderCell.hidden = true;
         }
         
+        _titleLB.text = [NSString stringWithFormat:@"%@ 设置", _track.displayName];
+        
         _displayStartTF.text = [[NSNumber numberWithLongLong: _track.displayRange.startPoint] stringValue];
         _displayEndTF.text = [[NSNumber numberWithLongLong: _track.displayRange.endPoint] stringValue];
         _sourceStartTF.text = [[NSNumber numberWithLongLong: _track.sourceRange.startPoint] stringValue];
@@ -219,6 +240,7 @@
         _trackInfoCell.hidden = true;
         _renderCell.hidden = true;
         _deleteBTN.hidden = true;
+        _titleLB.text = @"--";
     }
 }
 

@@ -756,11 +756,11 @@
                                             <color key="backgroundColor" systemColor="systemGray2Color" red="0.68235294120000001" green="0.68235294120000001" blue="0.69803921570000005" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         </tableViewCellContentView>
                                     </tableViewCell>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="153" id="ykm-vw-ULA">
-                                        <rect key="frame" x="0.0" y="58" width="414" height="153"/>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="208" id="ykm-vw-ULA">
+                                        <rect key="frame" x="0.0" y="58" width="414" height="208"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="ykm-vw-ULA" id="sFw-yH-7Fm">
-                                            <rect key="frame" x="0.0" y="0.0" width="414" height="153"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="208"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="显示时段" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="QIk-sV-3kg">
@@ -854,12 +854,40 @@
                                                     <nil key="textColor"/>
                                                     <nil key="highlightedColor"/>
                                                 </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="视频信息" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Bfs-40-56k">
+                                                    <rect key="frame" x="16" y="148" width="70" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="音频信息" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="8q4-xZ-mUs">
+                                                    <rect key="frame" x="16" y="176" width="70" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="poY-Vf-qSH">
+                                                    <rect key="frame" x="114" y="148" width="252" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="--" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="usS-sR-SxI">
+                                                    <rect key="frame" x="114" y="177" width="251" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
                                             </subviews>
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
                                     <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="233" id="adY-Px-dR3">
-                                        <rect key="frame" x="0.0" y="211" width="414" height="233"/>
+                                        <rect key="frame" x="0.0" y="266" width="414" height="233"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="adY-Px-dR3" id="E8f-Ep-582">
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="233"/>
@@ -998,6 +1026,7 @@
                     <connections>
                         <outlet property="alphaSlider" destination="gvm-aq-fxS" id="WGz-Pv-sHQ"/>
                         <outlet property="alphaTF" destination="ggX-Of-Mvh" id="wSy-i4-NCo"/>
+                        <outlet property="audioInfoLB" destination="usS-sR-SxI" id="Q9V-dL-KIC"/>
                         <outlet property="contentSizeX" destination="IPw-VB-Ri8" id="P69-Mv-erW"/>
                         <outlet property="contentSizeY" destination="eSm-xc-eoH" id="QZs-mW-aUm"/>
                         <outlet property="deleteBTN" destination="aki-zq-fGk" id="AFp-3V-Hwl"/>
@@ -1014,7 +1043,9 @@
                         <outlet property="sourceStartTF" destination="0hh-17-b4t" id="mJy-p9-uDx"/>
                         <outlet property="speedSlider" destination="z5s-g2-dCG" id="jle-SB-KRo"/>
                         <outlet property="speedTF" destination="E65-7x-aXa" id="0va-JZ-Fal"/>
+                        <outlet property="titleLB" destination="tgF-t7-DwA" id="Svy-gu-KLM"/>
                         <outlet property="trackInfoCell" destination="ykm-vw-ULA" id="O9B-1l-E74"/>
+                        <outlet property="videoInfoLB" destination="poY-Vf-qSH" id="RR5-FP-UvT"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sz4-LD-Hia" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>
