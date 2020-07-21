@@ -137,8 +137,10 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 - (void)removeMediaTrack:(QMediaTrack*)track
 {
     if ([_subObjectArray objectForKey:track.uid]) {
-        if(track.graphic != nil)
+        if(track.graphic != nil) {
             [self detachRenderNode:track.graphic];
+            [self removeGraphicNodeIndex:track.graphic];
+        }
         if(track.audio != nil)
             _combiner->detachAudioNode(track.audio.native);
         _combiner->removeMediaTrack(track.native);
@@ -187,6 +189,9 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 - (bool)detachRenderNode:(QGraphicNode*)current {
     _combiner->detachRenderNode(current.native);
     return true;
+}
+- (void)topRenderNode:(QGraphicNode*)current {
+    _combiner->topRenderNode(current.native);
 }
 
 - (bool)attachEffect:(QGraphicNode*)graphic effect:(QEffect*)effect {

@@ -61,6 +61,12 @@ QBlendFunc QBlendFuncMake(unsigned src, unsigned dst);
 - (bool)removeChildNode:(QGraphicNode*)childNode;
 - (void)clearAllChildrens;
 
+//set childnode display to top
+- (void)topChildNode:(QGraphicNode*)childNode;
+
+//remove self form combiner index
+- (void)releaseIndex;
+
 //for animator
 @property (nonatomic, readonly) NSArray<QNodeAnimator*>* animators;
 - (bool)addAnimator:(QNodeAnimator*)animator;

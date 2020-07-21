@@ -230,9 +230,14 @@
 {
     if (self.player.isPaused || self.player.state == XMPlayerState_Stopped) {
         [self.player play];
+        [self.playButton setImage:[UIImage imageNamed:@"Edit Preview Pause_12x18_"]
+        forState:UIControlStateNormal];
     }
     else {
         [self.player pause];
+        
+        [self.playButton setImage:[UIImage imageNamed:@"Edit Preview Play_13x18_"]
+        forState:UIControlStateNormal];
     }
     //test testVerseVideo,added by yuelei
     //[self testVerseVideo ];

@@ -209,6 +209,7 @@ protected:
     };
     
     std::map<std::string, std::shared_ptr<PropretyGroup>> _animatorsGroup;
+    std::mutex _render_mutex;
     
 private:
     void updateAnimator_positionxyz(Animator* animator, float t);

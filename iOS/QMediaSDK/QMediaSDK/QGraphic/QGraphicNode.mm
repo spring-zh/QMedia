@@ -193,9 +193,21 @@ using GraphicCore::AnimaNode;
 {
     for (QGraphicNode* child in _childrens) {
         child.native->removeFromParent();
-        child.native->setParent(nullptr);
     }
     [_childrens removeAllObjects];
+}
+
+- (void)topChildNode:(QGraphicNode*)childNode
+{
+    if ([_childrens containsObject:childNode]) {
+        [_childrens removeObject:childNode];
+        [_childrens addObject:childNode];
+        [_combiner topRenderNode:childNode];
+    }
+}
+
+- (void)releaseIndex {
+    [_combiner removeGraphicNodeIndex:self];
 }
 
 #pragma mark Aninmators

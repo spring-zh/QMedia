@@ -519,18 +519,31 @@ void EffectCombiner::detachRenderNode(GraphicCore::RenderNodeRef current)
 {
     postRenderTask(&EffectCombiner::_detachRenderNode, this, current);
 }
+
+void EffectCombiner::topRenderNode(GraphicCore::RenderNodeRef current)
+{
+    postRenderTask([](GraphicCore::RenderNodeRef current){
+        GraphicCore::Node *parent = current->getParent();
+        if (parent) {
+            current->removeFromParent();
+            parent->addChildren(current.get());
+        }
+    }, current);
+}
+
 void EffectCombiner::attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent) {
     postAudioTask(&EffectCombiner::_attachAudioNode, this, child, parent);
 }
+
+void EffectCombiner::detachAudioNode(MediaAudioChannelRef current) {
+    postAudioTask(&EffectCombiner::_detachAudioNode, this, current);
+}
+
 void EffectCombiner::attachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
     postRenderTask(&EffectCombiner::_attachEffect, this, renderNode, effect);
 }
 void EffectCombiner::detachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
     postRenderTask(&EffectCombiner::_detachEffect, this, renderNode, effect);
-}
-
-void EffectCombiner::detachAudioNode(MediaAudioChannelRef current) {
-    postAudioTask(&EffectCombiner::_detachAudioNode, this, current);
 }
 
 void EffectCombiner::runRenderCmd()

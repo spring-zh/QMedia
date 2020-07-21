@@ -136,6 +136,7 @@ public:
     void removeMediaTrack(MediaTrackRef mediaTrack);
     void attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent);
     void detachRenderNode(GraphicCore::RenderNodeRef current);
+    void topRenderNode(GraphicCore::RenderNodeRef current);
     
     void attachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect);
     void detachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect);

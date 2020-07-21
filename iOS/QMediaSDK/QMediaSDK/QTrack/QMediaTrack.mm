@@ -60,7 +60,7 @@
 
 - (void)dealloc
 {
-    NSLog(@"%@ dealloc ", self);
+    NSLog(@"%@ name(%@) dealloc ", self, self.displayName);
     _mediaTrackNative.reset();
     _mediaSource = nil;
 }

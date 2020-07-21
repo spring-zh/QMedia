@@ -9,7 +9,7 @@
 #import "TrackSettingTableViewController.h"
 #import "GlobalXMObject.h"
 
-@interface TrackSettingTableViewController() <UITextFieldDelegate>
+@interface TrackSettingTableViewController() <UITextFieldDelegate, UIPickerViewDataSource, UIPickerViewDelegate>
 @property (weak, nonatomic) IBOutlet UILabel *titleLB;
 @property (weak, nonatomic) IBOutlet UITableViewCell *trackInfoCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *renderCell;
@@ -34,11 +34,16 @@
 @property (weak, nonatomic) IBOutlet UITextField *scaleYTF;
 @property (weak, nonatomic) IBOutlet UISlider *alphaSlider;
 @property (weak, nonatomic) IBOutlet UILabel *alphaTF;
+@property (weak, nonatomic) IBOutlet UISwitch *blendSW;
+@property (weak, nonatomic) IBOutlet UIPickerView *srcPK;
+@property (weak, nonatomic) IBOutlet UIPickerView *dstPK;
 @property (weak, nonatomic) IBOutlet UIButton *deleteBTN;
 @end
 
 @implementation TrackSettingTableViewController {
     id<QTrack> _track;
+    NSArray<NSString*>* _blendNameArray;
+    NSArray<NSNumber*>* _blendValueArray;
 }
 
 - (void)viewDidLoad {
@@ -85,6 +90,28 @@
     /// 事件监听
     [_alphaSlider addTarget:self action:@selector(sliderProgressChange:) forControlEvents:UIControlEventValueChanged];
     [_alphaSlider addTarget:self action:@selector(sliderProgressUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _srcPK.hidden = true;
+    _srcPK.dataSource = self;
+    _srcPK.delegate = self;
+    [_srcPK selectRow:0 inComponent:0 animated:FALSE];
+    _dstPK.hidden = true;
+    _dstPK.dataSource = self;
+    _dstPK.delegate = self;
+    [_dstPK selectRow:0 inComponent:0 animated:FALSE];
+    [_blendSW setOn:FALSE];
+    _blendNameArray = [NSArray arrayWithObjects:@"ZERO", @"ONE",@"SRC_COLOR",@"ONE_MINUS_SRC_COLOR",@"SRC_ALPHA",@"ONE_MINUS_SRC_ALPHA",@"DST_ALPHA",@"ONE_MINUS_DST_ALPHA", @"DST_COLOR",@"ONE_MINUS_DST_COLOR",nil];
+    
+    _blendValueArray = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:Blend_ZERO],
+                        [NSNumber numberWithUnsignedInt:Blend_ONE],
+                        [NSNumber numberWithUnsignedInt:Blend_SRC_COLOR],
+                        [NSNumber numberWithUnsignedInt:Blend_ONE_MINUS_SRC_COLOR],
+                        [NSNumber numberWithUnsignedInt:Blend_SRC_ALPHA],
+                        [NSNumber numberWithUnsignedInt:Blend_ONE_MINUS_SRC_ALPHA],
+                        [NSNumber numberWithUnsignedInt:Blend_DST_ALPHA],
+                        [NSNumber numberWithUnsignedInt:Blend_ONE_MINUS_DST_ALPHA],
+                        [NSNumber numberWithUnsignedInt:Blend_DST_COLOR],
+                        [NSNumber numberWithUnsignedInt:Blend_ONE_MINUS_DST_COLOR],nil];
     _track = nil;
 }
 
@@ -96,6 +123,16 @@
 -  (void)viewWillAppear:(BOOL)animated {
     [super viewWillAppear:animated];
     [self updateSettingViews];
+}
+- (IBAction)toTop:(id)sender {
+    QGraphicNode* graphicNode;
+    if ([_track isKindOfClass:QMediaTrack.class]) {
+        graphicNode = ((QMediaTrack*)_track).graphic;
+    }else
+        graphicNode = _track;
+    
+    [graphicNode.parent topChildNode:graphicNode];
+    [[GlobalXMObject sharedInstance] updateDisplay];
 }
 
 //实现UITextField代理方法
@@ -286,17 +323,15 @@
             if (graphicNode.parent) {
                 [graphicNode.parent removeChildNode:graphicNode];
             }
+            [graphicNode releaseIndex];
         }else if ([_track isKindOfClass:QMediaTrack.class]) {
-//            QGraphicNode* graphicNode = ((QMediaTrack*)_track).graphic;
-//            if (graphicNode && graphicNode.parent) {
-//                [graphicNode.parent removeChildNode:graphicNode];
-//            }
             [[GlobalXMObject sharedInstance].player removeMediaTrack:_track];
         }
         [[GlobalXMObject sharedInstance] removeTrack:_track];
         [GlobalXMObject sharedInstance].selectTrackIndex = -1;
         [self updateSettingViews];
         [[GlobalXMObject sharedInstance] updateDisplay];
+        _track = nil;
     }];
     UIAlertAction *action_cancel = [UIAlertAction actionWithTitle:@"取消"
       style:UIAlertActionStyleDestructive
@@ -310,6 +345,73 @@
          presentViewController:actionSheet
          animated:YES
          completion:nil];
+}
+- (IBAction)blendSwitch:(id)sender {
+    if (_blendSW.on) {
+        _srcPK.hidden = false;
+        _dstPK.hidden = false;
+    }else {
+        _srcPK.hidden = true;
+        _dstPK.hidden = true;
+        QGraphicNode* graphicNode;
+        if ([_track isKindOfClass:QGraphicNode.class]) {
+            graphicNode = (QGraphicNode*)_track;
+        }else if ([_track isKindOfClass:QMediaTrack.class]) {
+            graphicNode = ((QMediaTrack*)_track).graphic;
+        }
+        
+        graphicNode.blendFunc = QBlendDisable;
+        [[GlobalXMObject sharedInstance] updateDisplay];
+    }
+}
+
+// returns the number of 'columns' to display.
+- (NSInteger)numberOfComponentsInPickerView:(UIPickerView *)pickerView {
+    return 1;
+}
+
+// returns the # of rows in each component..
+- (NSInteger)pickerView:(UIPickerView *)pickerView numberOfRowsInComponent:(NSInteger)component {
+    return _blendNameArray.count;
+}
+
+//- (nullable NSString *)pickerView:(UIPickerView *)pickerView titleForRow:(NSInteger)row forComponent:(NSInteger)component
+//{
+//    return [_blendNameArray objectAtIndex:row];
+//}
+- (UIView *)pickerView:(UIPickerView *)pickerView viewForRow:(NSInteger)row forComponent:(NSInteger)component reusingView:(UIView *)view{
+ 
+    UILabel* pickerLabel = (UILabel*)view;
+    if (!pickerLabel){
+        pickerLabel = [[UILabel alloc] init];
+        pickerLabel.adjustsFontSizeToFitWidth = YES;
+        [pickerLabel setTextAlignment:NSTextAlignmentCenter];
+        [pickerLabel setBackgroundColor:[UIColor clearColor]];
+        pickerLabel.font = [UIFont systemFontOfSize:14]; ;
+    }
+    pickerLabel.text=[_blendNameArray objectAtIndex:row];
+    return pickerLabel;
+ 
+}
+
+
+
+- (void)pickerView:(UIPickerView *)pickerView didSelectRow:(NSInteger)row inComponent:(NSInteger)component
+{
+    NSInteger src_index = [_srcPK selectedRowInComponent:0];
+    NSInteger dst_index = [_dstPK selectedRowInComponent:0];
+    unsigned src_blend_type = [[_blendValueArray objectAtIndex:src_index] unsignedIntValue];
+    unsigned dst_blend_type = [[_blendValueArray objectAtIndex:dst_index] unsignedIntValue];
+    
+    QGraphicNode* graphicNode;
+    if ([_track isKindOfClass:QGraphicNode.class]) {
+        graphicNode = (QGraphicNode*)_track;
+    }else if ([_track isKindOfClass:QMediaTrack.class]) {
+        graphicNode = ((QMediaTrack*)_track).graphic;
+    }
+    
+    graphicNode.blendFunc = QBlendFuncMake(src_blend_type, dst_blend_type);
+    [[GlobalXMObject sharedInstance] updateDisplay];
 }
 
 /*

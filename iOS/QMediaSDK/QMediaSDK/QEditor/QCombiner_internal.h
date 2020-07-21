@@ -21,6 +21,7 @@
 //add / remove graphicNode, will be execute on render thread
 - (bool)attachRenderNode:(QGraphicNode*)child parent:(QGraphicNode*)parent;
 - (bool)detachRenderNode:(QGraphicNode*)current;
+- (void)topRenderNode:(QGraphicNode*)current;
 
 //add / remove effect, will be execute on render thread
 - (bool)attachEffect:(QGraphicNode*)graphic effect:(QEffect*)effect;
