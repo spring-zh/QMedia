@@ -1,0 +1,3 @@
+[submodule "QMediaCore/Thirdparty/stb"]
+	path = QMediaCore/Thirdparty/stb
+	url = https://github.com/nothings/stb.git
