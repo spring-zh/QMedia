@@ -1,4 +1,8 @@
 # QMedia
+initialize submodules
+```
+git submodule update --init --recursive
+```
 ## ios sdk Demo
 ```
 open iOS/QMediaSDK/QMediaSDK.xcworkspace

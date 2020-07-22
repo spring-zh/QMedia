@@ -299,17 +299,25 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
 
 void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
 {
+    GraphicCore::Mat4 mvpMatrix;
+    GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
+    drawFrame(mvpMatrix, region, node->getPositionZ(), node->getCrop(), node->getColor(), node->getBlendFunc(), _rotation);
+}
+
+void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) {
+    
     if (_program && _program->use()) {
-        //FIXME: translation of position already contain in transform matrix
         GLfloat posArray[] = {
-            0, 0, 0,
-            node->getContentSize().width, 0, 0,
-            0, node->getContentSize().height, 0,
-            node->getContentSize().width, node->getContentSize().height, 0
+            region.getMinX(), region.getMinY(), positionZ,
+            region.getMaxX(), region.getMinY(), positionZ,
+            region.getMinX(), region.getMaxY(), positionZ,
+            region.getMaxX(), region.getMaxY(), positionZ
         };
         
         float *texArray = Drawable2D::RECTANGLE_TEX_COORDS;
-        switch (_rotation) {
+        switch (rotation) {
             case kVideoRotation_90:
                 texArray = Drawable2D::RECTANGLE_TEX_COORDS90;
                 break;
@@ -340,70 +348,6 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
             _program->setUniformValue("SamplerUV", Uniform::TEXTURE, texture_uv);
         }
         
-        GraphicCore::Mat4 mvpMatrix;
-        GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
-        GraphicCore::Mat4 texMatrix;
-        //TODO: check crop
-        GraphicCore::Rect cropRect = node->getCrop();
-        if (! cropRect.size.equals(GraphicCore::Size::ZERO)) {
-            //TODO: need crop
-            float crop[16] = {
-                    cropRect.size.width, 0, 0, 0,
-                    0, cropRect.size.height, 0, 0,
-                    0, 0, 1, 0,
-                    cropRect.getMinX(), cropRect.getMinY(), 0, 1,
-            };
-            texMatrix.multiply(crop);
-        }
-        _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m, 16);
-        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, mvpMatrix.m, 16);
-        _program->setUniformValue("colorConversionMatrix", Uniform::MATRIX3, _colorConversionMatrix, 9);
-        
-        Uniform::Value colorVal;
-        colorVal._floatOrmatrix_array = {
-            node->getColor().r,
-            node->getColor().g,
-            node->getColor().b,
-            node->getColor().a};
-        _program->setUniformValue("uColor", Uniform::FLOAT4, colorVal);
-        if (node->getBlendFunc() != BlendFunc::DISABLE) {
-            _program->setBlendFunc(node->getBlendFunc());
-        } else if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)){
-            _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
-        } else
-            _program->setBlendFunc(BlendFunc::DISABLE);
-        
-        _program->drawRectangle();
-    }
-}
-
-void PixelFrameNV12Drawer::drawFrameDirect(const GraphicCore::Scene* scene, const GraphicCore::Rect & region, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode) {
-    if (_program && _program->use()) {
-        GLfloat posArray[] = {
-            region.getMinX(), region.getMinY(), 0,
-            region.getMaxX(), region.getMinY(), 0,
-            region.getMinX(), region.getMaxY(), 0,
-            region.getMaxX(), region.getMaxY(), 0
-        };
-        
-        _program->setVertexAttribValue("a_texCoord", VertexAttrib::TEXCOORD, Drawable2D::RECTANGLE_TEX_COORDS, GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS));
-        _program->setVertexAttribValue("a_position", VertexAttrib::VERTEX3 ,posArray, GET_ARRAY_COUNT(posArray));
-        
-        if(_lumaTexture) {
-            Uniform::Value texture_y;
-            texture_y._texture = CVOpenGLESTextureGetName(_lumaTexture);
-            texture_y._textureTarget = CVOpenGLESTextureGetTarget(_lumaTexture);
-            _program->setUniformValue("SamplerY", Uniform::TEXTURE, texture_y);
-        }
-        if (_chromaTexture) {
-            Uniform::Value texture_uv;
-            texture_uv._texture = CVOpenGLESTextureGetName(_chromaTexture);
-            texture_uv._textureTarget = CVOpenGLESTextureGetTarget(_chromaTexture);
-            _program->setUniformValue("SamplerUV", Uniform::TEXTURE, texture_uv);
-        }
-        
-        GraphicCore::Mat4 mvpMatrix = scene->getMatrix(MATRIX_STACK_PROJECTION);
-//        GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
         GraphicCore::Mat4 texMatrix;
         //TODO: check crop
         if (! crop.size.equals(GraphicCore::Size::ZERO)) {
@@ -417,7 +361,7 @@ void PixelFrameNV12Drawer::drawFrameDirect(const GraphicCore::Scene* scene, cons
             texMatrix.multiply(crop_arr);
         }
         _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m, 16);
-        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, mvpMatrix.m, 16);
+        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, (float*)mvpMatrix.m, 16);
         _program->setUniformValue("colorConversionMatrix", Uniform::MATRIX3, _colorConversionMatrix, 9);
         
         Uniform::Value colorVal;
@@ -427,7 +371,9 @@ void PixelFrameNV12Drawer::drawFrameDirect(const GraphicCore::Scene* scene, cons
             color.b,
             color.a};
         _program->setUniformValue("uColor", Uniform::FLOAT4, colorVal);
-        if (! FLOAT_ISEQUAL(color.a, 1.0f)){
+        if (blend != BlendFunc::DISABLE) {
+            _program->setBlendFunc(blend);
+        } else if (! FLOAT_ISEQUAL(color.a, 1.0f)){
             _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
         } else
             _program->setBlendFunc(BlendFunc::DISABLE);
@@ -557,10 +503,11 @@ void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const Grap
     }
 }
 
-void PixelFrameBGRADrawer::drawFrameDirect(const GraphicCore::Scene* scene, const GraphicCore::Rect & region, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode)
+void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode)
 {
     if (_textureDrawer) {
-        _textureDrawer->drawDirect(&_duplicateTexture, scene, region, crop, color, flipMode);
+        _textureDrawer->draw(&_duplicateTexture, mvpMatrix, region, positionZ, crop, color, blend, flipMode);
     }
 }
 

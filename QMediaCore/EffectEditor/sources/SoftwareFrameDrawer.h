@@ -23,11 +23,12 @@ public:
 
     bool setFrame(const VideoFrame &videoFrame) override;
     virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) override ;
-    virtual void drawFrameDirect(const GraphicCore::Scene* /*scene*/, const GraphicCore::Rect & /*region*/, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode) override ;
+    virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+                           const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode = GraphicCore::Drawable2D::NONE) override ;
     virtual void release() override;
 
 protected:
-
+    VideoRotation _rotation;
     std::shared_ptr<ShaderProgram> _program;
     unsigned int _textureY, _textureU, _textureV;
     int _texWidth, _texHeight;
@@ -40,7 +41,8 @@ public:
 
     virtual bool setFrame(const VideoFrame& videoFrame) override;
     virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) override;
-    virtual void drawFrameDirect(const GraphicCore::Scene* /*scene*/, const GraphicCore::Rect & /*region*/, const GraphicCore::Rect crop, GraphicCore::Color4F color, GraphicCore::Drawable2D::FlipMode flipMode) override;
+    virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+                           const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode = GraphicCore::Drawable2D::NONE) override;
     const GraphicCore::Texture2D* getOutputTexture() override { return &_duplicateTexture; }
     virtual void release() override ;
 private:
