@@ -17,13 +17,6 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 //
-// Last changed  : $Date: 2012-06-13 22:29:53 +0300 (Wed, 13 Jun 2012) $
-// File revision : $Revision: 4 $
-//
-// $Id: FIFOSamplePipe.h 143 2012-06-13 19:29:53Z oparviai $
-//
-////////////////////////////////////////////////////////////////////////////////
-//
 // License :
 //
 //  SoundTouch audio processing library
@@ -58,6 +51,18 @@ namespace soundtouch
 /// Abstract base class for FIFO (first-in-first-out) sample processing classes.
 class FIFOSamplePipe
 {
+protected:
+
+    bool verifyNumberOfChannels(int nChannels) const
+    {
+        if ((nChannels > 0) && (nChannels <= SOUNDTOUCH_MAX_CHANNELS))
+        {
+            return true;
+        }
+        ST_THROW_RT_ERROR("Error: Illegal number of channels");
+        return false;
+    }
+
 public:
     // virtual default destructor
     virtual ~FIFOSamplePipe() {}
@@ -98,12 +103,6 @@ public:
                                 uint maxSamples                 ///< How many samples to receive at max.
                                 ) = 0;
 
-
-    // return remained samples
-    virtual bool receiveFixedSamples(SAMPLETYPE *output, ///< Buffer where to copy output samples.
-                                     uint fixSamples                 ///< How many samples to receive at max.
-    )=0;
-
     /// Adjusts book-keeping so that given number of samples are removed from beginning of the 
     /// sample buffer without copying them anywhere. 
     ///
@@ -128,7 +127,6 @@ public:
 };
 
 
-
 /// Base-class for sound processing routines working in FIFO principle. With this base 
 /// class it's easy to implement sound processing stages that can be chained together,
 /// so that samples that are fed into beginning of the pipe automatically go through 
@@ -151,14 +149,12 @@ protected:
         output = pOutput;
     }
 
-
     /// Constructor. Doesn't define output pipe; it has to be set be 
     /// 'setOutPipe' function.
     FIFOProcessor()
     {
         output = NULL;
     }
-
 
     /// Constructor. Configures output pipe.
     FIFOProcessor(FIFOSamplePipe *pOutput   ///< Output pipe.
@@ -167,12 +163,10 @@ protected:
         output = pOutput;
     }
 
-
     /// Destructor.
     virtual ~FIFOProcessor()
     {
     }
-
 
     /// Returns a pointer to the beginning of the output samples. 
     /// This function is provided for accessing the output samples directly. 
@@ -200,21 +194,6 @@ public:
         return output->receiveSamples(outBuffer, maxSamples);
     }
 
-
-    /// Output samples from beginning of the sample buffer. Copies requested samples to
-    /// output buffer and removes them from the sample buffer. If there are less than
-    /// 'fixedSamples' samples in the buffer, returns false.
-    ///
-    /// \return true if processed samples more than fixedSamples,else false
-    virtual bool
-    receiveFixedSamples(SAMPLETYPE *outBuffer, ///< Buffer where to copy output samples.
-                        uint fixedSamples                    ///< How many samples to receive at max.
-    ) {
-        return output->receiveFixedSamples(outBuffer, fixedSamples);
-    }
-
-
-
     /// Adjusts book-keeping so that given number of samples are removed from beginning of the 
     /// sample buffer without copying them anywhere. 
     ///
@@ -226,13 +205,11 @@ public:
         return output->receiveSamples(maxSamples);
     }
 
-
     /// Returns number of samples currently available.
     virtual uint numSamples() const
     {
         return output->numSamples();
     }
-
 
     /// Returns nonzero if there aren't any samples available for outputting.
     virtual int isEmpty() const
@@ -246,7 +223,6 @@ public:
     {
         return output->adjustAmountOfSamples(numSamples);
     }
-
 };
 
 }
