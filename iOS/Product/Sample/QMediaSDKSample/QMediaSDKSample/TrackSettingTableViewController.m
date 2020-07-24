@@ -13,6 +13,7 @@
 @property (weak, nonatomic) IBOutlet UILabel *titleLB;
 @property (weak, nonatomic) IBOutlet UITableViewCell *trackInfoCell;
 @property (weak, nonatomic) IBOutlet UITableViewCell *renderCell;
+@property (weak, nonatomic) IBOutlet UITableViewCell *audioCell;
 @property (weak, nonatomic) IBOutlet UILabel *mediaDurationLB;
 @property (weak, nonatomic) IBOutlet UITextField *displayStartTF;
 @property (weak, nonatomic) IBOutlet UITextField *displayEndTF;
@@ -37,6 +38,13 @@
 @property (weak, nonatomic) IBOutlet UISwitch *blendSW;
 @property (weak, nonatomic) IBOutlet UIPickerView *srcPK;
 @property (weak, nonatomic) IBOutlet UIPickerView *dstPK;
+
+@property (weak, nonatomic) IBOutlet UISlider *volumSlider;
+@property (weak, nonatomic) IBOutlet UISlider *pitchSlider;
+@property (weak, nonatomic) IBOutlet UILabel *volumTF;
+@property (weak, nonatomic) IBOutlet UILabel *pitchTF;
+
+
 @property (weak, nonatomic) IBOutlet UIButton *deleteBTN;
 @end
 
@@ -100,6 +108,17 @@
     _dstPK.delegate = self;
     [_dstPK selectRow:0 inComponent:0 animated:FALSE];
     [_blendSW setOn:FALSE];
+    
+    _volumSlider.maximumValue = 2.0f;
+    _volumSlider.minimumValue = 0;
+    [_volumSlider addTarget:self action:@selector(sliderProgressChange:) forControlEvents:UIControlEventValueChanged];
+    [_volumSlider addTarget:self action:@selector(sliderProgressUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    
+    _pitchSlider.maximumValue = 4.0f;
+    _pitchSlider.minimumValue = 0.25f;
+    [_pitchSlider addTarget:self action:@selector(sliderProgressChange:) forControlEvents:UIControlEventValueChanged];
+    [_pitchSlider addTarget:self action:@selector(sliderProgressUpInside:) forControlEvents:UIControlEventTouchUpInside];
+    
     _blendNameArray = [NSArray arrayWithObjects:@"ZERO", @"ONE",@"SRC_COLOR",@"ONE_MINUS_SRC_COLOR",@"SRC_ALPHA",@"ONE_MINUS_SRC_ALPHA",@"DST_ALPHA",@"ONE_MINUS_DST_ALPHA", @"DST_COLOR",@"ONE_MINUS_DST_COLOR",nil];
     
     _blendValueArray = [NSArray arrayWithObjects:[NSNumber numberWithUnsignedInt:Blend_ZERO],
@@ -187,6 +206,8 @@
         _speedTF.text = [NSString stringWithFormat:@"%0.1fx", _speedSlider.value];
     }else if([sender isEqual:_alphaSlider]) {
         _alphaTF.text = [NSString stringWithFormat:@"%0.1f", _alphaSlider.value];
+    }else if([sender isEqual:_pitchSlider]) {
+        _pitchTF.text = [NSString stringWithFormat:@"%0.2f", _pitchSlider.value];
     }
 }
 
@@ -209,6 +230,12 @@
         
         graphicNode.alpha = [_alphaTF.text floatValue];
     }
+    else if([sender isEqual:_pitchSlider]) {
+        _pitchTF.text = [NSString stringWithFormat:@"%0.2f", _pitchSlider.value];
+        QMediaTrack* mediaTrack = (QMediaTrack*)_track;
+        mediaTrack.audio.pitch = [_pitchTF.text floatValue];
+        return;
+    }
     [[GlobalXMObject sharedInstance] updateDisplay];
 }
 
@@ -216,6 +243,7 @@
     NSInteger index = [GlobalXMObject sharedInstance].selectTrackIndex;
     if (index >= 0) {
         _trackInfoCell.hidden = false;
+        _audioCell.hidden = false;
         _deleteBTN.hidden = false;
         
         _track = [[GlobalXMObject sharedInstance].tracks objectAtIndex:index];
@@ -242,6 +270,7 @@
             
         }else if ([_track isKindOfClass:QGraphicNode.class]) {
             graphicNode = _track;
+            _audioCell.hidden = true;
             _speedSlider.enabled = false;
             _sourceStartTF.enabled = false;
             _sourceEndTF.enabled = false;
@@ -276,6 +305,7 @@
     }else {
         _trackInfoCell.hidden = true;
         _renderCell.hidden = true;
+        _audioCell.hidden = true;
         _deleteBTN.hidden = true;
         _titleLB.text = @"--";
     }

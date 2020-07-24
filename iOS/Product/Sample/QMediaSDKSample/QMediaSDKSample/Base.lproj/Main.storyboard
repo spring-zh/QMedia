@@ -1046,6 +1046,60 @@
                                         </tableViewCellContentView>
                                         <color key="backgroundColor" systemColor="opaqueSeparatorColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                     </tableViewCell>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" rowHeight="108" id="mbN-F6-N2K">
+                                        <rect key="frame" x="0.0" y="568" width="414" height="108"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="mbN-F6-N2K" id="gj4-8s-xCn">
+                                            <rect key="frame" x="0.0" y="0.0" width="414" height="108"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="音频" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Vbk-xu-ayU">
+                                                    <rect key="frame" x="186" y="11" width="35" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="音调" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="94Y-9d-wjn">
+                                                    <rect key="frame" x="20" y="72" width="35" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="ItH-PR-FnU">
+                                                    <rect key="frame" x="91" y="68" width="118" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </slider>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="1.0" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="msd-xD-6bK">
+                                                    <rect key="frame" x="227" y="71" width="43" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="音量" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="38s-Os-4Kv">
+                                                    <rect key="frame" x="20" y="38" width="35" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                                <slider opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="j7K-UD-kUc">
+                                                    <rect key="frame" x="91" y="34" width="118" height="30"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                </slider>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="100%" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="f5P-oo-ciA">
+                                                    <rect key="frame" x="227" y="37" width="43" height="21"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                                    <nil key="textColor"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <color key="backgroundColor" systemColor="opaqueSeparatorColor" red="0.77647058820000003" green="0.77647058820000003" blue="0.7843137255" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                    </tableViewCell>
                                 </cells>
                             </tableViewSection>
                         </sections>
@@ -1059,6 +1113,7 @@
                     <connections>
                         <outlet property="alphaSlider" destination="gvm-aq-fxS" id="WGz-Pv-sHQ"/>
                         <outlet property="alphaTF" destination="ggX-Of-Mvh" id="wSy-i4-NCo"/>
+                        <outlet property="audioCell" destination="mbN-F6-N2K" id="rzk-3z-Yh0"/>
                         <outlet property="audioInfoLB" destination="usS-sR-SxI" id="Q9V-dL-KIC"/>
                         <outlet property="blendSW" destination="D6V-Fh-lK4" id="IeQ-Cc-qBy"/>
                         <outlet property="contentSizeX" destination="IPw-VB-Ri8" id="P69-Mv-erW"/>
@@ -1068,6 +1123,8 @@
                         <outlet property="displayStartTF" destination="KxY-W9-G1T" id="BpT-Hw-Uut"/>
                         <outlet property="dstPK" destination="kyc-Jn-JlG" id="N33-P9-0kl"/>
                         <outlet property="mediaDurationLB" destination="3vR-wj-tu8" id="F53-UL-90A"/>
+                        <outlet property="pitchSlider" destination="ItH-PR-FnU" id="Q97-a7-s4b"/>
+                        <outlet property="pitchTF" destination="msd-xD-6bK" id="Idl-yB-NnM"/>
                         <outlet property="positionX" destination="kBs-wE-57O" id="N0x-v1-Ih1"/>
                         <outlet property="positionY" destination="yYh-HK-dIF" id="J6i-N5-BXo"/>
                         <outlet property="renderCell" destination="adY-Px-dR3" id="QCi-fJ-Ipe"/>
@@ -1082,6 +1139,8 @@
                         <outlet property="titleLB" destination="tgF-t7-DwA" id="Svy-gu-KLM"/>
                         <outlet property="trackInfoCell" destination="ykm-vw-ULA" id="O9B-1l-E74"/>
                         <outlet property="videoInfoLB" destination="poY-Vf-qSH" id="RR5-FP-UvT"/>
+                        <outlet property="volumSlider" destination="j7K-UD-kUc" id="kcf-Gx-hGG"/>
+                        <outlet property="volumTF" destination="f5P-oo-ciA" id="nnL-uJ-U27"/>
                     </connections>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Sz4-LD-Hia" userLabel="First Responder" customClass="UIResponder" sceneMemberID="firstResponder"/>

@@ -1,23 +1,28 @@
 package com.qmedia.qmediasdk.sample;
 
+import android.Manifest;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.content.res.AssetManager;
-import android.os.Environment;
-import android.support.v7.app.AppCompatActivity;
+import android.os.Build;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
+import android.support.annotation.RequiresApi;
+import android.support.v4.content.ContextCompat;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+
+import com.lcw.library.imagepicker.ImagePicker;
 
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.List;
-
-import com.lcw.library.imagepicker.ImagePicker;
-import com.qmedia.qmediasdk.sample.R;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -26,6 +31,12 @@ public class MainActivity extends AppCompatActivity {
 	private final int REQUEST_SELECT_IMAGESCODE = 222;
 
 	public static Context context;
+
+	String[] permissions = new String[]{
+			Manifest.permission.WRITE_EXTERNAL_STORAGE,
+			Manifest.permission.READ_EXTERNAL_STORAGE,
+	};
+	List<String> mPermissionList = new ArrayList<>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -80,6 +91,10 @@ public class MainActivity extends AppCompatActivity {
 
 			}
 		});
+
+		if (android.os.Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+			askpermisson();
+
 	}
 
 	@Override
@@ -133,5 +148,33 @@ public class MainActivity extends AppCompatActivity {
 		//XMNative.module_destroy();
 	}
 
-	private int cnt = 0;
+	//请求图片存储本地的权限
+	@RequiresApi(api = Build.VERSION_CODES.M)
+	public void askpermisson(){
+		/**
+		 * 获取零时权限
+		 */
+		mPermissionList.clear();
+		for (int i = 0; i < permissions.length; i++) {
+			if (ContextCompat.checkSelfPermission(this, permissions[i]) != PackageManager.PERMISSION_GRANTED) {
+				mPermissionList.add(permissions[i]);
+			}
+		}
+		if (!mPermissionList.isEmpty()) {
+
+			String[] permissions = mPermissionList.toArray(new String[mPermissionList.size()]);//将List转为数组
+			requestPermissions( permissions, 9);
+		}
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+		if (requestCode == 9) {
+			if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+			} else {
+				Log.e(TAG, "onRequestPermissionsResult: 申请权限已拒绝");
+			}
+		}
+		super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+	}
 }
