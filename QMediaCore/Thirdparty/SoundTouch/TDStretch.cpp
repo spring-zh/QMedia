@@ -691,7 +691,7 @@ void TDStretch::processSamples()
                 #endif
             #endif
             skipFract -= skip;
-            assert(nominalSkip >= -skipFract);
+//            assert(nominalSkip >= -skipFract);
         }
 
         // ... then copy sequence samples from 'inputBuffer' to output:
