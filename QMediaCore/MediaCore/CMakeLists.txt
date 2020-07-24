@@ -1,8 +1,10 @@
 set(MEDIA_CORE_HEADER
+        MediaCore/audiocore/AudioClock.h
+        MediaCore/audiocore/AudioProcess.h
+        MediaCore/audiocore/ResamplerSpeex.h
+        MediaCore/audiocore/AudioEffect.h
 
-        MediaCore/core/AudioProcess.h
         MediaCore/core/DecodedFrameQueue.h
-        MediaCore/core/ResamplerSpeex.h
         MediaCore/core/SteadyClock.h
         MediaCore/core/AudioFrame.h
         MediaCore/core/EncodedPacket.h
@@ -23,14 +25,14 @@ set(MEDIA_CORE_HEADER
         MediaCore/output/AudioTarget.h
         MediaCore/output/VideoTarget.h
 
-        MediaCore/AudioClock.h
         MediaCore/QPlayer.h
     )
 
 set(MEDIA_CORE_SRC
+        MediaCore/audiocore/AudioProcess.cpp
+        MediaCore/audiocore/ResamplerSpeex.cpp
+        MediaCore/audiocore/AudioEffect.cpp
 
-        MediaCore/core/AudioProcess.cpp
-        MediaCore/core/ResamplerSpeex.cpp
         MediaCore/core/AudioFrame.cpp
         MediaCore/core/VideoFrame.cpp
         MediaCore/core/MediaStream.cpp

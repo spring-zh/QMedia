@@ -54,7 +54,7 @@ protected:
     EffectGroup _effect_group;
 };
 
-using RenderNodeRef = std::shared_ptr<RenderNode>;
+CLASSREF(RenderNode)
 
 GRAPHICCORE_END
 

@@ -61,3 +61,20 @@ NATIVE_FUNCTION(void , native_1setVolume)(JNIEnv *env, jobject thiz, jfloat jvol
     if (audioChannel_ptr)
         (*audioChannel_ptr)->setVolume(jvolume);
 }
+
+NATIVE_FUNCTION(jfloat , native_1getPitch)(JNIEnv *env, jobject thiz)
+{
+    MediaAudioChannelRef * audioChannel_ptr = reinterpret_cast<MediaAudioChannelRef *>(JniUtils::getObjectPtr(env, thiz));
+    float pitch = false;
+    if (audioChannel_ptr)
+        pitch = (*audioChannel_ptr)->getPitch();
+
+    return pitch;
+}
+
+NATIVE_FUNCTION(void , native_1setPitch)(JNIEnv *env, jobject thiz, jfloat jpitch)
+{
+    MediaAudioChannelRef * audioChannel_ptr = reinterpret_cast<MediaAudioChannelRef *>(JniUtils::getObjectPtr(env, thiz));
+    if (audioChannel_ptr)
+        (*audioChannel_ptr)->setPitch(jpitch);
+}

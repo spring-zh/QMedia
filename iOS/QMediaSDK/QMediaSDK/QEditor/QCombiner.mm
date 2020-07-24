@@ -270,7 +270,12 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
                     [mediaTrack generateVideoTrackNode:self uid:fromTrack.graphic.uid];
                     [mediaTrack.graphic copyFrom:fromTrack.graphic];
                 }
-                [mediaTrack generateAudioTrackNode:self uid:fromTrack.audio.uid];
+                if (fromTrack.audio) {
+                    [mediaTrack generateAudioTrackNode:self uid:fromTrack.audio.uid];
+                    mediaTrack.audio.pitch = fromTrack.audio.pitch;
+                    mediaTrack.audio.volume = fromTrack.audio.volume;
+                }
+                
             }
         }
     }

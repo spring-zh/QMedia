@@ -42,7 +42,7 @@ private:
     int _height;
 };
 
-using ImageNodeRef = std::shared_ptr<ImageNode>;
+CLASSREF(ImageNode)
 
 GRAPHICCORE_END
 

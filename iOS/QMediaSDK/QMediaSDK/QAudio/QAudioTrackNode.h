@@ -25,5 +25,6 @@
 
 @property (nonatomic) bool enable;
 @property (nonatomic) float volume;
+@property (nonatomic) float pitch;
 
 @end

@@ -35,6 +35,6 @@ private:
     std::unique_ptr<VideoFrameDrawer> _drawer;
 };
 
-using MediaGraphicChannelRef = std::shared_ptr<MediaGraphicChannel>;
+CLASSREF(MediaGraphicChannel)
 
 #endif /* EFFECTEDITOR_MEDIAGRAPHICCHANNEL_H */

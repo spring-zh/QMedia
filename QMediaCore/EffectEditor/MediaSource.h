@@ -78,6 +78,6 @@ protected:
     mutable int64_t _media_duration; //millisecond
 };
 
-using MediaSourceRef = std::shared_ptr<MediaSource>;
+CLASSREF(MediaSource)
 
 #endif /* EFFECTEDITOR_MEDIASOURCE_H */

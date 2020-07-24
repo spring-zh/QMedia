@@ -56,7 +56,7 @@ protected:
     std::shared_ptr<Texture2D> _depth_texture;
 };
 
-using LayerRef = std::shared_ptr<Layer>;
+CLASSREF(Layer)
 
 GRAPHICCORE_END
 

@@ -8,7 +8,7 @@
 
 #include "EffectCombiner.h"
 #include "Utils/Logger.h"
-#include "MediaCore/core/AudioProcess.h"
+#include "MediaCore/audiocore/AudioProcess.h"
 
 #define STATE_ISRUNING(state) (state == CombinerState::Prepared || state == CombinerState::Started || state == CombinerState::Paused )
 

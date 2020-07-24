@@ -12,7 +12,7 @@
 #include "Utils/ThreadTask.h"
 #include "GraphicCore/GcLayer.h"
 #include "MediaCore/core/SteadyClock.h"
-#include "MediaCore/AudioClock.h"
+#include "MediaCore/audiocore/AudioClock.h"
 #include "MediaCore/output/VideoTarget.h"
 #include "MediaCore/output/AudioTarget.h"
 #include "MediaSupervisor.h"

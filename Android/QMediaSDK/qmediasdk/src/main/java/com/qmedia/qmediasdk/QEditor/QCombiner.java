@@ -176,12 +176,20 @@ public class QCombiner extends QMediaFactory{
             }
 
             if (mediaTrack.prepare()) {
+                mediaTrack.setDisplayRange(fromTrack.getDisplayRange());
+                mediaTrack.setSourceRange(fromTrack.getSourceRange());
+                mediaTrack.setTimeScale(fromTrack.getTimeScale());
+
                 this.addMediaTrack(mediaTrack);
                 if (fromTrack.getGraphic() != null) {
                     mediaTrack.generateVideoTrackNode(this, fromTrack.getGraphic().getId());
                     mediaTrack.getGraphic().copyForm(fromTrack.getGraphic());
                 }
-                mediaTrack.generateAudioTrackNode(this);
+                if (fromTrack.getAudio() != null) {
+                    mediaTrack.generateAudioTrackNode(this);
+                    mediaTrack.getAudio().setPitch(fromTrack.getAudio().getPitch());
+                    mediaTrack.getAudio().setVolume(fromTrack.getAudio().getVolume());
+                }
             }
         }
 

@@ -63,6 +63,12 @@
 - (void)setVolume:(float)volume{
     _audioNode->setVolume(volume);
 }
+- (float)pitch {
+    return _audioNode->getPitch();
+}
+- (void)setPitch:(float)pitch {
+    _audioNode->setPitch(pitch);
+}
 
 #pragma mark private
 - (MediaAudioChannelRef)native {

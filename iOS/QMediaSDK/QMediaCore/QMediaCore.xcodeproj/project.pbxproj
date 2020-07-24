@@ -61,6 +61,7 @@
 		6F637ED823D0477A0004E053 /* Texture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637EC423D047790004E053 /* Texture2D.cpp */; };
 		6F637EE023D6AB8B0004E053 /* AudioProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637EDE23D6AB8B0004E053 /* AudioProcess.cpp */; };
 		6F637EE323D9BF1D0004E053 /* ResamplerSpeex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637EE223D9BF1D0004E053 /* ResamplerSpeex.cpp */; };
+		6F81B3BA24C827B500A8449B /* AudioEffect.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F81B3B924C827B500A8449B /* AudioEffect.cpp */; };
 		6F834F7A22363BF9006E32A5 /* EditorPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F834F7822363BF9006E32A5 /* EditorPlayer.cpp */; };
 		6FA69F95244D5DAA00BC3294 /* EffectCombiner.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FA69F94244D5DAA00BC3294 /* EffectCombiner.cpp */; };
 		6FBD028624595CA900372404 /* GcDuplicateNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FBD028424595CA900372404 /* GcDuplicateNode.cpp */; };
@@ -259,6 +260,8 @@
 		6F637EDF23D6AB8B0004E053 /* AudioProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioProcess.h; sourceTree = "<group>"; };
 		6F637EE123D9BF1C0004E053 /* ResamplerSpeex.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ResamplerSpeex.h; sourceTree = "<group>"; };
 		6F637EE223D9BF1D0004E053 /* ResamplerSpeex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ResamplerSpeex.cpp; sourceTree = "<group>"; };
+		6F81B3B824C827B500A8449B /* AudioEffect.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEffect.h; sourceTree = "<group>"; };
+		6F81B3B924C827B500A8449B /* AudioEffect.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioEffect.cpp; sourceTree = "<group>"; };
 		6F834F7822363BF9006E32A5 /* EditorPlayer.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = EditorPlayer.cpp; sourceTree = "<group>"; };
 		6F834F7922363BF9006E32A5 /* EditorPlayer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EditorPlayer.h; sourceTree = "<group>"; };
 		6F8F0C7A24444733000EB0A1 /* rw_lock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = rw_lock.h; sourceTree = "<group>"; };
@@ -565,13 +568,27 @@
 			path = shaders;
 			sourceTree = "<group>";
 		};
+		6F81B3B724C8265000A8449B /* audiocore */ = {
+			isa = PBXGroup;
+			children = (
+				6F637EE223D9BF1D0004E053 /* ResamplerSpeex.cpp */,
+				6F637EE123D9BF1C0004E053 /* ResamplerSpeex.h */,
+				6F637EDE23D6AB8B0004E053 /* AudioProcess.cpp */,
+				6F637EDF23D6AB8B0004E053 /* AudioProcess.h */,
+				6F81B3B924C827B500A8449B /* AudioEffect.cpp */,
+				6F81B3B824C827B500A8449B /* AudioEffect.h */,
+				6F372062246934B400356951 /* AudioClock.h */,
+			);
+			path = audiocore;
+			sourceTree = "<group>";
+		};
 		6FF0290B221BFEE40011E6CB /* MediaCore */ = {
 			isa = PBXGroup;
 			children = (
+				6F81B3B724C8265000A8449B /* audiocore */,
 				6FF0290C221BFEE40011E6CB /* core */,
 				6FF02917221BFEE40011E6CB /* decoder */,
 				6FF0291A221BFEE40011E6CB /* output */,
-				6F372062246934B400356951 /* AudioClock.h */,
 				6F4592292461ADE800FABEAF /* QPlayer.cpp */,
 				6F4592282461ADE800FABEAF /* QPlayer.h */,
 			);
@@ -590,10 +607,6 @@
 				6F224A6E24AEDDBF000244FF /* DecodedFrame.h */,
 				6F224A7324AEDDBF000244FF /* EncodedPacket.h */,
 				6F224A7224AEDDBF000244FF /* CodecSpecificInfo.h */,
-				6F637EE223D9BF1D0004E053 /* ResamplerSpeex.cpp */,
-				6F637EE123D9BF1C0004E053 /* ResamplerSpeex.h */,
-				6F637EDE23D6AB8B0004E053 /* AudioProcess.cpp */,
-				6F637EDF23D6AB8B0004E053 /* AudioProcess.h */,
 				6FF0290D221BFEE40011E6CB /* DecodedFrameQueue.h */,
 				6FF0290E221BFEE40011E6CB /* SteadyClock.h */,
 			);
@@ -733,6 +746,7 @@
 				6F637EC823D0477A0004E053 /* Mat4.cpp in Sources */,
 				6F187494248DD402009C4B94 /* GcImageNode.cpp in Sources */,
 				6F511878240F9BD50013BC9E /* InterpolateLinear.cpp in Sources */,
+				6F81B3BA24C827B500A8449B /* AudioEffect.cpp in Sources */,
 				6F637ED623D0477A0004E053 /* ccShaders.cpp in Sources */,
 				6F637ED123D0477A0004E053 /* GcScene.cpp in Sources */,
 				6F834F7A22363BF9006E32A5 /* EditorPlayer.cpp in Sources */,

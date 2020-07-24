@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <float.h>
+#include <math.h>
 #include <algorithm>
 #include <string>
 #include <sstream>
@@ -118,3 +120,5 @@ std::string ValueToString(const T &value){
 #define GET_ARRAY_COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
 
 #define FLOAT_ISEQUAL(val, eqVal) (fabs(val - eqVal) < FLT_EPSILON)
+
+#define CLASSREF(c) using c##Ref = std::shared_ptr<c> ;

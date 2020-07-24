@@ -11,8 +11,10 @@
 
 #include <vector>
 #include <memory>
+#include "Utils/Comm.h"
 #include "MediaCore/output/AudioTarget.h"
-#include "MediaCore/core/ResamplerSpeex.h"
+#include "MediaCore/audiocore/ResamplerSpeex.h"
+#include "MediaCore/audiocore/AudioEffect.h"
 
 class MediaTrack;
 
@@ -28,9 +30,13 @@ public:
     
     bool isEnable() const { return _bEnable; }
     void setEnable(bool enable) { _bEnable = enable; }
+    
+    float getPitch() const { return _fPitch; }
+    void setPitch(float fPitch) { _fPitch = fPitch; }
 private:
     
-    ResamplerSpeex _resampler;
+    std::shared_ptr<ResamplerSpeex> _resampler;
+    std::shared_ptr<AudioEffect> _audioEffect;
     
     AudioSampleCache _sampleCache;
     std::vector<uint8_t> _cacheBuffer;
@@ -40,8 +46,9 @@ private:
     
     float _volume;
     bool _bEnable;
+    float _fPitch;
 };
 
-using MediaAudioChannelRef = std::shared_ptr<MediaAudioChannel>;
+CLASSREF(MediaAudioChannel)
 
 #endif /* EFFECTEDITOR_MEDIAAUDIOCHANNEL_H */

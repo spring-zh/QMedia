@@ -10,8 +10,8 @@
 #define MEDIACORE_AUDIOCLOCK_H
 
 #include "Utils/Comm.h"
-#include "output/AudioTarget.h"
-#include "core/AudioProcess.h"
+#include "AudioProcess.h"
+#include "MediaCore/output/AudioTarget.h"
 
 inline static int getBytesFromPcmFormat(RawAudioFormat audioFormat) {
     switch (audioFormat) {
