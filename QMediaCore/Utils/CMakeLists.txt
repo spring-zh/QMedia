@@ -7,9 +7,12 @@ set(UTILS_HEADER
         Utils/rw_lock.h
         Utils/spin_lock.h
         Utils/ThreadTask.h
+
+        Utils/bitstream.h
     )
 
 set(UTILS_SRC
 
         Utils/Logger.cpp
+        Utils/bitstream.c
     )

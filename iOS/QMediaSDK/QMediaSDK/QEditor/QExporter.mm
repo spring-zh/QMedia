@@ -110,7 +110,7 @@ private:
 }
 
 - (void)dealloc {
-    NSLog(@"%@ dealloc ", self);
+    NSLog(@"QExporter dealloc ");
 }
 
 #pragma mark - Observer Logic

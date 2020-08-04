@@ -115,6 +115,7 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
 
 - (void)dealloc
 {
+    NSLog(@"%@ dealloc ", self);
     _videoCbQueue = nil;
     _audioCbQueue = nil;
     _glContextQueue = nil;
