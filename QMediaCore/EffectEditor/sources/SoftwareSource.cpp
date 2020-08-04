@@ -151,9 +151,9 @@ bool SoftwareSource::start(int64_t startMSec, int64_t endMSec) {
 
 void SoftwareSource::stop() {
     if (_isStarted) {
-        _isStarted = false;
         {
             std::unique_lock<std::mutex> lock(_mutex);
+            _isStarted = false;
             _condition.notify_one();
         }
 
