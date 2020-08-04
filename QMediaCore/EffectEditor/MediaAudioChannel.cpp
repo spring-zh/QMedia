@@ -56,8 +56,9 @@ const AudioSampleCache* MediaAudioChannel::getAudioSample(int64_t mSec) {
                     }
                     _audioEffect->setTempo(1.0f / _mediaTrack->getTimeScale());
                     _audioEffect->setPitch(_fPitch);
-                }else
+                }else {
                     _audioEffect.reset();
+                }
                 
                 if ((audioframe.channels() != target_channels) ||
                     (audioframe.samplerate() != target_samplerate) ||
@@ -94,8 +95,9 @@ const AudioSampleCache* MediaAudioChannel::getAudioSample(int64_t mSec) {
                 //fill empty buffer
                 cacheLen = 0;
                 if (_audioEffect) {
-                    uint8_t empty_buffer[2048] = {0};
-                    cacheLen = _audioEffect->process(empty_buffer, sizeof(empty_buffer), _cacheBuffer);
+//                    uint8_t empty_buffer[2048] = {0};
+//                    cacheLen = _audioEffect->process(empty_buffer, sizeof(empty_buffer), _cacheBuffer);
+                    cacheLen = _audioEffect->process(NULL, 0, _cacheBuffer);
                 }
                 int fillLen = 2048 - cacheLen;
                 if (fillLen > 0) {
@@ -107,42 +109,7 @@ const AudioSampleCache* MediaAudioChannel::getAudioSample(int64_t mSec) {
             _sampleCache.setAudioBuf(_cacheBuffer.data());
             _sampleCache.setAudioLength(cacheLen);
         }
-#if 0
-        if (!isEnd) {
-            if (nativebuffer) { //has audio buffer
-                
-                int out_samplerate = target_samplerate;
-                if(! FLOAT_ISEQUAL(_mediaTrack->getTimeScale() , 1.0f) && _mediaTrack->getTimeScale() > 0.f) {
-                    out_samplerate = target_samplerate * _mediaTrack->getTimeScale();
-                }
-                
-                if ((audioframe.channels() != target_channels) ||
-                    (audioframe.samplerate() != out_samplerate) ||
-                    (audioframe.get_audio_format() != target_format)) {
-                    //TODO: need resample
-                    _resampler.init(audioToResamplerFormat(nativebuffer->SampleFormat()),
-                                           nativebuffer->Channels(),
-                                           nativebuffer->SampleRate(),
-                    audioToResamplerFormat(target_format),
-                                           target_channels,
-                                           out_samplerate);
-                    
-                    cacheLen = _resampler.process((void*)nativebuffer->Data(), nativebuffer->Size(), _cacheBuffer);
-                    
-                }else {
-                    cacheLen = nativebuffer->Size();
-                    _cacheBuffer.assign(nativebuffer->Data(), nativebuffer->Data() + cacheLen);
-                }
-            }else {
-                //fill empty buffer
-                cacheLen = MIN((int)_cacheBuffer.size(), 2048);
-                std::memset(_cacheBuffer.data(), 0, cacheLen);
-            }
-            _sampleCache.setAudioBufOffset(0);
-            _sampleCache.setAudioBuf(_cacheBuffer.data());
-            _sampleCache.setAudioLength(cacheLen);
-        }
-#endif
+
         _sampleCache.setReadEnd(isEnd);
     }
     return &_sampleCache;
