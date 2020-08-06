@@ -12,9 +12,14 @@
 #include <vector>
 #include "Utils/Comm.h"
 
-namespace soundtouch{
-    class SoundTouch;
+#ifdef __cplusplus
+extern "C" {
+#endif
+struct sonicStreamStruct;
+typedef struct sonicStreamStruct* sonicStream;
+#ifdef __cplusplus
 }
+#endif
 
 class AudioEffect
 {
@@ -27,6 +32,7 @@ public:
     void setTempo(float fTempo);
     void setRate(float fRate);
     void setPitch(float fPitch);
+    void setVolume(float fVolume);
     void flush();
     void clear();
 
@@ -44,9 +50,10 @@ private:
     float _fTempo;
     float _fRate;
     float _fPitch;
+    float _fVolume;
 
     int _channels;
     int _samplerate;
 
-    soundtouch::SoundTouch *_soundProcess;
+    sonicStream _sonic;
 };

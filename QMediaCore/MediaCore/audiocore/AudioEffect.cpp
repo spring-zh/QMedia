@@ -9,75 +9,88 @@
 #include "AudioEffect.h"
 #include "Utils/Logger.h"
 
-#include "SoundTouch/SoundTouch.h"
+#ifdef __cplusplus
+extern "C" {
+#endif
+#include "sonic.h"
+#ifdef __cplusplus
+}
+#endif
 
 AudioEffect::AudioEffect():_channels(2),
-_samplerate(44100) {
+_samplerate(44100) , _sonic(NULL){
     _fTempo = 1.0f;
     _fRate = 1.0f;
     _fPitch = 1.0f;
+    _fVolume = 1.0f;
 
-    _soundProcess = new soundtouch::SoundTouch();
 }
 
 AudioEffect::~AudioEffect() {
-    _soundProcess->clear();
-    delete _soundProcess;
+    if (_sonic) {
+        sonicDestroyStream(_sonic);
+        _sonic = NULL;
+    }
 }
 
 bool AudioEffect::init(int samplerate,int channels) {
     _samplerate = samplerate;
     _channels = channels;
-    _soundProcess->clear();
-    
-    _soundProcess->setChannels(channels);
-    _soundProcess->setSampleRate(samplerate);
-    if (/*speech*/true)
-    {
-        // use settings for speech processing
-        _soundProcess->setSetting(SETTING_SEQUENCE_MS, 10);
-        _soundProcess->setSetting(SETTING_SEEKWINDOW_MS, 10);
-        _soundProcess->setSetting(SETTING_OVERLAP_MS, 10);
-        _soundProcess->setSetting(SETTING_USE_QUICKSEEK, 1);
+    if (_sonic == NULL) {
+        _sonic = sonicCreateStream(samplerate, channels);
+    }else {
+        sonicSetSampleRate(_sonic, samplerate);
+        sonicSetNumChannels(_sonic, channels);
     }
-    return true;
+    
+//    sonicSetQuality(_sonic, 0.5);
+    return _sonic != NULL;
 }
 
 void AudioEffect::setTempo(float fTempo) {
     if (! FLOAT_ISEQUAL(fTempo, _fTempo)){
-        _soundProcess->setTempo(fTempo);
+        sonicSetSpeed(_sonic, fTempo);
         _fTempo = fTempo;
     }
 }
 void AudioEffect::setRate(float fRate) {
     if (! FLOAT_ISEQUAL(fRate, _fRate)){
-        _soundProcess->setRate(fRate);
+        sonicSetRate(_sonic, fRate);
         _fRate = fRate;
     }
 }
 void AudioEffect::setPitch(float fPitch) {
     if (! FLOAT_ISEQUAL(fPitch, _fPitch)){
-        _soundProcess->setPitch(fPitch);
+        sonicSetPitch(_sonic, fPitch);
         _fPitch = fPitch;
+    }
+}
+void AudioEffect::setVolume(float fVolume) {
+    if (! FLOAT_ISEQUAL(fVolume, _fVolume)){
+        sonicSetVolume(_sonic, fVolume);
+        _fVolume = fVolume;
     }
 }
 
 void AudioEffect::flush() {
-     _soundProcess->flush();
+    sonicFlushStream(_sonic);
 }
 void AudioEffect::clear() {
-    _soundProcess->clear();
+    if (_sonic) {
+        sonicDestroyStream(_sonic);
+        _sonic = sonicCreateStream(_samplerate, _channels);
+    }
 }
 
 int AudioEffect::process(void* indata, int inSamples,void *outdata,int maxOutSamples) {
     if(indata && inSamples > 0)
-        _soundProcess->putSamples((soundtouch::SAMPLETYPE*)indata,inSamples);
+        sonicWriteShortToStream(_sonic, static_cast<short *>(indata), inSamples);
     else
-        _soundProcess->flush();
+        sonicFlushStream(_sonic);
 
     int totalSamplse = 0;
     do{
-        int samplse = _soundProcess->receiveSamples((soundtouch::SAMPLETYPE*)outdata + totalSamplse * _channels, maxOutSamples - totalSamplse);
+        int samplse = sonicReadShortFromStream(_sonic, (short*)outdata + totalSamplse * _channels, maxOutSamples - totalSamplse);
         if (samplse > 0)
             totalSamplse += samplse;
         else
@@ -86,25 +99,22 @@ int AudioEffect::process(void* indata, int inSamples,void *outdata,int maxOutSam
     return totalSamplse;
 }
 
-int AudioEffect::process(void*indata, int inBytes, std::vector<uint8_t>& outPut) {
+int AudioEffect::process(void* indata, int inBytes, std::vector<uint8_t>& outPut) {
     const int sample_addition = 512;
-    const int bytesPreSample = _channels * sizeof(soundtouch::SAMPLETYPE);
+    const int bytesPreSample = _channels * sizeof(short);
     if(indata && inBytes > 0) {
-        _soundProcess->putSamples((soundtouch::SAMPLETYPE*)indata, inBytes/ bytesPreSample);
+        sonicWriteShortToStream(_sonic, static_cast<short *>(indata), inBytes/ bytesPreSample);
     }
-    else if(_soundProcess->numUnprocessedSamples() > 0) {
-        //FIXME: SoundTouch flush will trigger assert(nominalSkip >= -skipFract) in TDStretch.cpp line 694
-        _soundProcess->flush();
+    else /*if(sonicSamplesAvailable(_sonic) > 0)*/ {
+        sonicFlushStream(_sonic);
     }
-    else
-        return 0;
     
     int maxOutSamples = sample_addition;
     outPut.resize(maxOutSamples * bytesPreSample);
     
     int totalSamplse = 0;
     do{
-        int samplse = _soundProcess->receiveSamples((soundtouch::SAMPLETYPE*)outPut.data() + totalSamplse * _channels, maxOutSamples - totalSamplse);
+        int samplse = sonicReadShortFromStream(_sonic, (short*)outPut.data() + totalSamplse * _channels, maxOutSamples - totalSamplse);
         if (samplse > 0)
             totalSamplse += samplse;
         else

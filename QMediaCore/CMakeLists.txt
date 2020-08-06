@@ -30,7 +30,7 @@ set(QMEDIA_SRC
 
 list(APPEND QMEDIA_SRC ${QMEDIA_HEADER})
 
-add_library(qmediacore ${QMEDIA_SRC} ${THIRDPARTY_SRC})
+add_library(qmediacore ${QMEDIA_SRC})
 
 if(ANDROID)
 # CMake from android SDK set ANDROID_NDK instead of CMAKE_ANDROID_NDK
@@ -75,7 +75,7 @@ if(ENABLE_FFMPEG)
     set_target_properties( swresample   PROPERTIES IMPORTED_LOCATION  ${FFMPEG_LIB_PATH}/libswresample.a)
     set_target_properties( avutil       PROPERTIES IMPORTED_LOCATION  ${FFMPEG_LIB_PATH}/libavutil.a)
 
-    target_link_libraries(qmediacore SoundTouch mp4 thirdparty avformat avcodec avutil swscale swresample z )
+    target_link_libraries(qmediacore thirdparty avformat avcodec avutil swscale swresample z )
 endif()
 
 target_include_directories(qmediacore
