@@ -6,167 +6,139 @@ extern "C" {
 #endif
 
 #include <stdint.h>
-
-#define H264_MAX_PICTURE_COUNT 36
-#define H264_MAX_THREADS       32
+#include <stddef.h>
 
 #define MAX_SPS_COUNT          32
 #define MAX_PPS_COUNT         256
-
-#define MAX_MMCO_COUNT         66
-
-#define MAX_DELAYED_PIC_COUNT  16
-
-#define MAX_MBPAIR_SIZE (256*1024) // a tighter bound could be calculated if someone cares about a few bytes
-
-#define MB_TYPE_REF0       MB_TYPE_ACPRED // dirty but it fits in 16 bit
-#define MB_TYPE_8x8DCT     0x01000000
-#define IS_REF0(a)         ((a) & MB_TYPE_REF0)
-#define IS_8x8DCT(a)       ((a) & MB_TYPE_8x8DCT)
+#define MAX_LOG2_MAX_FRAME_NUM    (12 + 4)
 
 #define QP_MAX_NUM (51 + 6*6)           // The maximum supported qp
 
-/* NAL unit types */
+/*
+* Table 7-1 – NAL unit type codes, syntax element categories, and NAL unit type classes in
+* T-REC-H.264-201704
+*/
 enum {
-	NAL_SLICE = 1,
-	NAL_DPA = 2,
-	NAL_DPB = 3,
-	NAL_DPC = 4,
-	NAL_IDR_SLICE = 5,
-	NAL_SEI = 6,
-	NAL_SPS = 7,
-	NAL_PPS = 8,
-	NAL_AUD = 9,
-	NAL_END_SEQUENCE = 10,
-	NAL_END_STREAM = 11,
-	NAL_FILLER_DATA = 12,
-	NAL_SPS_EXT = 13,
-	NAL_AUXILIARY_SLICE = 19,
-	NAL_FF_IGNORE = 0xff0f001,
+	H264_NAL_UNSPECIFIED     = 0,
+	H264_NAL_SLICE           = 1,
+	H264_NAL_DPA             = 2,
+	H264_NAL_DPB             = 3,
+	H264_NAL_DPC             = 4,
+	H264_NAL_IDR_SLICE       = 5,
+	H264_NAL_SEI             = 6,
+	H264_NAL_SPS             = 7,
+	H264_NAL_PPS             = 8,
+	H264_NAL_AUD             = 9,
+	H264_NAL_END_SEQUENCE    = 10,
+	H264_NAL_END_STREAM      = 11,
+	H264_NAL_FILLER_DATA     = 12,
+	H264_NAL_SPS_EXT         = 13,
+	H264_NAL_PREFIX          = 14,
+	H264_NAL_SUB_SPS         = 15,
+	H264_NAL_DPS             = 16,
+	H264_NAL_RESERVED17      = 17,
+	H264_NAL_RESERVED18      = 18,
+	H264_NAL_AUXILIARY_SLICE = 19,
+	H264_NAL_EXTEN_SLICE     = 20,
+	H264_NAL_DEPTH_EXTEN_SLICE = 21,
+	H264_NAL_RESERVED22      = 22,
+	H264_NAL_RESERVED23      = 23,
+	H264_NAL_UNSPECIFIED24   = 24,
+	H264_NAL_UNSPECIFIED25   = 25,
+	H264_NAL_UNSPECIFIED26   = 26,
+	H264_NAL_UNSPECIFIED27   = 27,
+	H264_NAL_UNSPECIFIED28   = 28,
+	H264_NAL_UNSPECIFIED29   = 29,
+	H264_NAL_UNSPECIFIED30   = 30,
+	H264_NAL_UNSPECIFIED31   = 31,
 };
 
 /**
-* SEI message types
-*/
-typedef enum {
-	SEI_TYPE_BUFFERING_PERIOD = 0,   ///< buffering period (H.264, D.1.1)
-	SEI_TYPE_PIC_TIMING = 1,   ///< picture timing
-	SEI_TYPE_USER_DATA_ITU_T_T35 = 4,   ///< user data registered by ITU-T Recommendation T.35
-	SEI_TYPE_USER_DATA_UNREGISTERED = 5,   ///< unregistered user data
-	SEI_TYPE_RECOVERY_POINT = 6,   ///< recovery point (frame # to decoder sync)
-	SEI_TYPE_FRAME_PACKING = 45,  ///< frame packing arrangement
-	SEI_TYPE_DISPLAY_ORIENTATION = 47,  ///< display orientation
-} SEI_Type;
+  * Chromaticity coordinates of the source primaries.
+  * These values match the ones defined by ISO/IEC 23001-8_2013 § 7.1.
+  */
+enum H264ColorPrimaries {
+	H264COL_PRI_RESERVED0   = 0,
+	H264COL_PRI_BT709       = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 / SMPTE RP177 Annex B
+	H264COL_PRI_UNSPECIFIED = 2,
+	H264COL_PRI_RESERVED    = 3,
+	H264COL_PRI_BT470M      = 4,  ///< also FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
 
-/**
-* pic_struct in picture timing SEI message
-*/
-typedef enum {
-	SEI_PIC_STRUCT_FRAME = 0, ///<  0: %frame
-	SEI_PIC_STRUCT_TOP_FIELD = 1, ///<  1: top field
-	SEI_PIC_STRUCT_BOTTOM_FIELD = 2, ///<  2: bottom field
-	SEI_PIC_STRUCT_TOP_BOTTOM = 3, ///<  3: top field, bottom field, in that order
-	SEI_PIC_STRUCT_BOTTOM_TOP = 4, ///<  4: bottom field, top field, in that order
-	SEI_PIC_STRUCT_TOP_BOTTOM_TOP = 5, ///<  5: top field, bottom field, top field repeated, in that order
-	SEI_PIC_STRUCT_BOTTOM_TOP_BOTTOM = 6, ///<  6: bottom field, top field, bottom field repeated, in that order
-	SEI_PIC_STRUCT_FRAME_DOUBLING = 7, ///<  7: %frame doubling
-	SEI_PIC_STRUCT_FRAME_TRIPLING = 8  ///<  8: %frame tripling
-} SEI_PicStructType;
-
-/**
-* Chromaticity coordinates of the source primaries.
-*/
-enum ColorPrimaries {
-	COL_PRI_RESERVED0 = 0,
-	COL_PRI_BT709 = 1, ///< also ITU-R BT1361 / IEC 61966-2-4 / SMPTE RP177 Annex B
-	COL_PRI_UNSPECIFIED = 2,
-	COL_PRI_RESERVED = 3,
-	COL_PRI_BT470M = 4, ///< also FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
-
-	COL_PRI_BT470BG = 5, ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM
-	COL_PRI_SMPTE170M = 6, ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
-	COL_PRI_SMPTE240M = 7, ///< functionally identical to above
-	COL_PRI_FILM = 8, ///< colour filters using Illuminant C
-	COL_PRI_BT2020 = 9, ///< ITU-R BT2020
-	COL_PRI_NB,              ///< Not part of ABI
-};
-/**
-* Color Transfer Characteristic.
-*/
-enum ColorTransferCharacteristic {
-	COL_TRC_RESERVED0 = 0,
-	COL_TRC_BT709 = 1,  ///< also ITU-R BT1361
-	COL_TRC_UNSPECIFIED = 2,
-	COL_TRC_RESERVED = 3,
-	COL_TRC_GAMMA22 = 4,  ///< also ITU-R BT470M / ITU-R BT1700 625 PAL & SECAM
-	COL_TRC_GAMMA28 = 5,  ///< also ITU-R BT470BG
-	COL_TRC_SMPTE170M = 6,  ///< also ITU-R BT601-6 525 or 625 / ITU-R BT1358 525 or 625 / ITU-R BT1700 NTSC
-	COL_TRC_SMPTE240M = 7,
-	COL_TRC_LINEAR = 8,  ///< "Linear transfer characteristics"
-	COL_TRC_LOG = 9,  ///< "Logarithmic transfer characteristic (100:1 range)"
-	COL_TRC_LOG_SQRT = 10, ///< "Logarithmic transfer characteristic (100 * Sqrt(10) : 1 range)"
-	COL_TRC_IEC61966_2_4 = 11, ///< IEC 61966-2-4
-	COL_TRC_BT1361_ECG = 12, ///< ITU-R BT1361 Extended Colour Gamut
-	COL_TRC_IEC61966_2_1 = 13, ///< IEC 61966-2-1 (sRGB or sYCC)
-	COL_TRC_BT2020_10 = 14, ///< ITU-R BT2020 for 10 bit system
-	COL_TRC_BT2020_12 = 15, ///< ITU-R BT2020 for 12 bit system
-	COL_TRC_NB,                ///< Not part of ABI
-};
-/**
-* YUV colorspace type.
-*/
-enum ColorSpace {
-	COL_SPC_RGB = 0,  ///< order of coefficients is actually GBR, also IEC 61966-2-1 (sRGB)
-	COL_SPC_BT709 = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 xvYCC709 / SMPTE RP177 Annex B
-	COL_SPC_UNSPECIFIED = 2,
-	COL_SPC_RESERVED = 3,
-	COL_SPC_FCC = 4,  ///< FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
-	COL_SPC_BT470BG = 5,  ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM / IEC 61966-2-4 xvYCC601
-	COL_SPC_SMPTE170M = 6,  ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC / functionally identical to above
-	COL_SPC_SMPTE240M = 7,
-	COL_SPC_YCOCG = 8,  ///< Used by Dirac / VC-2 and H.264 FRext, see ITU-T SG16
-	COL_SPC_BT2020_NCL = 9,  ///< ITU-R BT2020 non-constant luminance system
-	COL_SPC_BT2020_CL = 10, ///< ITU-R BT2020 constant luminance system
-	COL_SPC_NB,               ///< Not part of ABI
-};
-
-enum PictureType {
-	PICTURE_TYPE_NONE = 0, ///< Undefined
-	PICTURE_TYPE_I,     ///< Intra
-	PICTURE_TYPE_P,     ///< Predicted
-	PICTURE_TYPE_B,     ///< Bi-dir predicted
-	PICTURE_TYPE_S,     ///< S(GMC)-VOP MPEG4
-	PICTURE_TYPE_SI,    ///< Switching Intra
-	PICTURE_TYPE_SP,    ///< Switching Predicted
-	PICTURE_TYPE_BI,    ///< BI type
+	H264COL_PRI_BT470BG     = 5,  ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM
+	H264COL_PRI_SMPTE170M   = 6,  ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
+	H264COL_PRI_SMPTE240M   = 7,  ///< functionally identical to above
+	H264COL_PRI_FILM        = 8,  ///< colour filters using Illuminant C
+	H264COL_PRI_BT2020      = 9,  ///< ITU-R BT2020
+	H264COL_PRI_SMPTE428    = 10, ///< SMPTE ST 428-1 (CIE 1931 XYZ)
+	H264COL_PRI_SMPTEST428_1 = H264COL_PRI_SMPTE428,
+	H264COL_PRI_SMPTE431    = 11, ///< SMPTE ST 431-2 (2011) / DCI P3
+	H264COL_PRI_SMPTE432    = 12, ///< SMPTE ST 432-1 (2010) / P3 D65 / Display P3
+	H264COL_PRI_JEDEC_P22   = 22, ///< JEDEC P22 phosphors
+	H264COL_PRI_NB                ///< Not part of ABI
 };
 
 /**
-* Sequence parameter set
-*/
+ * Color Transfer Characteristic.
+ * These values match the ones defined by ISO/IEC 23001-8_2013 § 7.2.
+ */
+enum H264ColorTransferCharacteristic {
+	H264COL_TRC_RESERVED0    = 0,
+	H264COL_TRC_BT709        = 1,  ///< also ITU-R BT1361
+	H264COL_TRC_UNSPECIFIED  = 2,
+	H264COL_TRC_RESERVED     = 3,
+	H264COL_TRC_GAMMA22      = 4,  ///< also ITU-R BT470M / ITU-R BT1700 625 PAL & SECAM
+	H264COL_TRC_GAMMA28      = 5,  ///< also ITU-R BT470BG
+	H264COL_TRC_SMPTE170M    = 6,  ///< also ITU-R BT601-6 525 or 625 / ITU-R BT1358 525 or 625 / ITU-R BT1700 NTSC
+	H264COL_TRC_SMPTE240M    = 7,
+	H264COL_TRC_LINEAR       = 8,  ///< "Linear transfer characteristics"
+	H264COL_TRC_LOG          = 9,  ///< "Logarithmic transfer characteristic (100:1 range)"
+	H264COL_TRC_LOG_SQRT     = 10, ///< "Logarithmic transfer characteristic (100 * Sqrt(10) : 1 range)"
+	H264COL_TRC_IEC61966_2_4 = 11, ///< IEC 61966-2-4
+	H264COL_TRC_BT1361_ECG   = 12, ///< ITU-R BT1361 Extended Colour Gamut
+	H264COL_TRC_IEC61966_2_1 = 13, ///< IEC 61966-2-1 (sRGB or sYCC)
+	H264COL_TRC_BT2020_10    = 14, ///< ITU-R BT2020 for 10-bit system
+	H264COL_TRC_BT2020_12    = 15, ///< ITU-R BT2020 for 12-bit system
+	H264COL_TRC_SMPTE2084    = 16, ///< SMPTE ST 2084 for 10-, 12-, 14- and 16-bit systems
+	H264COL_TRC_SMPTEST2084  = H264COL_TRC_SMPTE2084,
+	H264COL_TRC_SMPTE428     = 17, ///< SMPTE ST 428-1
+	H264COL_TRC_SMPTEST428_1 = H264COL_TRC_SMPTE428,
+	H264COL_TRC_ARIB_STD_B67 = 18, ///< ARIB STD-B67, known as "Hybrid log-gamma"
+	H264COL_TRC_NB                 ///< Not part of ABI
+};
+
 /**
-* rational number numerator/denominator
-*/
-typedef struct Rational{
-	int num; ///< numerator
-	int den; ///< denominator
-} Rational;
+ * YUV colorspace type.
+ * These values match the ones defined by ISO/IEC 23001-8_2013 § 7.3.
+ */
+enum H264ColorSpace {
+	H264COL_SPC_RGB         = 0,  ///< order of coefficients is actually GBR, also IEC 61966-2-1 (sRGB)
+	H264COL_SPC_BT709       = 1,  ///< also ITU-R BT1361 / IEC 61966-2-4 xvYCC709 / SMPTE RP177 Annex B
+	H264COL_SPC_UNSPECIFIED = 2,
+	H264COL_SPC_RESERVED    = 3,
+	H264COL_SPC_FCC         = 4,  ///< FCC Title 47 Code of Federal Regulations 73.682 (a)(20)
+	H264COL_SPC_BT470BG     = 5,  ///< also ITU-R BT601-6 625 / ITU-R BT1358 625 / ITU-R BT1700 625 PAL & SECAM / IEC 61966-2-4 xvYCC601
+	H264COL_SPC_SMPTE170M   = 6,  ///< also ITU-R BT601-6 525 / ITU-R BT1358 525 / ITU-R BT1700 NTSC
+	H264COL_SPC_SMPTE240M   = 7,  ///< functionally identical to above
+	H264COL_SPC_YCGCO       = 8,  ///< Used by Dirac / VC-2 and H.264 FRext, see ITU-T SG16
+	H264COL_SPC_YCOCG       = H264COL_SPC_YCGCO,
+	H264COL_SPC_BT2020_NCL  = 9,  ///< ITU-R BT2020 non-constant luminance system
+	H264COL_SPC_BT2020_CL   = 10, ///< ITU-R BT2020 constant luminance system
+	H264COL_SPC_SMPTE2085   = 11, ///< SMPTE 2085, Y'D'zD'x
+	H264COL_SPC_CHROMA_DERIVED_NCL = 12, ///< Chromaticity-derived non-constant luminance system
+	H264COL_SPC_CHROMA_DERIVED_CL = 13, ///< Chromaticity-derived constant luminance system
+	H264COL_SPC_ICTCP       = 14, ///< ITU-R BT.2100-0, ICtCp
+	H264COL_SPC_NB                ///< Not part of ABI
+};
 
-typedef struct H264NALUnitArray {
-	uint8_t  array_completeness;
-	uint8_t  NAL_unit_type;
-	uint16_t numNalus;
-	uint16_t *nalUnitLength;
-	uint8_t  **nalUnit;
-} H264NALUnitArray;
-typedef struct H264DecoderConfigurationRecord {
-	uint8_t profile_idc;
-	uint8_t level_idc;
-	uint8_t chroma_format_idc;
-	uint8_t  numOfArrays;
-	H264NALUnitArray *array;
-} H264DecoderConfigurationRecord;
 
+typedef struct H264Rational{
+	int num; ///< Numerator
+	int den; ///< Denominator
+} H264Rational;
+
+/**
+ * Sequence parameter set
+ */
 typedef struct SPS {
 	unsigned int sps_id;
 	int profile_idc;
@@ -183,7 +155,8 @@ typedef struct SPS {
 	int ref_frame_count;               ///< num_ref_frames
 	int gaps_in_frame_num_allowed_flag;
 	int mb_width;                      ///< pic_width_in_mbs_minus1 + 1
-	int mb_height;                     ///< pic_height_in_map_units_minus1 + 1
+	///< (pic_height_in_map_units_minus1 + 1) * (2 - frame_mbs_only_flag)
+	int mb_height;
 	int frame_mbs_only_flag;
 	int mb_aff;                        ///< mb_adaptive_frame_field_flag
 	int direct_8x8_inference_flag;
@@ -195,18 +168,18 @@ typedef struct SPS {
 	unsigned int crop_top;             ///< frame_cropping_rect_top_offset
 	unsigned int crop_bottom;          ///< frame_cropping_rect_bottom_offset
 	int vui_parameters_present_flag;
-	Rational sar;
+	H264Rational sar;
 	int video_signal_type_present_flag;
 	int full_range;
 	int colour_description_present_flag;
-	enum ColorPrimaries color_primaries;
-	enum ColorTransferCharacteristic color_trc;
-	enum ColorSpace colorspace;
+	enum H264ColorPrimaries color_primaries;
+	enum H264ColorTransferCharacteristic color_trc;
+	enum H264ColorSpace colorspace;
 	int timing_info_present_flag;
 	uint32_t num_units_in_tick;
 	uint32_t time_scale;
 	int fixed_frame_rate_flag;
-	short offset_for_ref_frame[256]; // FIXME dyn aloc?
+	int32_t offset_for_ref_frame[256];
 	int bitstream_restriction_flag;
 	int num_reorder_frames;
 	int scaling_matrix_present;
@@ -224,6 +197,8 @@ typedef struct SPS {
 	int bit_depth_chroma;                 ///< bit_depth_chroma_minus8 + 8
 	int residual_color_transform_flag;    ///< residual_colour_transform_flag
 	int constraint_set_flags;             ///< constraint_set[0-3]_flag
+	uint8_t data[4096];
+	size_t data_size;
 } SPS;
 
 /**
@@ -247,52 +222,115 @@ typedef struct PPS {
 	int transform_8x8_mode;         ///< transform_8x8_mode_flag
 	uint8_t scaling_matrix4[6][16];
 	uint8_t scaling_matrix8[6][64];
-	uint8_t chroma_qp_table[2][QP_MAX_NUM + 1];  ///< pre-scaled (with chroma_qp_index_offset) version of qp_table
+	uint8_t chroma_qp_table[2][QP_MAX_NUM+1];  ///< pre-scaled (with chroma_qp_index_offset) version of qp_table
 	int chroma_qp_diff;
+	uint8_t data[4096];
+	size_t data_size;
+
+	uint32_t dequant4_buffer[6][QP_MAX_NUM + 1][16];
+	uint32_t dequant8_buffer[6][QP_MAX_NUM + 1][64];
+	uint32_t(*dequant4_coeff[6])[16];
+	uint32_t(*dequant8_coeff[6])[64];
 } PPS;
 
-typedef struct Slice {
-	uint8_t first_mb_in_slice;
-	uint32_t slice_type;                  ///< entropy_coding_mode_flag
-	uint8_t pic_parameter_set_id;      ///< pic_order_present_flag
-	int frame_num;      ///< num_slice_groups_minus1 + 1
-	uint8_t pic_order_cnt_lsb;
-	
+typedef struct H264ParamSets {
+	SPS *sps_list[MAX_SPS_COUNT];
+	PPS *pps_list[MAX_PPS_COUNT];
 
-	//
-	int pict_type;
-} Slice;
+	/* currently active parameters sets */
+	const PPS *pps;
+	const SPS *sps;
+} H264ParamSets;
 
-extern uint8_t* avc_find_startcode(const uint8_t* inp, int size, int* nal_header_size);
 
-extern int h264_decode_seq_parameter_set(uint8_t * buf, int size, SPS* sps, int ignore_truncation);
-extern int h264_decode_picture_parameter_set(uint8_t * buf, int size, SPS *sps, PPS *pps, int bit_length);
-extern int h264_decode_slice(uint8_t * buf, int size, Slice *slice, int log2_max_frame_num);
+typedef struct H264POCContext {
+	int poc_lsb;
+	int poc_msb;
+	int delta_poc_bottom;
+	int delta_poc[2];
+	int frame_num;
+	int prev_poc_msb;           ///< poc_msb of the last reference pic for POC type 0
+	int prev_poc_lsb;           ///< poc_lsb of the last reference pic for POC type 0
+	int frame_num_offset;       ///< for POC type 2
+	int prev_frame_num_offset;  ///< for POC type 2
+	int prev_frame_num;         ///< frame_num of the last pic for POC type 1/2
+} H264POCContext;
 
-// note - must free string
-extern char *h264_get_profile_level_string(const uint8_t profile,
-	const uint8_t level);
-
-#define ARRAY_ELEMS(a) (sizeof(a) / sizeof((a)[0]))
-static const Rational h264_pixel_aspect[17] = {
-	{ 0, 1 },
-	{   1,  1 },
-	{  12, 11 },
-	{ 10, 11 },
-	{ 16, 11 },
-	{ 40, 33 },
-	{ 24, 11 },
-	{ 20, 11 },
-	{ 32, 11 },
-	{ 80, 33 },
-	{ 18, 11 },
-	{ 15, 11 },
-	{ 64, 33 },
-	{ 160, 99 },
-	{ 4, 3 },
-	{ 3, 2 },
-	{ 2, 1 },
+enum H264PictureType {
+	H264_PICTURE_TYPE_NONE = 0, ///< Undefined
+	H264_PICTURE_TYPE_I,     ///< Intra
+	H264_PICTURE_TYPE_P,     ///< Predicted
+	H264_PICTURE_TYPE_B,     ///< Bi-dir predicted
+	H264_PICTURE_TYPE_S,     ///< S(GMC)-VOP MPEG-4
+	H264_PICTURE_TYPE_SI,    ///< Switching Intra
+	H264_PICTURE_TYPE_SP,    ///< Switching Predicted
+	H264_PICTURE_TYPE_BI,    ///< BI type
 };
+
+enum H264PictureStructure {
+	H264_PICTURE_STRUCTURE_UNKNOWN,      //< unknown
+	H264_PICTURE_STRUCTURE_TOP_FIELD,    //< coded as top field
+	H264_PICTURE_STRUCTURE_BOTTOM_FIELD, //< coded as bottom field
+	H264_PICTURE_STRUCTURE_FRAME,        //< coded as frame
+};
+
+typedef struct H264ParseContext {
+	H264ParamSets ps;
+	H264POCContext poc;
+	int is_avc;
+	int nal_length_size;
+	int got_first;
+	int picture_structure;
+	uint8_t parse_history[6];
+	int parse_history_count;
+	int parse_last_mb;
+	int64_t reference_dts;
+	int last_frame_num, last_picture_structure;
+
+	int pict_type; /* XXX: Put it back in AVCodecContext. */
+	int key_frame;
+
+	int output_picture_number;
+
+	/**
+	 * Dimensions of the decoded video intended for presentation.
+	 */
+	int width;
+	int height;
+
+	/**
+     * Dimensions of the coded video.
+     */
+	int coded_width;
+	int coded_height;
+
+	int profile;
+	int level;
+
+	uint8_t rbsp[2048];
+} H264ParseContext;
+
+typedef struct H264NAL {
+	/**
+     * NAL unit type
+     */
+	int type;
+
+	/**
+     * H.264 only, nal_ref_idc
+     */
+	int ref_idc;
+} H264NAL;
+
+H264ParseContext * CreateH264ParserContext();
+void ReleaseH264ParserContext(H264ParseContext **p_ctx);
+int H264DecodeExtradata(H264ParseContext *ctx, const uint8_t *buf, int buf_size);
+int H264ParseNalUnits(H264ParseContext *ctx, const uint8_t *buf, int buf_size, int is_avcc);
+int H264ParseSingleNalUnits(H264ParseContext *ctx, const uint8_t *buf, int buf_size);
+
+int H264DecodeNalSPS(const uint8_t *data, int size, H264ParamSets *ps, int ignore_truncation);
+int H264DecodeNalPPS(const uint8_t *data, int size, H264ParamSets *ps, int bit_length);
+int H264ParseSliceHeader(const uint8_t *data, int size, const H264NAL* nal, H264ParseContext *ctx);
 
 #ifdef __cplusplus
 }

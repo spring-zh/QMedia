@@ -742,6 +742,14 @@ static inline unsigned int get_bits(GetBitContext *s, int n){
 }
 
 /**
+ * Read 0-25 bits.
+ */
+static av_always_inline int get_bitsz(GetBitContext *s, int n)
+{
+    return n ? get_bits(s, n) : 0;
+}
+
+/**
  * shows 1-17 bits.
  * Note, the alt bitstream reader can read up to 25 bits, but the libmpeg2 reader can't
  */

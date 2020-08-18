@@ -42,6 +42,8 @@ uint32_t fsio_write(FSIOContext *s, const uint8_t *buf, uint32_t size)
 	}
 	else if (s->iomode == 1)
 		ret = fwrite(buf, size, 1, (FILE*)s->handle);
+    else
+        return -1;
 
 	s->curr_pos += size;
 	s->buff_size = MAX(s->curr_pos, s->buff_size);
@@ -169,7 +171,8 @@ int fsio_r8(FSIOContext *s)
 	else if (s->iomode == 1)
 	{
 		r8 = fgetc((FILE*)s->handle);
-	}
+	}else
+        return -1;
 	s->curr_pos++;
 	return r8;
 }
@@ -237,7 +240,7 @@ uint64_t fsio_rb64(FSIOContext *s)
 	return val;
 }
 
-uint32_t fsio_read(FSIOContext *s, const uint8_t *buf, uint32_t size)
+uint32_t fsio_read(FSIOContext *s, uint8_t * const buf, uint32_t size)
 {
 	uint8_t* curr_prt;
 	uint32_t ret;
@@ -253,8 +256,39 @@ uint32_t fsio_read(FSIOContext *s, const uint8_t *buf, uint32_t size)
 	else if (s->iomode == 1){
 		ret = fread(buf, 1, size, (FILE*)s->handle);
 		len_to_read = ret;
-	}
+	}else
+        return -1;
 
 	s->curr_pos += len_to_read;
 	return ret;
+}
+
+uint32_t fsio_peekb8(FSIOContext *s) {
+	int current_pos = fsio_tell(s);
+	uint32_t val = fsio_r8(s);
+	fsio_seek(s, current_pos, SEEK_SET);
+	return val;
+}
+uint32_t fsio_peekb16(FSIOContext *s) {
+	int current_pos = fsio_tell(s);
+	uint32_t val = fsio_rb16(s);
+	fsio_seek(s, current_pos, SEEK_SET);
+	return val;
+}
+uint32_t fsio_peekb32(FSIOContext *s) {
+	int current_pos = fsio_tell(s);
+	uint32_t val = fsio_rb32(s);
+	fsio_seek(s, current_pos, SEEK_SET);
+	return val;
+}
+uint64_t fsio_peekb64(FSIOContext *s) {
+	int current_pos = fsio_tell(s);
+	uint64_t val = fsio_rb64(s);
+	fsio_seek(s, current_pos, SEEK_SET);
+	return val;
+}
+
+unsigned int fsio_get_bytes_left(FSIOContext *s)
+{
+	return s->max_size - s->curr_pos;
 }

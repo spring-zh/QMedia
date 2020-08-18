@@ -33,7 +33,7 @@
 #include <stdint.h>
 #include <string.h>
 
-#include "Utils/bitstream.h"
+#include "bitstream.h"
 
 #define INVALID_VLC           0x80000000
 

@@ -31,6 +31,7 @@
 
 #include <inttypes.h>
 #include <stdlib.h>
+#include <stdint.h>
 
 #ifdef ROCKBOX_BIG_ENDIAN
 #define WORDS_BIGENDIAN
@@ -71,7 +72,7 @@ extern int32_t fsio_seek(FSIOContext *s, int32_t offset, int whence);
 extern int32_t fsio_skip(FSIOContext *s, int32_t offset);
 extern int32_t fsio_tell(FSIOContext *s);
 
-extern uint32_t fsio_read(FSIOContext *s, const uint8_t *buf, uint32_t size);
+extern uint32_t fsio_read(FSIOContext *s, uint8_t * const buf, uint32_t size);
 
 extern int fsio_r8(FSIOContext *s);
 extern unsigned int fsio_rl16(FSIOContext *s);
@@ -82,6 +83,13 @@ extern unsigned int fsio_rb16(FSIOContext *s);
 extern unsigned int fsio_rb24(FSIOContext *s);
 extern unsigned int fsio_rb32(FSIOContext *s);
 extern uint64_t fsio_rb64(FSIOContext *s);
+
+extern uint32_t fsio_peekb8(FSIOContext *s);
+extern uint32_t fsio_peekb16(FSIOContext *s);
+extern uint32_t fsio_peekb32(FSIOContext *s);
+extern uint64_t fsio_peekb64(FSIOContext *s);
+
+extern unsigned int fsio_get_bytes_left(FSIOContext *s);
 
 #ifdef __cplusplus
 }

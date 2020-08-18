@@ -28,8 +28,11 @@ set(MEDIA_CORE_HEADER
 
         MediaCore/protocol/adts.h
         MediaCore/protocol/golomb.h
+        MediaCore/protocol/bitstream.h
         MediaCore/protocol/h264_parse.h
+        MediaCore/protocol/avcc_parse.h
         MediaCore/protocol/hevc_parse.h
+        MediaCore/protocol/hvcc_parse.h
         MediaCore/protocol/sdp.h
         MediaCore/protocol/fs_io.h
 
@@ -50,8 +53,11 @@ set(MEDIA_CORE_SRC
         MediaCore/demuxer/GeneralDemuxer.cpp
         MediaCore/demuxer/Mp4Demuxer.cpp
 
+        MediaCore/protocol/bitstream.c
         MediaCore/protocol/h264_parse.c
+        MediaCore/protocol/avcc_parse.c
         MediaCore/protocol/hevc_parse.c
+        MediaCore/protocol/hvcc_parse.c
         MediaCore/protocol/sdp_decode.c
         MediaCore/protocol/sdp_util.c
         MediaCore/protocol/fs_io.c
