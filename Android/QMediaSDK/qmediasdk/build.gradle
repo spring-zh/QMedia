@@ -4,8 +4,8 @@ def SdkVersionName = "1.5"
 
 android {
 
-    compileSdkVersion 25
-    buildToolsVersion "27.0.3"
+    compileSdkVersion 26
+    buildToolsVersion "28.0.3"
 
     defaultConfig {
         minSdkVersion 18
@@ -17,25 +17,15 @@ android {
 
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
 
-        ndk {
-            // Specifies the ABI configurations of your native
-            // libraries Gradle should build and package with your APK.
-            abiFilters "armeabi-v7a","arm64-v8a","x86"
-        }
-
         externalNativeBuild {
             cmake {
-                arguments '-DANDROID_PLATFORM=android-18',
-                        '-DANDROID_ARM_NEON=TRUE' ,
-                        "-DANDROID_TOOLCHAIN=clang",
-                        '-DANDROID_STL=c++_static'
-//                        '-DCMAKE_BUILD_TYPE=Debug'
-                cppFlags "-std=c++11 -frtti -fexceptions"
+                arguments "-DANDROID_PLATFORM=android-18", "-DANDROID_ARM_NEON=TRUE" , "-DANDROID_TOOLCHAIN=clang",
+                        "-DANDROID_STL=c++_static"
                 cppFlags.add("-Werror=return-type");
                 cppFlags.add("-Werror=format");
-
                 cFlags "-std=gnu11"
-//                abiFilters "armeabi-v7a","arm64-v8a"
+                cppFlags "-std=c++11 -frtti -fexceptions"
+                abiFilters "armeabi-v7a","arm64-v8a","x86"
             }
         }
 
@@ -69,6 +59,7 @@ android {
     }
     externalNativeBuild {
         cmake {
+            version "3.10.2"
             path 'jni/CMakeLists.txt'
         }
     }
@@ -93,8 +84,8 @@ dependencies {
     androidTestImplementation('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
-    implementation 'com.android.support:appcompat-v7:25.3.1'
     testImplementation 'junit:junit:4.12'
+    implementation 'com.android.support:support-annotations:28.0.0'
 }
 
 task copyAAR(type: Copy) {

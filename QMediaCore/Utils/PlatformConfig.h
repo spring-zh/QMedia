@@ -155,5 +155,14 @@ THE SOFTWARE.
     #define PLATFORM_PC
 #endif
 
+
+#if defined(__GNUC__) || defined(__clang__)
+#    define q_builtin_constant_p __builtin_constant_p
+#    define q_printf_format(fmtpos, attrpos) __attribute__((__format__(__printf__, fmtpos, attrpos)))
+#else
+#    define q_builtin_constant_p(x) 0
+#    define q_printf_format(fmtpos, attrpos)
+#endif
+
 /// @endcond
 #endif  // __BASE_PLATFORM_CONFIG_H__
