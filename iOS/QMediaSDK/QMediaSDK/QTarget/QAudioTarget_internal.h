@@ -67,13 +67,3 @@ public:
 private:
     __weak id<QAudioTarget> _audioTarget;
 };
-
-
-#pragma mark QAudioTarget is deprecated
-@interface QAudioTarget : NSObject <QAudioRender>
-
--(instancetype)initWithTarget:(id<QAudioTarget>)target;
-@property (nonatomic, readonly) id<QAudioTarget> ocTarget;
-@property (nonatomic, readonly) AudioTarget* native;
-
-@end

@@ -1,17 +1,12 @@
 package com.qmedia.qmediasdk.QEditor;
 
+import android.os.Handler;
 import android.os.Looper;
 
-import com.qmedia.qmediasdk.QCommon.QVector;
-import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QTarget.Implements.QAudioPlayer;
 import com.qmedia.qmediasdk.QTarget.QAudioRender;
 import com.qmedia.qmediasdk.QTarget.QVideoRender;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
-
-import android.os.Handler;
-
-import java.nio.ByteBuffer;
 
 public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRender{
 
@@ -41,6 +36,7 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
 
     public QEditorPlayer(Handler cbHandler) {
         mPtr = native_create(rootNode);
+        rootNode.setFlipMode(2);
         QAudioPlayer audioPlayer = new QAudioPlayer();
         audioPlayer.setAudioRender(this);
         setAudioTarget(audioPlayer); // set default audio player
@@ -111,13 +107,18 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
         native_onVideoDestroy();
     }
 
+    @Override
+    public void setDisplayMode(int displayMode, int viewW, int viewH) {
+        native_setDisplayMode(displayMode, viewW, viewH);
+    }
+
     //    private int playerState;//QEditorPlayerState
 //    private boolean isPaused;
     private Handler mCbHandler;
     private Observer mObserver;
 
     //TODO: native
-    private native long native_create(DisplayRootNode rootNode);
+    private native long native_create(QDisplayLayer rootNode);
     private native int native_getPlayerState();
     private native boolean native_isPaused();
     private native void native_start();
@@ -130,6 +131,7 @@ public class QEditorPlayer extends QCombiner implements QVideoRender, QAudioRend
     private native boolean native_onVideoRender(long wantTime) ;
     private native boolean native_onVideoCreate();
     private native boolean native_onVideoDestroy();
+    private native boolean native_setDisplayMode(int displayMode, int viewW, int viewH);
 
     private native void native_release();
 

@@ -9,7 +9,13 @@
 #pragma once
 
 #include "OutputTarget.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/VideoFrame.h"
+
+enum class DisplayMode : int{
+    Stretch = 0,
+    Adaptive,
+    Clip
+};
 
 class VideoRender
 {
@@ -18,16 +24,13 @@ public:
     virtual bool onRenderCreate() = 0;
     virtual bool onVideoRender(int64_t wantTimeMs) = 0;
     virtual bool onRenderDestroy() = 0;
-//    virtual bool onVideoRenderWithTextureId(int textureId) = 0;
+    
+    //set output display mode
+    virtual void setDisplayMode(DisplayMode mode, int dstW, int dstH) = 0;
 };
 
 class VideoTarget :public OutputTarget{
 public:
-    
-//    typedef struct Resolution {
-//        int width;
-//        int height;
-//    }Resolution;
     
 	virtual ~VideoTarget(){}
 

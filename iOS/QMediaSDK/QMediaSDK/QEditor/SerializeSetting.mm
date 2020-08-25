@@ -18,8 +18,8 @@
     [dic setValue:self.property forKey:@"property"];
     {
         NSDictionary* dic_timeRang = [[NSMutableDictionary alloc] init];
-        [dic_timeRang setValue:@(self.timeRang.location) forKey:@"location"];
-        [dic_timeRang setValue:@(self.timeRang.length) forKey:@"length"];
+        [dic_timeRang setValue:@(self.timeRang.startPoint) forKey:@"startPoint"];
+        [dic_timeRang setValue:@(self.timeRang.endPoint) forKey:@"endPoint"];
         [dic setValue:dic_timeRang forKey:@"timeRang"];
     }
     {
@@ -50,11 +50,11 @@
 //    QNodeAnimator* nodeAnimator = [[QNodeAnimator alloc] init];
     NSString* name = [objDic valueForKey:@"name"];
     NSString* property = [objDic valueForKey:@"property"];
-    NSRange timeRang;
+    QTimeRange timeRang;
     {
         NSDictionary* timeRang_dic = [objDic valueForKey:@"timeRang"];
-        timeRang.length = [[timeRang_dic valueForKey:@"length"] integerValue];
-        timeRang.location = [[timeRang_dic valueForKey:@"location"] integerValue];
+        timeRang.startPoint = [[timeRang_dic valueForKey:@"startPoint"] integerValue];
+        timeRang.endPoint = [[timeRang_dic valueForKey:@"endPoint"] integerValue];
     }
     QVector beginPoint;
     {

@@ -10,7 +10,7 @@
 
 GRAPHICCORE_BEGIN
 
-RenderNode::RenderNode(){
+RenderNode::RenderNode():_flipMode(Drawable2D::NONE){
     
 }
 
@@ -29,8 +29,25 @@ void RenderNode::visit(Scene *scene, const Mat4& parentTransform, uint32_t paren
     Node::visit(scene, parentTransform, parentFlags);
 }
 
+bool RenderNode::drawEffects(int64_t duration, const Scene *scene, const Mat4 & transform, const Texture2D *inputTexture) {
+    const Texture2D *output = _effect_group.drawEffects(duration, scene->getGLEngine(), inputTexture);
+    if (output) {
+        _textureDrawer->draw(output, scene, transform, this, _flipMode);
+        return true;
+    }
+    return false;
+}
+
+void RenderNode::addEffect(EffectRef effectRef) {
+    _effect_group.addEffect(effectRef);
+}
+void RenderNode::removeEffect(EffectRef effectRef) {
+    _effect_group.removeEffect(effectRef);
+}
+
 bool RenderNode::createRes() {
     bool bRet = true;
+    _textureDrawer = std::shared_ptr<Texture2DDrawer>(new Texture2DDrawer());
     for (auto& child : _children) {
         RenderNode* renderNode = dynamic_cast<RenderNode*>(child);
         if (renderNode != nullptr) {
@@ -40,6 +57,9 @@ bool RenderNode::createRes() {
     return bRet;
 }
 void RenderNode::releaseRes() {
+    _effect_group.release();
+    _textureDrawer.reset();
+    
     for (auto& child : _children) {
         RenderNode* renderNode = dynamic_cast<RenderNode*>(child);
         if (renderNode != nullptr) {

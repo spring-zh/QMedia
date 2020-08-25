@@ -31,7 +31,7 @@ private:
     Color4F _bkColor;
 };
 
-using DuplicateNodeRef = std::shared_ptr<DuplicateNode>;
+CLASSREF(DuplicateNode)
 
 GRAPHICCORE_END
 

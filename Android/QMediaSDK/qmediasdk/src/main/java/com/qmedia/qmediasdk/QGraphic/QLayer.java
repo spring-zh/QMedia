@@ -3,10 +3,7 @@ package com.qmedia.qmediasdk.QGraphic;
 import com.qmedia.qmediasdk.QCommon.QSize;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
-import com.qmedia.qmediasdk.QEffect.QEffect;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.UUID;
 
 public class QLayer extends QGraphicNode {
@@ -22,6 +19,10 @@ public class QLayer extends QGraphicNode {
         layerSize = size;
     }
 
+    protected QLayer(QCombiner combiner, String id) {
+        super(combiner, id);
+    }
+
     public QSize getLayerSize() {
         return layerSize;
     }
@@ -31,34 +32,32 @@ public class QLayer extends QGraphicNode {
     }
 
     public void setBkColor(QVector bkColor) {
-        this.bkColor = bkColor;
         native_setBkColor(bkColor);
     }
 
-    public List<QEffect> getEffects() {
-        return effects;
+    public boolean isEnable3d() {
+        return native_isEnable3d();
     }
 
-    public void addEffect(QEffect effect) {
-        effects.add(effect);
-        weakCombiner.get().attachEffect(this, effect);
-    }
-    public void removeEffect(QEffect effect) {
-        effects.remove(effect);
-        weakCombiner.get().detachEffect(this, effect);
-    }
-    public void removeAllEffect() {
-        for (QEffect effect : effects) {
-            weakCombiner.get().detachEffect(this, effect);
-        }
-        effects.clear();
+    public void setEnable3d(boolean enable3d) {
+        native_setEnable3d(enable3d);
     }
 
-    private List<QEffect> effects = new ArrayList<>();
+    public int getFlipMode() {
+        return native_getFlipMode();
+    }
+
+    public void setFlipMode(int flipMode) {
+        native_setFlipMode(flipMode);
+    }
+
     private QSize layerSize;
-    private QVector bkColor;
     //TODO: native
     protected native long native_create(QSize size);
     protected native QVector native_getBkColor();
     protected native void native_setBkColor(QVector bkColor);
+    protected native boolean native_isEnable3d();
+    protected native void native_setEnable3d(boolean enable3d);
+    protected native int native_getFlipMode();
+    protected native void native_setFlipMode(int flipMode);
 }

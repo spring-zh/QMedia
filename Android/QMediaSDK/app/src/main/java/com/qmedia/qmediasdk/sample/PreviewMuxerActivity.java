@@ -1,5 +1,6 @@
 package com.qmedia.qmediasdk.sample;
 
+import android.media.effect.Effect;
 import android.os.Bundle;
 import android.os.Environment;
 import android.os.Handler;
@@ -24,7 +25,11 @@ import com.qmedia.qmediasdk.QEditor.QCombiner;
 import com.qmedia.qmediasdk.QEditor.QEditorPlayer;
 import com.qmedia.qmediasdk.QEditor.QExporter;
 import com.qmedia.qmediasdk.QEditor.QFileExporter;
+import com.qmedia.qmediasdk.QEffect.QEffect;
+import com.qmedia.qmediasdk.QEffect.QEffectConfig;
+import com.qmedia.qmediasdk.QEffect.QEffectManage;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
+import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QGraphic.QImageNode;
 import com.qmedia.qmediasdk.QGraphic.QLayer;
 import com.qmedia.qmediasdk.QGraphic.QNodeAnimator;
@@ -56,7 +61,7 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 	String[] media_paths;
 
 	void setVideoPreview(QCombiner combiner , String video_path) {
-		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
+		combiner.getRootNode().setBkColor(new QVector(0,0,1,1));
 
 //		String path = Environment.getExternalStorageDirectory().getPath() + "/test.mp4";
 		QMediaTrack videoTrack ;
@@ -82,11 +87,12 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		duplicatenodeR.setAnchorPoint(new QVector(0.5f,0.5f));
 		duplicatenodeR.setRotation3d(new QVector(0, -90, 0));
 
-		combiner.getRootNode().setAnchorPoint(new QVector(0.5f,0.5f));
-		combiner.getRootNode().setContentSize(new QSize(targetW, targetH));
-		combiner.getRootNode().addChildNode(videoTrack.getGraphic());
-		combiner.getRootNode().addChildNode(duplicatenodeL);
-		combiner.getRootNode().addChildNode(duplicatenodeR);
+		QGraphicNode composeNode = new QGraphicNode("composeNode", combiner);
+		composeNode.setAnchorPoint(new QVector(0.5f,0.5f));
+		composeNode.setContentSize(new QSize(targetW, targetH));
+		composeNode.addChildNode(videoTrack.getGraphic());
+		composeNode.addChildNode(duplicatenodeL);
+		composeNode.addChildNode(duplicatenodeR);
 
 //		String imagePath = Environment.getExternalStorageDirectory().getPath() + "/li.jpg";
 //		QImageNode imageNode = new QImageNode(imagePath, false, combiner);
@@ -94,24 +100,32 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 //		imageNode.setContentSize(new QVector(320, 240));
 //		combiner.getRootNode().addChildNode(imageNode);
 
-//		QLayer layer = new QLayer(new QVector(targetW, targetH), "", combiner);
-//		layer.setContentSize(new QVector(targetW, targetH));
+		QEffectConfig[] allconfig = QEffectManage.getAllEffectConfig();
+		QEffect effect = QEffectManage.createEffect("SobelEdgeDetection");
+		effect.setRenderRange(new QRange(0,10000));
+
+//		QLayer layer = new QLayer(new QSize(targetW, targetH), "", combiner);
+//		layer.setEnable3d(true);
+//		layer.setContentSize(new QSize(targetW, targetH));
+//		layer.setAnchorPoint(new QVector(0.5f,0.5f));
 //		layer.addChildNode(videoTrack.getGraphic());
 //		layer.addChildNode(duplicatenodeL);
 //		layer.addChildNode(duplicatenodeR);
-//		combiner.getRootNode().addChildNode(layer);
-
+		combiner.getRootNode().addEffect(effect);
+		combiner.getRootNode().addChildNode(composeNode);
+		combiner.getRootNode().setEnable3d(true);
+//		combiner.getRootNode().setBkColor(new QVector(1,0,1,1));
 
 		QNodeAnimator an1 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(0, 5000) ,
 				new QVector(0, 0, 0) , new QVector(-180, 180, 180), QNodeAnimator.Bounce_EaseOut ,false, "");
 		QNodeAnimator an2 = new QNodeAnimator(QNodeAnimator.rotationxyz, new QRange(5000, 15000) ,
 				new QVector(-180, 180, 180) , new QVector(-360, 360, 360), QNodeAnimator.Elastic_EaseOut ,false, "");
-		combiner.getRootNode().addAnimator(an1);
-		combiner.getRootNode().addAnimator(an2);
+		composeNode.addAnimator(an1);
+		composeNode.addAnimator(an2);
 	}
 
 	void setImagesPreview(QCombiner combiner , String[] images_path) {
-		combiner.getRootNode().setBKColor(new QVector(0,0,1,1));
+		combiner.getRootNode().setBkColor(new QVector(0,0,1,1));
 
 		QMediaTrack audioTrack = combiner.createAudioTrack("LR.mp3", true);
 
@@ -194,7 +208,7 @@ public class PreviewMuxerActivity extends AppCompatActivity implements View.OnCl
 		QMediaSDK.init(this);
 		mframeLayout = (FrameLayout) findViewById(R.id.frameLayout);
 		mPreviewView = (QPlayerView) findViewById(R.id.render_view);
-		mPreviewView.setDisplayMode(QPlayerView.DisplayMode.Adaptive);
+		mPreviewView.setDisplayMode(QPlayerView.DisplayAdaptive);
 
 		Log.e(TAG, "activity_create width=" + mPreviewView.getWidth() + " height=" + mPreviewView.getHeight() + " " + QMediaSDK.SDK_VERSION);
 

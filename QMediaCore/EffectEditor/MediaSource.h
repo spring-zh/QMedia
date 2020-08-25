@@ -9,10 +9,9 @@
 #ifndef EFFECTEDITOR_MEDIASOURCE_H
 #define EFFECTEDITOR_MEDIASOURCE_H
 
-#include <vector>
 #include "Utils/Comm.h"
-#include "MediaCore/mediadef/AudioFrame.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/AudioFrame.h"
+#include "MediaCore/core/VideoFrame.h"
 #include "VideoFrameDrawer.h"
 #include "MediaCore/output/VideoTarget.h"
 #include "MediaCore/output/AudioTarget.h"
@@ -79,6 +78,6 @@ protected:
     mutable int64_t _media_duration; //millisecond
 };
 
-using MediaSourceRef = std::shared_ptr<MediaSource>;
+CLASSREF(MediaSource)
 
 #endif /* EFFECTEDITOR_MEDIASOURCE_H */

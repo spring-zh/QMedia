@@ -9,5 +9,7 @@
 #import <UIKit/UIKit.h>
 
 @interface ResTrackTableViewController : UITableViewController
+@property (nonatomic, readonly) NSUInteger selectRow;
 
+- (void)selectRowByIndex:(NSUInteger)selectRow;
 @end

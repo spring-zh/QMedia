@@ -27,6 +27,7 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
 
     public QExporter(QVideoTarget videoTarget, QAudioTarget audioTarget, Handler cbHandler) {
         mPtr = native_create(rootNode);
+        rootNode.setFlipMode(2);
         videoTarget.setVideoRender(this);
         audioTarget.setAudioRender(this);
         setVideoTarget(videoTarget);
@@ -41,6 +42,7 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
     //for child class
     protected QExporter(Handler cbHandler) {
         mPtr = native_create(rootNode);
+        rootNode.setFlipMode(2);
         if (cbHandler == null)
             mCbHandler = new Handler(Looper.getMainLooper());
         else
@@ -67,10 +69,6 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
         mObserver = null;
     }
 
-    public DisplayRootNode getRootNode() {
-        return rootNode;
-    }
-
     @Override
     public boolean onAudioRender(byte[] buffer, int needBytes, long wantTime) {
         return native_onAudioRender(buffer, needBytes, wantTime);
@@ -87,12 +85,17 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
     }
 
     @Override
+    public void setDisplayMode(int displayMode, int viewW, int viewH) {
+        native_setDisplayMode(displayMode, viewW, viewH);
+    }
+
+    @Override
     public void onVideoDestroy() {
         native_onVideoDestroy();
     }
 
     //TODO: native
-    private native long native_create(DisplayRootNode rootNode);
+    private native long native_create(QDisplayLayer rootNode);
     private native void native_start();
     private native void native_stop();
     private native void native_cancel();
@@ -101,6 +104,7 @@ public class QExporter extends QCombiner implements QVideoRender, QAudioRender {
     private native boolean native_onVideoRender(long wantTime) ;
     private native boolean native_onVideoCreate();
     private native boolean native_onVideoDestroy();
+    private native boolean native_setDisplayMode(int displayMode, int viewW, int viewH);
 
     private native void native_release();
 

@@ -196,6 +196,7 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
     if (!videoFrame.is_texture()) {
         return false;
     }
+    _rotation = videoFrame.rotation();
     EAGLContext* context = [EAGLContext currentContext];
     if (context == nil) {
         return false;
@@ -216,8 +217,6 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
         }
     }
     CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
-    
-    //TODO: need to add BGRA pixelbuffer supported
     
     if (_lumaTexture) {
         CFRelease(_lumaTexture);
@@ -300,16 +299,40 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
 
 void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
 {
+    GraphicCore::Mat4 mvpMatrix;
+    GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
+    drawFrame(mvpMatrix, region, node->getPositionZ(), node->getCrop(), node->getColor(), node->getBlendFunc(), _rotation);
+}
+
+void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) {
+    
     if (_program && _program->use()) {
-        //FIXME: translation of position already contain in transform matrix
         GLfloat posArray[] = {
-            0, 0, 0,
-            node->getContentSize().width, 0, 0,
-            0, node->getContentSize().height, 0,
-            node->getContentSize().width, node->getContentSize().height, 0
+            region.getMinX(), region.getMinY(), positionZ,
+            region.getMaxX(), region.getMinY(), positionZ,
+            region.getMinX(), region.getMaxY(), positionZ,
+            region.getMaxX(), region.getMaxY(), positionZ
         };
         
-        _program->setVertexAttribValue("a_texCoord", VertexAttrib::TEXCOORD, Drawable2D::RECTANGLE_TEX_COORDS, GET_ARRAY_COUNT(Drawable2D::RECTANGLE_TEX_COORDS));
+        float *texArray = Drawable2D::RECTANGLE_TEX_COORDS;
+        switch (rotation) {
+            case kVideoRotation_90:
+                texArray = Drawable2D::RECTANGLE_TEX_COORDS90;
+                break;
+            case kVideoRotation_180:
+                texArray = Drawable2D::RECTANGLE_TEX_COORDS180;
+                break;
+            case kVideoRotation_270:
+                texArray = Drawable2D::RECTANGLE_TEX_COORDS270;
+                break;
+            default:
+                texArray = Drawable2D::RECTANGLE_TEX_COORDS;
+                break;
+
+        }
+        _program->setVertexAttribValue("a_texCoord", VertexAttrib::TEXCOORD, texArray, 8);
         _program->setVertexAttribValue("a_position", VertexAttrib::VERTEX3 ,posArray, GET_ARRAY_COUNT(posArray));
         
         if(_lumaTexture) {
@@ -325,23 +348,32 @@ void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const Grap
             _program->setUniformValue("SamplerUV", Uniform::TEXTURE, texture_uv);
         }
         
-        GraphicCore::Mat4 mvpMatrix;
-        GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
         GraphicCore::Mat4 texMatrix;
+        //TODO: check crop
+        if (! crop.size.equals(GraphicCore::Size::ZERO)) {
+            //TODO: need crop
+            float crop_arr[16] = {
+                    crop.size.width, 0, 0, 0,
+                    0, crop.size.height, 0, 0,
+                    0, 0, 1, 0,
+                    crop.getMinX(), crop.getMinY(), 0, 1,
+            };
+            texMatrix.multiply(crop_arr);
+        }
         _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m, 16);
-        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, mvpMatrix.m, 16);
+        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, (float*)mvpMatrix.m, 16);
         _program->setUniformValue("colorConversionMatrix", Uniform::MATRIX3, _colorConversionMatrix, 9);
         
         Uniform::Value colorVal;
         colorVal._floatOrmatrix_array = {
-            node->getColor().r,
-            node->getColor().g,
-            node->getColor().b,
-            node->getColor().a};
+            color.r,
+            color.g,
+            color.b,
+            color.a};
         _program->setUniformValue("uColor", Uniform::FLOAT4, colorVal);
-        if (node->getBlendFunc() != BlendFunc::DISABLE) {
-            _program->setBlendFunc(node->getBlendFunc());
-        } else if (! FLOAT_ISEQUAL(node->getColor().a, 1.0f)){
+        if (blend != BlendFunc::DISABLE) {
+            _program->setBlendFunc(blend);
+        } else if (! FLOAT_ISEQUAL(color.a, 1.0f)){
             _program->setBlendFunc(BlendFunc::ALPHA_NON_PREMULTIPLIED);
         } else
             _program->setBlendFunc(BlendFunc::DISABLE);
@@ -418,8 +450,6 @@ bool PixelFrameBGRADrawer::setFrame(const VideoFrame& videoFrame)
     }
     CVOpenGLESTextureCacheFlush(_videoTextureCache, 0);
     
-    //TODO: need to add BGRA pixelbuffer supported
-    
     if (_textureRef) {
         CFRelease(_textureRef);
         _textureRef = NULL;
@@ -471,6 +501,18 @@ void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const Grap
     if (_textureDrawer) {
         _textureDrawer->draw(&_duplicateTexture, scene, transform, node);
     }
+}
+
+void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode)
+{
+    if (_textureDrawer) {
+        _textureDrawer->draw(&_duplicateTexture, mvpMatrix, region, positionZ, crop, color, blend, flipMode);
+    }
+}
+
+const GraphicCore::Texture2D* PixelFrameBGRADrawer::getOutputTexture() {
+    return &_duplicateTexture;
 }
 
 void PixelFrameBGRADrawer::release()

@@ -7,6 +7,7 @@
 //
 
 #import "ResTrackTableViewCell.h"
+#import "ResTrackTableViewController.h"
 #import "FloatingTimeView.h"
 #import "GlobalXMObject.h"
 
@@ -43,7 +44,7 @@
     [self.resView addGestureRecognizer:self.longPressRecognizer];
     [self.resView addGestureRecognizer:self.panRecognizer];
     
-//    self.player = [XMPlayer sharedInstance];
+    self.player = [GlobalXMObject sharedInstance].player;
     self.globalXMObject = [GlobalXMObject sharedInstance];
     
     //    // 测试数据
@@ -58,9 +59,13 @@
     // Configure the view for the selected state
 }
 
+- (void)setSourceTimeLength:(CGFloat)sourceTimeLength {
+    _sourceTimeLength = sourceTimeLength;
+}
+
 - (void)setResTimeLength:(CGFloat)resTimeLength
 {
-    if (resTimeLength <= 0 || resTimeLength > self.globalTimeLength) {
+    if (resTimeLength <= 0 /*|| resTimeLength > self.globalTimeLength*/) {
         return ;
     }
     _resTimeLength = resTimeLength;
@@ -68,6 +73,11 @@
     CGRect rc = self.resView.frame;
     rc.size.width = resTimeLength*self.resView.superview.bounds.size.width/self.globalTimeLength;
     self.resView.frame = rc;
+    
+    CGFloat sourceDisplayLength = MIN(resTimeLength, _sourceTimeLength);
+    rc = self.resThumbImageView.frame;
+    rc.size.width = sourceDisplayLength*self.resView.superview.bounds.size.width/self.globalTimeLength;
+    self.resThumbImageView.frame = rc;
 }
 
 - (void)setResStartTimePoint:(CGFloat)resStartTimePoint
@@ -124,7 +134,7 @@
                 return ;
             }
             self.isDragging = YES;
-            self.resContentView.alpha = 0.75;
+//            self.resContentView.alpha = 0.75;
             
             [self adjustFloatingTimeViewPos];
             
@@ -147,7 +157,7 @@
         {
             
             self.isDragging = NO;
-            self.resContentView.alpha = 1.0;
+//            self.resContentView.alpha = 1.0;
             
             self.floatingTimeView.hidden = YES;
         }
@@ -174,6 +184,14 @@
                 CGPoint pt = [sender locationInView:self.resView.superview];
                 self.resStartTimePoint = self.globalTimeLength*(pt.x-self.draggingXPos)/self.resView.superview.bounds.size.width;
                 NSLog(@"%f, %f, %f", self.resStartTimePoint, self.resTimeLength, self.globalTimeLength);
+                
+                int64_t start_point = self.resStartTimePoint * 1000;
+                
+                id<QTrack> track = [self.globalXMObject.tracks objectAtIndex:self.cellIndex];
+                int64_t trackLenght = QTimeRangeGetLenght( track.displayRange);
+                track.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
+                
+                [self.player seekTo:self.player.position :0];
             }
         }
             break;
@@ -182,8 +200,14 @@
         case UIGestureRecognizerStateCancelled:
         case UIGestureRecognizerStateFailed:
         {
-//            XMObject* subObject = self.globalXMObject.subObjects[self.cellIndex];
-//            subObject.timeLayout.startTime = self.resStartTimePoint;
+            int64_t start_point = self.resStartTimePoint * 1000;
+//            QMediaTrack* subObject = self.globalXMObject.player.subObjects.allValues[self.cellIndex];
+//            int64_t trackLenght = QTimeRangeGetLenght( subObject.displayRange);
+//            subObject.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
+            id<QTrack> track = [self.globalXMObject.tracks objectAtIndex:self.cellIndex];
+            int64_t trackLenght = QTimeRangeGetLenght( track.displayRange);
+            track.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
+            [self.player seekTo:self.player.position :0];
         }
             break;
             
@@ -194,11 +218,12 @@
 
 - (IBAction)onResViewButtonPressed:(id)sender
 {
-    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:self.resNameLabel.text
-                                                                         message:nil
-                                                                  preferredStyle:UIAlertControllerStyleActionSheet];
-    UIAlertAction *action = nil;
+//    UIAlertController *actionSheet = [UIAlertController alertControllerWithTitle:self.resNameLabel.text
+//                                                                         message:nil
+//                                                                  preferredStyle:UIAlertControllerStyleActionSheet];
+//    UIAlertAction *action = nil;
     
+    [_tableViewController selectRowByIndex:self.cellIndex];
     
     
 //    if (self.isEditing) {
@@ -271,13 +296,13 @@
 //        action = [UIAlertAction actionWithTitle:@"编辑"
 //                                          style:UIAlertActionStyleDefault
 //                                        handler:^(UIAlertAction * _Nonnull action) {
-////                                            XMObject* object = self.globalXMObject.subObjects[self.cellIndex];
-////                                            XMComposedObject* container = [XMComposedObject new];
-////                                            container.pixelSize = self.globalXMObject.pixelSize;
-////                                            container.layout = self.globalXMObject.layout;
-////                                            container.duration = object.duration;
-////                                            container.timeLayout = object.timeLayout;
-////                                            [container addSubObject:object];
+//                                            XMObject* object = self.globalXMObject.subObjects[self.cellIndex];
+//                                            XMComposedObject* container = [XMComposedObject new];
+//                                            container.pixelSize = self.globalXMObject.pixelSize;
+//                                            container.layout = self.globalXMObject.layout;
+//                                            container.duration = object.duration;
+//                                            container.timeLayout = object.timeLayout;
+//                                            [container addSubObject:object];
 //                                            [self.player setObjectToPlay:self.globalXMObject.subObjects[self.cellIndex]];
 //                                            [self.player.objectToPlay.layout addObserver:self
 //                                                                              forKeyPath:@"duration"

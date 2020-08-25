@@ -20,12 +20,12 @@ GRAPHICCORE_BEGIN
  *  note: must use in opengl thread
  *  default vertex and uniform below
  *  ---------------------------------------------------------
- *  addVertexAttribOption("a_position",VertexAttrib::VERTEX3);
- *  addVertexAttribOption("a_texCoord",VertexAttrib::TEXCOORD);
- *  addUniformOption("uMVPMatrix",Uniform::MATRIX4);
- *  addUniformOption("uTexMatrix",Uniform::MATRIX4);
- *  addUniformOption("uTexture",Uniform::TEXTURE);
- *  addUniformOption("uColor",Uniform::FLOAT4);
+ *  VertexAttribOption("a_position",VertexAttrib::VERTEX3);
+ *  VertexAttribOption("a_texCoord",VertexAttrib::TEXCOORD);
+ *  UniformOption("uMVPMatrix",Uniform::MATRIX4);
+ *  UniformOption("uTexMatrix",Uniform::MATRIX4);
+ *  UniformOption("uTexture",Uniform::TEXTURE);
+ *  UniformOption("uColor",Uniform::FLOAT4);
  */
 class Texture2DDrawer {
 public:
@@ -36,7 +36,11 @@ public:
 
     ShaderProgram& getShaderProgram() { return _shaderProgram; }
 
+    //draw with node's settings
     virtual void draw(const Texture2D* texture,const Scene* scene, const Mat4 & /*transform*/, const Node* /*node*/, Drawable2D::FlipMode flipMode = Drawable2D::NONE) ;
+    
+    virtual void draw(const Texture2D* texture, const Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+                            const BlendFunc& blend, Drawable2D::FlipMode flipMode);
 
 protected:
     ShaderProgram _shaderProgram;

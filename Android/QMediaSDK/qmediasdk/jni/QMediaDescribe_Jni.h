@@ -6,7 +6,7 @@
 #define QMEDIASDK_QMEDIADESCRIBE_JNI_H
 
 #include "JniUtils.h"
-#include "MediaCore/mediadef/MediaComm.h"
+#include "MediaCore/core/MediaComm.h"
 
 #define QAUDIODESCRIBE_CLASSPATH "com/qmedia/qmediasdk/QSource/QAudioDescribe"
 #define QVIDEODESCRIBE_CLASSPATH "com/qmedia/qmediasdk/QSource/QVideoDescribe"

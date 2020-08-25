@@ -503,6 +503,7 @@ AnimaNode::~AnimaNode(){
 
 bool AnimaNode::addAnimator(Animator* animator)
 {
+    std::unique_lock<std::mutex> lock(_render_mutex);
     if (checkAndSetAnimator(animator)) {
         auto group = _animatorsGroup.find(animator->_property);
         if (group == _animatorsGroup.end()) {
@@ -514,6 +515,7 @@ bool AnimaNode::addAnimator(Animator* animator)
 }
 bool AnimaNode::removeAnimator(Animator* animator)
 {
+    std::unique_lock<std::mutex> lock(_render_mutex);
     auto group = _animatorsGroup.find(animator->_property);
     if (group != _animatorsGroup.end()) {
         return _animatorsGroup[animator->_property]->removeAnimator(animator);
@@ -539,6 +541,7 @@ void AnimaNode::updateAllAnimations(int64_t timeStamp)
 
 void AnimaNode::updateAnimations(int64_t timeStamp)
 {
+    std::unique_lock<std::mutex> lock(_render_mutex);
     for (auto& group : _animatorsGroup) {
         group.second->updateProperty(timeStamp);
     }

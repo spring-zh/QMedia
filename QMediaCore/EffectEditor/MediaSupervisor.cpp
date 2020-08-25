@@ -37,6 +37,7 @@ Range<int64_t> MediaSupervisor::getMediaTimeRange() const
     if (timeRange._start > timeRange._end) {
         timeRange = {0,0};
     }
+    timeRange._start = 0;
     return timeRange;
 }
 

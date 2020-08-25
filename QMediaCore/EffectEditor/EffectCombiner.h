@@ -12,31 +12,36 @@
 #include "Utils/ThreadTask.h"
 #include "GraphicCore/GcLayer.h"
 #include "MediaCore/core/SteadyClock.h"
-#include "MediaCore/AudioClock.h"
+#include "MediaCore/audiocore/AudioClock.h"
 #include "MediaCore/output/VideoTarget.h"
 #include "MediaCore/output/AudioTarget.h"
 #include "MediaSupervisor.h"
 
 class EffectCombiner;
 
-class RenderLayer : public GraphicCore::RenderNode {
+class DisplayLayer : public GraphicCore::Layer {
 public:
-    RenderLayer(EffectCombiner *combiner);
-    ~RenderLayer(){}
+    DisplayLayer(EffectCombiner *combiner);
+    ~DisplayLayer(){}
     
     const Range<int64_t> getRange() override;
     
     void releaseRes() override;
     
     bool beginRender();
+    void setDisplayMode(DisplayMode mode, int viewW, int viewH);
     void render(int64_t timeStamp);
-    void draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/) override;
     
+    bool _isInit;
+
+private:
     EffectCombiner *_combiner;
     GraphicCore::Scene _playerScene;
     GraphicCore::GLEngine _gle;
-    GraphicCore::Texture2D *_depthTexture;
-    bool _isInit;
+    
+    DisplayMode _displayMode;
+    int _viewW,_viewH;
+    int _targetW, _targetH;
 };
 
 #define MP_RET_IF_FAILED(ret) \
@@ -105,7 +110,7 @@ public:
     void setAudioTarget(AudioTarget* audioTarget);
     void setCallBack(Callback *callback) { _callback = callback; }
     
-    const std::shared_ptr<RenderLayer>& getRootNode() const { return _displayLayer; }
+    const std::shared_ptr<DisplayLayer>& getRootNode() const { return _displayLayer; }
 
     /**
      * set the output traget config what you want .
@@ -131,9 +136,10 @@ public:
     void removeMediaTrack(MediaTrackRef mediaTrack);
     void attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent);
     void detachRenderNode(GraphicCore::RenderNodeRef current);
+    void topRenderNode(GraphicCore::RenderNodeRef current);
     
-    void attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect);
-    void detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect);
+    void attachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect);
+    void detachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect);
     
     void attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent);
     void detachAudioNode(MediaAudioChannelRef current);
@@ -143,6 +149,7 @@ protected:
     virtual bool onRenderCreate() override;
     virtual bool onVideoRender(int64_t wantTimeMs) override;
     virtual bool onRenderDestroy() override;
+    virtual void setDisplayMode(DisplayMode mode, int dstW, int dstH) override;
     virtual bool onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs) override;
     
     bool onAudioRender(uint8_t * const buffer, unsigned needBytes);
@@ -164,8 +171,8 @@ protected:
     
     void _attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent);
     void _detachRenderNode(GraphicCore::RenderNodeRef current);
-    void _attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect);
-    void _detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect);
+    void _attachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect);
+    void _detachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect);
     
     void _attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent);
     void _detachAudioNode(MediaAudioChannelRef current);
@@ -177,7 +184,7 @@ protected:
     AudioDescribe _audioConfig;
     VideoTarget* _videoTarget;
     AudioTarget* _audioTarget;
-    std::shared_ptr<RenderLayer> _displayLayer;
+    std::shared_ptr<DisplayLayer> _displayLayer;
 
     Range<int64_t> _validTimeRange;
     

@@ -15,9 +15,7 @@
 using namespace GraphicCore;
 
 @implementation QLayer {
-    QColor4 _bkColor;
     GraphicCore::LayerRef _layer;
-    NSMutableArray<QEffect*>* _effects;
 }
 
 - (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner
@@ -31,38 +29,17 @@ using namespace GraphicCore;
 - (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner uid:(NSString*)uid
 {
     _layer = GraphicCore::LayerRef(new GraphicCore::Layer(GraphicCore::Size(size.width,size.height)));
-    if(self = [super initWithNode:_layer combiner:combiner uid:uid]) {
-        _bkColor = QColorMake(0, 0, 0, 0);
-        _effects = [NSMutableArray new];
-    }
-    return self;
+    return self = [super initWithNode:_layer combiner:combiner uid:uid];
+}
+
+- (instancetype)initWithNative:(GraphicCore::LayerRef)layer combiner:(QCombiner*)combiner uid:(NSString*)uid
+{
+    _layer = layer;
+    return self = [super initWithNode:_layer combiner:combiner uid:uid];
 }
 
 - (void)dealloc {
     NSLog(@"QLayer dealloc");
-}
-
-- (void)addEffect:(QEffect*)effect {
-    [_effects addObject:effect];
-    [super.combiner attachEffect:self effect:effect];
-//    _layer->addEffect(effect.native);
-}
-
-- (void)removeEffect:(QEffect*)effect {
-    [_effects removeObject:effect];
-    [super.combiner detachEffect:self effect:effect];
-//    _layer->removeEffect(effect.native);
-}
-
-- (void)removeAllEffect {
-    for (QEffect* effect in _effects) {
-        [super.combiner detachEffect:self effect:effect];
-    }
-    [_effects removeAllObjects];
-}
-
-- (NSArray<QEffect *> *)effects {
-    return _effects;
 }
 
 - (CGSize)layerSize {
@@ -74,9 +51,24 @@ using namespace GraphicCore;
     return QColorMake(color.r, color.g, color.b, color.a);
 }
 - (void)setBkColor:(QColor4)bkColor{
-    _bkColor = bkColor;
     GraphicCore::Color4F color(bkColor.r,bkColor.g,bkColor.b,bkColor.a);
     _layer->setBKColor(color);
+}
+
+- (bool)enable3d{
+    return _layer->getEnable3d();
+}
+
+- (void)setEnable3d:(bool)enable3d {
+    _layer->setEnable3d(enable3d);
+}
+
+- (QFlipMode)flipMode {
+    return (QFlipMode)_layer->getFlipMode();
+}
+
+- (void)setFlipMode:(QFlipMode)flipMode {
+    _layer->setFlipMode((Drawable2D::FlipMode)flipMode);
 }
 
 @end

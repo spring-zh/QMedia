@@ -110,7 +110,7 @@ private:
 }
 
 - (void)dealloc {
-    NSLog(@"%@ dealloc ", self);
+    NSLog(@"QExporter dealloc ");
 }
 
 #pragma mark - Observer Logic
@@ -157,6 +157,10 @@ private:
 
 - (bool)onVideoRender:(int64_t)wantTime {
     return ((VideoRender*)_exporter.get())->onVideoRender(wantTime);
+}
+
+- (void)setDisplayMode:(QDisplayMode)mode viewW:(int)viewW viewH:(int)viewH {
+    return ((VideoRender*)_exporter.get())->setDisplayMode((DisplayMode)mode, viewW, viewH);
 }
 
 - (bool)onAudioRender:(uint8_t *const)buffer needBytes:(unsigned int)needBytes wantTime:(int64_t)wantTime {

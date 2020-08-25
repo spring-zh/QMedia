@@ -4,9 +4,10 @@ import android.util.Log;
 
 import com.qmedia.qmediasdk.QAudio.QAudioTrackNode;
 import com.qmedia.qmediasdk.QCommon.QRange;
+import com.qmedia.qmediasdk.QCommon.QSize;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEffect.QEffect;
-import com.qmedia.qmediasdk.QEffect.QEffectManage;
+import com.qmedia.qmediasdk.QGraphic.QBlendFunc;
 import com.qmedia.qmediasdk.QGraphic.QDuplicateNode;
 import com.qmedia.qmediasdk.QGraphic.QGraphicNode;
 import com.qmedia.qmediasdk.QGraphic.QImageNode;
@@ -20,15 +21,51 @@ import com.qmedia.qmediasdk.QSource.QVideoDescribe;
 import com.qmedia.qmediasdk.QTarget.QAudioTarget;
 import com.qmedia.qmediasdk.QTarget.QVideoTarget;
 import com.qmedia.qmediasdk.QTrack.QMediaTrack;
+import com.qmedia.qmediasdk.QTrack.QMultiMediaTrack;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.UUID;
+import java.util.List;
 
 public class QCombiner extends QMediaFactory{
     private static final String TAG = "QCombiner";
 
-    protected DisplayRootNode rootNode = new DisplayRootNode();
+    public class QDisplayLayer extends QLayer {
+        QDisplayLayer() {
+            super(QCombiner.this, "0");
+        }
+        @Override
+        public void setRenderRange(QRange renderRange) { }
+        @Override
+        public void setVisible(boolean visible) { }
+        @Override
+        public void setRotation3d(QVector rotation3d) { }
+        @Override
+        public void setRotation(float rotation) { }
+        @Override
+        public void setScaleX(float scaleX) { }
+        @Override
+        public void setScaleY(float scaleY) { }
+        @Override
+        public void setScaleZ(float scaleZ) { }
+        @Override
+        public void setContentSize(QSize contentSize) { }
+        @Override
+        public void setPosition(QVector position) { }
+        @Override
+        public void setPositionZ(float positionZ) { }
+        @Override
+        public void setAnchorPoint(QVector anchorPoint) { }
+        @Override
+        public void setColor4(QVector color4) { }
+        @Override
+        public void setAlpha(float alpha) { }
+        @Override
+        public void setCrop(QVector crop) { }
+        @Override
+        public void setBlendFunc(QBlendFunc blendFunc) { }
+    }
+
+    protected QDisplayLayer rootNode = new QDisplayLayer();
 
     protected QCombiner() {
         super.setCombiner(this);
@@ -52,7 +89,7 @@ public class QCombiner extends QMediaFactory{
         native_setAudioConfig(describe);
     }
 
-    public DisplayRootNode getRootNode() {
+    public QDisplayLayer getRootNode() {
         return rootNode;
     }
 
@@ -83,12 +120,12 @@ public class QCombiner extends QMediaFactory{
         return native_detachRenderNode(current);
     }
 
-    public boolean attachEffect(QLayer layer, QEffect effect) {
-        return native_attachEffect(layer, effect);
+    public boolean attachEffect(QGraphicNode node, QEffect effect) {
+        return native_attachEffect(node, effect);
     }
 
-    public boolean detachEffect(QLayer layer, QEffect effect) {
-        return native_detachEffect(layer, effect);
+    public boolean detachEffect(QGraphicNode node, QEffect effect) {
+        return native_detachEffect(node, effect);
     }
 
     public boolean attachAudioNode(QAudioTrackNode child, QAudioTrackNode parent) {
@@ -109,42 +146,49 @@ public class QCombiner extends QMediaFactory{
         return native_getMediaTimeRange();
     }
 
-
-    public class DisplayRootNode extends QGraphicNode {
-        DisplayRootNode() {
-            super(QCombiner.this, UUID.randomUUID().toString());
-        }
-
-        public void setBKColor(QVector color) {
-            setColor4(color);
-        }
-    }
-
     public void copyForm(QCombiner from) {
         setValidTimeRange(from.getMediaTimeRange());
-        //copy rootNode
+
         graphicNodes.clear();
+        //copy rootNode
         rootNode.copyForm(from.rootNode);
+        rootNode.setEnable3d(from.rootNode.isEnable3d());
+        rootNode.setBkColor(from.rootNode.getBkColor());
         super.addGraphicNodeIndex(rootNode);
 
         //copy mediaTracks
         for (HashMap.Entry<String, QMediaTrack> entry : from.mediaTracks.entrySet()) {
             QMediaTrack fromTrack = entry.getValue();
             QMediaSource fromSource = fromTrack.getMediaSource();
-            if (fromSource instanceof QMediaExtractorSource) {
-                QMediaExtractorSource fromExtractorSource = (QMediaExtractorSource)fromSource;
-                QMediaSource mediaSource = new QMediaExtractorSource(fromExtractorSource.getFileName(),
-                        fromExtractorSource.enableVideo(), fromExtractorSource.enableAudio(), fromExtractorSource.readInAsset());
-                mediaSource.setVideoTarget(videoTarget);
-                mediaSource.setAudioTarget(audioTarget);
-                QMediaTrack mediaTrack = new QMediaTrack(mediaSource, fromTrack.getId());
-                if (mediaTrack.prepare()) {
-                    this.addMediaTrack(mediaTrack);
-                    if (fromTrack.getGraphic() != null) {
-                        mediaTrack.generateVideoTrackNode(this, fromTrack.getGraphic().getId());
-                        mediaTrack.getGraphic().copyForm(fromTrack.getGraphic());
-                    }
+            QMediaTrack mediaTrack = null;
+            if (fromTrack instanceof QMultiMediaTrack) {
+                List<String> fromFileList = ((QMultiMediaTrack)fromTrack).getFileList();
+                mediaTrack = new QMultiMediaTrack(fromFileList, this, fromTrack.getId());
+            }else {
+                if (fromSource instanceof QMediaExtractorSource) {
+                    QMediaExtractorSource fromExtractorSource = (QMediaExtractorSource)fromSource;
+                    QMediaSource mediaSource = new QMediaExtractorSource(fromExtractorSource.getFileName(),
+                            fromExtractorSource.enableVideo(), fromExtractorSource.enableAudio(), fromExtractorSource.readInAsset());
+                    mediaSource.setVideoTarget(videoTarget);
+                    mediaSource.setAudioTarget(audioTarget);
+                    mediaTrack = new QMediaTrack(mediaSource, fromTrack.getId());
+                }
+            }
+
+            if (mediaTrack.prepare()) {
+                mediaTrack.setDisplayRange(fromTrack.getDisplayRange());
+                mediaTrack.setSourceRange(fromTrack.getSourceRange());
+                mediaTrack.setTimeScale(fromTrack.getTimeScale());
+
+                this.addMediaTrack(mediaTrack);
+                if (fromTrack.getGraphic() != null) {
+                    mediaTrack.generateVideoTrackNode(this, fromTrack.getGraphic().getId());
+                    mediaTrack.getGraphic().copyForm(fromTrack.getGraphic());
+                }
+                if (fromTrack.getAudio() != null) {
                     mediaTrack.generateAudioTrackNode(this);
+                    mediaTrack.getAudio().setPitch(fromTrack.getAudio().getPitch());
+                    mediaTrack.getAudio().setVolume(fromTrack.getAudio().getVolume());
                 }
             }
         }
@@ -153,7 +197,7 @@ public class QCombiner extends QMediaFactory{
         for (HashMap.Entry<String, QGraphicNode> entry: from.graphicNodes.entrySet()) {
             QGraphicNode newNode;
             QGraphicNode fromNode = entry.getValue();
-            if (fromNode instanceof DisplayRootNode) {
+            if (fromNode instanceof QDisplayLayer) {
                 continue;
             }else if (fromNode instanceof QVideoTrackNode) {
                 //TODO: set QVideoTrackNode
@@ -165,11 +209,6 @@ public class QCombiner extends QMediaFactory{
                 QLayer fromLayer = (QLayer)fromNode;
                 QLayer layer = new QLayer(fromLayer.getLayerSize(),"", this, fromNode.getId());
                 layer.setBkColor(fromLayer.getBkColor());
-                for (QEffect effect : fromLayer.getEffects()) {
-                    QEffect newEffect = QEffectManage.createEffect(effect.getName());
-                    newEffect.setRenderRange(effect.getRenderRange());
-                    layer.addEffect(newEffect);
-                }
                 newNode = layer;
             }else if (fromNode instanceof QImageNode) {
                 QImageNode fromImage = (QImageNode)fromNode;
@@ -240,8 +279,8 @@ public class QCombiner extends QMediaFactory{
     protected native void native_removeMediaTrack(QMediaTrack track);
     protected native boolean native_attachRenderNode(QGraphicNode child, QGraphicNode parent);
     protected native boolean native_detachRenderNode(QGraphicNode current);
-    protected native boolean native_attachEffect(QLayer layer, QEffect effect);
-    protected native boolean native_detachEffect(QLayer layer, QEffect effect);
+    protected native boolean native_attachEffect(QGraphicNode node, QEffect effect);
+    protected native boolean native_detachEffect(QGraphicNode node, QEffect effect);
     protected native boolean native_attachAudioNode(QAudioTrackNode child, QAudioTrackNode parent);
     protected native boolean native_detachAudioNode(QAudioTrackNode current);
     protected native long native_getPosition();

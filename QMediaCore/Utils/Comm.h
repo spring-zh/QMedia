@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <float.h>
+#include <math.h>
 #include <algorithm>
 #include <string>
 #include <sstream>
@@ -69,14 +71,11 @@ protected:
 	NonCopyable& operator=(const NonCopyable&) = delete;
 };
 
-//union Storage {
-//    T value;
-//    
-//    template <typename... Args>
-//    explicit constexpr Storage(Args&&... args)
-//        : value(std::forward(Args)(args)...) {}
-//    ~Storage(){}
-//};
+#define RB_8(ptr) (*((uint8_t*)ptr))
+#define RB_16(ptr) ((RB_8(ptr) << 8)|RB_8(ptr+1))
+#define RB_24(ptr) ((RB_16(ptr)<<8)|RB_8(ptr+2))
+#define RB_32(ptr) ((RB_16(ptr)<<16)|RB_16(ptr+2))
+#define RB_64(ptr) (((uint64_t)RB_32(ptr)<<32)|RB_32(ptr+4))
 
 class CallOnce {
 public:
@@ -118,3 +117,5 @@ std::string ValueToString(const T &value){
 #define GET_ARRAY_COUNT(arr) (sizeof(arr)/sizeof(arr[0]))
 
 #define FLOAT_ISEQUAL(val, eqVal) (fabs(val - eqVal) < FLT_EPSILON)
+
+#define CLASSREF(c) using c##Ref = std::shared_ptr<c> ;

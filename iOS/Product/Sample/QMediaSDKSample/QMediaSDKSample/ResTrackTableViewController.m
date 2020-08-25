@@ -11,7 +11,7 @@
 #import "GlobalXMObject.h"
 #import <QMediaSDK/QMediaSDK.h>
 
-@interface ResTrackTableViewController () <QEditorPlayerObserver>
+@interface ResTrackTableViewController () <GlobalMeidaManageObserver>
 @property (nonatomic, weak) GlobalXMObject* globalXMObject;
 @property (nonatomic, weak) QEditorPlayer* player;
 @end
@@ -23,7 +23,9 @@
     self = [super initWithCoder:aDecoder];
     if (self) {
         self.globalXMObject = [GlobalXMObject sharedInstance];
-        [self.player addObserver:self];
+        self.player = [GlobalXMObject sharedInstance].player;
+//        [self.player addObserver:self];
+        [[GlobalXMObject sharedInstance].observers addObject:self];
         
         [[NSNotificationCenter defaultCenter] addObserver:self
                                                  selector:@selector(onNotification:)
@@ -35,7 +37,8 @@
 
 - (void)dealloc
 {
-    [self.player removeObserver:self];
+//    [self.player removeObserver:self];
+    [[GlobalXMObject sharedInstance].observers removeObject:self];
     
     [[NSNotificationCenter defaultCenter] removeObserver:self];
 }
@@ -50,14 +53,44 @@
     // self.navigationItem.rightBarButtonItem = self.editButtonItem;
 }
 
+-  (void)viewWillAppear:(BOOL)animated {
+    [super viewWillAppear:animated];
+    [self.tableView reloadData];
+}
+
 - (void)didReceiveMemoryWarning {
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }
 
-- (void)onPlayerChangedObjectToPlay
-{
+//- (void)onPlayerChangedObjectToPlay
+//{
+//    [self.tableView reloadData];
+//}
+
+-(void)onTrackChange {
     [self.tableView reloadData];
+}
+-(void)onSelectTrackAtIndex:(NSInteger)index {
+    _selectRow = index;
+    NSInteger sections = self.tableView.numberOfSections;
+    for (int section = 0; section < sections; section++) {
+        NSInteger rows =  [self.tableView numberOfRowsInSection:section];
+        for (int row = 0; row < rows; row++) {
+            NSIndexPath *indexPath = [NSIndexPath indexPathForRow:row inSection:section];
+            UITableViewCell* cell = [self.tableView cellForRowAtIndexPath:indexPath];
+            if (index == row) {
+                cell.backgroundColor = [UIColor cyanColor];
+                cell.layer.borderColor = [UIColor cyanColor].CGColor;
+                cell.layer.borderWidth = 2;
+            }else
+            {
+                cell.backgroundColor = nil;
+                cell.layer.borderColor = nil;
+                cell.layer.borderWidth = 0;
+            }
+        }
+    }
 }
 
 -(void)onNotification:(NSNotification *)notification{
@@ -74,7 +107,7 @@
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section {
-    return self.player.subObjects.count;
+    return self.globalXMObject.tracks.count;
 }
 
 
@@ -82,13 +115,22 @@
     ResTrackTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ResTrackTableViewCell" forIndexPath:indexPath];
     
     cell.cellIndex = indexPath.row;
-    QMediaTrack *track = [[self.player.subObjects allValues] objectAtIndex:indexPath];
-//    XMObject* subObject = self.globalXMObject.subObjects[indexPath.row];
-    cell.globalTimeLength = self.player.mediaTimeRange.length ;
-    cell.resTimeLength = track.displayRange.length;
-    cell.resStartTimePoint = track.displayRange.location;
-    cell.resNameLabel.text = @"subObject.name";
+    id<QTrack> track = [self.globalXMObject.tracks objectAtIndex:indexPath.row];
+    cell.globalTimeLength = QTimeRangeGetLenght(self.player.mediaTimeRange)/1000.0f ;
+    cell.sourceTimeLength = QTimeRangeGetLenght(track.sourceRange)/1000.0f;
+    cell.resTimeLength = QTimeRangeGetLenght(track.displayRange)/1000.0f;
+    cell.resStartTimePoint = track.displayRange.startPoint/1000.0f ;
+    cell.resNameLabel.text = track.displayName;
+    cell.tableViewController = self;
     return cell;
+}
+
+- (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath{
+    _selectRow = indexPath.row;
+}
+
+- (void)selectRowByIndex:(NSUInteger)selectRow {
+    self.globalXMObject.selectTrackIndex = selectRow;
 }
 
 /*

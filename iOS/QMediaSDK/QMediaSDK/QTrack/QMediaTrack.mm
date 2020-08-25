@@ -60,7 +60,7 @@
 
 - (void)dealloc
 {
-    NSLog(@"%@ dealloc ", self);
+    NSLog(@"%@ name(%@) dealloc ", self, self.displayName);
     _mediaTrackNative.reset();
     _mediaSource = nil;
 }
@@ -118,29 +118,33 @@
     return _uid;
 }
 
-- (NSRange)sourceRange{
-    auto range = _mediaTrackNative->getSourceRange();
-    NSRange nsRange;
-    nsRange.location = (NSUInteger)range._start;
-    nsRange.length = (NSUInteger)range.getLength();
-    return nsRange;
+- (QVideoDescribe *)videoDesc {
+    return _mediaSource.videoDesc;
 }
 
-- (void)setDisplayRange:(NSRange)range{
-    Range<int64_t> displayRange((int64_t)range.location,(int64_t)(range.location + range.length));
+- (QAudioDescribe *)audioDesc {
+    return _mediaSource.audioDesc;
+}
+
+- (QTimeRange)sourceRange{
+    auto range = _mediaTrackNative->getSourceRange();
+    QTimeRange qRange = {range._start, range._end};
+    return qRange;
+}
+
+- (void)setDisplayRange:(QTimeRange)range{
+    Range<int64_t> displayRange(range.startPoint,range.endPoint);
     _mediaTrackNative->setDisplayTrackRange(displayRange);
 }
 
-- (NSRange)displayRange{
+- (QTimeRange)displayRange{
     auto range = _mediaTrackNative->getDisplayTrackRange();
-    NSRange nsRange;
-    nsRange.location = (NSUInteger)range._start;
-    nsRange.length = (NSUInteger)range.getLength();
-    return nsRange;
+    QTimeRange qRange = {range._start, range._end};
+    return qRange;
 }
 
-- (void)setSourceRange:(NSRange)range{
-    Range<int64_t> selectSourceRange((int64_t)range.location,(int64_t)(range.location + range.length));
+- (void)setSourceRange:(QTimeRange)range{
+    Range<int64_t> selectSourceRange(range.startPoint,range.endPoint);
     _mediaTrackNative->setSourceRange(selectSourceRange);
 }
 
@@ -167,6 +171,15 @@
 
 - (QAudioTrackNode*)audio{
     return _audio;
+}
+
+@synthesize displayName = _displayName;
+- (NSString *)displayName {
+    return _displayName;
+}
+
+- (void)setDisplayName:(NSString*)displayName {
+    _displayName = [displayName copy];
 }
 
 - (MediaTrackRef)native

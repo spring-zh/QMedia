@@ -78,6 +78,7 @@ bool Node::removeChildren(Node *_child) {
 void Node::removeFromParent() {
     if (getParent()) {
         getParent()->removeChildren(this);
+        setParent(nullptr);
     }
 }
 

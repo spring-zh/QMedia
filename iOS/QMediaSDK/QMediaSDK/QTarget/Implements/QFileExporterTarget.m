@@ -115,6 +115,7 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
 
 - (void)dealloc
 {
+    NSLog(@"%@ dealloc ", self);
     _videoCbQueue = nil;
     _audioCbQueue = nil;
     _glContextQueue = nil;
@@ -174,6 +175,7 @@ void runSynchronously(dispatch_queue_t processingQueue, const void *key, void (^
 - (bool)initVideo:(QVideoDescribe*)describe
 {
     _videoDesc = describe;
+    [_videoRender setDisplayMode:DisplayStretch viewW:_videoDesc.width viewH:_videoDesc.height];
     if(_videoDesc.framerate < 0)
         _videoDesc.framerate = 25;
     _video_duration = (float)1000 / _videoDesc.framerate;

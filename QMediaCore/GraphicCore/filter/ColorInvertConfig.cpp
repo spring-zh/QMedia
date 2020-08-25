@@ -41,7 +41,7 @@ const char * ColorInvertFragmentShaderString = R"(
 )";
 #endif
 
-const char * ColorInvertDescribe = "invert color";
+const char * ColorInvertDescribe = "";
 
 FilterConfigRef createColorInvertConfig() {
     

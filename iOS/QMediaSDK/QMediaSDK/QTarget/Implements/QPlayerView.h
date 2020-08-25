@@ -11,6 +11,7 @@
 
 @interface QPlayerView : UIView <QVideoTarget>
 
--(bool)capturePicture:(NSString *)filePath;
+- (void)setDisplayMode:(QDisplayMode)mode;
+- (bool)capturePicture:(NSString *)filePath;
 
 @end

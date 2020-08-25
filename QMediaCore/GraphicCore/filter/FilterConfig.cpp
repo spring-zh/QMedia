@@ -117,6 +117,21 @@ const char * BrightnessFragmentShaderString = R"(
  )";
 #endif
 
+const char * RGBAFragmentShaderString = R"(
+#ifdef GL_ES
+  precision highp float;
+#endif
+ varying vec2 textureCoordinate;
+ 
+ uniform sampler2D inputImageTexture;
+ uniform vec4 mixColor;
+ 
+ void main()
+ {
+     gl_FragColor = texture2D(inputImageTexture, textureCoordinate) * mixColor;
+ }
+)";
+
 FilterConfig::FilterConfig(const char* name, const char* describe) :
 EffectConfig(name, describe, "filter"){
 }
@@ -155,8 +170,9 @@ FilterConfigRef createLuminanceConfig() {
     return config;
 }
 
+const char* BrightnessDescribe = R"({ "brightness": {"type":"FLOAT", "default": 0, "max": 1.0 , "min": -1.0} })";
 FilterConfigRef createBrightnessConfig() {
-    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("Brightness", "uniform:{@brightness(FLOAT:-1.0 ~ 1.0)}"));
+    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("Brightness", BrightnessDescribe));
     config->vertex_sh = DefaultFilterVertexShaderString;
     config->fragment_sh = BrightnessFragmentShaderString;
     
@@ -185,8 +201,40 @@ FilterConfigRef createBrightnessConfig() {
     return config;
 }
 
+const char* RGBADescribe = R"({ "mixColor": {"type":"FLOAT4", "default": [1.0,1.0,1.0,1.0]} })";
+FilterConfigRef createRGBAConfig() {
+    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("RGBA", RGBADescribe));
+    config->vertex_sh = DefaultFilterVertexShaderString;
+    config->fragment_sh = RGBAFragmentShaderString;
+    
+    //vertex value
+    FilterConfig::VertexConfig positionVC;
+    positionVC.key = "a_position";
+    positionVC.type = VertexAttrib::VERTEX2;
+    positionVC.value.copyForm(Drawable2D::RECTANGLE_COORDS, 8);
+    
+    FilterConfig::VertexConfig texCoordVC;
+    texCoordVC.key = "a_texCoord";
+    texCoordVC.type = VertexAttrib::VERTEX2;
+    texCoordVC.value.copyForm(Drawable2D::RECTANGLE_TEX_COORDS, 8);
+    
+    //uniform value
+    FilterConfig::UniformConfig mixColorUC;
+    mixColorUC.key = "mixColor";
+    mixColorUC.type = Uniform::FLOAT4;
+    mixColorUC.value._floatOrmatrix_array = {1.0, 1.0, 1.0, 1.0};
+    
+    config->_vertexConfig.push_back(std::move(positionVC));
+    config->_vertexConfig.push_back(std::move(texCoordVC));
+    config->_uniformConfigs.push_back(std::move(mixColorUC));
+    
+    config->inputTexture = "inputTexture";
+    return config;
+}
+
+const char* LuminanceThresholdDescribe = R"({ "threshold": {"type":"FLOAT", "default": 0.5, "max": 1.0 , "min": 0.0} })";
 FilterConfigRef createLuminanceThresholdConfig() {
-    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("LuminanceThreshold", "uniform:{@threshold(FLOAT)}"));
+    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("LuminanceThreshold", LuminanceThresholdDescribe));
     config->vertex_sh = DefaultFilterVertexShaderString;
     config->fragment_sh = LuminanceThresholdFragmentShaderString;
     
@@ -215,8 +263,9 @@ FilterConfigRef createLuminanceThresholdConfig() {
     return config;
 }
 
+const char* ContrastDescribe = R"({ "contrast": {"type":"FLOAT", "default": 1.0, "max": 4.0 , "min": 0.0} })";
 FilterConfigRef createContrastConfig() {
-    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("Contrast", "uniform:{@contrast(FLOAT)}"));
+    std::shared_ptr<FilterConfig> config = std::shared_ptr<FilterConfig>(new FilterConfig("Contrast", ContrastDescribe));
     config->vertex_sh = DefaultFilterVertexShaderString;
     config->fragment_sh = ContrastFragmentShaderString;
     

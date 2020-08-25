@@ -7,7 +7,7 @@
 
 #include "JniUtils.h"
 #include "GraphicCore/opengl/ShaderProgram.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/VideoFrame.h"
 #include "EffectEditor/VideoFrameDrawer.h"
 
 using GraphicCore::ShaderProgram;
@@ -52,6 +52,8 @@ public:
 
     bool setFrame(const VideoFrame &videoFrame) override;
     virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) override ;
+    virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+                                const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode = GraphicCore::Drawable2D::NONE) override ;
     virtual void release() override;
 
 protected:
@@ -59,6 +61,7 @@ protected:
     int _textureid;
     int _texW;
     int _texH;
+    VideoRotation _rotation;
 };
 
 #endif //QMEDIASDK_QVIDEOFRAME_JNI_H

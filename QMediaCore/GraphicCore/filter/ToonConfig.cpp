@@ -151,7 +151,8 @@ const char * ToonFragmentShaderString = R"(
 )";
 #endif
 
-const char * ToonDescribe = "uniform:{@intensity(FLOAT), @threshold(FLOAT), @quantizationLevels(FLOAT)}";
+//const char * ToonDescribe = R"({ "threshold": {"type":"FLOAT", "default": 0.2, "max": 1.0 , "min": 0.0} })";
+const char * ToonDescribe = "";
 
 FilterConfigRef createToonConfig() {
     

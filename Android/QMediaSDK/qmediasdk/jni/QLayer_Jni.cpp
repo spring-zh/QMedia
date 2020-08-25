@@ -39,3 +39,39 @@ NATIVE_FUNCTION(void , native_1setBkColor)(JNIEnv *env, jobject thiz, jobject jc
         return (*layer_ptr)->setBKColor(bkcolor4F);
     }
 }
+
+NATIVE_FUNCTION(jboolean , native_1isEnable3d)(JNIEnv *env, jobject thiz)
+{
+    GraphicCore::LayerRef * layer_ptr = reinterpret_cast<GraphicCore::LayerRef *>(JniUtils::getObjectPtr(env, thiz));
+    jboolean jRet = JNI_FALSE;
+    if (layer_ptr) {
+        jRet = (*layer_ptr)->getEnable3d();
+    }
+    return jRet;
+}
+
+NATIVE_FUNCTION(void , native_1setEnable3d)(JNIEnv *env, jobject thiz, jboolean jenable)
+{
+    GraphicCore::LayerRef * layer_ptr = reinterpret_cast<GraphicCore::LayerRef *>(JniUtils::getObjectPtr(env, thiz));
+    if (layer_ptr) {
+        return (*layer_ptr)->setEnable3d(jenable);
+    }
+}
+
+NATIVE_FUNCTION(jint , native_1getFlipMode)(JNIEnv *env, jobject thiz)
+{
+    GraphicCore::LayerRef * layer_ptr = reinterpret_cast<GraphicCore::LayerRef *>(JniUtils::getObjectPtr(env, thiz));
+    GraphicCore::Drawable2D::FlipMode flipMode = GraphicCore::Drawable2D::NONE;
+    if (layer_ptr) {
+        flipMode = (*layer_ptr)->getFlipMode();
+    }
+    return flipMode;
+}
+
+NATIVE_FUNCTION(void , native_1setFlipMode)(JNIEnv *env, jobject thiz, jint jmode)
+{
+    GraphicCore::LayerRef * layer_ptr = reinterpret_cast<GraphicCore::LayerRef *>(JniUtils::getObjectPtr(env, thiz));
+    if (layer_ptr) {
+        return (*layer_ptr)->setFlipMode((GraphicCore::Drawable2D::FlipMode)jmode);
+    }
+}

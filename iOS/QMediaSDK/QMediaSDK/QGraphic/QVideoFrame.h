@@ -12,7 +12,7 @@
 #include <CoreVideo/CoreVideo.h>
 #include <CoreMedia/CoreMedia.h>
 #include "GraphicCore/opengl/Texture2DDrawer.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/VideoFrame.h"
 #include "EffectEditor/VideoFrameDrawer.h"
 
 using GraphicCore::ShaderProgram;
@@ -58,6 +58,8 @@ public:
 
     virtual bool setFrame(const VideoFrame& videoFrame) override;
     virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) override;
+    virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+    const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode = GraphicCore::Drawable2D::NONE) override;
     virtual void release() override ;
 private:
     
@@ -71,6 +73,8 @@ private:
     GLfloat *_colorConversionMatrix;
     
     std::shared_ptr<ShaderProgram> _program;
+    
+    VideoRotation _rotation;
 };
 
 class PixelFrameBGRADrawer: public VideoFrameDrawer {
@@ -80,6 +84,9 @@ public:
 
     virtual bool setFrame(const VideoFrame& videoFrame) override;
     virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) override;
+    virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+    const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) override;
+    const GraphicCore::Texture2D* getOutputTexture() override;
     virtual void release() override ;
 private:
     
@@ -93,4 +100,6 @@ private:
     
     std::shared_ptr<GraphicCore::Texture2DDrawer> _textureDrawer;
     GraphicCore::DuplicateTexture2D _duplicateTexture;
+    
+    VideoRotation _rotation;
 };

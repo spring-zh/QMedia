@@ -1,0 +1,7 @@
+[submodule "QMediaCore/Thirdparty/stb"]
+	path = QMediaCore/Thirdparty/stb
+	url = https://github.com/nothings/stb.git
+[submodule "QMediaCore/Thirdparty/mp4"]
+	path = QMediaCore/Thirdparty/mp4
+	url = https://github.com/spring-zh/mp4.git
+	branch = develop

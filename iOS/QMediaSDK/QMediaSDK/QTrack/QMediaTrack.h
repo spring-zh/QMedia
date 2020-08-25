@@ -7,12 +7,13 @@
 //
 
 #import "QMediaSource.h"
+#import "QTrack.h"
 #import "QVideoTrackNode.h"
 #import "QAudioTrackNode.h"
 
 @class QCombiner;
 
-@interface QMediaTrack : NSObject
+@interface QMediaTrack : NSObject <QTrack>
 
 - (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource;
 - (bool) prepare;
@@ -27,12 +28,19 @@
 - (bool)generateVideoTrackNode:(QCombiner*)combiner;
 
 @property (nonatomic, readonly) NSString* uid;
-@property (nonatomic) NSRange sourceRange;
-@property (nonatomic) NSRange displayRange;
+//media source describe
+@property (nonatomic, readonly) QVideoDescribe* videoDesc;
+@property (nonatomic, readonly) QAudioDescribe* audioDesc;
+
+@property (nonatomic) QTimeRange sourceRange;
+@property (nonatomic) QTimeRange displayRange;
 @property (nonatomic) float timeScale;
 @property (nonatomic) int repeatTimes;
 @property (nonatomic, readonly) id<QMediaSource> source;
 @property (nonatomic, readonly) QVideoTrackNode* graphic;
 @property (nonatomic, readonly) QAudioTrackNode* audio;
+
+@property (nonatomic, readonly) NSString* displayName;
+- (void)setDisplayName:(NSString*)displayName;
 
 @end

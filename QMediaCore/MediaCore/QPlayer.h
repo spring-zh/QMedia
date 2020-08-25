@@ -11,7 +11,7 @@
 
 #include "Utils/ThreadTask.h"
 #include "core/SteadyClock.h"
-#include "AudioClock.h"
+#include "MediaCore/audiocore/AudioClock.h"
 #include "decoder/VideoDecoder.h"
 #include "decoder/AudioDecoder.h"
 #include "output/VideoTarget.h"

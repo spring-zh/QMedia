@@ -8,7 +8,7 @@
 
 #pragma once
 
-#include "MediaCore/mediadef/MediaComm.h"
+#include "MediaCore/core/MediaComm.h"
 #include "OutputTarget.h"
 
 class AudioRender

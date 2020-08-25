@@ -26,8 +26,8 @@
     bool _updateView;
     CGSize _viewSize;
     CGSize _targetSize;
-    id<IOSTexture> _iosTexture;
-    IOSGLTextureDrawable *_textureDrawable;
+    
+    QDisplayMode _displayMode;
 }
 
 - (void)internalInit
@@ -52,6 +52,8 @@
     _targetSize.width = 0;
     _targetSize.height = 0;
     _bStart = false;
+    
+    _displayMode = DisplayStretch;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -89,22 +91,8 @@
 //    NSLog(@"QPlayerView onDrawFrame %@", [NSThread currentThread]);
     if (_bStart || _updateView) {
         _updateView = false;
-        
-        if (_targetSize.width > 0 && _targetSize.height > 0) {
-            [IOSGLTextureDrawable savePrevStatus];
-            if(!_textureDrawable) {
-                _iosTexture = [[IOSGeneralTexture alloc] initWithSize:_targetSize];
-                _textureDrawable = [[IOSGLTextureDrawable alloc] initWithTexture:_iosTexture];
-            }
-            [_textureDrawable useAsFrameBuffer];
-            [_videoRender onVideoRender:-1];
-            [IOSGLTextureDrawable loadPrevStatus];
-            glFinish();
-            glDisable(GL_DEPTH_TEST);
-            [_textureDrawable draw: QFilpV];
-        }
-        else
-            [_videoRender onVideoRender:-1];
+
+        [_videoRender onVideoRender:-1];
     }
     
     if (_bTakePicture) {
@@ -116,10 +104,13 @@
 - (void)onRelease
 {
     [_videoRender onVideoDestroy];
-    //TODO: release gl resource
-    [_textureDrawable releaseFb];
-    _textureDrawable = nil;
-    _iosTexture = nil;
+}
+
+- (void)setDisplayMode:(QDisplayMode)mode {
+    _displayMode = mode;
+    if (_videoRender) {
+        [_videoRender setDisplayMode:mode viewW:_viewSize.width viewH:_viewSize.height];
+    }
 }
 
 - (bool)capturePicture:(NSString *)filePath
@@ -170,6 +161,9 @@
 
 - (void)layoutSubviews{
 //    _viewSize = [self bounds].size;
+    _viewSize.width = _objView.getWidth;
+    _viewSize.height = _objView.getHeight;
+    [_videoRender setDisplayMode:_displayMode viewW:_viewSize.width viewH:_viewSize.height];
     _updateView = true;
 }
 
@@ -183,16 +177,10 @@
 }
 - (int)getWidth
 {
-    if (_iosTexture) {
-        return _iosTexture.width;
-    }
     return _describe.width;
 }
 - (int)getHeight
 {
-    if (_iosTexture) {
-        return _iosTexture.height;
-    }
     return _describe.height;
 }
 - (float)getFrameRate

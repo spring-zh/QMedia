@@ -51,8 +51,10 @@ bool MediaTrackImpl::mapTimeToMediaSource(int64_t mSec, int64_t& outmSec) const
             distance -= _sourceRange.getLength();
             loop--;
         }
-        outmSec = _sourceRange._start + distance;
-        return true;
+        if(distance <= _sourceRange.getLength()) {
+            outmSec = _sourceRange._start + distance;
+            return true;
+        }
     }
     return false;
 }
@@ -87,6 +89,10 @@ bool MediaTrackImpl::setPositionTo(int64_t mSec)
     wrlock_guard wrlock(_rwlock);
     int64_t remap_time;
     bool bRet = false;
+    
+    if(mSec < getDisplayTrackRange()._start) {
+        mSec = getDisplayTrackRange()._start;
+    }
     
     if(mapTimeToMediaSource(mSec, remap_time))
     {

@@ -1,9 +1,9 @@
 # The version number
 project(qmediacore)
 
-set(QMEDIA_CORE_VERSION 1.0.0)
+#enable_language(ASM)
 
-set(QMEDIA_CORE_LIB qmediacore)
+set(QMEDIA_CORE_VERSION 1.0.0)
 
 set(THIRDPARTY_PATH ${CMAKE_CURRENT_SOURCE_DIR}/Thirdparty)
 
@@ -12,7 +12,7 @@ include(GraphicCore/CMakeLists.txt)
 include(MediaCore/CMakeLists.txt)
 include(Utils/CMakeLists.txt)
 
-include(Thirdparty/CMakeLists.txt)
+add_subdirectory(Thirdparty)
 
 set(QMEDIA_HEADER
     ${EFFECT_EDITOR_HEADER}
@@ -22,6 +22,7 @@ set(QMEDIA_HEADER
     )
 
 set(QMEDIA_SRC
+    qmediacore.cpp
     ${EFFECT_EDITOR_SRC}
     ${GRAPHIC_CORE_SRC}
     ${MEDIA_CORE_SRC}
@@ -30,7 +31,7 @@ set(QMEDIA_SRC
 
 list(APPEND QMEDIA_SRC ${QMEDIA_HEADER})
 
-add_library(qmediacore ${QMEDIA_SRC} ${THIRDPARTY_SRC})
+add_library(qmediacore ${QMEDIA_SRC})
 
 if(ANDROID)
 # CMake from android SDK set ANDROID_NDK instead of CMAKE_ANDROID_NDK
@@ -47,13 +48,11 @@ if(ANDROID)
     target_link_libraries(qmediacore cpufeatures)
 endif()
 
+target_link_libraries(qmediacore thirdparty)
+
 target_include_directories(qmediacore
     PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}
     PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Thirdparty
-#    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/Utils
-#    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/GraphicCore
-#    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/MediaCore
-#    PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/EffectEditor
 )
 
 set_target_properties(qmediacore

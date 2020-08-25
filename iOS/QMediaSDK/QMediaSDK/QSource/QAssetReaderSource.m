@@ -23,7 +23,8 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
     QMediaDescribe* mediadescribe = [[QMediaDescribe alloc] init];
     if (NSOrderedSame == [avTrack.mediaType compare:AVMediaTypeVideo]) {
         QVideoDescribe* videoDescribe = [[QVideoDescribe alloc] init];
-        CGSize dimensions = CGSizeApplyAffineTransform(avTrack.naturalSize,avTrack.preferredTransform);
+//        CGSize dimensions = CGSizeApplyAffineTransform(avTrack.naturalSize,avTrack.preferredTransform);
+        CGSize dimensions = avTrack.naturalSize;
         CMFormatDescriptionRef desc = (__bridge CMFormatDescriptionRef)avTrack.formatDescriptions.firstObject;
         FourCharCode subType = CMFormatDescriptionGetMediaSubType(desc);
         if (subType == kCMVideoCodecType_H264) {
@@ -37,6 +38,23 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
         videoDescribe.framerate = avTrack.nominalFrameRate;
         videoDescribe.bitrate = avTrack.estimatedDataRate;
         videoDescribe.timeScale = 1000;
+        
+        QVideoRotation rotation = QVideoRotation_0;
+        CGAffineTransform t = avTrack.preferredTransform;
+         if(t.a == 0 && t.b == 1.0 && t.c == -1.0 && t.d == 0){
+             // Portrait
+             rotation = QVideoRotation_90;
+         }else if(t.a == 0 && t.b == -1.0 && t.c == 1.0 && t.d == 0){
+             // PortraitUpsideDown
+             rotation = QVideoRotation_270;
+         }else if(t.a == 1.0 && t.b == 0 && t.c == 0 && t.d == 1.0){
+             // LandscapeRight
+             rotation = QVideoRotation_0;
+         }else if(t.a == -1.0 && t.b == 0 && t.c == 0 && t.d == -1.0){
+             // LandscapeLeft
+             rotation = QVideoRotation_180;
+         }
+        videoDescribe.rotation = rotation;
         mediadescribe.videoDescribe = videoDescribe;
     }else if (NSOrderedSame == [avTrack.mediaType compare:AVMediaTypeAudio]) {
         QAudioDescribe* audioDescribe = [[QAudioDescribe alloc] init];
@@ -172,17 +190,18 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
     
     if (_enableVideo) {
         _videoTrack = [[_inputAsset tracksWithMediaType:AVMediaTypeVideo] firstObject];
+        if (_videoTrack != nil) {
+            QMediaDescribe* mediaDescribe = AVAssetTrackToMediaDescribe(_videoTrack);
+            _vdesc = mediaDescribe.videoDescribe;
+        }
     }
-    if (_videoTrack != nil) {
-        QMediaDescribe* mediaDescribe = AVAssetTrackToMediaDescribe(_videoTrack);
-        _vdesc = mediaDescribe.videoDescribe;
-    }
+    
     if (_enableAudio) {
         _audioTrack = [[_inputAsset tracksWithMediaType:AVMediaTypeAudio] firstObject];
-    }
-    if (_audioTrack != nil) {
-        QMediaDescribe* mediaDescribe = AVAssetTrackToMediaDescribe(_audioTrack);
-        _adesc = mediaDescribe.audioDescribe;
+        if (_audioTrack != nil) {
+            QMediaDescribe* mediaDescribe = AVAssetTrackToMediaDescribe(_audioTrack);
+            _adesc = mediaDescribe.audioDescribe;
+        }
     }
 
     _isInit = true;

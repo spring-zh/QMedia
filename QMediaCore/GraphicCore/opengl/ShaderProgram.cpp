@@ -6,6 +6,7 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
+#include <stdlib.h>
 #include "ShaderProgram.h"
 #include "GLEngine.h"
 #include "Utils/Logger.h"
@@ -358,9 +359,8 @@ GLuint ShaderProgram::LoadShader(GLenum type, const char* shaderSrc) {
         {
            char *info_log = (char*)malloc ( sizeof ( char ) * info_len );
            glGetShaderInfoLog ( shader, info_len, NULL, info_log );
-
+           LOGE("glCompileShader error: %s", info_log);
            free ( info_log );
-           info_log = NULL;
         }
         glCheckError();
         glDeleteShader(shader);

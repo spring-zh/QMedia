@@ -124,8 +124,13 @@
 
 - (void)colorViewController:(MSColorSelectionViewController *)colorViewCntroller didChangeColor:(UIColor *)color
 {
-    self.colorView.backgroundColor = color;
-//    self.globalXMObject.layout.backgroundColor = color;
+    CGFloat red = 0.0;
+    CGFloat green = 0.0;
+    CGFloat blue = 0.0;
+    CGFloat alpha = 0.0;
+    [color getRed:&red green:&green blue:&blue alpha:&alpha];
+    self.globalXMObject.player.rootNode.bkColor = QColorMake(red, green, blue, alpha);
+    [self.globalXMObject updateDisplay];
 }
 
 #pragma mark - Table view data source

@@ -53,6 +53,7 @@
 		22EF4DA81EA5D21200D1A198 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF4DA71EA5D21200D1A198 /* AVFoundation.framework */; };
 		22EF4DAA1EA5D21700D1A198 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF4DA91EA5D21700D1A198 /* CoreMedia.framework */; };
 		22EF4DAC1EA5D22100D1A198 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF4DAB1EA5D22100D1A198 /* OpenGLES.framework */; };
+		6F224A8424C0885B000244FF /* TrackSettingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A8224C0885B000244FF /* TrackSettingTableViewController.m */; };
 		6F4592122461503A00FABEAF /* QMediaSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4592112461503A00FABEAF /* QMediaSDK.framework */; };
 		6F4592132461504900FABEAF /* QMediaSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4592112461503A00FABEAF /* QMediaSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9EFB1EE81EE1508100AB91A4 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = 9EFB1EE71EE1508100AB91A4 /* audio */; };
@@ -156,6 +157,8 @@
 		22EF4DA71EA5D21200D1A198 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		22EF4DA91EA5D21700D1A198 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
 		22EF4DAB1EA5D22100D1A198 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		6F224A8224C0885B000244FF /* TrackSettingTableViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TrackSettingTableViewController.m; sourceTree = "<group>"; };
+		6F224A8324C0885B000244FF /* TrackSettingTableViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TrackSettingTableViewController.h; sourceTree = "<group>"; };
 		6F4592112461503A00FABEAF /* QMediaSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QMediaSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		9EFB1EE71EE1508100AB91A4 /* audio */ = {isa = PBXFileReference; lastKnownFileType = folder; path = audio; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -215,6 +218,7 @@
 				10D916041EC3113C00BA8E06 /* FilterManagement */,
 				10CC5C931EE7405400EE50E6 /* Transform */,
 				10CAB09F1EF56E18007C3BE1 /* Animation */,
+				6F224A8124C0864A000244FF /* Setting */,
 				10D916061EC3117900BA8E06 /* ResGenerators */,
 				10A9FE8A1EA4A4670051BDFC /* Main.storyboard */,
 				10A9FE8F1EA4A4670051BDFC /* LaunchScreen.storyboard */,
@@ -372,6 +376,15 @@
 			name = ResGenerators;
 			sourceTree = "<group>";
 		};
+		6F224A8124C0864A000244FF /* Setting */ = {
+			isa = PBXGroup;
+			children = (
+				6F224A8324C0885B000244FF /* TrackSettingTableViewController.h */,
+				6F224A8224C0885B000244FF /* TrackSettingTableViewController.m */,
+			);
+			name = Setting;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -483,6 +496,7 @@
 				10CAB09A1EF54259007C3BE1 /* MSThumbView.m in Sources */,
 				10CAB07A1EF5407D007C3BE1 /* SettingsTableViewController.m in Sources */,
 				10760CE41ED6D9C90045644C /* ExportViewController.m in Sources */,
+				6F224A8424C0885B000244FF /* TrackSettingTableViewController.m in Sources */,
 				10CAB0991EF54259007C3BE1 /* MSSliderView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

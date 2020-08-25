@@ -95,4 +95,18 @@ public:
     }
 };
 
+//class TimeDurationPrint {
+//public:
+//	TimeDurationPrint(const char* logstr) {
+//		logstring = logstr;
+//		firstTimeMs = SystemClock::getCurrentTime<int64_t ,scale_milliseconds >();
+//	}
+//	~TimeDurationPrint() {
+//		int64_t secondTimeMs = SystemClock::getCurrentTime<int64_t ,scale_milliseconds >();
+//		LOGI("%s Time Duration : %lld milliseconds", logstring.c_str(), (long long)secondTimeMs - firstTimeMs);
+//	}
+//	std::string logstring;
+//	int64_t firstTimeMs;
+//};
+
 #endif //UTILS_MEDIA_CLOCK_H

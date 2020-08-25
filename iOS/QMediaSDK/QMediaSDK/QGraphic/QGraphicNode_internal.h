@@ -13,7 +13,7 @@
 #include "EffectEditor/MediaGraphicChannel.h"
 
 @interface QGraphicNode()
-@property (nonatomic, assign) NSRange origin_renderRange;
+@property (nonatomic, assign) QTimeRange origin_displayRange;
 @property (nonatomic, assign) bool origin_visible;
 //@property (nonatomic, assign) float origin_rotation;
 @property (nonatomic, assign) QVector origin_rotation3d;

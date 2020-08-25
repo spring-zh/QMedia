@@ -6,7 +6,7 @@
 #define QMEDIASDK_QAUDIOFRAME_JNI_H
 
 #include "JniUtils.h"
-#include "MediaCore/mediadef/AudioFrame.h"
+#include "MediaCore/core/AudioFrame.h"
 
 class JavaAudioFrameBuffer : public AudioFrameBuffer {
 public:

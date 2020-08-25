@@ -54,6 +54,7 @@ FilterFactory::FilterFactory() {
     addNewConfig(createToonConfig());
     addNewConfig(createLuminanceConfig());
     addNewConfig(createBrightnessConfig());
+    addNewConfig(createRGBAConfig());
     addNewConfig(createSobelEdgeDetectionConfig());
     addNewConfig(createWhiteBalanceConfig());
     addNewConfig(createLuminanceThresholdConfig());
@@ -102,6 +103,15 @@ std::vector<FilterConfig*> FilterFactory::getAllFilterConfig() {
         filterlists.push_back(iter.second.get());
     }
     return filterlists;
+}
+
+FilterDrawer* FilterFactory::getFilterDrawer(const char* filter_name) {
+    FilterDrawer* drawer = nullptr;
+    auto iter = _filterConfigs.find(filter_name);
+    if (iter != _filterConfigs.end()) {
+        drawer = getFilterDrawer(iter->second.get());
+    }
+    return drawer;
 }
 
 FilterDrawer* FilterFactory::getFilterDrawer(FilterConfig* config) {

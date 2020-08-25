@@ -8,64 +8,100 @@
 
 #include "EffectCombiner.h"
 #include "Utils/Logger.h"
-#include "MediaCore/core/AudioProcess.h"
+#include "MediaCore/audiocore/AudioProcess.h"
 
 #define STATE_ISRUNING(state) (state == CombinerState::Prepared || state == CombinerState::Started || state == CombinerState::Paused )
 
 USING_GRAPHICCORE
 
-RenderLayer::RenderLayer(EffectCombiner *combiner):
+GraphicCore::Rect calculateDisplayRegion(DisplayMode mode, int srcW, int srcH, int dstW, int dstH) {
+    GraphicCore::Rect dstRegion;
+        switch (mode) {
+            case DisplayMode::Stretch:
+                dstRegion.size.width = dstW;
+                dstRegion.size.height = dstH;
+                break;
+            case DisplayMode::Adaptive:
+            {
+                float dstRatio = (float) dstW / dstH;
+                float srcRatio = (float) srcW / srcH;
+                if (srcRatio > dstRatio) {
+                    dstRegion.origin.x = 0;
+                    dstRegion.size.width = dstW;
+                    int newH = (int) (dstW / srcRatio);
+                    dstRegion.origin.y = (dstH - newH)/2;
+                    dstRegion.size.height = newH;
+                } else {
+                    dstRegion.origin.y = 0;
+                    dstRegion.size.height = dstH;
+                    int newW = (int) (dstH * srcRatio);
+                    dstRegion.origin.x = (dstW - newW) / 2;
+                    dstRegion.size.width = newW;
+                }
+            }
+                break;
+            case DisplayMode::Clip:
+
+                break;
+
+        }
+        return dstRegion;
+    }
+
+
+DisplayLayer::DisplayLayer(EffectCombiner *combiner):
+GraphicCore::Layer(GraphicCore::Size(0,0)),
 _combiner(combiner),
-_depthTexture(nullptr){
+_displayMode(DisplayMode::Adaptive)
+{
     _playerScene.setGLEngine(&_gle);
+    _renderRange = Range<int64_t>(0, std::numeric_limits<int64_t>::max());
     _isInit = false;
 }
 
-const Range<int64_t> RenderLayer::getRange()
+const Range<int64_t> DisplayLayer::getRange()
 {
-    return _combiner->getMediaTimeRange();
+    return _combiner->getValidTimeRange();
 }
 
-void RenderLayer::releaseRes()
+void DisplayLayer::releaseRes()
 {
     _gle.releaseAll();
-    if (_depthTexture) {
-        delete _depthTexture;
-        _depthTexture = nullptr;
-    }
     RenderNode::releaseRes();
 }
 
-bool RenderLayer::beginRender()
+bool DisplayLayer::beginRender()
 {
     _gle.useAsDefaultFrameBuffer();
-    
     if (!_isInit) {
-        GraphicCore::Rect vp(0, 0, _combiner->getVideoTarget()->getWidth(), _combiner->getVideoTarget()->getHeight());
-        _playerScene.setViewPort(vp);
-        _playerScene.setProjection(Projection::_3D);
-        _depthTexture = GeneralTexture2D::createTexture(Texture2D::DEPTH, _combiner->getVideoTarget()->getWidth(), _combiner->getVideoTarget()->getHeight());
+        _targetW = _combiner->getVideoTarget()->getWidth();
+        _targetH = _combiner->getVideoTarget()->getHeight();
+        _layerSize = GraphicCore::Size(_targetW, _targetH);
+
         createRes();
         _isInit = true;
     }
+
     return true;
 }
 
-void RenderLayer::render(int64_t timeStamp){
-    _playerScene.setDelta(timeStamp);
-    
-//    AnimaNode::updateAnimations(timeStamp);
-    RenderNode::visit(&_playerScene, _playerScene.getMatrix(MATRIX_STACK_MODELVIEW), 0);
+void DisplayLayer::setDisplayMode(DisplayMode mode, int viewW, int viewH) {
+    _displayMode = mode;
+    _viewW = viewW;
+    _viewH = viewH;
+    GraphicCore::Rect vp(0, 0, _viewW, _viewH);
+    _playerScene.setViewPort(vp);
+    _playerScene.setProjection(Projection::_2D);
 }
 
-void RenderLayer::draw(GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, uint32_t /*flags*/){
-    //draw background color
-    //FIXME: ?????
-    _gle.getCurrentFrameBuffer()->use();
-    _gle.getCurrentFrameBuffer()->attachTexture2D(FrameBuffer::DEPTH, _depthTexture);
-    _gle.enableDepthTest(true);
-    _gle.setClearColor(_realColor);
-    _gle.clearByColor();
+void DisplayLayer::render(int64_t timeStamp){
+    _playerScene.setDelta(timeStamp);
+
+    GraphicCore::Rect region = calculateDisplayRegion(_displayMode, _targetW, _targetH, _viewW, _viewH);
+    setPosition(region.origin);
+    setContentSize(region.size);
+
+    Layer::visit(&_playerScene, _playerScene.getMatrix(MATRIX_STACK_MODELVIEW), 0);
 }
 
 EffectCombiner::EffectCombiner():
@@ -86,7 +122,7 @@ _state(CombinerState::Idle)
     _audioConfig.bitwidth = 16;
     _audioConfig.codectype = AudioCodecType::kAAC;
     _audioConfig.format = RawAudioFormat::kS16;
-    _displayLayer = std::shared_ptr<RenderLayer>(new RenderLayer(this));
+    _displayLayer = std::shared_ptr<DisplayLayer>(new DisplayLayer(this));
     _threadTask.setTaskCallback(&EffectCombiner::cmdCallback,this);
 }
 EffectCombiner::~EffectCombiner()
@@ -222,7 +258,7 @@ EffectCombiner::RetCode EffectCombiner::_addMediaTrack(MediaTrackRef mediaTrack)
             _mediaTracks.insert(mediaTrack);
 
             if (STATE_ISRUNING(_state)) {
-                mediaTrack->setPositionTo(getPosition());
+                mediaTrack->setPositionTo(0);
             }
         }else
             return RetCode::e_state;
@@ -290,15 +326,15 @@ void EffectCombiner::_detachRenderNode(GraphicCore::RenderNodeRef current)
     current->releaseRes();
 }
 
-void EffectCombiner::_attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
-    if (layer) {
+void EffectCombiner::_attachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
+    if (renderNode) {
         effect->load();
-        layer->addEffect(effect);
+        renderNode->addEffect(effect);
     }
 }
-void EffectCombiner::_detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
-    if (layer) {
-        layer->removeEffect(effect);
+void EffectCombiner::_detachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
+    if (renderNode) {
+        renderNode->removeEffect(effect);
         effect->unload();
     }
 }
@@ -350,6 +386,11 @@ bool EffectCombiner::onRenderDestroy()
     runRenderCmd();
     _displayLayer->releaseRes();
     return true;
+}
+
+void EffectCombiner::setDisplayMode(DisplayMode mode, int dstW, int dstH)
+{
+    _displayLayer->setDisplayMode(mode, dstW, dstH);
 }
 
 bool EffectCombiner::onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs)
@@ -453,10 +494,9 @@ void EffectCombiner::stop()
 }
 
 Range<int64_t> EffectCombiner::getValidTimeRange() {
-    if ( _validTimeRange.isValid())
-        return _validTimeRange;
-    else
-        return getMediaTimeRange();
+    if (! _validTimeRange.isValid())
+        _validTimeRange = getMediaTimeRange();
+    return _validTimeRange;
 }
 
 void EffectCombiner::addMediaTrack(MediaTrackRef mediaTrack)
@@ -479,18 +519,31 @@ void EffectCombiner::detachRenderNode(GraphicCore::RenderNodeRef current)
 {
     postRenderTask(&EffectCombiner::_detachRenderNode, this, current);
 }
+
+void EffectCombiner::topRenderNode(GraphicCore::RenderNodeRef current)
+{
+    postRenderTask([](GraphicCore::RenderNodeRef current){
+        GraphicCore::Node *parent = current->getParent();
+        if (parent) {
+            current->removeFromParent();
+            parent->addChildren(current.get());
+        }
+    }, current);
+}
+
 void EffectCombiner::attachAudioNode(MediaAudioChannelRef child, MediaAudioChannelRef parent) {
     postAudioTask(&EffectCombiner::_attachAudioNode, this, child, parent);
-}
-void EffectCombiner::attachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
-    postRenderTask(&EffectCombiner::_attachEffect, this, layer, effect);
-}
-void EffectCombiner::detachEffect(GraphicCore::LayerRef layer, GraphicCore::EffectRef effect) {
-    postRenderTask(&EffectCombiner::_detachEffect, this, layer, effect);
 }
 
 void EffectCombiner::detachAudioNode(MediaAudioChannelRef current) {
     postAudioTask(&EffectCombiner::_detachAudioNode, this, current);
+}
+
+void EffectCombiner::attachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
+    postRenderTask(&EffectCombiner::_attachEffect, this, renderNode, effect);
+}
+void EffectCombiner::detachEffect(GraphicCore::RenderNodeRef renderNode, GraphicCore::EffectRef effect) {
+    postRenderTask(&EffectCombiner::_detachEffect, this, renderNode, effect);
 }
 
 void EffectCombiner::runRenderCmd()

@@ -44,6 +44,14 @@ public class QAudioTrackNode {
         native_setVolume(volume);
     }
 
+    public float getPitch() {
+        return native_getPitch();
+    }
+
+    public void setPitch(float pitch) {
+        native_setPitch(pitch);
+    }
+
     public void release() {
         native_release();
         mediaTrack = null;
@@ -60,6 +68,8 @@ public class QAudioTrackNode {
     protected native void native_setEnable(boolean enable);
     protected native float native_getVolume();
     protected native void native_setVolume(float volume);
+    protected native float native_getPitch();
+    protected native void native_setPitch(float pitch);
     //native ptr
     private long mPtr = 0;
 }

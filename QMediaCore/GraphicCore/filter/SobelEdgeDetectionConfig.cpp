@@ -94,7 +94,7 @@ const char * SobelEdgeDetectionFragmentShaderString = R"(
  }
 )";
 
-const char * SobelEdgeDetectionDescribe = "uniform:{@edgeStrength(FLOAT)}";
+const char * SobelEdgeDetectionDescribe = R"({ "edgeStrength": {"type":"FLOAT", "default": 1.f, "max": 2.0 , "min": 0.0} })";
 
 FilterConfigRef createSobelEdgeDetectionConfig() {
     
@@ -128,7 +128,7 @@ FilterConfigRef createSobelEdgeDetectionConfig() {
     FilterConfig::UniformConfig edgeStrengthUC;
     edgeStrengthUC.key = "edgeStrength";
     edgeStrengthUC.type = Uniform::FLOAT;
-    edgeStrengthUC.value._float_val = 2.f;
+    edgeStrengthUC.value._float_val = 1.f;
     
     config->_vertexConfig.push_back(std::move(positionVC));
     config->_vertexConfig.push_back(std::move(texCoordVC));

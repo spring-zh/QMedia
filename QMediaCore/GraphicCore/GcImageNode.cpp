@@ -27,29 +27,40 @@ ImageNode::ImageNode(uint8_t * iamge_buffer, int image_size){
     }
 }
 
+void ImageNode::draw(GraphicCore::Scene* scene, const Mat4 & transform, uint32_t flags) {
+    const Texture2D* texture = _texture2d.get();
+    if (texture && _textureDrawer) {
+        
+        int64_t duration = scene->getDelta() - _renderRange._start;
+        if (_effect_group.has_effect()) {
+            RenderNode::drawEffects(duration, scene, transform, texture);
+        }else {
+            _textureDrawer->draw(texture, scene, transform, this);
+        }
+    }
+}
+
 void ImageNode::duplicateDraw(Scene* scene, const Mat4 & transform, const Node* displayNode) {
     if (_texture2d && _textureDrawer) {
-        _textureDrawer->draw(_texture2d, scene, transform, displayNode);
+        _textureDrawer->draw(_texture2d.get(), scene, transform, displayNode);
     }
+}
+
+const Texture2D* ImageNode::getOutputTexture() {
+    return _texture2d.get();
 }
 
 bool ImageNode::createRes() {
     //TODO:
     if (_image) {
-        _texture2d = GeneralTexture2D::createFromImage(_image.get());
+        _texture2d = std::shared_ptr<Texture2D>(GeneralTexture2D::createFromImage(_image.get()));
         _image.reset();
     }
-    _textureDrawer = std::shared_ptr<Texture2DDrawer>(new Texture2DDrawer());
     return RenderNode::createRes();
 }
 void ImageNode::releaseRes() {
     //TODO:
-    if (_texture2d) {
-        _texture2d->release();
-        delete _texture2d;
-        _texture2d = nullptr;
-    }
-    _textureDrawer.reset();
+    _texture2d.reset();
     RenderNode::releaseRes();
 }
 

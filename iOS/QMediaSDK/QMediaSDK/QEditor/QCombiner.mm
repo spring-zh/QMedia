@@ -22,16 +22,40 @@
 extern const struct VideoDescribe XMToVideoDescribe(QVideoDescribe* xmdesc);
 extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 
-@implementation DisplayRootNode
+@interface QLayer(internal)
+- (instancetype)initWithNative:(GraphicCore::LayerRef)layer combiner:(QCombiner*)combiner uid:(NSString*)uid;
+@end
 
-- (QColor4)bkColor {
-    return [self color4];
-}
+@implementation QDisplayLayer
+- (void)setRenderRange:(NSRange)renderRange {}
 
-- (void)setBkColor:(QColor4)bkColor {
-    [self setColor4:bkColor];
-}
+- (void)setVisible:(bool)visible{}
 
+- (void)setRotation:(float)rotation{}
+
+- (void)setRotation3d:(QVector)rotation3d {}
+
+- (void)setScaleX:(float)scaleX{}
+
+- (void)setScaleY:(float)scaleY{}
+
+- (void)setScaleZ:(float)scaleZ{}
+
+- (void)setContentSize:(CGSize)contentSize{}
+
+- (void)setPosition:(CGPoint)position{}
+
+- (void)setPositionZ:(float)positionZ{}
+
+- (void)setAnchorPoint:(CGPoint)anchorPoint{}
+
+- (void)setColor4:(QColor4)color4{}
+
+- (void)setAlpha:(float)alpha{}
+
+- (void)setCrop:(QVector)crop {}
+
+- (void)setBlendFunc:(QBlendFunc)blendFunc {}
 @end
 
 @implementation QCombiner {
@@ -40,7 +64,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     NSMutableDictionary<NSString*, QGraphicNode*>* _duplicateNodesArray;
     EffectCombiner* _combiner;
     QMediaFactory *_mediaFactory;
-    DisplayRootNode* _rootNode;
+    QDisplayLayer* _rootNode;
 }
 
 - (instancetype)initWithNative:(EffectCombiner* )combiner_native
@@ -51,7 +75,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
         _subObjectArray = [NSMutableDictionary new];
         _graphicNodesArray = [NSMutableDictionary new];
         _duplicateNodesArray = [NSMutableDictionary new];
-        _rootNode = [[DisplayRootNode alloc] initWithNode:_combiner->getRootNode() combiner:self];
+        _rootNode = [[QDisplayLayer alloc] initWithNative:_combiner->getRootNode() combiner:self uid:@"0"];
     }
     return self;
 }
@@ -113,8 +137,12 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 - (void)removeMediaTrack:(QMediaTrack*)track
 {
     if ([_subObjectArray objectForKey:track.uid]) {
-        [self detachRenderNode:track.graphic];
-        _combiner->detachAudioNode(track.audio.native);
+        if(track.graphic != nil) {
+            [self detachRenderNode:track.graphic];
+            [self removeGraphicNodeIndex:track.graphic];
+        }
+        if(track.audio != nil)
+            _combiner->detachAudioNode(track.audio.native);
         _combiner->removeMediaTrack(track.native);
         [_subObjectArray removeObjectForKey:track.uid];
     }
@@ -162,13 +190,16 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     _combiner->detachRenderNode(current.native);
     return true;
 }
+- (void)topRenderNode:(QGraphicNode*)current {
+    _combiner->topRenderNode(current.native);
+}
 
-- (bool)attachEffect:(QLayer*)layer effect:(QEffect*)effect {
-    _combiner->attachEffect(std::dynamic_pointer_cast<GraphicCore::Layer>(layer.native), effect.native);
+- (bool)attachEffect:(QGraphicNode*)graphic effect:(QEffect*)effect {
+    _combiner->attachEffect(graphic.native, effect.native);
     return true;
 }
-- (bool)detachEffect:(QLayer*)layer effect:(QEffect*)effect {
-    _combiner->detachEffect(std::dynamic_pointer_cast<GraphicCore::Layer>(layer.native), effect.native);
+- (bool)detachEffect:(QGraphicNode*)graphic effect:(QEffect*)effect {
+    _combiner->detachEffect(graphic.native, effect.native);
     return true;
 }
 
@@ -182,20 +213,18 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     return true;
 }
 
-- (void)setMediaTimeRange:(NSRange)timeRange {
-    Range<int64_t> tRange = {static_cast<int64_t>(timeRange.location) , static_cast<int64_t>(timeRange.location + timeRange.length)};
+- (void)setMediaTimeRange:(QTimeRange)timeRange {
+    Range<int64_t> tRange = {timeRange.startPoint , timeRange.endPoint};
     _combiner->setValidTimeRange(tRange);
 }
-- (NSRange)mediaTimeRange
+- (QTimeRange)mediaTimeRange
 {
-    NSRange nsRange;
     Range<int64_t> tRange = _combiner->getValidTimeRange();
-    nsRange.location = static_cast<NSUInteger>(tRange._start);
-    nsRange.length = static_cast<NSUInteger>(tRange.getLength());
-    return nsRange;
+    QTimeRange qRange = {tRange._start, tRange._end};
+    return qRange;
 }
 
-- (DisplayRootNode*)rootNode {
+- (QDisplayLayer*)rootNode {
     return _rootNode;
 }
 
@@ -212,9 +241,13 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
 #pragma mark copy settings
 - (void)copyFrom:(QCombiner*)from {
     self.mediaTimeRange = from.mediaTimeRange;
-    //copy rootNode
+    
     [_graphicNodesArray removeAllObjects];
+    //copy rootNode
     [_rootNode copyFrom:from.rootNode];
+    _rootNode.bkColor = from.rootNode.bkColor;
+//    _rootNode.flipMode = from.rootNode.flipMode;
+    _rootNode.enable3d = from.rootNode.enable3d;
     [self addGraphicNodeIndex:_rootNode];
     
     //copy mediaTracks
@@ -222,16 +255,27 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
         if ([fromTrack.source isKindOfClass:QAssetReaderSource.class]) {
             QAssetReaderSource* fromSource = (QAssetReaderSource*)fromTrack.source;
             QAssetReaderSource* mediaSource = [[QAssetReaderSource alloc] initWithFilePath:fromSource.filePath audio:fromSource.enableAudio video:fromSource.enableVideo];
+            mediaSource.video_frame_format = fromSource.video_frame_format;
             [mediaSource setVideoTarget:_mediaFactory.videoTarget];
             [mediaSource setAudioTarget:_mediaFactory.audioTarget];
             QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:mediaSource uid:fromTrack.uid];
             if ([mediaTrack prepare]) {
+                mediaTrack.displayRange = fromTrack.displayRange;
+                mediaTrack.sourceRange = fromTrack.sourceRange;
+                mediaTrack.timeScale = fromTrack.timeScale;
+                mediaTrack.repeatTimes = fromTrack.repeatTimes;
+                
                 [self addMediaTrack:mediaTrack];
                 if (fromTrack.graphic) {
                     [mediaTrack generateVideoTrackNode:self uid:fromTrack.graphic.uid];
                     [mediaTrack.graphic copyFrom:fromTrack.graphic];
                 }
-                [mediaTrack generateAudioTrackNode:self uid:fromTrack.audio.uid];
+                if (fromTrack.audio) {
+                    [mediaTrack generateAudioTrackNode:self uid:fromTrack.audio.uid];
+                    mediaTrack.audio.pitch = fromTrack.audio.pitch;
+                    mediaTrack.audio.volume = fromTrack.audio.volume;
+                }
+                
             }
         }
     }
@@ -239,7 +283,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
     //copy graphic nodes
     for (QGraphicNode *fromNode in from.graphicNodes.allValues) {
         QGraphicNode* newNode;
-        if ([fromNode isKindOfClass:DisplayRootNode.class]) {
+        if ([fromNode isKindOfClass:QDisplayLayer.class]) {
             continue;
         }else if ([fromNode isKindOfClass:QVideoTrackNode.class]) {
             continue;
@@ -247,11 +291,7 @@ extern const struct AudioDescribe XMToAudioDescribe(QAudioDescribe* xmdesc);
             QLayer* fromLayer = (QLayer*)fromNode;
             QLayer* layer = [[QLayer alloc] initWithSize:fromLayer.layerSize combiner:self uid:fromLayer.uid];
             layer.bkColor = fromLayer.bkColor;
-            for (QEffect* effect in fromLayer.effects) {
-                QEffect* newEffect = [QEffectManage createEffect:effect.name];
-                newEffect.renderRange = effect.renderRange;
-                [layer addEffect:newEffect];
-            }
+            layer.enable3d = fromLayer.enable3d;
             newNode = layer;
         }else if ([fromNode isKindOfClass:QImageNode.class]) {
             QImageNode* fromImageNode = (QImageNode*)fromNode;

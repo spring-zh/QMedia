@@ -57,6 +57,6 @@ public:
     virtual VideoFrameDrawer* createVideoFrameDrawer() = 0;
 };
 
-using MediaTrackRef = std::shared_ptr<MediaTrack>;
+CLASSREF(MediaTrack)
 
 #endif /* EFFECTEDITOR_MEDIATRACK_H */

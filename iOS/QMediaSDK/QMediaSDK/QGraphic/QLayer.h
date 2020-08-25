@@ -15,18 +15,20 @@
 
 @class QCombiner;
 
+typedef NS_ENUM(NSInteger, QFlipMode) {
+    QFlipNONE = 0,
+    QFlipH = 1,
+    QFlipV = 2
+};
+
 @interface QLayer : QGraphicNode
 
 - (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner;
 - (instancetype)initWithSize:(CGSize)size combiner:(QCombiner*)combiner uid:(NSString*)uid;
 
-//effects
-@property (nonatomic, readonly) NSArray<QEffect*>* effects;
-- (void)addEffect:(QEffect*)effect;
-- (void)removeEffect:(QEffect*)effect;
-- (void)removeAllEffect;
-
 @property (nonatomic, readonly) CGSize layerSize;
 @property (nonatomic) QColor4 bkColor;
+@property (nonatomic) bool enable3d;
+@property (nonatomic) QFlipMode flipMode;
 
 @end

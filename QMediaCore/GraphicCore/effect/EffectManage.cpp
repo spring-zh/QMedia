@@ -7,8 +7,13 @@
 //
 
 #include "EffectManage.h"
+#include "FlashEffect.h"
 
 GRAPHICCORE_BEGIN
+
+EffectManage::EffectManage() {
+    addEffectConfig(FlashEffect::createConfig());
+}
 
 EffectManage::~EffectManage() {
     
@@ -27,6 +32,10 @@ void EffectManage::addEffectConfig(std::string& config_json) {
     
 }
 
+void EffectManage::addEffectConfig(EffectConfig* config) {
+    _effectConfigs[config->name] = EffectConfigRef(FlashEffect::createConfig());
+}
+
 std::vector<EffectConfig*> EffectManage::getAllEffectConfig() {
     std::vector<FilterConfig*> filterconfigs = FilterFactory::instance()->getAllFilterConfig();
     std::vector<EffectConfig*> effectlists;
@@ -42,6 +51,11 @@ Effect* EffectManage::createEffect(const char* effect_name) {
     Effect* effect = FilterFactory::instance()->createFilter(effect_name);
     if (effect == nullptr) {
         //TODO: not filter, create other effect
+        auto iter = _effectConfigs.find(effect_name);
+        if (iter != _effectConfigs.end()) {
+            effect = (*iter->second->effect_create)();
+            effect->_config = iter->second.get();
+        }
     }
     return effect;
 }

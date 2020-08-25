@@ -16,6 +16,9 @@
 
 GRAPHICCORE_BEGIN
 
+class Effect;
+typedef Effect* (*effectCreate)();
+
 class EffectConfig {
 public:
     EffectConfig(const char* name, const char* describe, const char* type) {
@@ -27,6 +30,8 @@ public:
     std::string name; //effect name
     std::string describe; //effect describe
     std::string effect_type; //effect type
+    
+    effectCreate effect_create = nullptr; //effect create function
 };
 
 class Effect {
@@ -47,6 +52,7 @@ public:
     const EffectConfig* getConfig() const { return _config; }
     Range<int64_t> _timeRange; //display time range
 protected:
+    friend class EffectManage;
     EffectConfig* _config;
 };
 

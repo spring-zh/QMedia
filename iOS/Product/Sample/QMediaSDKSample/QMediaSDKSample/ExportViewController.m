@@ -80,7 +80,7 @@
 }
 - (void)onExporterProgressUpdated:(CGFloat)progress
 {
-    float value = (float)progress * 1000/ (_exporter.mediaTimeRange.location + _exporter.mediaTimeRange.length);
+    float value = (float)progress * 1000/ QTimeRangeGetLenght(_exporter.mediaTimeRange);
     self.progressLabel.text = [NSString stringWithFormat:@"%d%%", (int)(value*100)];
 }
 - (void)onExporterCanceled:(QExporterRetCode)code

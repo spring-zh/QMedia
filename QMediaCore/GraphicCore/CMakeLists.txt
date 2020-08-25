@@ -29,6 +29,8 @@ set(GRAPHIC_CORE_HEADER
         GraphicCore/opengl/FrameBuffer.h
         GraphicCore/opengl/Texture2DDrawer.h
 
+        GraphicCore/effect/FlashEffect.h
+        GraphicCore/effect/EffectGroup.h
         GraphicCore/effect/Effect.h
         GraphicCore/effect/EffectManage.h
 
@@ -67,6 +69,7 @@ set(GRAPHIC_CORE_SRC
         GraphicCore/opengl/FrameBuffer.cpp
         GraphicCore/opengl/Texture2DDrawer.cpp
 
+        GraphicCore/effect/EffectGroup.cpp
         GraphicCore/effect/EffectManage.cpp
 
         GraphicCore/filter/Filter.cpp

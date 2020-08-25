@@ -8,9 +8,9 @@
 
 #pragma once
 
-#include "MediaCore/mediadef/AudioFrame.h"
-#include "MediaCore/mediadef/CodecSpecificInfo.h"
-#include "MediaCore/mediadef/EncodedPacket.h"
+#include "MediaCore/core/AudioFrame.h"
+#include "MediaCore/core/CodecSpecificInfo.h"
+#include "MediaCore/core/EncodedPacket.h"
 #include <stdint.h>
 
 class DecodedSampleCallback {

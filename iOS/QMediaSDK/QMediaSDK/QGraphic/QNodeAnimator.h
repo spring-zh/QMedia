@@ -82,10 +82,10 @@ extern NSString* property_mixcolor;//v4
 extern NSString* property_crop;//v4 (0.0f ~ 1.0f)
 
 @interface QNodeAnimator : NSObject
-- (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat;
-- (instancetype)initWith:(NSString*)property range:(NSRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat name:(NSString*)name;
+- (instancetype)initWith:(NSString*)property range:(QTimeRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat;
+- (instancetype)initWith:(NSString*)property range:(QTimeRange)timeRang begin:(QVector)beginPoint end:(QVector)endPoint functype:(QEaseFunction)functionType repleat:(bool)repleat name:(NSString*)name;
 @property (nonatomic, assign) NSString* property;
-@property (nonatomic, assign) NSRange timeRang;
+@property (nonatomic, assign) QTimeRange timeRang;
 @property (nonatomic, assign) QVector beginPoint;
 @property (nonatomic, assign) QVector endPoint;
 @property (nonatomic, assign) QEaseFunction functionType;

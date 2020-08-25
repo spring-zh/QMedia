@@ -8,7 +8,7 @@
 
 #include "EditorPlayer.h"
 #include "Utils/Logger.h"
-#include "MediaCore/core/AudioProcess.h"
+#include "MediaCore/audiocore/AudioProcess.h"
 
 USING_GRAPHICCORE
 

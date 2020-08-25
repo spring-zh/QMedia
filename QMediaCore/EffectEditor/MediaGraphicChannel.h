@@ -27,11 +27,14 @@ public:
     void releaseRes() override;
     
 private:
+
+    void updateFrame(int64_t time_ms);
+    int64_t _lastUpdateTime;
     
     MediaTrack* _mediaTrack;
     std::unique_ptr<VideoFrameDrawer> _drawer;
 };
 
-using MediaGraphicChannelRef = std::shared_ptr<MediaGraphicChannel>;
+CLASSREF(MediaGraphicChannel)
 
 #endif /* EFFECTEDITOR_MEDIAGRAPHICCHANNEL_H */

@@ -4,9 +4,12 @@ import com.qmedia.qmediasdk.QCommon.QRange;
 import com.qmedia.qmediasdk.QCommon.QSize;
 import com.qmedia.qmediasdk.QCommon.QVector;
 import com.qmedia.qmediasdk.QEditor.QCombiner;
+import com.qmedia.qmediasdk.QEffect.QEffect;
+import com.qmedia.qmediasdk.QEffect.QEffectManage;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class QGraphicNode {
@@ -76,6 +79,25 @@ public class QGraphicNode {
             return true;
         }
         return false;
+    }
+
+    public List<QEffect> getEffects() {
+        return effects;
+    }
+
+    public void addEffect(QEffect effect) {
+        effects.add(effect);
+        weakCombiner.get().attachEffect(this, effect);
+    }
+    public void removeEffect(QEffect effect) {
+        effects.remove(effect);
+        weakCombiner.get().detachEffect(this, effect);
+    }
+    public void removeAllEffect() {
+        for (QEffect effect : effects) {
+            weakCombiner.get().detachEffect(this, effect);
+        }
+        effects.clear();
     }
 
     public String getName() {
@@ -245,6 +267,13 @@ public class QGraphicNode {
             addAnimator(new QNodeAnimator(animator.property,animator.timeRang,animator.beginPoint,animator.endPoint,animator.functionType,
                     animator.repleat,animator.name));
         }
+
+        removeAllEffect();
+        for (QEffect effect : from.getEffects()) {
+            QEffect newEffect = QEffectManage.createEffect(effect.getName());
+            newEffect.setRenderRange(effect.getRenderRange());
+            this.addEffect(newEffect);
+        }
     }
 
     public void release(){
@@ -258,6 +287,7 @@ public class QGraphicNode {
     protected QGraphicNode parent = null;
     protected ArrayList<QGraphicNode> childrens = new ArrayList();
     protected ArrayList<QNodeAnimator> animators = new ArrayList();
+    protected List<QEffect> effects = new ArrayList<>();
 
     protected String id;
     String name = "";

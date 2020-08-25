@@ -1,5 +1,7 @@
 set(EFFECT_EDITOR_HEADER
 
+        EffectEditor/sources/SoftwareSource.h
+        EffectEditor/sources/SoftwareFrameDrawer.h
         EffectEditor/VideoFrameDrawer.h
         EffectEditor/MediaSource.h
         EffectEditor/EditorExporter.h
@@ -15,6 +17,8 @@ set(EFFECT_EDITOR_HEADER
 
 set(EFFECT_EDITOR_SRC
 
+        EffectEditor/sources/SoftwareSource.cpp
+        EffectEditor/sources/SoftwareFrameDrawer.cpp
         EffectEditor/MediaTrackImpl.cpp
         EffectEditor/MediaAudioChannel.cpp
         EffectEditor/MediaGraphicChannel.cpp

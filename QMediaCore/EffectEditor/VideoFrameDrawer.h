@@ -12,7 +12,7 @@
 #include "Utils/Comm.h"
 #include "GraphicCore/opengl/Texture2D.h"
 #include "GraphicCore/GcNode.h"
-#include "MediaCore/mediadef/VideoFrame.h"
+#include "MediaCore/core/VideoFrame.h"
 #include "MediaCore/output/VideoTarget.h"
 
 class VideoFrameDrawer{
@@ -22,7 +22,9 @@ public:
 
     virtual bool setFrame(const VideoFrame& videoFrame) = 0;
     virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) = 0;
-//    virtual GraphicCore::Texture2D* getDuplicateTexture() { return nullptr; }
+    virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
+                           const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) = 0;
+    virtual const GraphicCore::Texture2D* getOutputTexture() { return nullptr; }
     virtual void release() = 0;
     
 protected:
