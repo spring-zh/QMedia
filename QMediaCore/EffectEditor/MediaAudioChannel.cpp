@@ -92,17 +92,16 @@ const AudioSampleCache* MediaAudioChannel::getAudioSample(int64_t mSec) {
                     _cacheBuffer.assign(nativebuffer->Data(), nativebuffer->Data() + cacheLen);
                 }
             }else {
-                //fill empty buffer
-                cacheLen = 0;
+                //fill empty buffer with 2048 bytes
+                const int fill_size = 2048;
+                int process_len = 0;
                 if (_audioEffect) {
-//                    uint8_t empty_buffer[2048] = {0};
-//                    cacheLen = _audioEffect->process(empty_buffer, sizeof(empty_buffer), _cacheBuffer);
-                    cacheLen = _audioEffect->process(NULL, 0, _cacheBuffer);
+                    process_len = _audioEffect->process(NULL, 0, _cacheBuffer);
                 }
-                int fillLen = 2048 - cacheLen;
-                if (fillLen > 0) {
-                    cacheLen = 2048;
-                    std::memset(_cacheBuffer.data() + cacheLen, 0, fillLen);
+                int need_fill_len = fill_size - process_len;
+                if (need_fill_len > 0) {
+                    std::memset(_cacheBuffer.data() + process_len, 0, need_fill_len);
+                    cacheLen = fill_size;
                 }
             }
             _sampleCache.setAudioBufOffset(0);
