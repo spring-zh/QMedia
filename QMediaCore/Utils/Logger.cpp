@@ -37,7 +37,7 @@ void initLogFile(const char *path)
         close(logIO);
     }
 
-    logIO = open(path, O_WRONLY | O_CREAT | O_APPEND);
+    logIO = open(path, O_WRONLY | O_CREAT | O_APPEND, S_IRUSR | S_IWUSR);
 }
 
 void destroyLogFile()
