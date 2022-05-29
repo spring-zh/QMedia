@@ -9,7 +9,7 @@
 #ifndef MEDIACORE_QPLAYER_H
 #define MEDIACORE_QPLAYER_H
 
-#include "Utils/ThreadTask.h"
+#include "Utils/ThreadTaskFuture.h"
 #include "core/SteadyClock.h"
 #include "MediaCore/audiocore/AudioClock.h"
 #include "decoder/VideoDecoder.h"
@@ -84,7 +84,7 @@ private:
     AudioClock _audioClock;
     
     //the thread for handle sync commands
-    ThreadTask<RetCode> _threadTask;
+    ThreadTaskFuture _threadTask;
 };
 
 #endif /* MEDIACORE_QPLAYER_H */

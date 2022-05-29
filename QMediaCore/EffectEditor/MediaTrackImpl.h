@@ -12,6 +12,7 @@
 #include <memory>
 #include "Utils/rw_lock.h"
 #include "MediaTrack.h"
+#include "ThreadTaskFuture.h"
 
 class MediaTrackImpl : public MediaTrack {
 public:
@@ -22,8 +23,8 @@ public:
     
     virtual bool prepare() override;
     
-    virtual bool setPositionTo(int64_t mSec) override;//set read position to designated location
-    virtual void stopMedia() override;//stop
+    virtual std::future<bool> setPositionTo(int64_t mSec) override;//set read position to designated location
+    virtual std::future<void> stopMedia() override;//stop
     /**
      * timeScale(float) time scale for track, the equivalent of (1.0f / playe speed)
      * default 1.0f
@@ -71,7 +72,7 @@ private:
     virtual AudioFrame getAudioFrame(int64_t mSec , bool& isEnd) override;
     
 protected:
-    
+    ThreadTaskFuture thread_task_;
     MediaSourceRef _sourceRef;
     
     bool _isPrepare;

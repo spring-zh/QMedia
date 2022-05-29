@@ -44,48 +44,48 @@ void QPlayer::setAudioTarget(AudioTarget* audioTarget)
 }
 
 QPlayer::RetCode QPlayer::open(std::string url) {
-    if (_threadTask.isCurrent()) {
+    if (_threadTask.IsCurrent()) {
         //TODO: handle open
         return QPlayer::unknow;
     }else {
-        _threadTask.postTask((int)CMD_OPEN, &QPlayer::open, this, url);
+        _threadTask.PostTask(CMD_OPEN, &QPlayer::open, this, url);
         return QPlayer::ok;
     }
 }
 QPlayer::RetCode QPlayer::play() {
-    if (_threadTask.isCurrent()) {
+    if (_threadTask.IsCurrent()) {
         //TODO: handle play
         return QPlayer::unknow;
     }else {
-        _threadTask.postTask((int)CMD_PLAY, &QPlayer::play, this);
+        _threadTask.PostTask(CMD_PLAY, &QPlayer::play, this);
         return QPlayer::ok;
     }
 }
 QPlayer::RetCode QPlayer::pause() {
-    if (_threadTask.isCurrent()) {
+    if (_threadTask.IsCurrent()) {
         //TODO: handle pause
         return QPlayer::unknow;
     }else {
-        _threadTask.postTask((int)CMD_PAUSE, &QPlayer::pause, this);
+        _threadTask.PostTask(CMD_PAUSE, &QPlayer::pause, this);
         return QPlayer::ok;
     }
 }
 QPlayer::RetCode QPlayer::seek(int64_t mSec, int flag) {
-    if (_threadTask.isCurrent()) {
+    if (_threadTask.IsCurrent()) {
         //TODO: handle seek
         return QPlayer::unknow;
     }else {
-        _threadTask.removeTaskById(CMD_SEEK);
-        _threadTask.postTask((int)CMD_SEEK, &QPlayer::seek, this, mSec, flag);
+        _threadTask.RemoveTask(CMD_SEEK);
+        _threadTask.PostTask(CMD_SEEK, &QPlayer::seek, this, mSec, flag);
         return QPlayer::ok;
     }
 }
 QPlayer::RetCode QPlayer::close() {
-    if (_threadTask.isCurrent()) {
+    if (_threadTask.IsCurrent()) {
         //TODO: handle close
         return QPlayer::unknow;
     }else {
-        _threadTask.postTask((int)CMD_CLOSE, &QPlayer::close, this);
+        _threadTask.PostTask(CMD_CLOSE, &QPlayer::close, this);
         return QPlayer::ok;
     }
 }

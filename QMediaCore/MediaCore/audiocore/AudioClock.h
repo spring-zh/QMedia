@@ -9,6 +9,7 @@
 #ifndef MEDIACORE_AUDIOCLOCK_H
 #define MEDIACORE_AUDIOCLOCK_H
 
+#include "Utils/spin_lock.h"
 #include "Utils/Comm.h"
 #include "AudioProcess.h"
 #include "MediaCore/output/AudioTarget.h"

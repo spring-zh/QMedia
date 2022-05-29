@@ -11,6 +11,7 @@
 #define MAX_FRAME_SKIP 5
 
 MediaTrackImpl::MediaTrackImpl(MediaSourceRef source):
+//thread_task_("[threadtask].mediatrack"),
 _sourceRef(source),
 _isPrepare(false),
 _timeScale(1.0f),
@@ -84,40 +85,44 @@ bool MediaTrackImpl::prepare()
     return _isPrepare;
 }
 
-bool MediaTrackImpl::setPositionTo(int64_t mSec)
+std::future<bool> MediaTrackImpl::setPositionTo(int64_t mSec)
 {
-    wrlock_guard wrlock(_rwlock);
-    int64_t remap_time;
-    bool bRet = false;
-    
-    if(mSec < getDisplayTrackRange()._start) {
-        mSec = getDisplayTrackRange()._start;
-    }
-    
-    if(mapTimeToMediaSource(mSec, remap_time))
-    {
-        if (_sourceRange.isContain(remap_time)) {
-            if (_sourceRef->isStarted()) {
-                if (remap_time < (_media_position_ms - 20) || remap_time > (_media_position_ms + 1000)) {
-                    bRet = _sourceRef->seekTo(remap_time);
+    return thread_task_.PostTask([this](int64_t mSec)->bool {
+        wrlock_guard wrlock(_rwlock);
+        int64_t remap_time;
+        bool bRet = false;
+        
+        if(mSec < getDisplayTrackRange()._start) {
+            mSec = getDisplayTrackRange()._start;
+        }
+        
+        if(mapTimeToMediaSource(mSec, remap_time))
+        {
+            if (_sourceRange.isContain(remap_time)) {
+                if (_sourceRef->isStarted()) {
+                    if (remap_time < (_media_position_ms - 20) || remap_time > (_media_position_ms + 1000)) {
+                        bRet = _sourceRef->seekTo(remap_time);
+                        _media_position_ms = _last_video_ms = _last_audio_ms = remap_time - 1;
+                    }else
+                        bRet = true;
+                }else {
+                    bRet = _sourceRef->start(remap_time, _sourceRange._end);
                     _media_position_ms = _last_video_ms = _last_audio_ms = remap_time - 1;
-                }else
-                    bRet = true;
-            }else {
-                bRet = _sourceRef->start(remap_time, _sourceRange._end);
-                _media_position_ms = _last_video_ms = _last_audio_ms = remap_time - 1;
+                }
             }
         }
-    }
-    _after_seek_video = true;
-    _after_seek_audio = true;
-    return bRet;
+        _after_seek_video = true;
+        _after_seek_audio = true;
+        return bRet;
+    }, mSec);
 }
 
-void MediaTrackImpl::stopMedia()
+std::future<void> MediaTrackImpl::stopMedia()
 {
-    wrlock_guard wrlock(_rwlock);
-    _sourceRef->stop();
+    return thread_task_.PostTask([this](){
+        wrlock_guard wrlock(_rwlock);
+        _sourceRef->stop();
+    });
 }
 
 float MediaTrackImpl::getPlaySpeed() const

@@ -98,10 +98,10 @@
     return false;
 }
 - (bool) setTimeTo:(int)mSec {
-    return _mediaTrackNative->setPositionTo(mSec);
+    return _mediaTrackNative->setPositionTo(mSec).get();
 }
 - (void) stopMedia {
-    _mediaTrackNative->stopMedia();
+    _mediaTrackNative->stopMedia().get();
 }
 
 - (bool)isPrepare{

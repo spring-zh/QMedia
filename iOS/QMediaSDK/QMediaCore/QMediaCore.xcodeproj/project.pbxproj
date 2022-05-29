@@ -73,6 +73,10 @@
 
 /* Begin PBXFileReference section */
 		10A9FE1E1EA4A06B0051BDFC /* libQMediaCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libQMediaCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		136C13F128391CE3004BCF13 /* ThreadTaskFuture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThreadTaskFuture.h; sourceTree = "<group>"; };
+		136C13F228391CE3004BCF13 /* ConditionVariable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConditionVariable.h; sourceTree = "<group>"; };
+		136C13F328391CE3004BCF13 /* circle_buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = circle_buffer.h; sourceTree = "<group>"; };
+		136C13F428391E38004BCF13 /* SteadyClock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SteadyClock.h; sourceTree = "<group>"; };
 		6F049346244B1BDC00F8B73B /* EditorExporter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = EditorExporter.h; sourceTree = "<group>"; };
 		6F049347244B1BDC00F8B73B /* EditorExporter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = EditorExporter.cpp; sourceTree = "<group>"; };
 		6F187492248DD402009C4B94 /* GcImageNode.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GcImageNode.cpp; sourceTree = "<group>"; };
@@ -233,7 +237,6 @@
 		6FBD028D24607B0B00372404 /* Image.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Image.cpp; sourceTree = "<group>"; };
 		6FBD028E24607B0B00372404 /* Image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Image.h; sourceTree = "<group>"; };
 		6FF0290D221BFEE40011E6CB /* DecodedFrameQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecodedFrameQueue.h; sourceTree = "<group>"; };
-		6FF0290E221BFEE40011E6CB /* SteadyClock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SteadyClock.h; sourceTree = "<group>"; };
 		6FF02918221BFEE40011E6CB /* AudioDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioDecoder.h; sourceTree = "<group>"; };
 		6FF02919221BFEE40011E6CB /* VideoDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoDecoder.h; sourceTree = "<group>"; };
 		6FF0291B221BFEE40011E6CB /* VideoTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoTarget.h; sourceTree = "<group>"; };
@@ -249,7 +252,6 @@
 		6FF0292B221D28A50011E6CB /* MediaAudioChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaAudioChannel.h; sourceTree = "<group>"; };
 		6FF0292E221EECFC0011E6CB /* MediaSupervisor.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MediaSupervisor.cpp; sourceTree = "<group>"; };
 		6FF0292F221EECFC0011E6CB /* MediaSupervisor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaSupervisor.h; sourceTree = "<group>"; };
-		6FF029382221657F0011E6CB /* ThreadTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThreadTask.h; sourceTree = "<group>"; };
 		6FF029392221657F0011E6CB /* BlockingQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockingQueue.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -532,6 +534,7 @@
 		6FF0290C221BFEE40011E6CB /* core */ = {
 			isa = PBXGroup;
 			children = (
+				136C13F428391E38004BCF13 /* SteadyClock.h */,
 				6F224A6D24AEDDBF000244FF /* MediaComm.h */,
 				6F224A7124AEDDBF000244FF /* AudioFrame.cpp */,
 				6F224A7024AEDDBF000244FF /* AudioFrame.h */,
@@ -541,7 +544,6 @@
 				6F224A7324AEDDBF000244FF /* EncodedPacket.h */,
 				6F224A7224AEDDBF000244FF /* CodecSpecificInfo.h */,
 				6FF0290D221BFEE40011E6CB /* DecodedFrameQueue.h */,
-				6FF0290E221BFEE40011E6CB /* SteadyClock.h */,
 			);
 			path = core;
 			sourceTree = "<group>";
@@ -593,14 +595,16 @@
 		6FF02922221BFEE40011E6CB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
-				6FF02923221BFEE40011E6CB /* Comm.h */,
 				6F5118BF240F9CCB0013BC9E /* Logger.cpp */,
 				6F5118C0240F9CCB0013BC9E /* Logger.h */,
+				136C13F228391CE3004BCF13 /* ConditionVariable.h */,
+				136C13F128391CE3004BCF13 /* ThreadTaskFuture.h */,
+				6FF02923221BFEE40011E6CB /* Comm.h */,
+				136C13F328391CE3004BCF13 /* circle_buffer.h */,
 				6F8F0C7A24444733000EB0A1 /* rw_lock.h */,
 				6F637EDC23D434200004E053 /* spin_lock.h */,
 				6F56B736234C232B000F5122 /* PlatformConfig.h */,
 				6FF029392221657F0011E6CB /* BlockingQueue.h */,
-				6FF029382221657F0011E6CB /* ThreadTask.h */,
 			);
 			name = Utils;
 			path = ../../../QMediaCore/Utils;
@@ -761,7 +765,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -803,7 +807,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				VALIDATE_PRODUCT = YES;

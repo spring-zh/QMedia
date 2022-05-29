@@ -43,26 +43,26 @@ EditorPlayer::~EditorPlayer()
 
 void EditorPlayer::start()
 {
-    _threadTask.postTask(&EditorPlayer::_start, this);
+    _threadTask.PostTask(&EditorPlayer::_start, this);
 }
 
 void EditorPlayer::pause(bool bPause)
 {
-    _threadTask.postTask(&EditorPlayer::_pause, this, bPause);
+    _threadTask.PostTask(&EditorPlayer::_pause, this, bPause);
 }
 void EditorPlayer::seek(int64_t mSec, int flag)
 {
-    _threadTask.removeTaskById(CMD_SEEK);
+    _threadTask.RemoveTask(CMD_SEEK);
     _bSeeking.store(true);
     _seekIdx ++;
     _playerPosition = mSec;
-    _threadTask.postTask((int)CMD_SEEK, &EditorPlayer::_seek, this, mSec, _seekIdx.load());
+    _threadTask.PostTask(CMD_SEEK, &EditorPlayer::_seek, this, mSec, _seekIdx.load());
 }
 
 bool EditorPlayer::onVideoRender(int64_t wantTimeMs)
 {
     t_lock_guard<ticket_lock> clk(_render_mutex);
-    int64_t current_video_time = _playerClock.getClock();
+    int64_t current_video_time = _playerClock.GetClock();
     if (! _bSeeking.load() ) {
         _playerPosition = current_video_time;
         int64_t currentRenderTime = SystemClock::getCurrentTime<int64_t,scale_milliseconds>();
@@ -85,14 +85,14 @@ void EditorPlayer::onPrepared(RetCode code)
 {
     _state = EffectCombiner::_state;
     _userPaused = true;
-    _playerClock.setPaused(true);
-    _playerClock.setClock(getValidTimeRange()._start);
+    _playerClock.SetPaused(true);
+    _playerClock.SetClock(getValidTimeRange()._start);
     _videoTarget->flush();
     _callback->onPrepare(code);
 }
 void EditorPlayer::onStarted(RetCode code)
 {
-    _playerClock.setPaused(false);
+    _playerClock.SetPaused(false);
     _callback->onPlayerStateChanged(EffectCombiner::_state, _state);
     _state = EffectCombiner::_state;
 }
@@ -123,7 +123,7 @@ RetCode EditorPlayer::_start()
     }else {
         
         if(RetCode::ok == ( ret = EffectCombiner::_start())) {
-            _playerClock.setPaused(false);
+            _playerClock.SetPaused(false);
             _userPaused = false;
             _state = EffectCombiner::_state;
         }
@@ -148,7 +148,7 @@ RetCode EditorPlayer::_pause(bool bPause)
         return RetCode::ok;
     }
     _userPaused = bPause;
-    _playerClock.setPaused(bPause);
+    _playerClock.SetPaused(bPause);
     _videoTarget->pause(bPause);
     _audioTarget->pause(bPause);
     _state = bPause? PlayerState::Paused : PlayerState::Started;
@@ -170,13 +170,13 @@ RetCode EditorPlayer::_seek(int64_t mSec, int flag)
     
     _bAudioCompleted = _bVideoCompleted = false;
     
-    _playerClock.setPaused(true);
+    _playerClock.SetPaused(true);
 //    _videoTarget->pause(true);
     _audioTarget->pause(true);
     _audioTarget->flush();
     _videoTarget->flush();
     
-    _playerClock.setClock(mSec);
+    _playerClock.SetClock(mSec);
     _audioClock.setClock(mSec);
     MediaSupervisor::setPositionTo(mSec);
     if(_state == PlayerState::Completed) {
@@ -186,12 +186,11 @@ RetCode EditorPlayer::_seek(int64_t mSec, int flag)
     if (!_userPaused) {
         _videoTarget->pause(false);
         _audioTarget->pause(false);
-        _playerClock.setPaused(false);
+        _playerClock.SetPaused(false);
     }
-    
     if (_seekIdx.load() == flag) { //clear seeking state
         _bSeeking.store(false);
     }
-
+//    _callback->onSeekTo(mSec);
     return RetCode::ok;
 }

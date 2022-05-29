@@ -10,6 +10,7 @@
 #define EFFECTEDITOR_MEDIATRACK_H
 
 #include <stdint.h>
+#include <future>
 #include "MediaSource.h"
 
 class MediaTrack {
@@ -17,8 +18,8 @@ public:
     
     virtual bool prepare() = 0;
     
-    virtual bool setPositionTo(int64_t mSec) = 0;
-    virtual void stopMedia() = 0;
+    virtual std::future<bool> setPositionTo(int64_t mSec) = 0;
+    virtual std::future<void> stopMedia() = 0;
     /**
      * timeScale(float) time scale for track, the equivalent of (1.0f / playe speed)
      * default 1.0f

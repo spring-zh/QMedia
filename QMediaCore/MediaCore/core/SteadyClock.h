@@ -12,7 +12,35 @@
 #include <chrono>
 #include <iomanip>
 #include <sstream>
-#include "Utils/spin_lock.h"
+
+namespace LockFree {
+class SpinMutex {
+public:
+    SpinMutex() = default;
+    ~SpinMutex() = default;
+
+    void lock() {
+        while (flag_.test_and_set(std::memory_order_acquire));
+    }
+    void unlock() {
+        flag_.clear(std::memory_order_release);
+    }
+private:
+    std::atomic_flag flag_ = ATOMIC_FLAG_INIT;
+};
+
+template <class mutexT>
+class LockGuard {
+public:
+    explicit LockGuard(mutexT& mutex):__mutex(mutex) { __mutex.lock(); }
+    ~LockGuard() { __mutex.unlock(); }
+private:
+    LockGuard(LockGuard const&) = delete;
+    LockGuard& operator=(LockGuard const&) = delete;
+
+    mutexT& __mutex;
+};
+}
 
 //timeScale template
 using scale_nanoseconds = std::nano;
@@ -28,50 +56,41 @@ class SteadyClock final
 {
 public:
     using steady_clock = std::chrono::steady_clock;
+
+    #define DURATION_CAST std::chrono::duration_cast<std::chrono::duration<timeT, timeScale>>
     
-	SteadyClock():
-    _bPaused(true),
-    _startClk(steady_clock::now()),
-    _currVal(0) {}
-    
+	SteadyClock(): _bPaused(true), _startClk(steady_clock::now()), _currVal(0) {}
     ~SteadyClock() {}
 
-	void setClock(timeT val)
-	{
-        t_lock_guard<spin_mutex> lck(_spin);
+	void SetClock(timeT val) {
+        LockFree::LockGuard<LockFree::SpinMutex> lck(spin_mutex_);
 		_currVal = val;
 		_startClk = steady_clock::now();
 	}
-	timeT getClock() const
-	{
-        t_lock_guard<spin_mutex> lck(_spin);
-		if (_bPaused)
-		{
+	timeT GetClock() const {
+        LockFree::LockGuard<LockFree::SpinMutex> lck(spin_mutex_);
+		if (_bPaused) {
 			return _currVal;
 		}
 		else {
-			return _currVal + std::chrono::duration_cast<std::chrono::duration<timeT, timeScale>>(steady_clock::now() - _startClk).count();
+			return _currVal + DURATION_CAST(steady_clock::now() - _startClk).count();
 		}
 	}
 
-	void setPaused(bool pause)
-	{
-        t_lock_guard<spin_mutex> lck(_spin);
+	void SetPaused(bool pause) {
+        LockFree::LockGuard<LockFree::SpinMutex> lck(spin_mutex_);
         if(pause != _bPaused){
             if(!_bPaused) {
-                _currVal += std::chrono::duration_cast<std::chrono::duration<timeT, timeScale>>(steady_clock::now() - _startClk).count();
+                _currVal += DURATION_CAST(steady_clock::now() - _startClk).count();
             }
             _startClk = steady_clock::now();
             _bPaused = pause;
         }
 	}
-	bool isPaused() const { return _bPaused; }
+	bool IsPaused() const { return _bPaused; }
 
-    
-    //get the value form last setClock
-//    inline timeT getSetValue() const { return _currVal; }
 private:
-    mutable spin_mutex _spin;
+    mutable LockFree::SpinMutex spin_mutex_;
     timeT _currVal;
 	bool _bPaused;
 	steady_clock::time_point _startClk;

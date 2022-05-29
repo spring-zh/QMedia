@@ -9,7 +9,6 @@
 /* Begin PBXBuildFile section */
 		10A9FE051EA498020051BDFC /* QMediaSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10A9FDFB1EA498020051BDFC /* QMediaSDK.framework */; };
 		10A9FE0C1EA498020051BDFC /* QMediaSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 10A9FDFE1EA498020051BDFC /* QMediaSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		10A9FE9D1EA4B9820051BDFC /* QMediaSDK.framework in Copy Files */ = {isa = PBXBuildFile; fileRef = 10A9FDFB1EA498020051BDFC /* QMediaSDK.framework */; };
 		6F049342244AC7F900F8B73B /* QInternalVideoSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F04933F244AC7F900F8B73B /* QInternalVideoSource.h */; };
 		6F049344244AC7F900F8B73B /* QInternalVideoSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F049341244AC7F900F8B73B /* QInternalVideoSource.mm */; };
 		6F04934D244BF21A00F8B73B /* QAudioTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F049349244BF21A00F8B73B /* QAudioTarget.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -138,7 +137,6 @@
 			dstPath = "$(SRCROOT)/../SDKBuild/$(CONFIGURATION)$(EFFECTIVE_PLATFORM_NAME)";
 			dstSubfolderSpec = 0;
 			files = (
-				10A9FE9D1EA4B9820051BDFC /* QMediaSDK.framework in Copy Files */,
 			);
 			name = "Copy Files";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -822,7 +820,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -869,7 +867,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				SYMROOT = build;
@@ -897,7 +895,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/QMediaSDK/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
@@ -928,7 +926,7 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/QMediaSDK/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;

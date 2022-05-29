@@ -9,7 +9,7 @@
 #ifndef EFFECTEDITOR_EFFECTEDITORCOMBINER_H
 #define EFFECTEDITOR_EFFECTEDITORCOMBINER_H
 
-#include "Utils/ThreadTask.h"
+#include "Utils/ThreadTaskFuture.h"
 #include "GraphicCore/GcLayer.h"
 #include "MediaCore/core/SteadyClock.h"
 #include "MediaCore/audiocore/AudioClock.h"
@@ -216,7 +216,7 @@ protected:
     void runAudioCmd();
     
     //the thread for handle sync commands
-    ThreadTask<RetCode> _threadTask;
+    ThreadTaskFuture _threadTask;
     
     typedef std::function<void(void)> AsyncRenderCmd;
     std::mutex _renderCmdsMutex;

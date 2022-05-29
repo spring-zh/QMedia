@@ -105,6 +105,7 @@ void DisplayLayer::render(int64_t timeStamp){
 }
 
 EffectCombiner::EffectCombiner():
+_threadTask("[threadtask].combiner_main"),
 _videoTarget(nullptr),
 _audioTarget(nullptr),
 _hasAudio(false),
@@ -123,7 +124,7 @@ _state(CombinerState::Idle)
     _audioConfig.codectype = AudioCodecType::kAAC;
     _audioConfig.format = RawAudioFormat::kS16;
     _displayLayer = std::shared_ptr<DisplayLayer>(new DisplayLayer(this));
-    _threadTask.setTaskCallback(&EffectCombiner::cmdCallback,this);
+//    _threadTask.setTaskCallback(&EffectCombiner::cmdCallback,this);
 }
 EffectCombiner::~EffectCombiner()
 {
@@ -148,29 +149,29 @@ void EffectCombiner::setAudioTarget(AudioTarget* audioTarget)
     }
 }
 
-void EffectCombiner::cmdCallback(RetCode errcode, int taskId)
-{
-//    LOGI("Cmd Code:%d Error Code%d",errcode, taskId);
-    switch (taskId) {
-        case CMD_PREPARE:
-            _callback->onPrepared(errcode);
-            break;
-        case CMD_START:
-            _callback->onStarted(errcode);
-            break;
-        case CMD_STOP:
-            _callback->onStoped(errcode);
-            break;
-//        case CMD_SEEK:
+//void EffectCombiner::cmdCallback(RetCode errcode, int taskId)
+//{
+////    LOGI("Cmd Code:%d Error Code%d",errcode, taskId);
+//    switch (taskId) {
+//        case CMD_PREPARE:
+//            _callback->onPrepared(errcode);
 //            break;
-//        case CMD_ADDTRACK:
+//        case CMD_START:
+//            _callback->onStarted(errcode);
 //            break;
-//        case CMD_REMOVETRACK:
+//        case CMD_STOP:
+//            _callback->onStoped(errcode);
 //            break;
-        default:
-            break;
-    }
-}
+////        case CMD_SEEK:
+////            break;
+////        case CMD_ADDTRACK:
+////            break;
+////        case CMD_REMOVETRACK:
+////            break;
+//        default:
+//            break;
+//    }
+//}
 
 EffectCombiner::RetCode EffectCombiner::_prepare()
 {
@@ -196,6 +197,7 @@ EffectCombiner::RetCode EffectCombiner::_prepare()
     MediaSupervisor::start();
     
     _state = CombinerState::Prepared;
+    _callback->onPrepared(RetCode::ok);
     return RetCode::ok;
 }
 
@@ -215,6 +217,7 @@ EffectCombiner::RetCode EffectCombiner::_start()
     if (_videoTarget) _videoTarget->start();
     if (_audioTarget) _audioTarget->start();
     _state = CombinerState::Started;
+    _callback->onStarted(RetCode::ok);
     return RetCode::ok;
 }
 EffectCombiner::RetCode EffectCombiner::_stop()
@@ -236,6 +239,7 @@ EffectCombiner::RetCode EffectCombiner::_stop()
     MediaSupervisor::stop();
     
     _state = CombinerState::Stopped;
+    _callback->onStoped(RetCode::ok);
     return RetCode::ok;
 }
 
@@ -370,7 +374,7 @@ bool EffectCombiner::onVideoRender(int64_t wantTimeMs)
     {
         if( !_bVideoCompleted) {
             _bVideoCompleted = true;
-            _threadTask.postTask(&EffectCombiner::onStreamCompleted, this, MediaType::Video);
+            _threadTask.PostTask(&EffectCombiner::onStreamCompleted, this, MediaType::Video);
         }
         position = getValidTimeRange()._end;
     }else
@@ -438,7 +442,7 @@ bool EffectCombiner::onAudioRender(uint8_t * const buffer, unsigned needBytes) {
     {
         if (!_bAudioCompleted) {
             _bAudioCompleted = true;
-            _threadTask.postTask(&EffectCombiner::onStreamCompleted, this, MediaType::Audio);
+            _threadTask.PostTask(&EffectCombiner::onStreamCompleted, this, MediaType::Audio);
         }
     }else
         _bAudioCompleted = false;
@@ -479,18 +483,18 @@ int EffectCombiner::getCacheAudioSample(uint64_t timeMs, int wantLen, bool& hasD
 
 void EffectCombiner::prepare()
 {
-    _threadTask.postTask((int)CMD_PREPARE ,&EffectCombiner::_prepare, this);
+    _threadTask.PostTask(CMD_PREPARE ,&EffectCombiner::_prepare, this);
 }
 
 void EffectCombiner::start()
 {
-    _threadTask.removeTaskById(CMD_STOP);
-    _threadTask.postTask((int)CMD_START ,&EffectCombiner::_start, this);
+    _threadTask.RemoveTask(CMD_STOP);
+    _threadTask.PostTask(CMD_START ,&EffectCombiner::_start, this);
 }
 void EffectCombiner::stop()
 {
-    _threadTask.removeTaskById(CMD_START);
-    _threadTask.postTask((int)CMD_STOP, &EffectCombiner::_stop, this);
+    _threadTask.RemoveTask(CMD_START);
+    _threadTask.PostTask(CMD_STOP, &EffectCombiner::_stop, this);
 }
 
 Range<int64_t> EffectCombiner::getValidTimeRange() {
@@ -502,12 +506,12 @@ Range<int64_t> EffectCombiner::getValidTimeRange() {
 void EffectCombiner::addMediaTrack(MediaTrackRef mediaTrack)
 {
 //    _threadTask.removeTaskById(CMD_ADDTRACK);
-    _threadTask.postTask((int)CMD_ADDTRACK, &EffectCombiner::_addMediaTrack, this, mediaTrack);
+    _threadTask.PostTask(CMD_ADDTRACK, &EffectCombiner::_addMediaTrack, this, mediaTrack);
 }
 void EffectCombiner::removeMediaTrack(MediaTrackRef mediaTrack)
 {
 //    _threadTask.removeTaskById(CMD_ADDTRACK);
-    _threadTask.postTask((int)CMD_REMOVETRACK, &EffectCombiner::_removeMediaTrack, this, mediaTrack);
+    _threadTask.PostTask(CMD_REMOVETRACK, &EffectCombiner::_removeMediaTrack, this, mediaTrack);
 }
 
 void EffectCombiner::attachRenderNode(GraphicCore::RenderNodeRef child, GraphicCore::RenderNodeRef parent)

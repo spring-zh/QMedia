@@ -13,75 +13,69 @@
 #include <condition_variable>
 #include <list>
 
-template <typename T>
-class BlockingQueue{
+template <typename T, typename = typename std::enable_if<std::is_copy_assignable<T>::value>::type>
+class BlockingQueue {
 public:
+    static_assert(sizeof(T) < 1024, "template class size is too large!!!");
+
     BlockingQueue() {}
     virtual ~BlockingQueue() {}
-
-    static_assert(std::is_copy_assignable<T>::value &&
-                  std::is_move_assignable<T>::value, "template class is not copyable!!");
-    static_assert(sizeof(T) < 1024, "template class size is too large!!!");
     
-    typedef typename std::lock_guard<std::mutex> guard_lock;
+    typedef typename std::unique_lock<std::mutex> unique_lock;
 
-    void Put(const T& value, int vId)
-    {
-        guard_lock lock(mtx_);
-        ItemT item = {value,vId};
+    void Put(const T& value, int vId) {
+        unique_lock lock(mutex_);
+        ObjectT item = {value,vId};
         queue_.push_back(item);
-        cond_.notify_one();
+        cv_.notify_one();
     }
 
-    T Take(int& vIdOut)
-    {
-        std::unique_lock<std::mutex> lock(mtx_);
-        for (;;)
-        {
-            if (!queue_.empty())
-                break;
-            cond_.wait(lock, [this]{return !queue_.empty ();});
+    void Insert(const T& value, int vId) {
+        unique_lock lock(mutex_);
+        ObjectT obj = {value,vId};
+        queue_.push_front(obj);
+        cv_.notify_one();
+    }
+
+    T Take(int& vIdOut) {
+        unique_lock lock(mutex_);
+        for (;;) {
+            if (!queue_.empty()) break;
+            cv_.wait(lock, [this]{return !queue_.empty();});
         }
         
-        ItemT rtItem = queue_.front();
+        ObjectT ret_obj = queue_.front();
         queue_.pop_front();
-        vIdOut = rtItem._id;
-        return rtItem._t;
+        vIdOut = ret_obj._id;
+        return ret_obj._t;
     }
 
-    size_t Size() const
-    {
-        guard_lock lock (mtx_);
+    size_t Size() const {
+        unique_lock lock (mutex_);
         return queue_.size();
     }
     
-    void RemoveAll()
-    {
-        guard_lock lock(mtx_);
+    void RemoveAll() {
+        unique_lock lock(mutex_);
         queue_.clear();
     }
     
-    void RemoveById(int vId)
-    {
-        guard_lock lock(mtx_);
-        for(auto iter = queue_.begin();iter != queue_.end(); ){
-            if (iter->_id == vId) {
-                iter = queue_.erase(iter);
-            }else
-                ++iter;
-        }
+    void RemoveById(int vId) {
+        unique_lock lock(mutex_);
+        queue_.remove_if([vId](const ObjectT& obj){return obj._id == vId;});
     }
+
 private:
     BlockingQueue (const BlockingQueue& rhs);
     BlockingQueue& operator = (const BlockingQueue& rhs);
 private:
-    struct ItemT {
+    struct ObjectT {
         T _t;
         int _id;
     };
-    std::mutex mtx_;
-    std::condition_variable cond_;
-    std::list<ItemT> queue_;
+    std::mutex mutex_;
+    std::condition_variable cv_;
+    std::list<ObjectT> queue_;
 };
 
 #endif //UTILS_BLOCKINGQUEUE_H

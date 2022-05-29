@@ -30,7 +30,7 @@ void EditorExporter::stop()
 
 void EditorExporter::cancel()
 {
-    _threadTask.postTask(&EditorExporter::_cancel, this);
+    _threadTask.PostTask(&EditorExporter::_cancel, this);
 }
 int64_t EditorExporter::getPosition() const {
     return _renderPosition;
@@ -94,7 +94,7 @@ void EditorExporter::onStoped(RetCode code)
 
 void EditorExporter::onCompleted()
 {
-    _threadTask.postTask(&EditorExporter::_complete, this);
+    _threadTask.PostTask(&EditorExporter::_complete, this);
 }
 
 EditorExporter::RetCode EditorExporter::_cancel()

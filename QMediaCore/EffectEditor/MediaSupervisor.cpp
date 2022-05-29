@@ -49,50 +49,22 @@ void MediaSupervisor::start()
 #define USE_ASYNC_CALL 1
 void MediaSupervisor::setPositionTo(int64_t mSec)
 {
-#if USE_ASYNC_CALL
-    //async call then sync
-    if (_mediaTracks.size() > 1) {
-        std::vector<std::future<bool>> futures;
-        for (auto &track : _mediaTracks) {
-//            std::packaged_task<bool(int64_t)> task(std::bind(&MediaTrack::setPositionTo, track));
-            std::future<bool> fut= std::async(&MediaTrack::setPositionTo, track, mSec);
-            futures.push_back(std::move(fut));
-        }
-        for (auto& future : futures) {
-            future.get();
-        }
-    }else if (_mediaTracks.size() == 1){
-        _mediaTracks.begin()->get()->setPositionTo(mSec);
-    }
-#endif
-#if !USE_ASYNC_CALL
-    //direct call
+    std::vector<std::future<bool>> futures;
     for (auto &track : _mediaTracks) {
-        track->setPositionTo(mSec);
+        futures.push_back(track->setPositionTo(mSec));
     }
-#endif
+    for (auto& future : futures) {
+        future.get();
+    }
 }
 
 void MediaSupervisor::stop()
 {
-#if USE_ASYNC_CALL
-    if (_mediaTracks.size() > 1) {
-        std::vector<std::future<void>> futures;
-        for (auto &track : _mediaTracks) {
-//            std::packaged_task<void(void)> task(std::bind(&MediaTrack::stopMedia, track));
-            std::future<void> fut= std::async(&MediaTrack::stopMedia, track);
-            futures.push_back(std::move(fut));
-        }
-        for (auto& future : futures) {
-            future.get();
-        }
-    }else if (_mediaTracks.size() == 1){
-        _mediaTracks.begin()->get()->stopMedia();
-    }
-#endif
-#if !USE_ASYNC_CALL
+    std::vector<std::future<void>> futures;
     for (auto &track : _mediaTracks) {
-        track->stopMedia();
+        futures.push_back(track->stopMedia());
     }
-#endif
+    for (auto& future : futures) {
+        future.get();
+    }
 }
