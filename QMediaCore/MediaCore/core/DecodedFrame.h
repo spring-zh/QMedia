@@ -14,6 +14,7 @@
 class DecodedFrameBuffer : public VideoFrameBuffer, public AudioFrameBuffer {
 public:
     virtual MediaType getMediaType() const = 0;
+    virtual int getFlags() const = 0;
 };
 
 class DecodedFrame {
@@ -37,6 +38,8 @@ public:
     DecodedFrame& operator=(DecodedFrame&&) = default;
 
     int64_t render_time_ms() const { return timestamp_ms_; }
+    
+    int flags() const { return frame_buffer_->getFlags();}
 
     //members
     std::shared_ptr<DecodedFrameBuffer> frame_buffer_;

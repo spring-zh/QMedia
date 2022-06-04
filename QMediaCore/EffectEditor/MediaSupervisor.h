@@ -15,6 +15,8 @@
 #include "MediaGraphicChannel.h"
 #include "MediaAudioChannel.h"
 
+#include "MediaCore/decoder/SequentailDecoder.h"
+
 class MediaSupervisor {
 public:
     MediaSupervisor();
@@ -36,6 +38,8 @@ protected:
     
     std::list<GraphicCore::RenderNodeRef> _graphicChannels;
     std::list<MediaAudioChannelRef> _audioChannels;
+    
+    SequentailDecoder* sequentail_decoder_;
 };
 
 #endif /* EFFECTEDITOR_MEDIASUPERVISOR_H */

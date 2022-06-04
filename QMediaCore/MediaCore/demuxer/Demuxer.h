@@ -13,6 +13,10 @@
 
 class Demuxer {
 public:
+    
+    using UPtr = std::unique_ptr<Demuxer>;
+    using SPtr = std::shared_ptr<Demuxer>;
+    
 	virtual ~Demuxer() {}
 
 	virtual int32_t Open(const char* urlpath, int flags) = 0;
@@ -35,6 +39,8 @@ public:
 	virtual bool IsEOF() const = 0;
 
 	virtual void setIgnoreBFrame(bool ignore) = 0;
+    
+    virtual void Select(int stream_id) = 0;
 
     virtual const std::vector<MediaStreamDescribe>& getMediaStreamDescribes() const = 0;
 

@@ -13,6 +13,15 @@
 #include "MediaCore/core/EncodedPacket.h"
 #include <stdint.h>
 
+enum DecodeErr : int {
+    DEC_OK = 0,
+    DEC_UNKNOW = -1,
+    DEC_INVALID_DECODER = -2,
+    DEC_CONFIG_NOT_FOUND = -3,
+    DEC_INVALID_DATA = -4,
+    DEC_EAGAIN = -5,
+};
+
 class DecodedFrameCallback {
 public:
 	virtual ~DecodedFrameCallback() {}
@@ -34,6 +43,10 @@ public:
 
 class Decoder {
 public:
+    using UPtr = std::unique_ptr<Decoder>;
+    using SPtr = std::shared_ptr<Decoder>;
+    
+    
 	enum RetCode : int32_t {
 		ok = 0,
 		unknow = -1,

@@ -88,13 +88,13 @@ class EncodedPacket
 {
 public:
 
-	enum :unsigned{ FLAG_SYNC = BitValue(0), FLAG_FLUSH = BitValue(1), FLAG_CONFIG = BitValue(2), FLAG_END = BitValue(3), FLAG_DISCARD = BitValue(4)};
+	enum :unsigned{ FLAG_SYNC = BitValue(0), FLAG_FLUSH = BitValue(1), FLAG_CONFIG = BitValue(2), FLAG_END = BitValue(3), FLAG_DISCARD = BitValue(4), FLAG_REVERSE = BitValue(10), FLAG_REVERSE_END = BitValue(11)};
 
+    EncodedPacket():_ntp_time_ms(-1), _flags(0) {}
 	EncodedPacket(std::shared_ptr<EncodedPacketBuffer> _encData, int64_t ntp_time_ms):
             _encodedBuffer(_encData),
             _ntp_time_ms(ntp_time_ms),
-            _flags(0) {
-		    }
+            _flags(0) {}
 	virtual ~EncodedPacket(){}
 
 	// Support move and copy.

@@ -306,6 +306,17 @@ void GeneralDemuxer::setIgnoreBFrame(bool ignore) {
     }
 }
 
+void GeneralDemuxer::Select(int stream_id) {
+    if (stream_id >= 0) {
+        for (int i = 0; i < _formatContext->nb_streams && i < 5; i++) {
+            if(stream_id != i)
+                _formatContext->streams[i]->discard = AVDISCARD_ALL;
+            else
+                _formatContext->streams[i]->discard = AVDISCARD_DEFAULT;
+        }
+    }
+}
+
 int64_t GeneralDemuxer::getDuration() const {
     return  _isOpen ? _formatContext->duration/1000 : 0;
 }

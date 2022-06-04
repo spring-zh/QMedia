@@ -26,8 +26,8 @@ public:
 		// The default implementation ignores custom decode time value.
 		return Decoded(decodedImage);
 	}
-
-	virtual int32_t ReceivedDecodedFrame(const uint64_t pictureId) { return -1; }
+    
+    virtual int32_t OnEnd() = 0;
 };
 
 class VideoDecoder {

@@ -17,17 +17,38 @@ class CodecSpecificInfo
 {
 public:
 
-	CodecSpecificInfo() {}
+    CodecSpecificInfo() = default;
 
-	~CodecSpecificInfo() {
-		extra_datas_.clear();
-	}
-	CodecSpecificInfo(const CodecSpecificInfo& from) {
-		extra_datas_ = from.getExtraDatas();
-	}
-	CodecSpecificInfo(CodecSpecificInfo&& from) {
-		extra_datas_ = std::move(from.getExtraDatas());
-	}
+    ~CodecSpecificInfo() = default;
+    
+    CodecSpecificInfo(const CodecSpecificInfo& from): extra_datas_(from.extra_datas_) {}
+    
+	CodecSpecificInfo(CodecSpecificInfo&& from) : extra_datas_(std::move(from.extra_datas_)) {}
+    
+    CodecSpecificInfo& operator=(const CodecSpecificInfo& rhs) {
+        extra_datas_ = rhs.extra_datas_;
+        return *this;
+    }
+    
+    CodecSpecificInfo& operator=(const CodecSpecificInfo&& rhs) {
+        extra_datas_ = std::move(rhs.extra_datas_);
+        return *this;
+    }
+    
+    bool IsSameCodec(const CodecSpecificInfo& other) const {
+        if (extra_datas_.size() == other.extra_datas_.size()) {
+            for (int i = 0; i < extra_datas_.size(); ++i) {
+                if (extra_datas_[i].size() != other.extra_datas_[i].size()) {
+                    return false;
+                }
+                if (memcmp(extra_datas_[i].data(), other.extra_datas_[i].data(), extra_datas_[i].size())) {
+                    return false;
+                }
+            }
+            return true;
+        }
+        return false;
+    }
 
 	void addExtraData(uint8_t *data, size_t size) {
 		std::vector<uint8_t > add_data(data, data + size);
@@ -37,8 +58,12 @@ public:
 	const std::vector<std::vector<uint8_t >>& getExtraDatas() const {
 		return extra_datas_;
 	}
+    
+    int GetCodecFlag() const { return codec_flag_; }
+    void SetCodecFlag(int codec_flag) { codec_flag_ = codec_flag; }
 
 private:
+    int codec_flag_ = 0;
 	std::vector<std::vector<uint8_t >> extra_datas_;
 };
 

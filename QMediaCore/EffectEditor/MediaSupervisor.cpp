@@ -7,18 +7,16 @@
 //
 
 #include "MediaSupervisor.h"
-#include <future>
-#include <limits>
+#include "MediaCore/decoder/SequentailDecoder.h"
 //#include "MediaCore/core/PlayerClock.h"
 //#include "Utils/Logger.h"
 
-MediaSupervisor::MediaSupervisor()
-{
-    
+MediaSupervisor::MediaSupervisor() {
+    sequentail_decoder_ = new SequentailDecoder();
+    sequentail_decoder_->StopMedia();
 }
 
-MediaSupervisor::~MediaSupervisor()
-{
+MediaSupervisor::~MediaSupervisor() {
     _mediaTracks.clear();
 }
 

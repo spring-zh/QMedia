@@ -60,6 +60,11 @@ public:
         return InsertTaskInternal<RetT>(TASK_IMPL<RetT>(new TaskImpl<RetT>(std::bind(fn, std::forward<Args>(args)...))));
     }
     
+    template <typename Fn, class... Args, typename RetT = typename std::result_of<Fn(Args...)>::type>
+    inline std::future<RetT> InsertTask(int taskId, Fn&& fn, Args&&... args) {
+        return InsertTaskInternal<RetT>(TASK_IMPL<RetT>(new TaskImpl<RetT>(std::bind(fn, std::forward<Args>(args)...))), taskId);
+    }
+    
     inline void RemoveTask(int vId = -1) {
         task_queue_.RemoveById(vId);
     }

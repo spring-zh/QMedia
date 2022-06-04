@@ -8,7 +8,7 @@
 
 #pragma once
 
-enum class MediaType {Unkonw = 0,  Video = 1 , Audio = 2 , Subtitle = 4 };
+enum class MediaType : int {Unkonw = 0,  Video = 1 , Audio = 2 , Subtitle = 4 };
 
 // Raw video format
 enum class RawVideoFormat {

@@ -35,6 +35,8 @@ public:
     virtual bool IsEOF() const override { return _isEOF; }
 
     virtual void setIgnoreBFrame(bool ignore) override ;
+    
+    virtual void Select(int stream_id) override;
 
     virtual int64_t getDuration() const override ;
 

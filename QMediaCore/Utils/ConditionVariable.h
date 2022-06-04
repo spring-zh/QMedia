@@ -15,30 +15,30 @@ public:
 
     void SetTimeoutMs(int32_t timeout_ms = -1) { timeout_ms_ = timeout_ms; }
 
-    template <typename FuncPtr, typename ...Args>
-    inline Result Wait(FuncPtr func_ptr, Args... args) {
-        return WaitInternal(std::bind(func_ptr, args...));
+    template <typename Fn, typename ...Args, typename RetT = typename std::result_of<Fn(Args...)>::type>
+    inline Result Wait(Fn fn, Args... args) {
+        return WaitInternal(std::bind(fn, args...));
     }
 
-    template <typename RetT, typename FuncPtr, typename ...Args>
-    inline RetT Run(FuncPtr func_ptr, Args... args) {
-        std::function<RetT()> f = std::bind(func_ptr, args...);
+    template <typename Fn, typename ...Args, typename RetT = typename std::result_of<Fn(Args...)>::type>
+    inline RetT Run(Fn fn, Args... args) {
+        std::function<RetT()> f = std::bind(fn, args...);
         std::unique_lock<std::mutex> lck(mutex_);
         return f();
     }
 
-    template <typename FuncPtr, typename ...Args>
-    inline bool Notify(FuncPtr func_ptr, Args... args) {
-        std::function<bool()> f = std::bind(func_ptr, args...);
+    template <typename Fn, typename ...Args>
+    inline bool Notify(Fn fn, Args... args) {
+        std::function<bool()> f = std::bind(fn, args...);
         std::unique_lock<std::mutex> lck(mutex_);
         bool result = f();
         if (result) cv_.notify_one();
         return result;
     }
 
-    template <typename FuncPtr, typename ...Args>
-    inline bool NotifyAll(FuncPtr func_ptr, Args... args) {
-        std::function<bool()> f = std::bind(func_ptr, args...);
+    template <typename Fn, typename ...Args>
+    inline bool NotifyAll(Fn fn, Args... args) {
+        std::function<bool()> f = std::bind(fn, args...);
         std::unique_lock<std::mutex> lck(mutex_);
         bool result = f();
         if (result) cv_.notify_all();

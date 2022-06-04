@@ -140,6 +140,8 @@ public:
     bool is_texture() const ;
 
     RawVideoFormat get_video_format() const ;
+    
+    int pkt_flags = 0;
 
 private:
 	// An opaque reference counted handle that stores the pixel data.
