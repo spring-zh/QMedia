@@ -8,6 +8,8 @@
 
 #pragma once
 
+#include <stdint.h>
+
 enum class MediaType : int {Unkonw = 0,  Video = 1 , Audio = 2 , Subtitle = 4 };
 
 // Raw video format
@@ -125,3 +127,40 @@ struct MediaDescribe
 		SubtitleDescribe _subtitledesc;
 	};
 };
+
+
+//
+#define UIN8_PTR(ptr, offset) ((uint8_t*)(ptr) + offset)
+// memory read
+#define MEM_RB8(ptr) (*UIN8_PTR(ptr,0))
+#define MEM_RB16(ptr) (((uint16_t)MEM_RB8(ptr) <<8) | ((uint16_t)MEM_RB8(UIN8_PTR(ptr,1))))
+#define MEM_RB24(ptr) (((uint32_t)MEM_RB16(ptr)<<8) | ((uint32_t)MEM_RB8(UIN8_PTR(ptr,2))))
+#define MEM_RB32(ptr) (((uint32_t)MEM_RB16(ptr)<<16)| ((uint32_t)MEM_RB16(UIN8_PTR(ptr,2))))
+#define MEM_RB64(ptr) (((uint64_t)MEM_RB32(ptr)<<32)| ((uint64_t)MEM_RB32(UIN8_PTR(ptr,4))))
+
+// memory write
+#define MEM_WB8(ptr, value) (*UIN8_PTR(ptr,0) = (value))
+#define MEM_WB16(ptr, value) \
+*UIN8_PTR(ptr,0) = (uint8_t)((value >> 8)&0xFF);\
+*UIN8_PTR(ptr,1) = (uint8_t)((value     )&0xFF);
+
+#define MEM_WB24(ptr, value) \
+*UIN8_PTR(ptr,0) = (uint8_t)((value >> 16)&0xFF);\
+*UIN8_PTR(ptr,1) = (uint8_t)((value >> 8)&0xFF);\
+*UIN8_PTR(ptr,2) = (uint8_t)((value     )&0xFF);
+
+#define MEM_WB32(ptr, value) \
+*UIN8_PTR(ptr,0) = (uint8_t)((value >> 24)&0xFF);\
+*UIN8_PTR(ptr,1) = (uint8_t)((value >> 16)&0xFF);\
+*UIN8_PTR(ptr,2) = (uint8_t)((value >> 8)&0xFF);\
+*UIN8_PTR(ptr,3) = (uint8_t)((value     )&0xFF);
+
+#define MEM_WB64(ptr, value) \
+*UIN8_PTR(ptr,0) = (uint8_t)((value >> 56)&0xFF);\
+*UIN8_PTR(ptr,1) = (uint8_t)((value >> 48)&0xFF);\
+*UIN8_PTR(ptr,2) = (uint8_t)((value >> 40)&0xFF);\
+*UIN8_PTR(ptr,3) = (uint8_t)((value >> 32)&0xFF);\
+*UIN8_PTR(ptr,4) = (uint8_t)((value >> 24)&0xFF);\
+*UIN8_PTR(ptr,5) = (uint8_t)((value >> 16)&0xFF);\
+*UIN8_PTR(ptr,6) = (uint8_t)((value >> 8)&0xFF);\
+*UIN8_PTR(ptr,7) = (uint8_t)((value     )&0xFF);

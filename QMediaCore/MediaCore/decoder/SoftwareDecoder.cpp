@@ -140,6 +140,10 @@ int SoftwareDecodedFrameBuffer::StrideV() const {
     return _avFrame->linesize[2];
 }
 
+int SoftwareDecodedFrameBuffer::getFlags() const {
+    return _avFrame->flags;
+}
+
 #pragma mark ---------- SoftwareDecoder ----------
 SoftwareDecoder::SoftwareDecoder():
 _avcodec(NULL),_avcontext(NULL),

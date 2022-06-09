@@ -9,6 +9,14 @@
 /* Begin PBXBuildFile section */
 		10A9FE051EA498020051BDFC /* QMediaSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10A9FDFB1EA498020051BDFC /* QMediaSDK.framework */; };
 		10A9FE0C1EA498020051BDFC /* QMediaSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 10A9FDFE1EA498020051BDFC /* QMediaSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		13E51EA5284BA5CD00EC9179 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51E9F284BA5CC00EC9179 /* libavformat.a */; };
+		13E51EA6284BA5CD00EC9179 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA0284BA5CC00EC9179 /* libavutil.a */; };
+		13E51EA7284BA5CD00EC9179 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA1284BA5CD00EC9179 /* libswscale.a */; };
+		13E51EA8284BA5CD00EC9179 /* libswresample.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA2284BA5CD00EC9179 /* libswresample.a */; };
+		13E51EA9284BA5CD00EC9179 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA3284BA5CD00EC9179 /* libavcodec.a */; };
+		13E51EAA284BA5CD00EC9179 /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA4284BA5CD00EC9179 /* libavfilter.a */; };
+		13E51EC2284F9BD200EC9179 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EC1284F9BD200EC9179 /* libz.tbd */; };
+		13E51EC9284FAB9C00EC9179 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EC3284FA8DC00EC9179 /* VideoToolbox.framework */; };
 		6F049342244AC7F900F8B73B /* QInternalVideoSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F04933F244AC7F900F8B73B /* QInternalVideoSource.h */; };
 		6F049344244AC7F900F8B73B /* QInternalVideoSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F049341244AC7F900F8B73B /* QInternalVideoSource.mm */; };
 		6F04934D244BF21A00F8B73B /* QAudioTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F049349244BF21A00F8B73B /* QAudioTarget.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -151,6 +159,16 @@
 		10A9FE0B1EA498020051BDFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		10A9FE301EA4A0F10051BDFC /* QMediaCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QMediaCore.xcodeproj; path = QMediaCore/QMediaCore.xcodeproj; sourceTree = "<group>"; };
 		10A9FEA31EA4BE410051BDFC /* ReleaseBuild.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = ReleaseBuild.sh; path = ../../SDKBuild/ReleaseBuild.sh; sourceTree = "<group>"; };
+		13E51E9F284BA5CC00EC9179 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libavformat.a; sourceTree = "<group>"; };
+		13E51EA0284BA5CC00EC9179 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libavutil.a; sourceTree = "<group>"; };
+		13E51EA1284BA5CD00EC9179 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libswscale.a; sourceTree = "<group>"; };
+		13E51EA2284BA5CD00EC9179 /* libswresample.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswresample.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libswresample.a; sourceTree = "<group>"; };
+		13E51EA3284BA5CD00EC9179 /* libavcodec.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavcodec.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libavcodec.a; sourceTree = "<group>"; };
+		13E51EA4284BA5CD00EC9179 /* libavfilter.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavfilter.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libavfilter.a; sourceTree = "<group>"; };
+		13E51EC1284F9BD200EC9179 /* libz.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = libz.tbd; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/usr/lib/libz.tbd; sourceTree = DEVELOPER_DIR; };
+		13E51EC3284FA8DC00EC9179 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/VideoToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		13E51EC7284FAB8700EC9179 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
+		13E51ECA284FAED600EC9179 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
 		6F04933F244AC7F900F8B73B /* QInternalVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QInternalVideoSource.h; sourceTree = "<group>"; };
 		6F049341244AC7F900F8B73B /* QInternalVideoSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QInternalVideoSource.mm; sourceTree = "<group>"; };
 		6F049349244BF21A00F8B73B /* QAudioTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QAudioTarget.h; sourceTree = "<group>"; };
@@ -253,6 +271,14 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13E51EC9284FAB9C00EC9179 /* VideoToolbox.framework in Frameworks */,
+				13E51EC2284F9BD200EC9179 /* libz.tbd in Frameworks */,
+				13E51EA5284BA5CD00EC9179 /* libavformat.a in Frameworks */,
+				13E51EA6284BA5CD00EC9179 /* libavutil.a in Frameworks */,
+				13E51EA7284BA5CD00EC9179 /* libswscale.a in Frameworks */,
+				13E51EA8284BA5CD00EC9179 /* libswresample.a in Frameworks */,
+				13E51EA9284BA5CD00EC9179 /* libavcodec.a in Frameworks */,
+				13E51EAA284BA5CD00EC9179 /* libavfilter.a in Frameworks */,
 				753C28E11F5D7C80007EE433 /* libc++.tbd in Frameworks */,
 				753C28DF1F5D7C75007EE433 /* libc.tbd in Frameworks */,
 				6F45921024614EAF00FABEAF /* libQMediaCore.a in Frameworks */,
@@ -507,6 +533,16 @@
 		753C28D81F5D7B18007EE433 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				13E51ECA284FAED600EC9179 /* AVFoundation.framework */,
+				13E51EC7284FAB8700EC9179 /* CoreVideo.framework */,
+				13E51EC3284FA8DC00EC9179 /* VideoToolbox.framework */,
+				13E51EC1284F9BD200EC9179 /* libz.tbd */,
+				13E51EA3284BA5CD00EC9179 /* libavcodec.a */,
+				13E51EA4284BA5CD00EC9179 /* libavfilter.a */,
+				13E51E9F284BA5CC00EC9179 /* libavformat.a */,
+				13E51EA0284BA5CC00EC9179 /* libavutil.a */,
+				13E51EA2284BA5CD00EC9179 /* libswresample.a */,
+				13E51EA1284BA5CD00EC9179 /* libswscale.a */,
 				753C28DD1F5D7B2A007EE433 /* libstdc++.tbd */,
 				753C28DB1F5D7B22007EE433 /* libc++.tbd */,
 				753C28D91F5D7B18007EE433 /* libc.tbd */,
@@ -897,6 +933,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../QMediaCore/Thirdparty/ffmpeg/lib/ios";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_LDFLAGS = "-ObjC";
@@ -928,6 +965,7 @@
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../QMediaCore/Thirdparty/ffmpeg/lib/ios";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
 				OTHER_LDFLAGS = "-ObjC";

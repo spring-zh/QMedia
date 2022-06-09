@@ -17,7 +17,7 @@
 
 class DecoderSlice {
 public:
-    DecoderSlice(std::string file_path, int64_t media_file_duration);
+    DecoderSlice(std::string file_path, int64_t media_file_duration) : file_path_(file_path), media_file_duration_(media_file_duration) {}
     ~DecoderSlice() = default;
     
     static bool IsContinuous(const DecoderSlice& prev, const DecoderSlice& next);
@@ -32,13 +32,12 @@ public:
     Range<int64_t> GetSourceRannge() const {
         if (!source_range_.isValid())
             source_range_ = Range<int64_t>(0, media_file_duration_);
-        return source_range_;
+        return source_range_ ;
     }
     Range<int64_t> GetDisplayRannge() const {
         if (!display_range_.isValid())
-            return display_range_;
-        else
-            return GetSourceRannge();
+            display_range_ = GetSourceRannge();
+        return display_range_;
     }
     
     int64_t GetMediaDuration() const { return media_file_duration_; }
@@ -58,16 +57,19 @@ private:
     std::string file_path_;
     int64_t media_file_duration_;
     mutable Range<int64_t> source_range_;
-    Range<int64_t> display_range_;
-    float time_scale_;
+    mutable Range<int64_t> display_range_;
+    float time_scale_ = 1.0f;
 };
 
 
 class SequentailDecoder : public DecodedFrameCallback {
 public:
     
+    using UPtr = std::unique_ptr<SequentailDecoder>;
+    using SPtr = std::shared_ptr<SequentailDecoder>;
+    
     struct CallBack {
-        virtual void OnError(int error) = 0;
+        virtual void OnSequentailError(int error) = 0;
     };
 
     SequentailDecoder(MediaType media_type, CallBack* callback, DecoderFactory* factory);
@@ -84,8 +86,8 @@ public:
     virtual DecodedFrame ReadFrame(int64_t time_ms, int& index);
     
 private:
-    int32_t OnDecoded(DecodedFrame& decodedFrame);
-
+    int32_t OnDecoded(DecodedFrame& decodedFrame) override;
+    void OnDecodedEnd() override;
     //
     int GetUpperSliceIndex(int64_t time_ms);
     int GetSliceIndex(int64_t time_ms);

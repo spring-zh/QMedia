@@ -40,6 +40,7 @@ typedef struct SampleBufferFrame {
 //kCVPixelFormatType_420YpCbCr8BiPlanarVideoRange , kCVPixelFormatType_420YpCbCr8BiPlanarFullRange ,kCVPixelFormatType_32BGRA
 @property (nonatomic) uint32_t video_frame_format;
 
+- (NSString*)filePath;
 - (bool)load;
 - (void)unload;
 - (bool)isInit;

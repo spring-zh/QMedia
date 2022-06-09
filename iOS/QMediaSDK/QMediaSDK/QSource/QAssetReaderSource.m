@@ -178,8 +178,7 @@ static QMediaDescribe* AVAssetTrackToMediaDescribe(AVAssetTrack* avTrack){
 @synthesize videoTarget = _videoTarget;
 @synthesize audioTarget = _audioTarget;
 
-- (bool)load
-{
+- (bool)load {
     if (_isInit) return true;
     
     NSDictionary *inputOptions = [NSDictionary dictionaryWithObject:[NSNumber numberWithBool:YES] forKey:AVURLAssetPreferPreciseDurationAndTimingKey];

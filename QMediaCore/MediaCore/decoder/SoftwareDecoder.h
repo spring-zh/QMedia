@@ -64,6 +64,7 @@ public:
 
     //other
     MediaType getMediaType() const override { return _mediaType; }
+    int getFlags() const override ;
 
     void *native_handle() const override { return _avFrame; }
 

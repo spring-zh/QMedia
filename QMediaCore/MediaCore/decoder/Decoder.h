@@ -117,3 +117,17 @@ protected:
     std::list<VideoCodecType> video_codecs_list_;
     std::list<AudioCodecType> audio_codecs_list_;
 };
+
+class HardwareDecoderFactory : public DecoderFactory {
+public:
+
+    static HardwareDecoderFactory* instance();
+
+    virtual Decoder *CreateDecoder(const MediaDescribe& mediaDescribe) override ;
+
+    virtual void DestroyDecoder(Decoder *decoder) override ;
+
+protected:
+    HardwareDecoderFactory();
+    ~HardwareDecoderFactory();
+};

@@ -49,6 +49,10 @@ public:
         std::unique_lock<std::mutex> lck(mutex_);
         cv_.notify_one();
     }
+    
+    inline void NotifyNoLock() {
+        cv_.notify_one();
+    }
 
     inline void NotifyAll() {
         std::unique_lock<std::mutex> lck(mutex_);

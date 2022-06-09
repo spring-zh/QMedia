@@ -21,19 +21,28 @@ public:
 
     ~CodecSpecificInfo() = default;
     
-    CodecSpecificInfo(const CodecSpecificInfo& from): extra_datas_(from.extra_datas_) {}
+//    CodecSpecificInfo(const CodecSpecificInfo& from): extra_datas_(from.extra_datas_) {}
+//
+//	CodecSpecificInfo(CodecSpecificInfo&& from) : extra_datas_(std::move(from.extra_datas_)) {}
+//
+//    CodecSpecificInfo& operator=(const CodecSpecificInfo& rhs) {
+//        extra_datas_ = rhs.extra_datas_;
+//        return *this;
+//    }
+//
+//    CodecSpecificInfo& operator=(const CodecSpecificInfo&& rhs) {
+//        extra_datas_ = std::move(rhs.extra_datas_);
+//        is_avcc_ = rhs.is_avcc_;
+//        return *this;
+//    }
     
-	CodecSpecificInfo(CodecSpecificInfo&& from) : extra_datas_(std::move(from.extra_datas_)) {}
+    CodecSpecificInfo(const CodecSpecificInfo& from) = default;
     
-    CodecSpecificInfo& operator=(const CodecSpecificInfo& rhs) {
-        extra_datas_ = rhs.extra_datas_;
-        return *this;
-    }
+    CodecSpecificInfo(CodecSpecificInfo&& from) = default;
     
-    CodecSpecificInfo& operator=(const CodecSpecificInfo&& rhs) {
-        extra_datas_ = std::move(rhs.extra_datas_);
-        return *this;
-    }
+    CodecSpecificInfo& operator=(const CodecSpecificInfo& rhs) = default;
+    
+    CodecSpecificInfo& operator=(CodecSpecificInfo&& rhs) = default;
     
     bool IsSameCodec(const CodecSpecificInfo& other) const {
         if (extra_datas_.size() == other.extra_datas_.size()) {
@@ -63,6 +72,7 @@ public:
     void SetCodecFlag(int codec_flag) { codec_flag_ = codec_flag; }
 
 private:
+    bool is_avcc_;
     int codec_flag_ = 0;
 	std::vector<std::vector<uint8_t >> extra_datas_;
 };

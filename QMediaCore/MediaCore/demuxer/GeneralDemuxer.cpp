@@ -204,6 +204,7 @@ bool GeneralDemuxer::initMediaStreamDescribe(AVStream* avstream, MediaStreamDesc
     mediaStreamDescribe.describe = describe;
     if (codecpar->extradata && codecpar->extradata_size > 0) {
         mediaStreamDescribe.specificInfo.addExtraData(codecpar->extradata, codecpar->extradata_size);
+        mediaStreamDescribe.specificInfo.SetCodecFlag(codecpar->extradata[0]);
     }
     mediaStreamDescribe.duraion = avstream->duration != AV_NOPTS_VALUE?avstream->duration * AV_TIME_BASE * av_q2d(avstream->time_base): _formatContext->duration /1000;
 

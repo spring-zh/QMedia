@@ -110,17 +110,16 @@ varying vec2 v_texCoord;
 uniform sampler2D SamplerY;
 uniform sampler2D SamplerUV;
 uniform mat3 colorConversionMatrix;
-uniform highp vec4 uColor;
+uniform vec4 uColor;
 
 void main()
 {
-    mediump vec3 yuv;
-    lowp vec3 rgb;
+    vec3 yuv;
      
     // Subtract constants to map the video range start at 0
     yuv.x = (texture2D(SamplerY, v_texCoord).r - (16.0 / 255.0));
     yuv.yz = (texture2D(SamplerUV, v_texCoord).rg - vec2(0.5, 0.5));
-    rgb = colorConversionMatrix * yuv;
+    vec3 rgb = colorConversionMatrix * yuv;
     gl_FragColor = vec4(rgb, uColor.a);
 }
 )";

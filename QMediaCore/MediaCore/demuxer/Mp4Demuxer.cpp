@@ -19,7 +19,7 @@
 #include "mp4/sample_source.h"
 
 #include "MediaCore/protocol/avcc_parse.h"
-#include "MediaCore/protocol//hvcc_parse.h"
+#include "MediaCore/protocol/hvcc_parse.h"
 
 class Mp4PacketBuffer: public EncodedPacketBuffer {
 public:

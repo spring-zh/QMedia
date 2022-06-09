@@ -27,6 +27,8 @@ public:
     ~MediaSourceAdapter() {
     }
     
+    std::string filePath() const override { return [[_source filePath] UTF8String]; }
+    
     virtual void setVideoTarget(const VideoTarget* videoTarget) override {}
     virtual void setAudioTarget(const AudioTarget* audioTarget) override {}
 //

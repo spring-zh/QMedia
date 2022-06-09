@@ -75,6 +75,8 @@ public:
         _audioOutput = nil;
     }
     
+    virtual std::string filePath() const override { return _file_path; }
+    
     virtual bool load() override {
 //        wrlock_guard wrlock(_rwlock);
         if (_isInit) return true;

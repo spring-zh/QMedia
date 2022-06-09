@@ -153,6 +153,7 @@
 		10D915FD1EC306EC00BA8E06 /* FilterCollectionViewCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterCollectionViewCell.m; sourceTree = "<group>"; };
 		10D915FF1EC3095A00BA8E06 /* FilterCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterCollectionViewController.h; sourceTree = "<group>"; };
 		10D916001EC3095A00BA8E06 /* FilterCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterCollectionViewController.m; sourceTree = "<group>"; };
+		13E51EC5284FAA0600EC9179 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
 		22EF4D9C1EA5CFDF00D1A198 /* video */ = {isa = PBXFileReference; lastKnownFileType = folder; path = video; sourceTree = "<group>"; };
 		22EF4DA71EA5D21200D1A198 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		22EF4DA91EA5D21700D1A198 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -239,6 +240,7 @@
 		10A9FE981EA4B5390051BDFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				13E51EC5284FAA0600EC9179 /* VideoToolbox.framework */,
 				6F4592112461503A00FABEAF /* QMediaSDK.framework */,
 				10CAB06E1EF400B2007C3BE1 /* AssetsLibrary.framework */,
 				10760CEE1ED8653D0045644C /* AVKit.framework */,
