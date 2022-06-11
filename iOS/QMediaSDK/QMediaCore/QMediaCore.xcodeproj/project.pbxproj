@@ -3,14 +3,14 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		13CC2AB42853A6E10007FD87 /* SequentailSlice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13CC2AB22853A6E00007FD87 /* SequentailSlice.cpp */; };
 		13E51E9C284A3A6500EC9179 /* GeneralDemuxer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51E97284A3A6500EC9179 /* GeneralDemuxer.cpp */; };
 		13E51E9D284A3A6500EC9179 /* Mp4Demuxer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51E9B284A3A6500EC9179 /* Mp4Demuxer.cpp */; };
 		13E51E9E284A40A000EC9179 /* SequentailDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51E8F2843BF8500EC9179 /* SequentailDecoder.cpp */; };
-		13E51EAE284BB38E00EC9179 /* VideoToolboxDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51EAC284BB38D00EC9179 /* VideoToolboxDecoder.cpp */; };
 		13E51EB4284BB47200EC9179 /* SoftwareFrameDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51EB0284BB47200EC9179 /* SoftwareFrameDrawer.cpp */; };
 		13E51EB5284BB47200EC9179 /* SoftwareSource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51EB1284BB47200EC9179 /* SoftwareSource.cpp */; };
 		13E51EBD284F9A8500EC9179 /* SoftwareDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51E93284A33FF00EC9179 /* SoftwareDecoder.cpp */; };
@@ -84,6 +84,8 @@
 		136C13F228391CE3004BCF13 /* ConditionVariable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConditionVariable.h; sourceTree = "<group>"; };
 		136C13F328391CE3004BCF13 /* circle_buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = circle_buffer.h; sourceTree = "<group>"; };
 		136C13F428391E38004BCF13 /* SteadyClock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SteadyClock.h; sourceTree = "<group>"; };
+		13CC2AB22853A6E00007FD87 /* SequentailSlice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SequentailSlice.cpp; sourceTree = "<group>"; };
+		13CC2AB32853A6E00007FD87 /* SequentailSlice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequentailSlice.h; sourceTree = "<group>"; };
 		13E51E8F2843BF8500EC9179 /* SequentailDecoder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SequentailDecoder.cpp; sourceTree = "<group>"; };
 		13E51E902843BF8500EC9179 /* SequentailDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SequentailDecoder.h; sourceTree = "<group>"; };
 		13E51E92284A33FF00EC9179 /* Decoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Decoder.h; sourceTree = "<group>"; };
@@ -94,8 +96,6 @@
 		13E51E99284A3A6500EC9179 /* Demuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Demuxer.h; sourceTree = "<group>"; };
 		13E51E9A284A3A6500EC9179 /* Mp4Demuxer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mp4Demuxer.h; sourceTree = "<group>"; };
 		13E51E9B284A3A6500EC9179 /* Mp4Demuxer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Mp4Demuxer.cpp; sourceTree = "<group>"; };
-		13E51EAC284BB38D00EC9179 /* VideoToolboxDecoder.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = VideoToolboxDecoder.cpp; sourceTree = "<group>"; };
-		13E51EAD284BB38D00EC9179 /* VideoToolboxDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoToolboxDecoder.h; sourceTree = "<group>"; };
 		13E51EB0284BB47200EC9179 /* SoftwareFrameDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoftwareFrameDrawer.cpp; sourceTree = "<group>"; };
 		13E51EB1284BB47200EC9179 /* SoftwareSource.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SoftwareSource.cpp; sourceTree = "<group>"; };
 		13E51EB2284BB47200EC9179 /* SoftwareSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SoftwareSource.h; sourceTree = "<group>"; };
@@ -311,6 +311,17 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
+		13CC2AB12853A6040007FD87 /* sequentail */ = {
+			isa = PBXGroup;
+			children = (
+				13CC2AB22853A6E00007FD87 /* SequentailSlice.cpp */,
+				13CC2AB32853A6E00007FD87 /* SequentailSlice.h */,
+				13E51E8F2843BF8500EC9179 /* SequentailDecoder.cpp */,
+				13E51E902843BF8500EC9179 /* SequentailDecoder.h */,
+			);
+			path = sequentail;
+			sourceTree = "<group>";
+		};
 		13E51E96284A3A6500EC9179 /* demuxer */ = {
 			isa = PBXGroup;
 			children = (
@@ -321,15 +332,6 @@
 				13E51E9B284A3A6500EC9179 /* Mp4Demuxer.cpp */,
 			);
 			path = demuxer;
-			sourceTree = "<group>";
-		};
-		13E51EAB284BB38D00EC9179 /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				13E51EAC284BB38D00EC9179 /* VideoToolboxDecoder.cpp */,
-				13E51EAD284BB38D00EC9179 /* VideoToolboxDecoder.h */,
-			);
-			path = ios;
 			sourceTree = "<group>";
 		};
 		13E51EAF284BB47200EC9179 /* sources */ = {
@@ -617,11 +619,8 @@
 		6FF02917221BFEE40011E6CB /* decoder */ = {
 			isa = PBXGroup;
 			children = (
-				13E51EAB284BB38D00EC9179 /* ios */,
 				13E51E93284A33FF00EC9179 /* SoftwareDecoder.cpp */,
 				13E51E94284A33FF00EC9179 /* SoftwareDecoder.h */,
-				13E51E8F2843BF8500EC9179 /* SequentailDecoder.cpp */,
-				13E51E902843BF8500EC9179 /* SequentailDecoder.h */,
 				13E51E92284A33FF00EC9179 /* Decoder.h */,
 				6FF02918221BFEE40011E6CB /* AudioDecoder.h */,
 				6FF02919221BFEE40011E6CB /* VideoDecoder.h */,
@@ -642,6 +641,7 @@
 		6FF0291E221BFEE40011E6CB /* EffectEditor */ = {
 			isa = PBXGroup;
 			children = (
+				13CC2AB12853A6040007FD87 /* sequentail */,
 				13E51EAF284BB47200EC9179 /* sources */,
 				6F5117BF240B65600013BC9E /* VideoFrameDrawer.h */,
 				6FF0291F221BFEE40011E6CB /* MediaSource.h */,
@@ -719,7 +719,7 @@
 				};
 			};
 			buildConfigurationList = 10A9FE191EA4A06B0051BDFC /* Build configuration list for PBXProject "QMediaCore" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -754,7 +754,6 @@
 				6F5118C1240F9CCB0013BC9E /* Logger.cpp in Sources */,
 				6F637ED223D0477A0004E053 /* ColorTypes.cpp in Sources */,
 				6F637ECB23D0477A0004E053 /* Vec2.cpp in Sources */,
-				13E51EAE284BB38E00EC9179 /* VideoToolboxDecoder.cpp in Sources */,
 				6F637EC823D0477A0004E053 /* Mat4.cpp in Sources */,
 				6F187494248DD402009C4B94 /* GcImageNode.cpp in Sources */,
 				6F81B3BA24C827B500A8449B /* AudioEffect.cpp in Sources */,
@@ -798,6 +797,7 @@
 				6F637ECC23D0477A0004E053 /* Vec3.cpp in Sources */,
 				6F1874A32490DFF3009C4B94 /* Texture2DDrawer.cpp in Sources */,
 				13E51EB5284BB47200EC9179 /* SoftwareSource.cpp in Sources */,
+				13CC2AB42853A6E10007FD87 /* SequentailSlice.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

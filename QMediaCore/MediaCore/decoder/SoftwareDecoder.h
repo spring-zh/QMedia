@@ -89,7 +89,7 @@ public:
 
 	virtual int32_t Decode(const EncodedPacket &input_packet) override ;
 
-	virtual int32_t Flush() override ;
+	virtual int32_t Flush(bool wait_completed) override ;
 
 	virtual void RegisterDecodedFrameCallback(DecodedFrameCallback *callback) override {_callback = callback; }
 
@@ -110,18 +110,4 @@ protected:
 	MediaDescribe _outputDescribe;
 	struct SwrContext* _swrContext;
 	struct SwsContext* _swsContext;
-};
-
-class SoftwareDecoderFactory : public DecoderFactory {
-public:
-
-    static SoftwareDecoderFactory* instance();
-
-	virtual Decoder *CreateDecoder(const MediaDescribe& mediaDescribe) override ;
-
-	virtual void DestroyDecoder(Decoder *decoder) override ;
-
-protected:
-	SoftwareDecoderFactory();
-	~SoftwareDecoderFactory();
 };

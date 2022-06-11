@@ -119,7 +119,7 @@ struct SubtitleDescribe
 
 struct MediaDescribe
 {
-	MediaType mediatype_;
+	MediaType mediatype_ = MediaType::Unkonw;
 	union 
 	{
 		VideoDescribe _videodesc;
@@ -127,7 +127,6 @@ struct MediaDescribe
 		SubtitleDescribe _subtitledesc;
 	};
 };
-
 
 //
 #define UIN8_PTR(ptr, offset) ((uint8_t*)(ptr) + offset)

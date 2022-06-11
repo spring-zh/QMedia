@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -49,24 +49,23 @@
 		10CC5C961EE7408400EE50E6 /* TransformTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10CC5C951EE7408400EE50E6 /* TransformTableViewController.m */; };
 		10D915FE1EC306EC00BA8E06 /* FilterCollectionViewCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 10D915FD1EC306EC00BA8E06 /* FilterCollectionViewCell.m */; };
 		10D916011EC3095A00BA8E06 /* FilterCollectionViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 10D916001EC3095A00BA8E06 /* FilterCollectionViewController.m */; };
+		13EF004F28539E4C0028DEC7 /* QMediaSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13EF004E28539E4C0028DEC7 /* QMediaSDK.framework */; };
+		13EF005028539E4C0028DEC7 /* QMediaSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 13EF004E28539E4C0028DEC7 /* QMediaSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		22EF4D9D1EA5CFDF00D1A198 /* video in Resources */ = {isa = PBXBuildFile; fileRef = 22EF4D9C1EA5CFDF00D1A198 /* video */; };
 		22EF4DA81EA5D21200D1A198 /* AVFoundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF4DA71EA5D21200D1A198 /* AVFoundation.framework */; };
 		22EF4DAA1EA5D21700D1A198 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF4DA91EA5D21700D1A198 /* CoreMedia.framework */; };
-		22EF4DAC1EA5D22100D1A198 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 22EF4DAB1EA5D22100D1A198 /* OpenGLES.framework */; };
 		6F224A8424C0885B000244FF /* TrackSettingTableViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A8224C0885B000244FF /* TrackSettingTableViewController.m */; };
-		6F4592122461503A00FABEAF /* QMediaSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4592112461503A00FABEAF /* QMediaSDK.framework */; };
-		6F4592132461504900FABEAF /* QMediaSDK.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6F4592112461503A00FABEAF /* QMediaSDK.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9EFB1EE81EE1508100AB91A4 /* audio in Resources */ = {isa = PBXBuildFile; fileRef = 9EFB1EE71EE1508100AB91A4 /* audio */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
-		753C28E61F5D7CC3007EE433 /* Embed Frameworks */ = {
+		13EF005128539E4D0028DEC7 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
 			buildActionMask = 2147483647;
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				6F4592132461504900FABEAF /* QMediaSDK.framework in Embed Frameworks */,
+				13EF005028539E4C0028DEC7 /* QMediaSDK.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -154,6 +153,8 @@
 		10D915FF1EC3095A00BA8E06 /* FilterCollectionViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterCollectionViewController.h; sourceTree = "<group>"; };
 		10D916001EC3095A00BA8E06 /* FilterCollectionViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilterCollectionViewController.m; sourceTree = "<group>"; };
 		13E51EC5284FAA0600EC9179 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = System/Library/Frameworks/VideoToolbox.framework; sourceTree = SDKROOT; };
+		13EF004B28539C090028DEC7 /* QMediaSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QMediaSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		13EF004E28539E4C0028DEC7 /* QMediaSDK.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; path = QMediaSDK.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		22EF4D9C1EA5CFDF00D1A198 /* video */ = {isa = PBXFileReference; lastKnownFileType = folder; path = video; sourceTree = "<group>"; };
 		22EF4DA71EA5D21200D1A198 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = System/Library/Frameworks/AVFoundation.framework; sourceTree = SDKROOT; };
 		22EF4DA91EA5D21700D1A198 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = System/Library/Frameworks/CoreMedia.framework; sourceTree = SDKROOT; };
@@ -169,10 +170,9 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6F4592122461503A00FABEAF /* QMediaSDK.framework in Frameworks */,
+				13EF004F28539E4C0028DEC7 /* QMediaSDK.framework in Frameworks */,
 				10CAB06F1EF400B2007C3BE1 /* AssetsLibrary.framework in Frameworks */,
 				10760CEF1ED8653D0045644C /* AVKit.framework in Frameworks */,
-				22EF4DAC1EA5D22100D1A198 /* OpenGLES.framework in Frameworks */,
 				22EF4DAA1EA5D21700D1A198 /* CoreMedia.framework in Frameworks */,
 				22EF4DA81EA5D21200D1A198 /* AVFoundation.framework in Frameworks */,
 			);
@@ -240,6 +240,8 @@
 		10A9FE981EA4B5390051BDFC /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				13EF004E28539E4C0028DEC7 /* QMediaSDK.framework */,
+				13EF004B28539C090028DEC7 /* QMediaSDK.framework */,
 				13E51EC5284FAA0600EC9179 /* VideoToolbox.framework */,
 				6F4592112461503A00FABEAF /* QMediaSDK.framework */,
 				10CAB06E1EF400B2007C3BE1 /* AssetsLibrary.framework */,
@@ -397,7 +399,7 @@
 				10A9FE7A1EA4A4670051BDFC /* Sources */,
 				10A9FE7B1EA4A4670051BDFC /* Frameworks */,
 				10A9FE7C1EA4A4670051BDFC /* Resources */,
-				753C28E61F5D7CC3007EE433 /* Embed Frameworks */,
+				13EF005128539E4D0028DEC7 /* Embed Frameworks */,
 			);
 			buildRules = (
 			);
@@ -425,7 +427,7 @@
 				};
 			};
 			buildConfigurationList = 10A9FE791EA4A4670051BDFC /* Build configuration list for PBXProject "QMediaSDKSample" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -566,7 +568,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
@@ -609,7 +611,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				SDKROOT = iphoneos;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -627,8 +629,11 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../SDK";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/QMediaSDKSample/**";
 				INFOPLIST_FILE = QMediaSDKSample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qmedia.QMediaSDKDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -648,8 +653,11 @@
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../../SDK";
 				HEADER_SEARCH_PATHS = "$(SRCROOT)/QMediaSDKSample/**";
 				INFOPLIST_FILE = QMediaSDKSample/Info.plist;
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+				);
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_BUNDLE_IDENTIFIER = com.qmedia.QMediaSDKDemo;
 				PRODUCT_NAME = "$(TARGET_NAME)";

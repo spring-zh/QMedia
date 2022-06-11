@@ -141,7 +141,7 @@ static id s_sharedDirectorCaller;
     // Director::setAnimationInterval() is called, we should invalidate it first
     [self stopMainLoop];
         
-    self.interval = 60.0 * intervalNew;
+    self.interval = 30.0 * intervalNew;
         
     dispatch_async(renderQueue, ^(){
         displayLink = [NSClassFromString(@"CADisplayLink") displayLinkWithTarget:self selector:@selector(doCaller:)];

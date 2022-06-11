@@ -22,20 +22,20 @@
     QAudioTrackNode* _audio;
 }
 
-- (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource
+- (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource mediatype:(QMediaType)mediatype
 {
     CFUUIDRef uuidref = CFUUIDCreate(kCFAllocatorDefault);
     CFStringRef uuid = CFUUIDCreateString(kCFAllocatorDefault, uuidref);
     CFRelease(uuidref);
-    return [self initWithMediaSource:mediaSource uid:(__bridge_transfer NSString *)uuid];
+    return [self initWithMediaSource:mediaSource mediatype:mediatype uid:(__bridge_transfer NSString *)uuid];
 }
 
-- (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource uid:(NSString*)uid
+- (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource mediatype:(QMediaType)mediatype uid:(NSString*)uid
 {
     if ((self = [super init]) != nil) {
         _uid = [uid copy];
         _mediaSource = mediaSource;
-        _mediaTrackNative = MediaTrackRef(new MediaTrackImpl(MediaSourceRef(new MediaSourceAdapter(mediaSource))));
+        _mediaTrackNative = MediaTrackRef(new MediaTrackImpl(MediaSourceRef(new MediaSourceAdapter(mediaSource)), (MediaType)mediatype));
         if(_mediaTrackNative->prepare()){
 //            _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
 //            _audio = [[QAudioTrackNode alloc] initFromTrack:self];
@@ -45,10 +45,10 @@
     return self;
 }
 
-- (instancetype)initWithMediaSourceNative:(MediaSourceRef)mediaSource
+- (instancetype)initWithMediaSourceNative:(MediaSourceRef)mediaSource mediatype:(QMediaType)mediatype
 {
     if ((self = [super init]) != nil) {
-        _mediaTrackNative = std::shared_ptr<MediaTrack>(new MediaTrackImpl(mediaSource));
+        _mediaTrackNative = MediaTrackRef(new MediaTrackImpl(mediaSource, (MediaType)mediatype));
         if(_mediaTrackNative->prepare()){
 //            _graphic = [[QVideoTrackNode alloc] initFromTrack:self];
 //            _audio = [[QAudioTrackNode alloc] initFromTrack:self];

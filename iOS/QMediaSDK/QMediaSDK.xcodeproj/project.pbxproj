@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 46;
+	objectVersion = 50;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,7 +16,11 @@
 		13E51EA9284BA5CD00EC9179 /* libavcodec.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA3284BA5CD00EC9179 /* libavcodec.a */; };
 		13E51EAA284BA5CD00EC9179 /* libavfilter.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA4284BA5CD00EC9179 /* libavfilter.a */; };
 		13E51EC2284F9BD200EC9179 /* libz.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EC1284F9BD200EC9179 /* libz.tbd */; };
-		13E51EC9284FAB9C00EC9179 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EC3284FA8DC00EC9179 /* VideoToolbox.framework */; };
+		13EF004628539A380028DEC7 /* VideoToolboxDecoder.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13EF004428539A380028DEC7 /* VideoToolboxDecoder.mm */; };
+		13EF005228539E7D0028DEC7 /* VideoToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EC3284FA8DC00EC9179 /* VideoToolbox.framework */; };
+		13EF005428539E830028DEC7 /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13EF005328539E830028DEC7 /* AudioToolbox.framework */; };
+		13EF005628539E920028DEC7 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13EF005528539E920028DEC7 /* OpenGLES.framework */; };
+		13EF005728539EB50028DEC7 /* CoreMedia.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 13EF004728539B4B0028DEC7 /* CoreMedia.framework */; };
 		6F049342244AC7F900F8B73B /* QInternalVideoSource.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F04933F244AC7F900F8B73B /* QInternalVideoSource.h */; };
 		6F049344244AC7F900F8B73B /* QInternalVideoSource.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F049341244AC7F900F8B73B /* QInternalVideoSource.mm */; };
 		6F04934D244BF21A00F8B73B /* QAudioTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F049349244BF21A00F8B73B /* QAudioTarget.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -169,6 +173,12 @@
 		13E51EC3284FA8DC00EC9179 /* VideoToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = VideoToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/VideoToolbox.framework; sourceTree = DEVELOPER_DIR; };
 		13E51EC7284FAB8700EC9179 /* CoreVideo.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreVideo.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/CoreVideo.framework; sourceTree = DEVELOPER_DIR; };
 		13E51ECA284FAED600EC9179 /* AVFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AVFoundation.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/AVFoundation.framework; sourceTree = DEVELOPER_DIR; };
+		13EF004428539A380028DEC7 /* VideoToolboxDecoder.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VideoToolboxDecoder.mm; sourceTree = "<group>"; };
+		13EF004528539A380028DEC7 /* VideoToolboxDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoToolboxDecoder.h; sourceTree = "<group>"; };
+		13EF004728539B4B0028DEC7 /* CoreMedia.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreMedia.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/CoreMedia.framework; sourceTree = DEVELOPER_DIR; };
+		13EF005328539E830028DEC7 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/Library/Frameworks/AudioToolbox.framework; sourceTree = DEVELOPER_DIR; };
+		13EF005528539E920028DEC7 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
+		13EF005828539ECD0028DEC7 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX11.3.sdk/System/iOSSupport/System/Library/Frameworks/UIKit.framework; sourceTree = DEVELOPER_DIR; };
 		6F04933F244AC7F900F8B73B /* QInternalVideoSource.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QInternalVideoSource.h; sourceTree = "<group>"; };
 		6F049341244AC7F900F8B73B /* QInternalVideoSource.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QInternalVideoSource.mm; sourceTree = "<group>"; };
 		6F049349244BF21A00F8B73B /* QAudioTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QAudioTarget.h; sourceTree = "<group>"; };
@@ -271,7 +281,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				13E51EC9284FAB9C00EC9179 /* VideoToolbox.framework in Frameworks */,
+				13EF005728539EB50028DEC7 /* CoreMedia.framework in Frameworks */,
+				13EF005628539E920028DEC7 /* OpenGLES.framework in Frameworks */,
+				13EF005428539E830028DEC7 /* AudioToolbox.framework in Frameworks */,
+				13EF005228539E7D0028DEC7 /* VideoToolbox.framework in Frameworks */,
 				13E51EC2284F9BD200EC9179 /* libz.tbd in Frameworks */,
 				13E51EA5284BA5CD00EC9179 /* libavformat.a in Frameworks */,
 				13E51EA6284BA5CD00EC9179 /* libavutil.a in Frameworks */,
@@ -359,6 +372,8 @@
 				6F049353244C2A2600F8B73B /* QMediaDescribe.mm */,
 				6FBD026D24568D3D00372404 /* QMediaSource.h */,
 				6FBD02732457106B00372404 /* QMediaSource_internal.h */,
+				13EF004528539A380028DEC7 /* VideoToolboxDecoder.h */,
+				13EF004428539A380028DEC7 /* VideoToolboxDecoder.mm */,
 				6FBD02632455705700372404 /* VideoCaptureSession.h */,
 				6FBD02622455705700372404 /* VideoCaptureSession.m */,
 				6FBD02672455895200372404 /* QCaptureSource.h */,
@@ -533,6 +548,10 @@
 		753C28D81F5D7B18007EE433 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				13EF005828539ECD0028DEC7 /* UIKit.framework */,
+				13EF005528539E920028DEC7 /* OpenGLES.framework */,
+				13EF005328539E830028DEC7 /* AudioToolbox.framework */,
+				13EF004728539B4B0028DEC7 /* CoreMedia.framework */,
 				13E51ECA284FAED600EC9179 /* AVFoundation.framework */,
 				13E51EC7284FAB8700EC9179 /* CoreVideo.framework */,
 				13E51EC3284FA8DC00EC9179 /* VideoToolbox.framework */,
@@ -676,7 +695,7 @@
 				};
 			};
 			buildConfigurationList = 10A9FDF51EA498020051BDFC /* Build configuration list for PBXProject "QMediaSDK" */;
-			compatibilityVersion = "Xcode 3.2";
+			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
 			knownRegions = (
@@ -758,6 +777,7 @@
 				6F372074246A7B0300356951 /* SerializeSetting.mm in Sources */,
 				6F5117C7240D50540013BC9E /* QGraphicNode.mm in Sources */,
 				6FBD02682455895200372404 /* QCaptureSource.mm in Sources */,
+				13EF004628539A380028DEC7 /* VideoToolboxDecoder.mm in Sources */,
 				6F049344244AC7F900F8B73B /* QInternalVideoSource.mm in Sources */,
 				6F6214502445D7DB00AF70A0 /* QLayer.mm in Sources */,
 				6FACC44624625983008F1B41 /* QPlayerView.m in Sources */,
@@ -931,8 +951,12 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/QMediaSDK/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../QMediaCore/Thirdparty/ffmpeg/lib/ios";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
@@ -942,7 +966,10 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../QMediaCore/** $(SRCROOT)/../../QMediaCore/Thirdparty";
+				USER_HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../QMediaCore/**",
+					"$(SRCROOT)/../../QMediaCore/Thirdparty",
+				);
 			};
 			name = Debug;
 		};
@@ -963,8 +990,12 @@
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = "$(SRCROOT)/QMediaSDK/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 11.0;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				LIBRARY_SEARCH_PATHS = "$(SRCROOT)/../../QMediaCore/Thirdparty/ffmpeg/lib/ios";
 				LINK_WITH_STANDARD_LIBRARIES = NO;
 				MACH_O_TYPE = mh_dylib;
@@ -974,7 +1005,10 @@
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../QMediaCore/** $(SRCROOT)/../../QMediaCore/Thirdparty";
+				USER_HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../QMediaCore/**",
+					"$(SRCROOT)/../../QMediaCore/Thirdparty",
+				);
 			};
 			name = Release;
 		};
@@ -982,7 +1016,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = QMediaSDKTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qmedia.QMediaSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -992,7 +1030,11 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				INFOPLIST_FILE = QMediaSDKTests/Info.plist;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.qmedia.QMediaSDKTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};

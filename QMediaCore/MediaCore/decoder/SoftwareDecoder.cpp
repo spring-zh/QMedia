@@ -269,9 +269,13 @@ int32_t SoftwareDecoder::Decode(const EncodedPacket &input_packet) {
     return retCode;
 }
 
-int32_t SoftwareDecoder::Flush() {
+int32_t SoftwareDecoder::Flush(bool wait_completed) {
     if (!_isInit)
         return -2;
+    if (wait_completed) {
+        EncodedPacket input_packet(nullptr, -1);
+        Decode(input_packet);
+    }
     avcodec_flush_buffers(_avcontext);
     return 0;
 }

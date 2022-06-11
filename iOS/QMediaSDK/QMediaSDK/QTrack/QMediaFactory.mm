@@ -67,7 +67,7 @@
     readerSource.videoTarget = _videoTarget;
     readerSource.audioTarget = _audioTarget;
 //    readerSource.video_frame_format = kCVPixelFormatType_32BGRA;
-    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:readerSource];
+    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:readerSource mediatype:QMediaTypeVideo];
     if (mediaTrack) {
         [mediaTrack generateVideoTrackNode:combiner];
         [mediaTrack generateAudioTrackNode:combiner];
@@ -80,7 +80,7 @@
     QAssetReaderSource* readerSource = [[QAssetReaderSource alloc] initWithFilePath:filePath audio:true video:false];
     readerSource.videoTarget = _videoTarget;
     readerSource.audioTarget = _audioTarget;
-    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:readerSource];
+    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:readerSource mediatype:QMediaTypeAudio];
     if (mediaTrack) {
         [mediaTrack generateAudioTrackNode:combiner];
     }
@@ -94,7 +94,7 @@
     captureSource.audioTarget = _audioTarget;
     captureSource.enableVideo = enableVideo;
     captureSource.enableAudio = enableAudio;
-    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:captureSource];
+    QMediaTrack* mediaTrack = [[QMediaTrack alloc] initWithMediaSource:captureSource mediatype:QMediaTypeVideo];
     if (mediaTrack) {
         if(enableVideo)[mediaTrack generateVideoTrackNode:combiner];
         if(enableAudio)[mediaTrack generateAudioTrackNode:combiner];

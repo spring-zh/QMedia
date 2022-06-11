@@ -65,7 +65,7 @@ public:
 	 */
 	virtual int32_t Decode(const EncodedPacket& input_packet) = 0;
 
-	virtual int32_t Flush() = 0;
+	virtual int32_t Flush(bool wait_completed) = 0;
 
 	virtual void RegisterDecodedFrameCallback(
             DecodedFrameCallback* callback) = 0;
@@ -130,4 +130,18 @@ public:
 protected:
     HardwareDecoderFactory();
     ~HardwareDecoderFactory();
+};
+
+class SoftwareDecoderFactory : public DecoderFactory {
+public:
+
+    static SoftwareDecoderFactory* instance();
+
+    virtual Decoder *CreateDecoder(const MediaDescribe& mediaDescribe) override ;
+
+    virtual void DestroyDecoder(Decoder *decoder) override ;
+
+protected:
+    SoftwareDecoderFactory();
+    ~SoftwareDecoderFactory();
 };

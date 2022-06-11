@@ -137,11 +137,12 @@ Copyright (C) 2008 Apple Inc. All Rights Reserved.
         if( ! [self setupSurfaceWithSharegroup:sharegroup] ) {
             return nil;
         }
-        
+#if !TARGET_IPHONE_SIMULATOR
         if ([self respondsToSelector:@selector(setContentScaleFactor:)])
         {
             self.contentScaleFactor = [[UIScreen mainScreen] scale];
         }
+#endif
     }
     return self;
 }

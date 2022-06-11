@@ -32,6 +32,7 @@ public:
     virtual const VideoTarget* getVideoTarget() const{ return _videoTarget; }
     virtual const AudioTarget* getAudioTarget() const{ return _audioTarget; }
 
+    virtual std::string filePath() const = 0;
     virtual bool load() = 0; //init and get media info
     virtual void unload() = 0; //uninit
     virtual bool isInit() = 0;

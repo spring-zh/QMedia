@@ -15,7 +15,7 @@
 
 @interface QMediaTrack : NSObject <QTrack>
 
-- (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource;
+- (instancetype)initWithMediaSource:(id<QMediaSource>)mediaSource mediatype:(QMediaType)mediatype;
 - (bool) prepare;
 - (bool) setTimeTo:(int)mSec;//set read position to designated location
 - (void) stopMedia;//stop
