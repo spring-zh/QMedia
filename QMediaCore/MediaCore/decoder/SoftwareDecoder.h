@@ -98,7 +98,8 @@ public:
 	virtual void setOutputRequest(const MediaDescribe& mediaDescribe)  override ;
 
 protected:
-	bool retrieveAVFrame(struct AVFrame ** pFrame);
+    int32_t __DoReceiveFrame();
+	bool __retrieveAVFrame(struct AVFrame ** pFrame);
     bool _isInit;
 	MediaDescribe _mediaDescribe;
 

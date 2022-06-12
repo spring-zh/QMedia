@@ -349,8 +349,10 @@ int32_t VideoToolboxDecoder::Decode(const EncodedPacket &input_packet) {
     
     std::vector<NaluUnit> nalus = ParseNaluUnits(input_packet.getEncodedBuffer()->data(), input_packet.getEncodedBuffer()->size(), is_hevc_, is_avcc_);
     if (nalus.empty()) {
-        return -2;
+        return DEC_INVALID_DATA;
     }
+    
+    int dec_ret = DEC_OK;
     
     auto pts = input_packet.ntp_time_ms();
     auto dts = input_packet.getEncodedBuffer()->dts();
@@ -397,10 +399,14 @@ int32_t VideoToolboxDecoder::Decode(const EncodedPacket &input_packet) {
     if (status != noErr) {
         if (status == kVTInvalidSessionErr) {
             //TODO: need restart
-        }
+            dec_ret = DEC_INVALID_DECODER;
+        } else if(status == kVTVideoDecoderBadDataErr) {
+            dec_ret = DEC_INVALID_DATA;
+        } else
+            dec_ret = DEC_UNKNOW;
     }
     
-    return status == noErr ? 0 : -1;
+    return dec_ret;
 }
 
 int32_t VideoToolboxDecoder::Flush(bool wait_completed) {

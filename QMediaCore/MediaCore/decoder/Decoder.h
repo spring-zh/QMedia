@@ -20,6 +20,7 @@ enum DecodeErr : int {
     DEC_CONFIG_NOT_FOUND = -3,
     DEC_INVALID_DATA = -4,
     DEC_EAGAIN = -5,
+    DEC_END = -6
 };
 
 class DecodedFrameCallback {
@@ -45,14 +46,6 @@ class Decoder {
 public:
     using UPtr = std::unique_ptr<Decoder>;
     using SPtr = std::shared_ptr<Decoder>;
-    
-    
-	enum RetCode : int32_t {
-		ok = 0,
-		unknow = -1,
-		busy = -2,
-		end = -3
-	};
 
 	virtual ~Decoder() {}
 

@@ -221,9 +221,8 @@ int32_t SoftwareDecoder::InitDecode(const MediaDescribe& media_describe,
 }
 
 int32_t SoftwareDecoder::Decode(const EncodedPacket &input_packet) {
-    RetCode retCode = Decoder::unknow;
     if (!_isInit)
-        return retCode;
+        return DEC_UNKNOW;
 
     AVPacket avPacket = { 0 };
     av_init_packet(&avPacket);
@@ -241,26 +240,33 @@ int32_t SoftwareDecoder::Decode(const EncodedPacket &input_packet) {
 
     int ret = avcodec_send_packet(_avcontext, &avPacket);
     if (ret == AVERROR(EAGAIN)) {
-        retCode = Decoder::busy;
-        return retCode;
+        __DoReceiveFrame();
+        return DEC_EAGAIN;
     }
 
+    return __DoReceiveFrame();
+}
+
+int32_t SoftwareDecoder::__DoReceiveFrame() {
+    int32_t retCode = DEC_UNKNOW;
     do {
         AVFrame *decFrame = av_frame_alloc();
-        ret = avcodec_receive_frame(_avcontext, decFrame);
+        int ret = avcodec_receive_frame(_avcontext, decFrame);
         if (ret >= 0) {
-//            retrieveAVFrame(&decFrame); //transform frame format
+//            __retrieveAVFrame(&decFrame); //transform frame format
             std::shared_ptr<SoftwareDecodedFrameBuffer> decodedFrameBuffer = std::shared_ptr<SoftwareDecodedFrameBuffer>(new SoftwareDecodedFrameBuffer(_mediaDescribe.mediatype_, decFrame));
             int64_t frame_pts = decFrame->pts != AV_NOPTS_VALUE ? decFrame->pts : decFrame->pkt_pts;
             DecodedFrame decodedFrame(decodedFrameBuffer, decFrame->pts, frame_pts);
             _callback->OnDecoded(decodedFrame);
-            retCode = Decoder::ok;
+            retCode = DEC_OK;
         } else {
-            av_frame_unref(decFrame);
+            av_frame_free(&decFrame);
             if (ret == AVERROR_EOF) {
                 //decoder stream end
-                retCode = Decoder::end;
+                retCode = DEC_END;
                 _callback->OnDecodedEnd();
+            } else if (ret == AVERROR(EAGAIN)) {
+                retCode = DEC_OK;
             }
             break;
         }
@@ -304,7 +310,7 @@ void SoftwareDecoder::setOutputRequest(const MediaDescribe& mediaDescribe)  {
     _outputDescribe = mediaDescribe;
 }
 
-bool SoftwareDecoder::retrieveAVFrame(struct AVFrame ** pFrame) {
+bool SoftwareDecoder::__retrieveAVFrame(struct AVFrame ** pFrame) {
     bool bRet = true;
     AVFrame * input_frame = *pFrame;
     if (_outputRequest) {
