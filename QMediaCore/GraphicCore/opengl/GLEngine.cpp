@@ -19,12 +19,10 @@ GRAPHICCORE_BEGIN
 GLEngine::GLEngine():
 _currentFramebuffer(nullptr),
 _defaultFramebuffer(nullptr),
-_enableDepthTest(false)
-{
+_enableDepthTest(false) {
 
 }
-GLEngine::~GLEngine()
-{
+GLEngine::~GLEngine() {
     
 }
 
@@ -92,6 +90,15 @@ bool GLEngine::checkSupportExtension(const char* extension)
 {
     std::string extensions = (const char*)glGetString(GL_EXTENSIONS);
     return (extensions.find(extension)!= std::string::npos);
+}
+
+float GLEngine::GetVersion() {
+    auto version = glGetString(GL_VERSION);
+    const char *pos = strchr((const char*)version, '.');
+    if (pos) {
+        return atof(pos - 1);
+    }
+    return 2.0;
 }
 
 FrameBuffer* GLEngine::getCurrentFrameBuffer() {

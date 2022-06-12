@@ -41,6 +41,7 @@ protected:
     FrameBuffer();
 
     const Texture2D *_attachTexture;
+    const Texture2D *_depthTexture;
     GLuint _fbo;
     GLint _last_fbol;
     bool _useMultisample;

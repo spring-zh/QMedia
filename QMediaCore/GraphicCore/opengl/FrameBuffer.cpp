@@ -24,6 +24,7 @@ GRAPHICCORE_BEGIN
 
 FrameBuffer::FrameBuffer():
 _attachTexture(nullptr),
+_depthTexture(nullptr),
 _fbo(0),
 _last_fbol(0),
 _useMultisample(false)
@@ -64,6 +65,7 @@ void FrameBuffer::use()
     if (_last_fbol != _fbo)
     {
         glBindFramebuffer(GL_FRAMEBUFFER, _fbo);
+        glCheckError() ;
     }
 }
 
@@ -123,11 +125,13 @@ bool FrameBuffer::attachTexture2D(AttachMode mode, const Texture2D *texture2D)
                                    texture2D->getTextureId(), 0);
     }
 
-    _attachTexture = texture2D;
+    if (mode == DEPTH) {
+        _depthTexture = texture2D;
+    } else
+        _attachTexture = texture2D;
 
     const int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-    if (status != GL_FRAMEBUFFER_COMPLETE)
-    {
+    if (status != GL_FRAMEBUFFER_COMPLETE) {
         LOGW("glCheckFramebufferStatus: %d", status);
         return false;
     }

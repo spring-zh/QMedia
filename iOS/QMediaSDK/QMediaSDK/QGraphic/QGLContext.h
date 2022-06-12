@@ -5,6 +5,8 @@
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
 
+extern EAGLRenderingAPI DefaultRenderingAPI;
+
 @interface QGLContext : NSObject
 
 @property(readonly, retain, nonatomic) EAGLContext *context;

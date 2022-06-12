@@ -117,8 +117,8 @@ void main()
     vec3 yuv;
      
     // Subtract constants to map the video range start at 0
-    yuv.x = (texture2D(SamplerY, v_texCoord).r - (16.0 / 255.0));
-    yuv.yz = (texture2D(SamplerUV, v_texCoord).rg - vec2(0.5, 0.5));
+    yuv.x = (texture2D(SamplerY, v_texCoord).a - (16.0 / 255.0));
+    yuv.yz = (texture2D(SamplerUV, v_texCoord).ra - vec2(0.5, 0.5));
     vec3 rgb = colorConversionMatrix * yuv;
     gl_FragColor = vec4(rgb, uColor.a);
 }
@@ -233,10 +233,10 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
                                                        pixelBuffer,
                                                        NULL,
                                                        GL_TEXTURE_2D,
-                                                       GL_RED_EXT,
+                                                       GL_ALPHA,
                                                        frameWidth,
                                                        frameHeight,
-                                                       GL_RED_EXT,
+                                                       GL_ALPHA,
                                                        GL_UNSIGNED_BYTE,
                                                        0,
                                                        &_lumaTexture);
@@ -260,10 +260,10 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
                                                            pixelBuffer,
                                                            NULL,
                                                            GL_TEXTURE_2D,
-                                                           GL_RG_EXT,
+                                                           GL_LUMINANCE_ALPHA,
                                                            frameWidth / 2,
                                                            frameHeight / 2,
-                                                           GL_RG_EXT,
+                                                           GL_LUMINANCE_ALPHA,
                                                            GL_UNSIGNED_BYTE,
                                                            1,
                                                            &_chromaTexture);

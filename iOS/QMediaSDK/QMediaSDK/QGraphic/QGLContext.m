@@ -1,5 +1,7 @@
 #import "QGLContext.h"
 
+EAGLRenderingAPI DefaultRenderingAPI = kEAGLRenderingAPIOpenGLES3;
+
 @interface QGLContext()
 {
     EAGLSharegroup *_sharegroup;
@@ -113,8 +115,12 @@
 
 - (EAGLContext *)createContext;
 {
-    EAGLContext *context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:_sharegroup];
-    NSAssert(context != nil, @"Unable to create an OpenGL ES 2.0 context. The GPUImage framework requires OpenGL ES 2.0 support to work.");
+    EAGLContext *context = [[EAGLContext alloc] initWithAPI:DefaultRenderingAPI sharegroup:_sharegroup];
+    if (!context && DefaultRenderingAPI != kEAGLRenderingAPIOpenGLES2) {
+        NSLog(@"Unable to create an OpenGL ES 3.0 context. The GPUImage framework requires OpenGL ES 2.0 support to work.");
+        context = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:_sharegroup];
+        NSAssert(context != nil, @"Unable to create an OpenGL ES 2.0 context. The GPUImage framework requires OpenGL ES 2.0 support to work.");
+    }
     return context;
 }
 

@@ -53,7 +53,7 @@ protected:
     std::shared_ptr<FrameBuffer> _framebuffer;
 
     std::shared_ptr<Texture2D> _texture;
-    std::shared_ptr<Texture2D> _depth_texture;
+    std::unique_ptr<Texture2D> _depth_texture;
 };
 
 CLASSREF(Layer)

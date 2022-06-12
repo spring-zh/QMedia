@@ -500,7 +500,7 @@ VTDecompressionSessionRef VideoToolboxDecoder::CreateVTbSession(int pixelFormatT
     CFDictionarySetBoolean(destinationPixelBufferAttributes,
                           kCVPixelBufferOpenGLESCompatibilityKey, TRUE);
     
-    VTDecompressionOutputCallbackRecord outputCallback = {&VideoToolboxDecoder::__DecompressionOutputCallback, this};
+    VTDecompressionOutputCallbackRecord outputCallback = {&VideoToolboxDecoder::__output_callback, this};
     OSStatus status = VTDecompressionSessionCreate(
         NULL, format_desc_ /*CMVideoFormatDescriptionRef  _Nonnull
                              videoFormatDescription*/
@@ -527,16 +527,16 @@ void VideoToolboxDecoder::DecompressionOutputCallback( void* CM_NULLABLE sourceF
                                                      CM_NULLABLE CVImageBufferRef imageBuffer,
                                                      CMTime presentationTimeStamp,
                                                      CMTime presentationDuration) {
-    if (imageBuffer) {
-        //
-        if (callback_) {
-            auto framebuffer = std::shared_ptr<VTFrameBuffer>(new VTFrameBuffer(imageBuffer, presentationTimeStamp));
-            DecodedFrame frame(framebuffer, CMTimeGetSeconds(presentationTimeStamp) * 1000);
-            callback_->OnDecoded(frame);
-        }
+    if (imageBuffer && callback_) {
+        auto framebuffer = std::shared_ptr<VTFrameBuffer>(new VTFrameBuffer(imageBuffer, presentationTimeStamp));
+        framebuffer->pkt_flag = (infoFlags & kVTDecodeInfo_FrameDropped) ? EncodedPacket::FLAG_DISCARD : 0;
+        DecodedFrame frame(framebuffer, CMTimeGetSeconds(presentationTimeStamp) * 1000);
+        callback_->OnDecoded(frame);
+    } else if (status == kVTVideoDecoderBadDataErr) {
+        //TODO: decode with bad data
     }
 }
-void VideoToolboxDecoder::__DecompressionOutputCallback(void* CM_NULLABLE decompressionOutputRefCon,
+void VideoToolboxDecoder::__output_callback(void* CM_NULLABLE decompressionOutputRefCon,
                                                       void* CM_NULLABLE sourceFrameRefCon,
                                                       OSStatus status,
                                                       VTDecodeInfoFlags infoFlags,

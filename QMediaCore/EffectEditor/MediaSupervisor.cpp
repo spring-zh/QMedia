@@ -8,8 +8,22 @@
 
 #include "MediaSupervisor.h"
 #include "sequentail/SequentailDecoder.h"
-//#include "MediaCore/core/PlayerClock.h"
+//#include "MediaCore/core/SteadyClock.h"
 //#include "Utils/Logger.h"
+
+//class TimeDurationPrint {
+//public:
+//    TimeDurationPrint(const char* logstr) {
+//        logstring = logstr;
+//        firstTimeMs = SystemClock::getCurrentTime<int64_t ,scale_milliseconds >();
+//    }
+//    ~TimeDurationPrint() {
+//        int64_t secondTimeMs = SystemClock::getCurrentTime<int64_t ,scale_milliseconds >();
+//        LOGI("%s Time Duration : %lld milliseconds", logstring.c_str(), (long long)secondTimeMs - firstTimeMs);
+//    }
+//    std::string logstring;
+//    int64_t firstTimeMs;
+//};
 
 MediaSupervisor::MediaSupervisor() {
 }

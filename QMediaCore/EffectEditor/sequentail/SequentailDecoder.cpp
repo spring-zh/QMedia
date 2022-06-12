@@ -355,6 +355,10 @@ bool SequentailDecoder::__OpenSlice(int index, int64_t time_ms) {
 
 #pragma mark implmention Decoder callback
 int32_t SequentailDecoder::OnDecoded(DecodedFrame& decodedFrame) {
+    if (decodedFrame.flags() & EncodedPacket::FLAG_DISCARD) {
+        LOGI("decodedFrame flags FLAG_DISCARD");
+        return false;
+    }
     frame_cv_.Notify([this, &decodedFrame]()->bool {
         if (decodedFrame.timestamp_ms_ < position_limit_ - TIMD_DIFF) {
             LOGI("decodedFrame.timestamp_ms_(%lld) < position_limit_(%lld) - TIMD_DIFF",

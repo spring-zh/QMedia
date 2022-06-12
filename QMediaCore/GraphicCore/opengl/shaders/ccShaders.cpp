@@ -119,6 +119,7 @@ void main()
 )";
 
 const char* defaultPositionTexture_vert = R"(
+precision mediump float;
 uniform mat4 uMVPMatrix;
 uniform mat4 uTexMatrix;
 attribute vec4 a_position;
@@ -138,10 +139,12 @@ void main()
 )";
 
 const char* defaultPositionTexture_frag = R"(
+precision mediump float;
 #ifdef GL_ES
-  precision highp float;
-#endif
+varying highp vec2 v_texCoord;
+#else
 varying vec2 v_texCoord;
+#endif
 
 uniform sampler2D uTexture;
 uniform vec4 uColor;

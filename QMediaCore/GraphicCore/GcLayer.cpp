@@ -108,7 +108,7 @@ bool Layer::createRes()
     _framebuffer = std::shared_ptr<FrameBuffer>(FrameBuffer::createNew());
     _framebuffer->attachTexture2D(FrameBuffer::COLOR, _texture.get());
     if (_enable3d) {
-        _depth_texture = std::shared_ptr<Texture2D>(GeneralTexture2D::createTexture(Texture2D::DEPTH, _layerSize.width,_layerSize.height));
+        _depth_texture = std::unique_ptr<Texture2D>(GeneralTexture2D::createTexture(Texture2D::DEPTH, _layerSize.width,_layerSize.height));
         _framebuffer->attachTexture2D(FrameBuffer::DEPTH, _depth_texture.get());
     }
 

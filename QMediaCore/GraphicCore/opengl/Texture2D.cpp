@@ -7,6 +7,7 @@
 //
 
 #include "Texture2D.h"
+#include "GLEngine.h"
 #include <new>
 
 GRAPHICCORE_BEGIN
@@ -77,8 +78,8 @@ Texture2D* GeneralTexture2D::createTexture(Format format, int width, int height)
 
     glGenTextures(1, &texture->_textureid);
     glBindTexture(GL_TEXTURE_2D, texture->_textureid);
-    if (gl_format == GL_DEPTH_COMPONENT) {
-        glTexImage2D(GL_TEXTURE_2D, 0 ,gl_format, width , height , 0, gl_format, GL_UNSIGNED_INT, NULL);
+    if (format == DEPTH) {
+        glTexImage2D(GL_TEXTURE_2D, 0 , (int)GLEngine::GetVersion() == 3? GL_DEPTH_COMPONENT16 : GL_DEPTH_COMPONENT, width , height , 0, gl_format, GL_UNSIGNED_INT, NULL);
     }else
         glTexImage2D(GL_TEXTURE_2D, 0 ,gl_format, width , height , 0, gl_format, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);

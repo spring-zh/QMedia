@@ -53,12 +53,14 @@ public:
         return MediaType::Video;
     }
     virtual int getFlags() const override {
-        return 0;
+        return pkt_flag;
     }
     
     int64_t _time_stamp;
     int _data_size;
     CMPixelFormatType _formatType;
+    
+    int pkt_flag = 0;
     
 protected:
 //    CMSampleBufferRef _sampleBuffer;
@@ -93,7 +95,7 @@ protected:
          CM_NULLABLE CVImageBufferRef imageBuffer,
          CMTime presentationTimeStamp,
          CMTime presentationDuration);
-    static void __DecompressionOutputCallback(
+    static void __output_callback(
          void* CM_NULLABLE decompressionOutputRefCon,
          void* CM_NULLABLE sourceFrameRefCon,
          OSStatus status,

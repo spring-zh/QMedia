@@ -47,6 +47,7 @@ public:
     void recoverStatus();
 
     static bool checkSupportExtension(const char* extension);
+    static float GetVersion();
 
     FrameBuffer* getFramebuffer(const char* name);
     void releaseFramebuffer(FrameBuffer *frameBuffer);

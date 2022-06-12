@@ -39,6 +39,8 @@
 #define NSLog(...)       do {} while (0)
 #endif
 
+extern EAGLRenderingAPI DefaultRenderingAPI;
+
 @implementation CCES2Renderer
 
 @synthesize context=context_;
@@ -54,14 +56,14 @@
     {
         if (! sharegroup)
         {
-            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-            if (! context_)
+            context_ = [[EAGLContext alloc] initWithAPI:DefaultRenderingAPI];
+            if (! context_ && DefaultRenderingAPI != kEAGLRenderingAPIOpenGLES2)
                 context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
         }
         else
         {
-            context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3 sharegroup:sharegroup];
-            if (!context_)
+            context_ = [[EAGLContext alloc] initWithAPI:DefaultRenderingAPI sharegroup:sharegroup];
+            if (!context_ && DefaultRenderingAPI != kEAGLRenderingAPIOpenGLES2)
                 context_ = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2 sharegroup:sharegroup];
         }
 

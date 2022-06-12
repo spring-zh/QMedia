@@ -87,7 +87,6 @@ bool MediaTrackImpl::prepare()
         SequentailSlice slice(_sourceRef->filePath(), _sourceRef->getMediaDuration());
         Range<int64_t> src_range(0, _sourceRef->getMediaDuration()/2);
         slice.SetSourceRannge(src_range);
-        slice.SetDisplayRannge(src_range);
         SequentailSlice slice2 = slice;
 //        slice2.SetSourceRannge(src_range);
         slice2.SetDisplayRannge(slice.GetDisplayRannge()._end, slice.GetDisplayRannge()._end + src_range.getLength());
