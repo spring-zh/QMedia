@@ -1,0 +1,59 @@
+time_range = record {
+    start : i64;
+    end : i64;
+} deriving (eq, json)
+
+size = record {
+    width : i64;
+    height : i64;
+} deriving (eq, json)
+
+vec4 = record {
+    v1 : f32;
+    v2 : f32;
+    v3 : f32;
+    v4 : f32;
+} deriving (eq, json)
+
+audio_description = record {
+    const format_unknow: i16 = -1;
+
+    const format_u8: i16 = 0;
+    const format_s16: i16 = 1;
+    const format_u16: i16 = 2;
+    const format_s32: i16 = 3;
+    const format_u32: i16 = 4;
+    const format_float: i16 = 5;
+
+    const format_samplebuffer: i16 = 100;
+    const format_bytearray: i16  = 101;
+
+    smaple_format: i16;
+    nchannel: i16;
+    sample_rate: i32;
+    sample_bits: i32;
+}
+
+video_description = record {
+    const format_unknow: i16 = -1;
+
+    const format_i420: i16 = 0;
+    const format_yv12: i16 = 1;
+    const format_nv12: i16 = 2;
+    const format_nv21: i16 = 3;
+    const format_rgba: i16 = 4;
+    const format_bgra: i16 = 5;
+
+    #platform formats
+    const format_surfaceTexture: i16 = 100;
+    const format_cvPixelBuffer: i16 = 101;
+    const format_mediaCodecBuffer: i16 = 102;
+    const format_oesTexture: i16 = 103;
+    const format_glTexture: i16 = 104;
+
+    width: i32;
+    height: i32;
+    pixel_format: i16;
+    rotation: i32;
+    is_texture: bool;
+}

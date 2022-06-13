@@ -1,0 +1,9 @@
+
+media_engine = interface +c {
+    static version(): string;
+    # set audio output paramenters
+    static config_audio_out(desc: audio_description);
+
+    static create_editor_player_internal(): editor_player_internal;
+    static create_editor_exporter_internal(): editor_exporter_internal;
+}

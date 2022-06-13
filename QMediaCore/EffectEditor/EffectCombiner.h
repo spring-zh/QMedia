@@ -17,6 +17,8 @@
 #include "MediaCore/output/AudioTarget.h"
 #include "MediaSupervisor.h"
 
+#include "MediaEngineImpl.h"
+
 class EffectCombiner;
 
 class DisplayLayer : public GraphicCore::Layer {

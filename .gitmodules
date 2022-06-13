@@ -5,3 +5,7 @@
 	path = QMediaCore/Thirdparty/mp4
 	url = https://github.com/spring-zh/mp4.git
 	branch = develop
+[submodule "code_gen/djinni"]
+	path = code_gen/djinni
+	url = git@github.com:spring-zh/djinni.git
+	branch = develop

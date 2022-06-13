@@ -9,6 +9,60 @@
 /* Begin PBXBuildFile section */
 		10A9FE051EA498020051BDFC /* QMediaSDK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 10A9FDFB1EA498020051BDFC /* QMediaSDK.framework */; };
 		10A9FE0C1EA498020051BDFC /* QMediaSDK.h in Headers */ = {isa = PBXBuildFile; fileRef = 10A9FDFE1EA498020051BDFC /* QMediaSDK.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		132435CC2857953000AD6BA8 /* QTimeRange+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 132435C82857953000AD6BA8 /* QTimeRange+Private.h */; };
+		132435CD2857953000AD6BA8 /* QTimeRange.h in Headers */ = {isa = PBXBuildFile; fileRef = 132435C92857953000AD6BA8 /* QTimeRange.h */; };
+		132435CE2857953000AD6BA8 /* QTimeRange.mm in Sources */ = {isa = PBXBuildFile; fileRef = 132435CA2857953000AD6BA8 /* QTimeRange.mm */; };
+		132435CF2857953000AD6BA8 /* QTimeRange+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 132435CB2857953000AD6BA8 /* QTimeRange+Private.mm */; };
+		13D086C028577733007DD14D /* QEditorPlayerInternal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D0869028577731007DD14D /* QEditorPlayerInternal.mm */; };
+		13D086C128577733007DD14D /* QEditorExporterCallback+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D0869128577731007DD14D /* QEditorExporterCallback+Private.mm */; };
+		13D086C228577733007DD14D /* QAudioDescription+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869228577731007DD14D /* QAudioDescription+Private.h */; };
+		13D086C328577733007DD14D /* QMediaSegment+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D0869328577731007DD14D /* QMediaSegment+Private.mm */; };
+		13D086C428577733007DD14D /* QEditorExporterInternal.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D0869428577731007DD14D /* QEditorExporterInternal.mm */; };
+		13D086C528577733007DD14D /* QMediaEngine.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869528577731007DD14D /* QMediaEngine.h */; };
+		13D086C628577733007DD14D /* QEditorExporterInternal+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869628577731007DD14D /* QEditorExporterInternal+Private.h */; };
+		13D086C728577733007DD14D /* QEditorExporterInternal+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D0869728577731007DD14D /* QEditorExporterInternal+Private.mm */; };
+		13D086C828577733007DD14D /* QEditorPlayerCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869828577732007DD14D /* QEditorPlayerCallback.h */; };
+		13D086C928577733007DD14D /* QMediaSegment+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869928577732007DD14D /* QMediaSegment+Private.h */; };
+		13D086CA28577733007DD14D /* QMediaStreamInfo.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869A28577732007DD14D /* QMediaStreamInfo.h */; };
+		13D086CC28577733007DD14D /* QSize.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869C28577732007DD14D /* QSize.h */; };
+		13D086CD28577733007DD14D /* QMediaSessionInternal+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869D28577732007DD14D /* QMediaSessionInternal+Private.h */; };
+		13D086CF28577733007DD14D /* QMediaSessionInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D0869F28577732007DD14D /* QMediaSessionInternal.h */; };
+		13D086D028577733007DD14D /* QEditorExporterCallback.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086A028577732007DD14D /* QEditorExporterCallback.h */; };
+		13D086D128577733007DD14D /* QMediaStreamInfo+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086A128577732007DD14D /* QMediaStreamInfo+Private.mm */; };
+		13D086D228577733007DD14D /* QEditorPlayerCallback+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086A228577732007DD14D /* QEditorPlayerCallback+Private.mm */; };
+		13D086D328577733007DD14D /* QSize+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086A328577732007DD14D /* QSize+Private.h */; };
+		13D086D428577733007DD14D /* QSize+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086A428577732007DD14D /* QSize+Private.mm */; };
+		13D086D528577733007DD14D /* QVec4.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086A528577732007DD14D /* QVec4.h */; };
+		13D086D628577733007DD14D /* QVec4+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086A628577732007DD14D /* QVec4+Private.mm */; };
+		13D086D728577733007DD14D /* Q-Include-All.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086A728577732007DD14D /* Q-Include-All.h */; };
+		13D086D828577733007DD14D /* QMediaStreamInfo.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086A828577732007DD14D /* QMediaStreamInfo.mm */; };
+		13D086D928577733007DD14D /* QAudioDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086A928577732007DD14D /* QAudioDescription.mm */; };
+		13D086DB28577733007DD14D /* QVideoDescription+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086AB28577732007DD14D /* QVideoDescription+Private.h */; };
+		13D086DC28577733007DD14D /* QMediaEngine+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086AC28577732007DD14D /* QMediaEngine+Private.mm */; };
+		13D086DD28577733007DD14D /* QMediaSegment.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086AD28577732007DD14D /* QMediaSegment.h */; };
+		13D086DE28577733007DD14D /* QAudioDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086AE28577732007DD14D /* QAudioDescription.h */; };
+		13D086DF28577733007DD14D /* QEditorPlayerInternal+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086AF28577732007DD14D /* QEditorPlayerInternal+Private.mm */; };
+		13D086E128577733007DD14D /* QSize.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086B128577732007DD14D /* QSize.mm */; };
+		13D086E228577733007DD14D /* QVideoDescription+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086B228577732007DD14D /* QVideoDescription+Private.mm */; };
+		13D086E328577733007DD14D /* QVec4.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086B328577732007DD14D /* QVec4.mm */; };
+		13D086E428577733007DD14D /* QMediaEngine+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086B428577732007DD14D /* QMediaEngine+Private.h */; };
+		13D086E528577733007DD14D /* QEditorPlayerInternal+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086B528577733007DD14D /* QEditorPlayerInternal+Private.h */; };
+		13D086E628577733007DD14D /* QVec4+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086B628577733007DD14D /* QVec4+Private.h */; };
+		13D086E728577733007DD14D /* QVideoDescription.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086B728577733007DD14D /* QVideoDescription.mm */; };
+		13D086E828577733007DD14D /* QEditorExporterCallback+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086B828577733007DD14D /* QEditorExporterCallback+Private.h */; };
+		13D086E928577733007DD14D /* QVideoDescription.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086B928577733007DD14D /* QVideoDescription.h */; };
+		13D086EA28577733007DD14D /* QAudioDescription+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086BA28577733007DD14D /* QAudioDescription+Private.mm */; };
+		13D086EB28577733007DD14D /* QEditorExporterInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086BB28577733007DD14D /* QEditorExporterInternal.h */; };
+		13D086EC28577733007DD14D /* QEditorPlayerInternal.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086BC28577733007DD14D /* QEditorPlayerInternal.h */; };
+		13D086ED28577733007DD14D /* QEditorPlayerCallback+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086BD28577733007DD14D /* QEditorPlayerCallback+Private.h */; };
+		13D086EE28577733007DD14D /* QMediaStreamInfo+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086BE28577733007DD14D /* QMediaStreamInfo+Private.h */; };
+		13D086EF28577733007DD14D /* QMediaSessionInternal+Private.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086BF28577733007DD14D /* QMediaSessionInternal+Private.mm */; };
+		13D086FD28577EEB007DD14D /* DJIError.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086F728577EEB007DD14D /* DJIError.h */; };
+		13D086FE28577EEB007DD14D /* DJIError.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086F828577EEB007DD14D /* DJIError.mm */; };
+		13D086FF28577EEB007DD14D /* DJICppWrapperCache+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086F928577EEB007DD14D /* DJICppWrapperCache+Private.h */; };
+		13D0870028577EEB007DD14D /* DJIMarshal+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086FA28577EEB007DD14D /* DJIMarshal+Private.h */; };
+		13D0870128577EEB007DD14D /* DJIObjcWrapperCache+Private.h in Headers */ = {isa = PBXBuildFile; fileRef = 13D086FB28577EEB007DD14D /* DJIObjcWrapperCache+Private.h */; };
+		13D0870228577EEB007DD14D /* DJIProxyCaches.mm in Sources */ = {isa = PBXBuildFile; fileRef = 13D086FC28577EEB007DD14D /* DJIProxyCaches.mm */; };
 		13E51EA5284BA5CD00EC9179 /* libavformat.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51E9F284BA5CC00EC9179 /* libavformat.a */; };
 		13E51EA6284BA5CD00EC9179 /* libavutil.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA0284BA5CC00EC9179 /* libavutil.a */; };
 		13E51EA7284BA5CD00EC9179 /* libswscale.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 13E51EA1284BA5CD00EC9179 /* libswscale.a */; };
@@ -163,6 +217,60 @@
 		10A9FE0B1EA498020051BDFC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		10A9FE301EA4A0F10051BDFC /* QMediaCore.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = QMediaCore.xcodeproj; path = QMediaCore/QMediaCore.xcodeproj; sourceTree = "<group>"; };
 		10A9FEA31EA4BE410051BDFC /* ReleaseBuild.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = ReleaseBuild.sh; path = ../../SDKBuild/ReleaseBuild.sh; sourceTree = "<group>"; };
+		132435C82857953000AD6BA8 /* QTimeRange+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QTimeRange+Private.h"; sourceTree = "<group>"; };
+		132435C92857953000AD6BA8 /* QTimeRange.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QTimeRange.h; sourceTree = "<group>"; };
+		132435CA2857953000AD6BA8 /* QTimeRange.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QTimeRange.mm; sourceTree = "<group>"; };
+		132435CB2857953000AD6BA8 /* QTimeRange+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QTimeRange+Private.mm"; sourceTree = "<group>"; };
+		13D0869028577731007DD14D /* QEditorPlayerInternal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QEditorPlayerInternal.mm; sourceTree = "<group>"; };
+		13D0869128577731007DD14D /* QEditorExporterCallback+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QEditorExporterCallback+Private.mm"; sourceTree = "<group>"; };
+		13D0869228577731007DD14D /* QAudioDescription+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QAudioDescription+Private.h"; sourceTree = "<group>"; };
+		13D0869328577731007DD14D /* QMediaSegment+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QMediaSegment+Private.mm"; sourceTree = "<group>"; };
+		13D0869428577731007DD14D /* QEditorExporterInternal.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QEditorExporterInternal.mm; sourceTree = "<group>"; };
+		13D0869528577731007DD14D /* QMediaEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMediaEngine.h; sourceTree = "<group>"; };
+		13D0869628577731007DD14D /* QEditorExporterInternal+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QEditorExporterInternal+Private.h"; sourceTree = "<group>"; };
+		13D0869728577731007DD14D /* QEditorExporterInternal+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QEditorExporterInternal+Private.mm"; sourceTree = "<group>"; };
+		13D0869828577732007DD14D /* QEditorPlayerCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEditorPlayerCallback.h; sourceTree = "<group>"; };
+		13D0869928577732007DD14D /* QMediaSegment+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMediaSegment+Private.h"; sourceTree = "<group>"; };
+		13D0869A28577732007DD14D /* QMediaStreamInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMediaStreamInfo.h; sourceTree = "<group>"; };
+		13D0869C28577732007DD14D /* QSize.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QSize.h; sourceTree = "<group>"; };
+		13D0869D28577732007DD14D /* QMediaSessionInternal+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMediaSessionInternal+Private.h"; sourceTree = "<group>"; };
+		13D0869F28577732007DD14D /* QMediaSessionInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMediaSessionInternal.h; sourceTree = "<group>"; };
+		13D086A028577732007DD14D /* QEditorExporterCallback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEditorExporterCallback.h; sourceTree = "<group>"; };
+		13D086A128577732007DD14D /* QMediaStreamInfo+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QMediaStreamInfo+Private.mm"; sourceTree = "<group>"; };
+		13D086A228577732007DD14D /* QEditorPlayerCallback+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QEditorPlayerCallback+Private.mm"; sourceTree = "<group>"; };
+		13D086A328577732007DD14D /* QSize+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QSize+Private.h"; sourceTree = "<group>"; };
+		13D086A428577732007DD14D /* QSize+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QSize+Private.mm"; sourceTree = "<group>"; };
+		13D086A528577732007DD14D /* QVec4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QVec4.h; sourceTree = "<group>"; };
+		13D086A628577732007DD14D /* QVec4+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QVec4+Private.mm"; sourceTree = "<group>"; };
+		13D086A728577732007DD14D /* Q-Include-All.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "Q-Include-All.h"; sourceTree = "<group>"; };
+		13D086A828577732007DD14D /* QMediaStreamInfo.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QMediaStreamInfo.mm; sourceTree = "<group>"; };
+		13D086A928577732007DD14D /* QAudioDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QAudioDescription.mm; sourceTree = "<group>"; };
+		13D086AB28577732007DD14D /* QVideoDescription+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QVideoDescription+Private.h"; sourceTree = "<group>"; };
+		13D086AC28577732007DD14D /* QMediaEngine+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QMediaEngine+Private.mm"; sourceTree = "<group>"; };
+		13D086AD28577732007DD14D /* QMediaSegment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QMediaSegment.h; sourceTree = "<group>"; };
+		13D086AE28577732007DD14D /* QAudioDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QAudioDescription.h; sourceTree = "<group>"; };
+		13D086AF28577732007DD14D /* QEditorPlayerInternal+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QEditorPlayerInternal+Private.mm"; sourceTree = "<group>"; };
+		13D086B128577732007DD14D /* QSize.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QSize.mm; sourceTree = "<group>"; };
+		13D086B228577732007DD14D /* QVideoDescription+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QVideoDescription+Private.mm"; sourceTree = "<group>"; };
+		13D086B328577732007DD14D /* QVec4.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QVec4.mm; sourceTree = "<group>"; };
+		13D086B428577732007DD14D /* QMediaEngine+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMediaEngine+Private.h"; sourceTree = "<group>"; };
+		13D086B528577733007DD14D /* QEditorPlayerInternal+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QEditorPlayerInternal+Private.h"; sourceTree = "<group>"; };
+		13D086B628577733007DD14D /* QVec4+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QVec4+Private.h"; sourceTree = "<group>"; };
+		13D086B728577733007DD14D /* QVideoDescription.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QVideoDescription.mm; sourceTree = "<group>"; };
+		13D086B828577733007DD14D /* QEditorExporterCallback+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QEditorExporterCallback+Private.h"; sourceTree = "<group>"; };
+		13D086B928577733007DD14D /* QVideoDescription.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QVideoDescription.h; sourceTree = "<group>"; };
+		13D086BA28577733007DD14D /* QAudioDescription+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QAudioDescription+Private.mm"; sourceTree = "<group>"; };
+		13D086BB28577733007DD14D /* QEditorExporterInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEditorExporterInternal.h; sourceTree = "<group>"; };
+		13D086BC28577733007DD14D /* QEditorPlayerInternal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QEditorPlayerInternal.h; sourceTree = "<group>"; };
+		13D086BD28577733007DD14D /* QEditorPlayerCallback+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QEditorPlayerCallback+Private.h"; sourceTree = "<group>"; };
+		13D086BE28577733007DD14D /* QMediaStreamInfo+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "QMediaStreamInfo+Private.h"; sourceTree = "<group>"; };
+		13D086BF28577733007DD14D /* QMediaSessionInternal+Private.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = "QMediaSessionInternal+Private.mm"; sourceTree = "<group>"; };
+		13D086F728577EEB007DD14D /* DJIError.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DJIError.h; sourceTree = "<group>"; };
+		13D086F828577EEB007DD14D /* DJIError.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DJIError.mm; sourceTree = "<group>"; };
+		13D086F928577EEB007DD14D /* DJICppWrapperCache+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DJICppWrapperCache+Private.h"; sourceTree = "<group>"; };
+		13D086FA28577EEB007DD14D /* DJIMarshal+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DJIMarshal+Private.h"; sourceTree = "<group>"; };
+		13D086FB28577EEB007DD14D /* DJIObjcWrapperCache+Private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "DJIObjcWrapperCache+Private.h"; sourceTree = "<group>"; };
+		13D086FC28577EEB007DD14D /* DJIProxyCaches.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = DJIProxyCaches.mm; sourceTree = "<group>"; };
 		13E51E9F284BA5CC00EC9179 /* libavformat.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavformat.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libavformat.a; sourceTree = "<group>"; };
 		13E51EA0284BA5CC00EC9179 /* libavutil.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libavutil.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libavutil.a; sourceTree = "<group>"; };
 		13E51EA1284BA5CD00EC9179 /* libswscale.a */ = {isa = PBXFileReference; lastKnownFileType = archive.ar; name = libswscale.a; path = ../../QMediaCore/Thirdparty/ffmpeg/lib/ios/libswscale.a; sourceTree = "<group>"; };
@@ -332,6 +440,8 @@
 		10A9FDFD1EA498020051BDFC /* QMediaSDK */ = {
 			isa = PBXGroup;
 			children = (
+				13D086F628577EBB007DD14D /* djinni_support */,
+				13D0868F285776FD007DD14D /* generated-src */,
 				6FACC42C24625615008F1B41 /* QCommon */,
 				6F224A40249B951D000244FF /* QEffect */,
 				6F5117A22409F7F20013BC9E /* QTarget */,
@@ -363,6 +473,76 @@
 				10A9FEA31EA4BE410051BDFC /* ReleaseBuild.sh */,
 			);
 			name = ProjectConfig;
+			sourceTree = "<group>";
+		};
+		13D0868F285776FD007DD14D /* generated-src */ = {
+			isa = PBXGroup;
+			children = (
+				13D086A728577732007DD14D /* Q-Include-All.h */,
+				13D086AE28577732007DD14D /* QAudioDescription.h */,
+				13D086A928577732007DD14D /* QAudioDescription.mm */,
+				13D0869228577731007DD14D /* QAudioDescription+Private.h */,
+				13D086BA28577733007DD14D /* QAudioDescription+Private.mm */,
+				13D086A028577732007DD14D /* QEditorExporterCallback.h */,
+				13D086B828577733007DD14D /* QEditorExporterCallback+Private.h */,
+				13D0869128577731007DD14D /* QEditorExporterCallback+Private.mm */,
+				13D086BB28577733007DD14D /* QEditorExporterInternal.h */,
+				13D0869428577731007DD14D /* QEditorExporterInternal.mm */,
+				13D0869628577731007DD14D /* QEditorExporterInternal+Private.h */,
+				13D0869728577731007DD14D /* QEditorExporterInternal+Private.mm */,
+				13D0869828577732007DD14D /* QEditorPlayerCallback.h */,
+				13D086BD28577733007DD14D /* QEditorPlayerCallback+Private.h */,
+				13D086A228577732007DD14D /* QEditorPlayerCallback+Private.mm */,
+				13D086BC28577733007DD14D /* QEditorPlayerInternal.h */,
+				13D0869028577731007DD14D /* QEditorPlayerInternal.mm */,
+				13D086B528577733007DD14D /* QEditorPlayerInternal+Private.h */,
+				13D086AF28577732007DD14D /* QEditorPlayerInternal+Private.mm */,
+				13D0869528577731007DD14D /* QMediaEngine.h */,
+				13D086B428577732007DD14D /* QMediaEngine+Private.h */,
+				13D086AC28577732007DD14D /* QMediaEngine+Private.mm */,
+				13D086AD28577732007DD14D /* QMediaSegment.h */,
+				13D0869928577732007DD14D /* QMediaSegment+Private.h */,
+				13D0869328577731007DD14D /* QMediaSegment+Private.mm */,
+				13D0869F28577732007DD14D /* QMediaSessionInternal.h */,
+				13D0869D28577732007DD14D /* QMediaSessionInternal+Private.h */,
+				13D086BF28577733007DD14D /* QMediaSessionInternal+Private.mm */,
+				13D0869A28577732007DD14D /* QMediaStreamInfo.h */,
+				13D086A828577732007DD14D /* QMediaStreamInfo.mm */,
+				13D086BE28577733007DD14D /* QMediaStreamInfo+Private.h */,
+				13D086A128577732007DD14D /* QMediaStreamInfo+Private.mm */,
+				132435C92857953000AD6BA8 /* QTimeRange.h */,
+				132435CA2857953000AD6BA8 /* QTimeRange.mm */,
+				132435C82857953000AD6BA8 /* QTimeRange+Private.h */,
+				132435CB2857953000AD6BA8 /* QTimeRange+Private.mm */,
+				13D0869C28577732007DD14D /* QSize.h */,
+				13D086B128577732007DD14D /* QSize.mm */,
+				13D086A328577732007DD14D /* QSize+Private.h */,
+				13D086A428577732007DD14D /* QSize+Private.mm */,
+				13D086A528577732007DD14D /* QVec4.h */,
+				13D086B328577732007DD14D /* QVec4.mm */,
+				13D086B628577733007DD14D /* QVec4+Private.h */,
+				13D086A628577732007DD14D /* QVec4+Private.mm */,
+				13D086B928577733007DD14D /* QVideoDescription.h */,
+				13D086B728577733007DD14D /* QVideoDescription.mm */,
+				13D086AB28577732007DD14D /* QVideoDescription+Private.h */,
+				13D086B228577732007DD14D /* QVideoDescription+Private.mm */,
+			);
+			name = "generated-src";
+			path = "../../../generated-src/objc";
+			sourceTree = "<group>";
+		};
+		13D086F628577EBB007DD14D /* djinni_support */ = {
+			isa = PBXGroup;
+			children = (
+				13D086F928577EEB007DD14D /* DJICppWrapperCache+Private.h */,
+				13D086F728577EEB007DD14D /* DJIError.h */,
+				13D086F828577EEB007DD14D /* DJIError.mm */,
+				13D086FA28577EEB007DD14D /* DJIMarshal+Private.h */,
+				13D086FB28577EEB007DD14D /* DJIObjcWrapperCache+Private.h */,
+				13D086FC28577EEB007DD14D /* DJIProxyCaches.mm */,
+			);
+			name = djinni_support;
+			path = ../../../djinni_support_file/objc;
 			sourceTree = "<group>";
 		};
 		6F04933E244AC7D500F8B73B /* QSource */ = {
@@ -577,10 +757,16 @@
 			buildActionMask = 2147483647;
 			files = (
 				6FBD026124552F0F00372404 /* IOSGLTextureDrawable.h in Headers */,
+				13D086E928577733007DD14D /* QVideoDescription.h in Headers */,
+				13D086DB28577733007DD14D /* QVideoDescription+Private.h in Headers */,
+				13D086D528577733007DD14D /* QVec4.h in Headers */,
+				13D086D328577733007DD14D /* QSize+Private.h in Headers */,
 				6F5117D3240E756F0013BC9E /* QAudioTrackNode.h in Headers */,
 				6F5117CC240E74E20013BC9E /* QVideoFrame.h in Headers */,
+				13D086EB28577733007DD14D /* QEditorExporterInternal.h in Headers */,
 				6FBD027A245926CF00372404 /* QMediaFactory_internal.h in Headers */,
 				6F5117A92409F94F0013BC9E /* QVideoTarget.h in Headers */,
+				13D086E828577733007DD14D /* QEditorExporterCallback+Private.h in Headers */,
 				6FA69F98244E8E3700BC3294 /* IOSTexture.h in Headers */,
 				6F224A4A249C5533000244FF /* QEffect_internal.h in Headers */,
 				6F47DD18246546450045C9DC /* QVideoTrackNode.h in Headers */,
@@ -592,43 +778,68 @@
 				6FACC4382462564A008F1B41 /* QDeviceUtils.h in Headers */,
 				6FACC45724625A94008F1B41 /* CCESRenderer-ios.h in Headers */,
 				6FACC4372462564A008F1B41 /* QFileUtils.h in Headers */,
+				13D0870128577EEB007DD14D /* DJIObjcWrapperCache+Private.h in Headers */,
 				6FACC44B24625983008F1B41 /* QFileExporterTarget.h in Headers */,
 				6F224A48249B981F000244FF /* QEffectManage.h in Headers */,
+				13D086EC28577733007DD14D /* QEditorPlayerInternal.h in Headers */,
+				13D0870028577EEB007DD14D /* DJIMarshal+Private.h in Headers */,
 				6FACC46524625AB0008F1B41 /* QEditorPlayer.h in Headers */,
 				6FACC44924625983008F1B41 /* QAudioPlayer.h in Headers */,
+				13D086CD28577733007DD14D /* QMediaSessionInternal+Private.h in Headers */,
 				6FACC44724625983008F1B41 /* QPlayerView.h in Headers */,
 				6FACC46624625AB0008F1B41 /* QExporter.h in Headers */,
+				13D086EE28577733007DD14D /* QMediaStreamInfo+Private.h in Headers */,
 				6FACC4362462564A008F1B41 /* QObserverHoster.h in Headers */,
 				6FACC45824625A94008F1B41 /* CCES2Renderer-ios.h in Headers */,
 				6FACC4352462564A008F1B41 /* QCommon.h in Headers */,
+				13D086C528577733007DD14D /* QMediaEngine.h in Headers */,
 				6F224A44249B95AF000244FF /* QEffect.h in Headers */,
 				6F47DD0E2463A05E0045C9DC /* QCombiner.h in Headers */,
+				13D086E428577733007DD14D /* QMediaEngine+Private.h in Headers */,
 				6F04934D244BF21A00F8B73B /* QAudioTarget.h in Headers */,
 				6F47DD1C24659AD10045C9DC /* QNodeAnimator.h in Headers */,
 				6F224A2624977114000244FF /* QFileExporter.h in Headers */,
 				6F187498248E5C4B009C4B94 /* QImageNode.h in Headers */,
+				13D086CC28577733007DD14D /* QSize.h in Headers */,
 				6F224A7924BFF6EE000244FF /* QTrack.h in Headers */,
 				6FACC45924625A94008F1B41 /* OpenGL_Internal-ios.h in Headers */,
+				13D086E628577733007DD14D /* QVec4+Private.h in Headers */,
 				6F049352244C227700F8B73B /* QMediaDescribe.h in Headers */,
 				6F47DD222468FD0A0045C9DC /* QAudioTrackNode_internal.h in Headers */,
 				6FBD02712456F5B700372404 /* QAssetReaderSource.h in Headers */,
+				13D086D028577733007DD14D /* QEditorExporterCallback.h in Headers */,
 				6FBD028B245A8B4D00372404 /* QDuplicateNode.h in Headers */,
 				6FBD02692455895200372404 /* QCaptureSource.h in Headers */,
 				6FACC45D24625A94008F1B41 /* CCDirectorCaller-ios.h in Headers */,
 				6FBD02652455705700372404 /* VideoCaptureSession.h in Headers */,
 				6FBD026E24568D3D00372404 /* QMediaSource.h in Headers */,
 				6FACC46F24625EB3008F1B41 /* QSourceFileForMerge.h in Headers */,
+				13D086FD28577EEB007DD14D /* DJIError.h in Headers */,
+				13D086C228577733007DD14D /* QAudioDescription+Private.h in Headers */,
 				6F6E97E72419E35A00992B9D /* QGLContext.h in Headers */,
 				6FEA149E242798E100758ACD /* QMediaFactory.h in Headers */,
 				6F5117D4240E756F0013BC9E /* QAudioFrame.h in Headers */,
 				6F049342244AC7F900F8B73B /* QInternalVideoSource.h in Headers */,
 				6F47DD112463B7700045C9DC /* QCombiner_internal.h in Headers */,
+				13D086ED28577733007DD14D /* QEditorPlayerCallback+Private.h in Headers */,
+				13D086E528577733007DD14D /* QEditorPlayerInternal+Private.h in Headers */,
+				13D086C828577733007DD14D /* QEditorPlayerCallback.h in Headers */,
+				13D086C628577733007DD14D /* QEditorExporterInternal+Private.h in Headers */,
 				6FACC45A24625A94008F1B41 /* CCEAGLView-ios.h in Headers */,
 				6FACC46E24625EB3008F1B41 /* QMediaMerge.h in Headers */,
 				6F372076246A879B00356951 /* SerializeSetting.h in Headers */,
+				13D086D728577733007DD14D /* Q-Include-All.h in Headers */,
 				10A9FE0C1EA498020051BDFC /* QMediaSDK.h in Headers */,
+				13D086C928577733007DD14D /* QMediaSegment+Private.h in Headers */,
+				132435CC2857953000AD6BA8 /* QTimeRange+Private.h in Headers */,
+				13D086FF28577EEB007DD14D /* DJICppWrapperCache+Private.h in Headers */,
+				13D086CA28577733007DD14D /* QMediaStreamInfo.h in Headers */,
 				6F5117BD240A0EDB0013BC9E /* QVideoTarget_internal.h in Headers */,
+				13D086DD28577733007DD14D /* QMediaSegment.h in Headers */,
 				6F6214522445DE6E00AF70A0 /* QGraphicNode_internal.h in Headers */,
+				132435CD2857953000AD6BA8 /* QTimeRange.h in Headers */,
+				13D086CF28577733007DD14D /* QMediaSessionInternal.h in Headers */,
+				13D086DE28577733007DD14D /* QAudioDescription.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -767,9 +978,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13D086E228577733007DD14D /* QVideoDescription+Private.mm in Sources */,
+				13D086C728577733007DD14D /* QEditorExporterInternal+Private.mm in Sources */,
 				6FBD02722456F5B700372404 /* QAssetReaderSource.m in Sources */,
 				6FACC45C24625A94008F1B41 /* CCEAGLView-ios.m in Sources */,
 				6F47DD1B24659AD10045C9DC /* QNodeAnimator.mm in Sources */,
+				13D086E728577733007DD14D /* QVideoDescription.mm in Sources */,
+				13D086DF28577733007DD14D /* QEditorPlayerInternal+Private.mm in Sources */,
+				13D086D828577733007DD14D /* QMediaStreamInfo.mm in Sources */,
 				6F224A2524977114000244FF /* QFileExporter.mm in Sources */,
 				6FACC46D24625EB3008F1B41 /* QSourceFileForMerge.m in Sources */,
 				6F47DD0F2463A05E0045C9DC /* QCombiner.mm in Sources */,
@@ -778,32 +994,50 @@
 				6F5117C7240D50540013BC9E /* QGraphicNode.mm in Sources */,
 				6FBD02682455895200372404 /* QCaptureSource.mm in Sources */,
 				13EF004628539A380028DEC7 /* VideoToolboxDecoder.mm in Sources */,
+				13D086D228577733007DD14D /* QEditorPlayerCallback+Private.mm in Sources */,
 				6F049344244AC7F900F8B73B /* QInternalVideoSource.mm in Sources */,
 				6F6214502445D7DB00AF70A0 /* QLayer.mm in Sources */,
+				13D086E328577733007DD14D /* QVec4.mm in Sources */,
+				13D086EA28577733007DD14D /* QAudioDescription+Private.mm in Sources */,
 				6FACC44624625983008F1B41 /* QPlayerView.m in Sources */,
 				6FACC46C24625EB3008F1B41 /* QMediaMerge.m in Sources */,
 				6F5117CD240E74E20013BC9E /* QVideoFrame.mm in Sources */,
 				6FBD02742457106B00372404 /* QMediaSource_internal.h in Sources */,
 				6FACC43A2462564A008F1B41 /* QDeviceUtils.m in Sources */,
 				6FACC44A24625983008F1B41 /* QAudioPlayer.m in Sources */,
+				13D086D128577733007DD14D /* QMediaStreamInfo+Private.mm in Sources */,
 				6FBD02642455705700372404 /* VideoCaptureSession.m in Sources */,
+				13D086DC28577733007DD14D /* QMediaEngine+Private.mm in Sources */,
 				6FACC45E24625A94008F1B41 /* CCDirectorCaller-ios.m in Sources */,
 				6FACC46424625AB0008F1B41 /* QExporter.mm in Sources */,
 				6FBD028A245A8B4D00372404 /* QDuplicateNode.mm in Sources */,
+				132435CE2857953000AD6BA8 /* QTimeRange.mm in Sources */,
 				6F5117D6240E756F0013BC9E /* QAudioFrame.mm in Sources */,
+				13D086C028577733007DD14D /* QEditorPlayerInternal.mm in Sources */,
 				6FA69F99244E8E3700BC3294 /* IOSTexture.m in Sources */,
+				13D086EF28577733007DD14D /* QMediaSessionInternal+Private.mm in Sources */,
+				13D086C328577733007DD14D /* QMediaSegment+Private.mm in Sources */,
 				6FEA149F242798E100758ACD /* QMediaFactory.mm in Sources */,
 				6FACC45B24625A94008F1B41 /* CCES2Renderer-ios.m in Sources */,
+				13D086E128577733007DD14D /* QSize.mm in Sources */,
 				6F187497248E5C4B009C4B94 /* QImageNode.mm in Sources */,
 				6FBD026024552F0F00372404 /* IOSGLTextureDrawable.mm in Sources */,
 				6F049354244C2A2600F8B73B /* QMediaDescribe.mm in Sources */,
+				13D086C428577733007DD14D /* QEditorExporterInternal.mm in Sources */,
+				13D086D628577733007DD14D /* QVec4+Private.mm in Sources */,
+				13D0870228577EEB007DD14D /* DJIProxyCaches.mm in Sources */,
 				6FACC43C2462564A008F1B41 /* QFileUtils.m in Sources */,
 				6F5117D5240E756F0013BC9E /* QAudioTrackNode.mm in Sources */,
+				13D086FE28577EEB007DD14D /* DJIError.mm in Sources */,
 				6FACC43B2462564A008F1B41 /* QObserverHoster.m in Sources */,
 				6FACC44824625983008F1B41 /* QFileExporterTarget.m in Sources */,
 				6F224A42249B9587000244FF /* QEffect.mm in Sources */,
+				13D086C128577733007DD14D /* QEditorExporterCallback+Private.mm in Sources */,
+				13D086D928577733007DD14D /* QAudioDescription.mm in Sources */,
+				13D086D428577733007DD14D /* QSize+Private.mm in Sources */,
 				6FACC4392462564A008F1B41 /* QCommon.m in Sources */,
 				6F224A47249B981F000244FF /* QEffectManage.mm in Sources */,
+				132435CF2857953000AD6BA8 /* QTimeRange+Private.mm in Sources */,
 				6FACC46324625AB0008F1B41 /* QEditorPlayer.mm in Sources */,
 				6F6E97E82419E35A00992B9D /* QGLContext.m in Sources */,
 				6F47DD17246546450045C9DC /* QVideoTrackNode.mm in Sources */,
@@ -967,8 +1201,9 @@
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
 				USER_HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../../QMediaCore/**",
+					"$(SRCROOT)/../../QMediaCore",
 					"$(SRCROOT)/../../QMediaCore/Thirdparty",
+					"$(SRCROOT)/../../generated-src/cpp",
 				);
 			};
 			name = Debug;
@@ -1006,8 +1241,9 @@
 				SKIP_INSTALL = YES;
 				SYMROOT = build;
 				USER_HEADER_SEARCH_PATHS = (
-					"$(SRCROOT)/../../QMediaCore/**",
+					"$(SRCROOT)/../../QMediaCore",
 					"$(SRCROOT)/../../QMediaCore/Thirdparty",
+					"$(SRCROOT)/../../generated-src/cpp",
 				);
 			};
 			name = Release;

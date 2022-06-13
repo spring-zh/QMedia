@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		13CC2AB42853A6E10007FD87 /* SequentailSlice.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13CC2AB22853A6E00007FD87 /* SequentailSlice.cpp */; };
+		13D086F228577762007DD14D /* MediaSegmentImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13D086F128577762007DD14D /* MediaSegmentImpl.cpp */; };
+		13D087042857823D007DD14D /* MediaEngineImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13D08703285780DB007DD14D /* MediaEngineImpl.cpp */; };
 		13E51E9C284A3A6500EC9179 /* GeneralDemuxer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51E97284A3A6500EC9179 /* GeneralDemuxer.cpp */; };
 		13E51E9D284A3A6500EC9179 /* Mp4Demuxer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51E9B284A3A6500EC9179 /* Mp4Demuxer.cpp */; };
 		13E51E9E284A40A000EC9179 /* SequentailDecoder.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 13E51E8F2843BF8500EC9179 /* SequentailDecoder.cpp */; };
@@ -80,12 +82,29 @@
 
 /* Begin PBXFileReference section */
 		10A9FE1E1EA4A06B0051BDFC /* libQMediaCore.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libQMediaCore.a; sourceTree = BUILT_PRODUCTS_DIR; };
+		132435C72857924A00AD6BA8 /* time_range.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = time_range.h; sourceTree = "<group>"; };
 		136C13F128391CE3004BCF13 /* ThreadTaskFuture.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ThreadTaskFuture.h; sourceTree = "<group>"; };
 		136C13F228391CE3004BCF13 /* ConditionVariable.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ConditionVariable.h; sourceTree = "<group>"; };
 		136C13F328391CE3004BCF13 /* circle_buffer.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = circle_buffer.h; sourceTree = "<group>"; };
 		136C13F428391E38004BCF13 /* SteadyClock.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SteadyClock.h; sourceTree = "<group>"; };
 		13CC2AB22853A6E00007FD87 /* SequentailSlice.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = SequentailSlice.cpp; sourceTree = "<group>"; };
 		13CC2AB32853A6E00007FD87 /* SequentailSlice.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SequentailSlice.h; sourceTree = "<group>"; };
+		13D08679285776ED007DD14D /* editor_player_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = editor_player_internal.h; sourceTree = "<group>"; };
+		13D0867A285776ED007DD14D /* size.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = size.h; sourceTree = "<group>"; };
+		13D0867B285776ED007DD14D /* media_segment.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = media_segment.h; sourceTree = "<group>"; };
+		13D0867D285776ED007DD14D /* editor_exporter_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = editor_exporter_callback.h; sourceTree = "<group>"; };
+		13D0867E285776ED007DD14D /* media_session_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = media_session_internal.h; sourceTree = "<group>"; };
+		13D0867F285776ED007DD14D /* vec4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vec4.h; sourceTree = "<group>"; };
+		13D08680285776ED007DD14D /* video_description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = video_description.h; sourceTree = "<group>"; };
+		13D08684285776ED007DD14D /* media_stream_info.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = media_stream_info.h; sourceTree = "<group>"; };
+		13D08685285776ED007DD14D /* audio_description.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audio_description.h; sourceTree = "<group>"; };
+		13D08686285776ED007DD14D /* editor_player_callback.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = editor_player_callback.h; sourceTree = "<group>"; };
+		13D08688285776ED007DD14D /* media_engine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = media_engine.h; sourceTree = "<group>"; };
+		13D08689285776ED007DD14D /* editor_exporter_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = editor_exporter_internal.h; sourceTree = "<group>"; };
+		13D086F028577762007DD14D /* MediaSegmentImpl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MediaSegmentImpl.h; sourceTree = "<group>"; };
+		13D086F128577762007DD14D /* MediaSegmentImpl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = MediaSegmentImpl.cpp; sourceTree = "<group>"; };
+		13D08703285780DB007DD14D /* MediaEngineImpl.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MediaEngineImpl.cpp; sourceTree = "<group>"; };
+		13D08705285782E9007DD14D /* MediaEngineImpl.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaEngineImpl.h; sourceTree = "<group>"; };
 		13E51E8F2843BF8500EC9179 /* SequentailDecoder.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = SequentailDecoder.cpp; sourceTree = "<group>"; };
 		13E51E902843BF8500EC9179 /* SequentailDecoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SequentailDecoder.h; sourceTree = "<group>"; };
 		13E51E92284A33FF00EC9179 /* Decoder.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Decoder.h; sourceTree = "<group>"; };
@@ -293,6 +312,7 @@
 		10A9FE151EA4A06B0051BDFC = {
 			isa = PBXGroup;
 			children = (
+				13D0867728577674007DD14D /* generated-src */,
 				6FF02922221BFEE40011E6CB /* Utils */,
 				6F637E6123D047790004E053 /* GraphicCore */,
 				6FF0290B221BFEE40011E6CB /* MediaCore */,
@@ -320,6 +340,27 @@
 				13E51E902843BF8500EC9179 /* SequentailDecoder.h */,
 			);
 			path = sequentail;
+			sourceTree = "<group>";
+		};
+		13D0867728577674007DD14D /* generated-src */ = {
+			isa = PBXGroup;
+			children = (
+				132435C72857924A00AD6BA8 /* time_range.h */,
+				13D0867A285776ED007DD14D /* size.h */,
+				13D0867F285776ED007DD14D /* vec4.h */,
+				13D08685285776ED007DD14D /* audio_description.h */,
+				13D0867D285776ED007DD14D /* editor_exporter_callback.h */,
+				13D08689285776ED007DD14D /* editor_exporter_internal.h */,
+				13D08686285776ED007DD14D /* editor_player_callback.h */,
+				13D08679285776ED007DD14D /* editor_player_internal.h */,
+				13D08688285776ED007DD14D /* media_engine.h */,
+				13D0867B285776ED007DD14D /* media_segment.h */,
+				13D0867E285776ED007DD14D /* media_session_internal.h */,
+				13D08684285776ED007DD14D /* media_stream_info.h */,
+				13D08680285776ED007DD14D /* video_description.h */,
+			);
+			name = "generated-src";
+			path = "../../../generated-src/cpp";
 			sourceTree = "<group>";
 		};
 		13E51E96284A3A6500EC9179 /* demuxer */ = {
@@ -619,9 +660,9 @@
 		6FF02917221BFEE40011E6CB /* decoder */ = {
 			isa = PBXGroup;
 			children = (
+				13E51E92284A33FF00EC9179 /* Decoder.h */,
 				13E51E93284A33FF00EC9179 /* SoftwareDecoder.cpp */,
 				13E51E94284A33FF00EC9179 /* SoftwareDecoder.h */,
-				13E51E92284A33FF00EC9179 /* Decoder.h */,
 				6FF02918221BFEE40011E6CB /* AudioDecoder.h */,
 				6FF02919221BFEE40011E6CB /* VideoDecoder.h */,
 			);
@@ -643,6 +684,10 @@
 			children = (
 				13CC2AB12853A6040007FD87 /* sequentail */,
 				13E51EAF284BB47200EC9179 /* sources */,
+				13D08703285780DB007DD14D /* MediaEngineImpl.cpp */,
+				13D08705285782E9007DD14D /* MediaEngineImpl.h */,
+				13D086F128577762007DD14D /* MediaSegmentImpl.cpp */,
+				13D086F028577762007DD14D /* MediaSegmentImpl.h */,
 				6F5117BF240B65600013BC9E /* VideoFrameDrawer.h */,
 				6FF0291F221BFEE40011E6CB /* MediaSource.h */,
 				6FBD026A2456786000372404 /* MediaTrack.h */,
@@ -741,6 +786,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				13D087042857823D007DD14D /* MediaEngineImpl.cpp in Sources */,
 				13E51EBD284F9A8500EC9179 /* SoftwareDecoder.cpp in Sources */,
 				13E51E9E284A40A000EC9179 /* SequentailDecoder.cpp in Sources */,
 				6FBD028624595CA900372404 /* GcDuplicateNode.cpp in Sources */,
@@ -779,6 +825,7 @@
 				6F3720702469896800356951 /* speex_resampler.c in Sources */,
 				13E51E9C284A3A6500EC9179 /* GeneralDemuxer.cpp in Sources */,
 				6F637EC523D0477A0004E053 /* GcNode.cpp in Sources */,
+				13D086F228577762007DD14D /* MediaSegmentImpl.cpp in Sources */,
 				6F637ED823D0477A0004E053 /* Texture2D.cpp in Sources */,
 				6F637ECA23D0477A0004E053 /* Vec4.cpp in Sources */,
 				6F637EE323D9BF1D0004E053 /* ResamplerSpeex.cpp in Sources */,
@@ -904,7 +951,13 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../QMediaCore/**";
+				USER_HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../QMediaCore",
+					"$(SRCROOT)/../../../djinni_support_file",
+					"$(SRCROOT)/../../../generated-src",
+					"$(SRCROOT)/../../../QMediaCore/Thirdparty/",
+					"$(SRCROOT)/../../../QMediaCore/Thirdparty/ffmpeg/include",
+				);
 			};
 			name = Debug;
 		};
@@ -918,7 +971,13 @@
 				OTHER_LDFLAGS = "-ObjC";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
-				USER_HEADER_SEARCH_PATHS = "$(SRCROOT)/../../../QMediaCore/**";
+				USER_HEADER_SEARCH_PATHS = (
+					"$(SRCROOT)/../../../QMediaCore",
+					"$(SRCROOT)/../../../djinni_support_file",
+					"$(SRCROOT)/../../../generated-src",
+					"$(SRCROOT)/../../../QMediaCore/Thirdparty/",
+					"$(SRCROOT)/../../../QMediaCore/Thirdparty/ffmpeg/include",
+				);
 			};
 			name = Release;
 		};

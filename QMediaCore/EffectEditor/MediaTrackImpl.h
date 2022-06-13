@@ -10,10 +10,8 @@
 #define EFFECTEDITOR_MEDIATRACKIMPL_H
 
 #include <memory>
-#include "Utils/rw_lock.h"
 #include "MediaTrack.h"
-#include "ThreadTaskFuture.h"
-
+#include "Utils/ThreadTaskFuture.h"
 #include "sequentail/SequentailDecoder.h"
 
 class MediaTrackImpl : public MediaTrack, public SequentailDecoder::CallBack {
@@ -85,7 +83,7 @@ protected:
     Range<int64_t> _sourceRange; //customer select source range
     mutable Range<int64_t> _absoluteTrackRange;
     
-    rwlock _rwlock;
+//    rwlock _rwlock;
     int64_t _last_video_ms;
     int64_t _last_audio_ms;
     int64_t _media_position_ms;

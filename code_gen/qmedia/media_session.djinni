@@ -1,0 +1,69 @@
+
+
+media_session_internal = interface +c {
+
+    cresteMediaSegment(filename: string, mode :i32): media_segment;
+    addMediaSegment(segment: media_segment): bool;
+    removeMediaSegment(segment: media_segment): bool;
+
+    getTotalTimeRange(): time_range;
+
+    setDisplayLayerSize(size: size);
+    getDisplayLayerSize(): size;
+
+    setBkColor(color: vec4);
+    getBkColor(): vec4;
+
+    # control
+    start();
+    stop();
+    pause();
+    resume();
+    seek(time_ms: i64, flag: i32);
+    getPosition(): i64;
+}
+
+
+editor_player_callback = interface +c {
+    onStarted(code: i32);
+    onStoped(code: i32);
+    onSeekTo(time_ms: i64);
+    onProgressUpdated(time_ms: i64);
+    onPlayerStateChanged(new_state: i32, old_state: i32);
+    onCompleted();
+}
+
+editor_player_internal = interface +c {
+    # error code
+    const e_state : i32 = -3;
+    const e_system : i32 = -2;
+    const unknow : i32 = -1;
+    const ok :i32 = 0;
+
+    getSession(): media_session_internal;
+    setCallback(callback: editor_player_callback);
+
+    isUserPaused(): bool;
+}
+
+
+editor_exporter_callback = interface +c {
+    onStarted(code: i32);
+    onStoped(code: i32);
+    onProgressUpdated(time_ms: i64);
+    onCanceled(code: i32);
+    onCompleted();
+}
+
+editor_exporter_internal = interface +c {
+    # error code
+    const e_state : i32 = -3;
+    const e_system : i32 = -2;
+    const unknow : i32 = -1;
+    const ok :i32 = 0;
+
+    getSession(): media_session_internal;
+    setCallback(callback: editor_exporter_callback);
+
+    cancel();
+}

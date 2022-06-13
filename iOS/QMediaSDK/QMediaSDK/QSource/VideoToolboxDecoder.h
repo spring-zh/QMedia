@@ -12,7 +12,7 @@
 #include <list>
 #include "MediaCore/core/MediaComm.h"
 #include "MediaCore/core/CodecSpecificInfo.h"
-#include "Decoder.h"
+#include "MediaCore/decoder/Decoder.h"
 
 #include <VideoToolbox/VideoToolbox.h>
 
