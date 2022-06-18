@@ -22,7 +22,17 @@ public interface EditorPlayerInternal {
 
     public void setCallback(@Nullable EditorPlayerCallback callback);
 
+    public long getPosition();
+
+    public void play();
+
+    public void pause();
+
+    public void seek(long timeMs, int flag);
+
     public boolean isUserPaused();
+
+    public int getState();
 
     static final class CppProxy implements EditorPlayerInternal
     {
@@ -64,11 +74,51 @@ public interface EditorPlayerInternal {
         private native void native_setCallback(long _nativeRef, EditorPlayerCallback callback);
 
         @Override
+        public long getPosition()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getPosition(this.nativeRef);
+        }
+        private native long native_getPosition(long _nativeRef);
+
+        @Override
+        public void play()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_play(this.nativeRef);
+        }
+        private native void native_play(long _nativeRef);
+
+        @Override
+        public void pause()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_pause(this.nativeRef);
+        }
+        private native void native_pause(long _nativeRef);
+
+        @Override
+        public void seek(long timeMs, int flag)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_seek(this.nativeRef, timeMs, flag);
+        }
+        private native void native_seek(long _nativeRef, long timeMs, int flag);
+
+        @Override
         public boolean isUserPaused()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             return native_isUserPaused(this.nativeRef);
         }
         private native boolean native_isUserPaused(long _nativeRef);
+
+        @Override
+        public int getState()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getState(this.nativeRef);
+        }
+        private native int native_getState(long _nativeRef);
     }
 }

@@ -12,40 +12,16 @@
 #include "Utils/spin_lock.h"
 #include "Utils/Comm.h"
 #include "AudioProcess.h"
-#include "MediaCore/output/AudioTarget.h"
-
-inline static int getBytesFromPcmFormat(RawAudioFormat audioFormat) {
-    switch (audioFormat) {
-        case RawAudioFormat::kU8:
-            return 1;
-        case RawAudioFormat::kS16:
-        case RawAudioFormat::kU16:
-            return 2;
-        case RawAudioFormat::kS32:
-        case RawAudioFormat::kU32:
-        case RawAudioFormat::kFLOAT:
-            return 4;
-        default:
-            return 2;
-    }
-}
 
 class AudioClock {
 public:
     AudioClock():_audioPosition(0),_writeAudioBytes(0) {}
     ~AudioClock() {}
     
-    void init(AudioTarget *at) {
-        _sampleRate = at->getSampleRate();
-        _channels = at->getChannels();
-        _sampleWidthBytes = getBytesFromPcmFormat(at->getFormat());
-        _audoDelay = at->getAudioDelayBytes();
-    }
-    
-    void init(int sampleRate, int channels, RawAudioFormat audioFmt, int audioDelay) {
+    void init(int sampleRate, int channels, int bytesPreSample, int audioDelay) {
         _sampleRate = sampleRate;
         _channels = channels;
-        _sampleWidthBytes = getBytesFromPcmFormat(audioFmt);
+        _sampleWidthBytes = bytesPreSample;
         _audoDelay = audioDelay;
     }
     

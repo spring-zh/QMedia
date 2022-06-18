@@ -39,9 +39,16 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)setCallback:(nullable QEditorExporterCallback *)callback {
+- (void)setCallback:(nullable id<QEditorExporterCallback>)callback {
     try {
         _cppRefHandle.get()->setCallback(::djinni_generated::EditorExporterCallback::toCpp(callback));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (int64_t)getPosition {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getPosition();
+        return ::djinni::I64::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

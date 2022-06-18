@@ -53,6 +53,7 @@ protected:
 
 class PixelFrameNV12Drawer: public VideoFrameDrawer {
 public:
+    PixelFrameNV12Drawer() = default;
     PixelFrameNV12Drawer(const VideoTarget *videoTarget);
     ~PixelFrameNV12Drawer();
 

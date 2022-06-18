@@ -9,7 +9,7 @@
 #import <Foundation/Foundation.h>
 #import "QMediaDescribe.h"
 
-@protocol QAudioRender <NSObject>
+@protocol QAudioRender2 <NSObject>
 @required
 - (bool)onAudioRender:(uint8_t * const)buffer needBytes:(unsigned)needBytes wantTime:(int64_t)wantTime;
 @end
@@ -33,6 +33,6 @@
 //audioDelay bytes
 @property (nonatomic) int audioDelay;
 
-@property (nonatomic, weak) id<QAudioRender> audioRender;
+@property (nonatomic, weak) id<QAudioRender2> audioRender;
 
 @end

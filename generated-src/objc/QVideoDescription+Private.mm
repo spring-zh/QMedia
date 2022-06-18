@@ -12,18 +12,36 @@ auto VideoDescription::toCpp(ObjcType obj) -> CppType
     assert(obj);
     return {::djinni::I32::toCpp(obj.width),
             ::djinni::I32::toCpp(obj.height),
+            ::djinni::I32::toCpp(obj.framerate),
             ::djinni::I16::toCpp(obj.pixelFormat),
             ::djinni::I32::toCpp(obj.rotation),
-            ::djinni::Bool::toCpp(obj.isTexture)};
+            ::djinni::Bool::toCpp(obj.isTexture),
+            ::djinni::I32::toCpp(obj.profile),
+            ::djinni::I32::toCpp(obj.level),
+            ::djinni::I32::toCpp(obj.colorRange),
+            ::djinni::I32::toCpp(obj.colorSpace),
+            ::djinni::I32::toCpp(obj.colorTrc),
+            ::djinni::I32::toCpp(obj.colorPrimaries),
+            ::djinni::I32::toCpp(obj.aspectRatioNum),
+            ::djinni::I32::toCpp(obj.aspectRatioDen)};
 }
 
 auto VideoDescription::fromCpp(const CppType& cpp) -> ObjcType
 {
     return [[QVideoDescription alloc] initWithWidth:(::djinni::I32::fromCpp(cpp.width))
                                              height:(::djinni::I32::fromCpp(cpp.height))
+                                          framerate:(::djinni::I32::fromCpp(cpp.framerate))
                                         pixelFormat:(::djinni::I16::fromCpp(cpp.pixel_format))
                                            rotation:(::djinni::I32::fromCpp(cpp.rotation))
-                                          isTexture:(::djinni::Bool::fromCpp(cpp.is_texture))];
+                                          isTexture:(::djinni::Bool::fromCpp(cpp.is_texture))
+                                            profile:(::djinni::I32::fromCpp(cpp.profile))
+                                              level:(::djinni::I32::fromCpp(cpp.level))
+                                         colorRange:(::djinni::I32::fromCpp(cpp.color_range))
+                                         colorSpace:(::djinni::I32::fromCpp(cpp.color_space))
+                                           colorTrc:(::djinni::I32::fromCpp(cpp.color_trc))
+                                     colorPrimaries:(::djinni::I32::fromCpp(cpp.color_primaries))
+                                     aspectRatioNum:(::djinni::I32::fromCpp(cpp.aspect_ratio_num))
+                                     aspectRatioDen:(::djinni::I32::fromCpp(cpp.aspect_ratio_den))];
 }
 
 }  // namespace djinni_generated

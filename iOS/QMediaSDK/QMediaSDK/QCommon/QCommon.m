@@ -52,6 +52,11 @@ int64_t QTimeRangeGetLenght(QTimeRange qrange)
     return qrange.endPoint - qrange.startPoint;
 }
 
+int64_t QMediaRangeGetLenght(QMediaRange* qrange)
+{
+    return qrange.end - qrange.start;
+}
+
 #define XM_SDK_VERSION "1.3"
 NSString * QGetMediaSDKVersion(){
     char s[16];

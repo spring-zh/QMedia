@@ -9,10 +9,24 @@ import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface MediaSegment {
+    int FLAG_VIDEO = 1;
+
+    int FLAG_AUDIO = 2;
+
+    int FLAG_SUBTITLE = 4;
+
+    int FLAG_ALL = 7;
+
+    @Nullable
+    public VideoRenderNode getVideo();
+
+    @Nullable
+    public AudioRenderNode getAudio();
+
     @NonNull
     public ArrayList<MediaStreamInfo> getMediaStreamInfo();
 
-    public void enable(int streamId);
+    public boolean isValid();
 
     @NonNull
     public String getFileName();
@@ -21,15 +35,15 @@ public interface MediaSegment {
 
     public float getTimescale();
 
-    public void setSourceRange(@NonNull TimeRange range);
+    public void setSourceRange(@NonNull MediaRange range);
 
     @NonNull
-    public TimeRange getSourceRange();
+    public MediaRange getSourceRange();
 
-    public void setDisplayRange(@NonNull TimeRange range);
+    public void setDisplayRange(@NonNull MediaRange range);
 
     @NonNull
-    public TimeRange getDisplayRange();
+    public MediaRange getDisplayRange();
 
     public long getMediaDuration();
 
@@ -57,6 +71,22 @@ public interface MediaSegment {
         }
 
         @Override
+        public VideoRenderNode getVideo()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getVideo(this.nativeRef);
+        }
+        private native VideoRenderNode native_getVideo(long _nativeRef);
+
+        @Override
+        public AudioRenderNode getAudio()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getAudio(this.nativeRef);
+        }
+        private native AudioRenderNode native_getAudio(long _nativeRef);
+
+        @Override
         public ArrayList<MediaStreamInfo> getMediaStreamInfo()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
@@ -65,12 +95,12 @@ public interface MediaSegment {
         private native ArrayList<MediaStreamInfo> native_getMediaStreamInfo(long _nativeRef);
 
         @Override
-        public void enable(int streamId)
+        public boolean isValid()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_enable(this.nativeRef, streamId);
+            return native_isValid(this.nativeRef);
         }
-        private native void native_enable(long _nativeRef, int streamId);
+        private native boolean native_isValid(long _nativeRef);
 
         @Override
         public String getFileName()
@@ -97,36 +127,36 @@ public interface MediaSegment {
         private native float native_getTimescale(long _nativeRef);
 
         @Override
-        public void setSourceRange(TimeRange range)
+        public void setSourceRange(MediaRange range)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             native_setSourceRange(this.nativeRef, range);
         }
-        private native void native_setSourceRange(long _nativeRef, TimeRange range);
+        private native void native_setSourceRange(long _nativeRef, MediaRange range);
 
         @Override
-        public TimeRange getSourceRange()
+        public MediaRange getSourceRange()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             return native_getSourceRange(this.nativeRef);
         }
-        private native TimeRange native_getSourceRange(long _nativeRef);
+        private native MediaRange native_getSourceRange(long _nativeRef);
 
         @Override
-        public void setDisplayRange(TimeRange range)
+        public void setDisplayRange(MediaRange range)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             native_setDisplayRange(this.nativeRef, range);
         }
-        private native void native_setDisplayRange(long _nativeRef, TimeRange range);
+        private native void native_setDisplayRange(long _nativeRef, MediaRange range);
 
         @Override
-        public TimeRange getDisplayRange()
+        public MediaRange getDisplayRange()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             return native_getDisplayRange(this.nativeRef);
         }
-        private native TimeRange native_getDisplayRange(long _nativeRef);
+        private native MediaRange native_getDisplayRange(long _nativeRef);
 
         @Override
         public long getMediaDuration()

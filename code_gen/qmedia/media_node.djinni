@@ -1,0 +1,42 @@
+
+audio_render_node = interface +c {
+    setTempo(tempo: f32);
+    setRate(rate: f32);
+    setPitch(pitch: f32);
+    setVolume(volume: f32);
+}
+
+animator = record {
+    const positionxyz: string = "positionxyz";
+    const rotation: string = "rotation";
+    const rotationxyz: string = "rotationxyz";
+    name: string;
+    property: string;
+    timerang: media_range;
+    startpoint: vec4f;
+    endpoint: vec4f;
+    easefunction: i32;
+    repleat: bool;
+}
+
+video_render_node = interface +c {
+    setVisible(visible: bool);
+    setAlpha(alpha: f32);
+    setCrop(crop: vec4f);
+
+    setContentSize(content_size: size);
+    setAnchorPoint(anchor_point: point);
+    setPosition(position: point);
+    setPositionZ(positionz: i32);
+
+    setRotation(rotation: i32);
+    setRotation3d(rotation3d: vec4f);
+
+    setScaleX(scalex: f32);
+    setScaleY(scaley: f32);
+    setScaleZ(scalez: f32);
+
+    getAnimators(): list<animator>;
+    addAnimator(animator: animator): bool;
+    removeAnimator(animator: animator): bool;
+}

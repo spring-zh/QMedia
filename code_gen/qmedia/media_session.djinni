@@ -2,29 +2,33 @@
 
 media_session_internal = interface +c {
 
-    cresteMediaSegment(filename: string, mode :i32): media_segment;
+    cresteMediaSegment(filename: string, flag :i32): media_segment;
     addMediaSegment(segment: media_segment): bool;
     removeMediaSegment(segment: media_segment): bool;
+    # getSegments(): list<media_segment>;
 
-    getTotalTimeRange(): time_range;
+    getTotalTimeRange(): media_range;
+
+    getVideoRender(): video_render;
+    getAudioRender(): audio_render;
+    setAudioRunLoop(audio_loop: audio_runloop);
+    setVideoRunLoop(video_loop: video_runloop);
 
     setDisplayLayerSize(size: size);
     getDisplayLayerSize(): size;
 
-    setBkColor(color: vec4);
-    getBkColor(): vec4;
+    setBkColor(color: vec4f);
+    getBkColor(): vec4f;
 
     # control
+    prepare();
     start();
     stop();
-    pause();
-    resume();
-    seek(time_ms: i64, flag: i32);
-    getPosition(): i64;
 }
 
 
-editor_player_callback = interface +c {
+editor_player_callback = interface +o +j {
+    onPrepare(code: i32);
     onStarted(code: i32);
     onStoped(code: i32);
     onSeekTo(time_ms: i64);
@@ -43,11 +47,16 @@ editor_player_internal = interface +c {
     getSession(): media_session_internal;
     setCallback(callback: editor_player_callback);
 
+    getPosition(): i64;
+    play();
+    pause();
+    seek(time_ms: i64, flag: i32);
     isUserPaused(): bool;
+    getState(): i32;
 }
 
 
-editor_exporter_callback = interface +c {
+editor_exporter_callback = interface +o +j {
     onStarted(code: i32);
     onStoped(code: i32);
     onProgressUpdated(time_ms: i64);
@@ -65,5 +74,6 @@ editor_exporter_internal = interface +c {
     getSession(): media_session_internal;
     setCallback(callback: editor_exporter_callback);
 
+    getPosition(): i64;
     cancel();
 }

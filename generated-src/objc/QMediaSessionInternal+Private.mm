@@ -6,10 +6,14 @@
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
 #import "DJIMarshal+Private.h"
+#import "QAudioRender+Private.h"
+#import "QAudioRunloop+Private.h"
+#import "QMediaRange+Private.h"
 #import "QMediaSegment+Private.h"
 #import "QSize+Private.h"
-#import "QTimeRange+Private.h"
-#import "QVec4+Private.h"
+#import "QVec4f+Private.h"
+#import "QVideoRender+Private.h"
+#import "QVideoRunloop+Private.h"
 #include <exception>
 #include <stdexcept>
 #include <utility>
@@ -35,10 +39,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 }
 
 - (nullable QMediaSegment *)cresteMediaSegment:(nonnull NSString *)filename
-                                          mode:(int32_t)mode {
+                                          flag:(int32_t)flag {
     try {
         auto objcpp_result_ = _cppRefHandle.get()->cresteMediaSegment(::djinni::String::toCpp(filename),
-                                                                      ::djinni::I32::toCpp(mode));
+                                                                      ::djinni::I32::toCpp(flag));
         return ::djinni_generated::MediaSegment::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
@@ -57,10 +61,36 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (nonnull QTimeRange *)getTotalTimeRange {
+- (nonnull QMediaRange *)getTotalTimeRange {
     try {
         auto objcpp_result_ = _cppRefHandle.get()->getTotalTimeRange();
-        return ::djinni_generated::TimeRange::fromCpp(objcpp_result_);
+        return ::djinni_generated::MediaRange::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nullable QVideoRender *)getVideoRender {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getVideoRender();
+        return ::djinni_generated::VideoRender::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nullable QAudioRender *)getAudioRender {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getAudioRender();
+        return ::djinni_generated::AudioRender::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setAudioRunLoop:(nullable id<QAudioRunloop>)audioLoop {
+    try {
+        _cppRefHandle.get()->setAudioRunLoop(::djinni_generated::AudioRunloop::toCpp(audioLoop));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setVideoRunLoop:(nullable id<QVideoRunloop>)videoLoop {
+    try {
+        _cppRefHandle.get()->setVideoRunLoop(::djinni_generated::VideoRunloop::toCpp(videoLoop));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -77,16 +107,22 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)setBkColor:(nonnull QVec4 *)color {
+- (void)setBkColor:(nonnull QVec4f *)color {
     try {
-        _cppRefHandle.get()->setBkColor(::djinni_generated::Vec4::toCpp(color));
+        _cppRefHandle.get()->setBkColor(::djinni_generated::Vec4f::toCpp(color));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (nonnull QVec4 *)getBkColor {
+- (nonnull QVec4f *)getBkColor {
     try {
         auto objcpp_result_ = _cppRefHandle.get()->getBkColor();
-        return ::djinni_generated::Vec4::fromCpp(objcpp_result_);
+        return ::djinni_generated::Vec4f::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)prepare {
+    try {
+        _cppRefHandle.get()->prepare();
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -99,33 +135,6 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 - (void)stop {
     try {
         _cppRefHandle.get()->stop();
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)pause {
-    try {
-        _cppRefHandle.get()->pause();
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)resume {
-    try {
-        _cppRefHandle.get()->resume();
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)seek:(int64_t)timeMs
-        flag:(int32_t)flag {
-    try {
-        _cppRefHandle.get()->seek(::djinni::I64::toCpp(timeMs),
-                                  ::djinni::I32::toCpp(flag));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (int64_t)getPosition {
-    try {
-        auto objcpp_result_ = _cppRefHandle.get()->getPosition();
-        return ::djinni::I64::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

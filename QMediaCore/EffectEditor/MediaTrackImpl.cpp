@@ -25,7 +25,7 @@ _video_stream_idx(-1),_audio_stream_idx(-1)
     _last_audio_ms = -1;
     _media_position_ms = -1;
     
-    sequentail_decoder_ = SequentailDecoder::UPtr(new SequentailDecoder(media_type, this));
+    sequentail_decoder_ = SegmentDecoder::UPtr(new SegmentDecoder(media_type, this));
 }
 
 MediaTrackImpl::~MediaTrackImpl()
@@ -84,15 +84,15 @@ bool MediaTrackImpl::prepare()
             }
         }
         
-        SequentailSlice slice(_sourceRef->filePath(), _sourceRef->getMediaDuration());
-        Range<int64_t> src_range(0, _sourceRef->getMediaDuration()/2);
-        slice.SetSourceRannge(src_range);
-        SequentailSlice slice2 = slice;
-//        slice2.SetSourceRannge(src_range);
-        slice2.SetDisplayRannge(slice.GetDisplayRannge()._end, slice.GetDisplayRannge()._end + src_range.getLength());
-        slices.push_back(slice);
-        slices.push_back(slice2);
-        sequentail_decoder_->StartMedia(slices);
+//        SequentailSlice slice(_sourceRef->filePath(), _sourceRef->getMediaDuration());
+//        Range<int64_t> src_range(0, _sourceRef->getMediaDuration()/2);
+//        slice.SetSourceRannge(src_range);
+//        SequentailSlice slice2 = slice;
+////        slice2.SetSourceRannge(src_range);
+//        slice2.SetDisplayRannge(slice.GetDisplayRannge()._end, slice.GetDisplayRannge()._end + src_range.getLength());
+//        slices.push_back(slice);
+//        slices.push_back(slice2);
+//        sequentail_decoder_->StartMedia(slices);
         
         _sourceRef->stop();
     }
@@ -160,7 +160,7 @@ const Range<int64_t> MediaTrackImpl::getDisplayTrackRange() const
 
 VideoFrame MediaTrackImpl::getVideoFrame(int64_t mSec , bool& isEnd)
 {
-//    VideoFrame retFrame(nullptr,0);
+    VideoFrame retFrame(nullptr,0);
 //    int64_t remap_time = 0;
 //    if (! mapTimeToMediaSource(mSec, remap_time)) {
 //        return retFrame;
@@ -197,14 +197,15 @@ VideoFrame MediaTrackImpl::getVideoFrame(int64_t mSec , bool& isEnd)
 //    if(retFrame.video_frame_buffer() != nullptr)
 //        isEnd = false;
 //    return retFrame;
-    if (media_type_ == MediaType::Video) {
-        int index;
-        auto frame = sequentail_decoder_->ReadFrame(mSec, index);
-        return VideoFrame(frame.frame_buffer_, frame.timestamp_ms_);
-    } else {
-        isEnd = true;
-        return VideoFrame(nullptr, 0);
-    }
+//    if (media_type_ == MediaType::Video) {
+//        int index;
+//        auto frame = sequentail_decoder_->ReadFrame(mSec, index);
+//        return VideoFrame(frame.frame_buffer_, frame.timestamp_ms_);
+//    } else {
+//        isEnd = true;
+//        return VideoFrame(nullptr, 0);
+//    }
+    return retFrame;
 }
 AudioFrame MediaTrackImpl::getAudioFrame(int64_t mSec , bool& isEnd)
 {
@@ -244,19 +245,16 @@ AudioFrame MediaTrackImpl::getAudioFrame(int64_t mSec , bool& isEnd)
 //
 //    if(retFrame.audio_frame_buffer() != nullptr)
 //        isEnd = false;
-    if (media_type_ == MediaType::Audio) {
-        int index;
-        auto frame = sequentail_decoder_->ReadFrame(mSec, index);
-        return AudioFrame(frame.frame_buffer_, frame.timestamp_ms_, frame.timestamp_ms_);
-    } else {
-        isEnd = true;
+//    if (media_type_ == MediaType::Audio) {
+//        int index;
+//        auto frame = sequentail_decoder_->ReadFrame(mSec, index);
+//        return AudioFrame(frame.frame_buffer_, frame.timestamp_ms_, frame.timestamp_ms_);
+//    } else {
+//        isEnd = true;
         return AudioFrame(nullptr, 0, 0);
-    }
+//    }
 }
 
-void MediaTrackImpl::OnSequentailError(int error) {
-    
-}
 
 const VideoDescribe *const MediaTrackImpl::getVideoDescribe() const
 {

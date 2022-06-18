@@ -522,3 +522,7 @@ void PixelFrameBGRADrawer::release()
     clearTexture();
 }
 
+
+VideoFrameDrawer* VideoFrameDrawer::createVideoFrameDrawer(RawVideoFormat pixel_format) {
+    return new PixelFrameNV12Drawer();
+}

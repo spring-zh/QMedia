@@ -6,72 +6,69 @@
 
 namespace djinni_generated {
 
-NativeEditorPlayerCallback::NativeEditorPlayerCallback() : ::djinni::JniInterface<::QMedia::Api::EditorPlayerCallback, NativeEditorPlayerCallback>("com/qmedia/editor/generated/EditorPlayerCallback$CppProxy") {}
+NativeEditorPlayerCallback::NativeEditorPlayerCallback() : ::djinni::JniInterface<::QMedia::Api::EditorPlayerCallback, NativeEditorPlayerCallback>() {}
 
 NativeEditorPlayerCallback::~NativeEditorPlayerCallback() = default;
 
+NativeEditorPlayerCallback::JavaProxy::JavaProxy(JniType j) : Handle(::djinni::jniGetThreadEnv(), j) { }
 
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerCallback_00024CppProxy_nativeDestroy(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        delete reinterpret_cast<::djinni::CppProxyHandle<::QMedia::Api::EditorPlayerCallback>*>(nativeRef);
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+NativeEditorPlayerCallback::JavaProxy::~JavaProxy() = default;
+
+void NativeEditorPlayerCallback::JavaProxy::onPrepare(int32_t c_code) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onPrepare,
+                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_code)));
+    ::djinni::jniExceptionCheck(jniEnv);
 }
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerCallback_00024CppProxy_native_1onStarted(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_code)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerCallback>(nativeRef);
-        ref->onStarted(::djinni::I32::toCpp(jniEnv, j_code));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+void NativeEditorPlayerCallback::JavaProxy::onStarted(int32_t c_code) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onStarted,
+                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_code)));
+    ::djinni::jniExceptionCheck(jniEnv);
 }
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerCallback_00024CppProxy_native_1onStoped(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_code)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerCallback>(nativeRef);
-        ref->onStoped(::djinni::I32::toCpp(jniEnv, j_code));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+void NativeEditorPlayerCallback::JavaProxy::onStoped(int32_t c_code) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onStoped,
+                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_code)));
+    ::djinni::jniExceptionCheck(jniEnv);
 }
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerCallback_00024CppProxy_native_1onSeekTo(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jlong j_timeMs)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerCallback>(nativeRef);
-        ref->onSeekTo(::djinni::I64::toCpp(jniEnv, j_timeMs));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+void NativeEditorPlayerCallback::JavaProxy::onSeekTo(int64_t c_time_ms) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onSeekTo,
+                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c_time_ms)));
+    ::djinni::jniExceptionCheck(jniEnv);
 }
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerCallback_00024CppProxy_native_1onProgressUpdated(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jlong j_timeMs)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerCallback>(nativeRef);
-        ref->onProgressUpdated(::djinni::I64::toCpp(jniEnv, j_timeMs));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+void NativeEditorPlayerCallback::JavaProxy::onProgressUpdated(int64_t c_time_ms) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onProgressUpdated,
+                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c_time_ms)));
+    ::djinni::jniExceptionCheck(jniEnv);
 }
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerCallback_00024CppProxy_native_1onPlayerStateChanged(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_newState, jint j_oldState)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerCallback>(nativeRef);
-        ref->onPlayerStateChanged(::djinni::I32::toCpp(jniEnv, j_newState),
-                                  ::djinni::I32::toCpp(jniEnv, j_oldState));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+void NativeEditorPlayerCallback::JavaProxy::onPlayerStateChanged(int32_t c_new_state, int32_t c_old_state) {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onPlayerStateChanged,
+                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_new_state)),
+                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_old_state)));
+    ::djinni::jniExceptionCheck(jniEnv);
 }
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerCallback_00024CppProxy_native_1onCompleted(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerCallback>(nativeRef);
-        ref->onCompleted();
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+void NativeEditorPlayerCallback::JavaProxy::onCompleted() {
+    auto jniEnv = ::djinni::jniGetThreadEnv();
+    ::djinni::JniLocalScope jscope(jniEnv, 10);
+    const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onCompleted);
+    ::djinni::jniExceptionCheck(jniEnv);
 }
 
 }  // namespace djinni_generated

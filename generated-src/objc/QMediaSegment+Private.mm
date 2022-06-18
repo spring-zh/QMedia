@@ -6,8 +6,10 @@
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
 #import "DJIMarshal+Private.h"
+#import "QAudioRenderNode+Private.h"
+#import "QMediaRange+Private.h"
 #import "QMediaStreamInfo+Private.h"
-#import "QTimeRange+Private.h"
+#import "QVideoRenderNode+Private.h"
 #include <exception>
 #include <stdexcept>
 #include <utility>
@@ -32,6 +34,20 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     return self;
 }
 
+- (nullable QVideoRenderNode *)getVideo {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getVideo();
+        return ::djinni_generated::VideoRenderNode::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nullable QAudioRenderNode *)getAudio {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getAudio();
+        return ::djinni_generated::AudioRenderNode::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 - (nonnull NSArray<QMediaStreamInfo *> *)getMediaStreamInfo {
     try {
         auto objcpp_result_ = _cppRefHandle.get()->getMediaStreamInfo();
@@ -39,9 +55,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)enable:(int32_t)streamId {
+- (BOOL)isValid {
     try {
-        _cppRefHandle.get()->enable(::djinni::I32::toCpp(streamId));
+        auto objcpp_result_ = _cppRefHandle.get()->isValid();
+        return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -65,29 +82,29 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)setSourceRange:(nonnull QTimeRange *)range {
+- (void)setSourceRange:(nonnull QMediaRange *)range {
     try {
-        _cppRefHandle.get()->setSourceRange(::djinni_generated::TimeRange::toCpp(range));
+        _cppRefHandle.get()->setSourceRange(::djinni_generated::MediaRange::toCpp(range));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (nonnull QTimeRange *)getSourceRange {
+- (nonnull QMediaRange *)getSourceRange {
     try {
         auto objcpp_result_ = _cppRefHandle.get()->getSourceRange();
-        return ::djinni_generated::TimeRange::fromCpp(objcpp_result_);
+        return ::djinni_generated::MediaRange::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)setDisplayRange:(nonnull QTimeRange *)range {
+- (void)setDisplayRange:(nonnull QMediaRange *)range {
     try {
-        _cppRefHandle.get()->setDisplayRange(::djinni_generated::TimeRange::toCpp(range));
+        _cppRefHandle.get()->setDisplayRange(::djinni_generated::MediaRange::toCpp(range));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (nonnull QTimeRange *)getDisplayRange {
+- (nonnull QMediaRange *)getDisplayRange {
     try {
         auto objcpp_result_ = _cppRefHandle.get()->getDisplayRange();
-        return ::djinni_generated::TimeRange::fromCpp(objcpp_result_);
+        return ::djinni_generated::MediaRange::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -97,6 +114,7 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
         return ::djinni::I64::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
+
 
 namespace djinni_generated {
 

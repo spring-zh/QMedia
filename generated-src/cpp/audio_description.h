@@ -9,23 +9,23 @@
 namespace QMedia { namespace Api {
 
 struct AudioDescription final {
-    static const int16_t FORMAT_UNKNOW = -1;
+    static const int16_t FORMAT_UNKNOW;
 
-    static const int16_t FORMAT_U8 = 0;
+    static const int16_t FORMAT_U8;
 
-    static const int16_t FORMAT_S16 = 1;
+    static const int16_t FORMAT_S16;
 
-    static const int16_t FORMAT_U16 = 2;
+    static const int16_t FORMAT_U16;
 
-    static const int16_t FORMAT_S32 = 3;
+    static const int16_t FORMAT_S32;
 
-    static const int16_t FORMAT_U32 = 4;
+    static const int16_t FORMAT_U32;
 
-    static const int16_t FORMAT_FLOAT = 5;
+    static const int16_t FORMAT_FLOAT;
 
-    static const int16_t FORMAT_SAMPLEBUFFER = 100;
+    static const int16_t FORMAT_SAMPLEBUFFER;
 
-    static const int16_t FORMAT_BYTEARRAY = 101;
+    static const int16_t FORMAT_BYTEARRAY;
 
     int16_t smaple_format;
     int16_t nchannel;

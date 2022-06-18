@@ -6,24 +6,62 @@
 @interface QVideoDescription : NSObject
 - (nonnull instancetype)initWithWidth:(int32_t)width
                                height:(int32_t)height
+                            framerate:(int32_t)framerate
                           pixelFormat:(int16_t)pixelFormat
                              rotation:(int32_t)rotation
-                            isTexture:(BOOL)isTexture;
+                            isTexture:(BOOL)isTexture
+                              profile:(int32_t)profile
+                                level:(int32_t)level
+                           colorRange:(int32_t)colorRange
+                           colorSpace:(int32_t)colorSpace
+                             colorTrc:(int32_t)colorTrc
+                       colorPrimaries:(int32_t)colorPrimaries
+                       aspectRatioNum:(int32_t)aspectRatioNum
+                       aspectRatioDen:(int32_t)aspectRatioDen;
 + (nonnull instancetype)videoDescriptionWithWidth:(int32_t)width
                                            height:(int32_t)height
+                                        framerate:(int32_t)framerate
                                       pixelFormat:(int16_t)pixelFormat
                                          rotation:(int32_t)rotation
-                                        isTexture:(BOOL)isTexture;
+                                        isTexture:(BOOL)isTexture
+                                          profile:(int32_t)profile
+                                            level:(int32_t)level
+                                       colorRange:(int32_t)colorRange
+                                       colorSpace:(int32_t)colorSpace
+                                         colorTrc:(int32_t)colorTrc
+                                   colorPrimaries:(int32_t)colorPrimaries
+                                   aspectRatioNum:(int32_t)aspectRatioNum
+                                   aspectRatioDen:(int32_t)aspectRatioDen;
 
 @property (nonatomic, readonly) int32_t width;
 
 @property (nonatomic, readonly) int32_t height;
+
+@property (nonatomic, readonly) int32_t framerate;
 
 @property (nonatomic, readonly) int16_t pixelFormat;
 
 @property (nonatomic, readonly) int32_t rotation;
 
 @property (nonatomic, readonly) BOOL isTexture;
+
+/** ff field */
+@property (nonatomic, readonly) int32_t profile;
+
+@property (nonatomic, readonly) int32_t level;
+
+@property (nonatomic, readonly) int32_t colorRange;
+
+@property (nonatomic, readonly) int32_t colorSpace;
+
+@property (nonatomic, readonly) int32_t colorTrc;
+
+@property (nonatomic, readonly) int32_t colorPrimaries;
+
+/** aspect_ratio */
+@property (nonatomic, readonly) int32_t aspectRatioNum;
+
+@property (nonatomic, readonly) int32_t aspectRatioDen;
 
 @end
 

@@ -6,7 +6,12 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
-#import "QCombiner.h"
+#import "QSize.h"
+#import "QVec4f.h"
+#import "QMediaRange.h"
+#import "QMediaSegment.h"
+#import "QVideoRunloop.h"
+#import "QPlayerView.h"
 
 typedef NS_ENUM(NSInteger, QEditorPlayerState) {
     XMPlayerState_Idle = 0,
@@ -18,34 +23,63 @@ typedef NS_ENUM(NSInteger, QEditorPlayerState) {
     XMPlayerState_Error
 };
 
+@class QEditorPlayer;
+
 @protocol QEditorPlayerObserver <NSObject>
 @optional
 - (void)onPrepare;
-- (void)onPlayerChangedFromOldState:(NSNumber*)xmsOldState
-                         toNewState:(NSNumber*)xmsNewState;
+- (void)onPlayerChangedFromOldState:(nonnull QEditorPlayer*)player oldState:(int)xmsOldState
+                         toNewState:(int)xmsNewState;
 - (void)onPlayerTimeProgressUpdated:(NSNumber*)cgfTime;
-- (void)onPlayerSeekedTo:(NSNumber*)cgfTime;
-- (void)onCompleted;
+- (void)onPlayerSeekedTo:(nonnull QEditorPlayer*)player position:(int64_t)cgfTime;
+- (void)onStarted:(nonnull QEditorPlayer*)player;
+- (void)onStoped:(nonnull QEditorPlayer*)player;
+- (void)onCompleted:(nonnull QEditorPlayer*)player;
 @end
 
 
-@interface QEditorPlayer : QCombiner <QVideoRender ,QAudioRender>
+@interface QEditorPlayer : NSObject
 - (instancetype)initWithQueue:(dispatch_queue_t)cbQueue;
 
 @property (nonatomic, readonly) QEditorPlayerState state;
-@property (nonatomic, readonly) int64_t position;
-@property (nonatomic, readonly) BOOL isPaused;
-@property (nonatomic) BOOL loopPlay;
-@property (nonatomic, strong) id<QVideoTarget> playerView;
+@property (nonatomic, strong) QPlayerView* _Nullable playerView;
 
 - (void)addObserver:(id<QEditorPlayerObserver>)observer;
 - (void)removeObserver:(id<QEditorPlayerObserver>)observer;
 - (void)removeAllObservers;
 
-- (BOOL)start;
-- (BOOL)play;
-- (BOOL)pause;
-- (BOOL)stop;
-- (BOOL)seekTo:(CGFloat)timePoint :(int)flags;
+- (nullable QMediaSegment *)cresteMediaSegment:(nonnull NSString *)filename
+                                          flag:(int32_t)flag;
+
+- (BOOL)addMediaSegment:(nullable QMediaSegment *)segment;
+
+- (BOOL)removeMediaSegment:(nullable QMediaSegment *)segment;
+
+- (nonnull QMediaRange *)getTotalTimeRange;
+
+- (void)setDisplayLayerSize:(nonnull QSize *)size;
+
+- (nonnull QSize *)getDisplayLayerSize;
+
+- (void)setBkColor:(nonnull QVec4f *)color;
+
+- (nonnull QVec4f *)getBkColor;
+
+/** control */
+
+- (void)start;
+
+- (void)stop;
+
+- (int64_t)getPosition;
+
+- (void)play;
+
+- (void)pause;
+
+- (void)seek:(int64_t)timeMs
+        flag:(int32_t)flag;
+
+- (BOOL)isUserPaused;
 
 @end

@@ -32,37 +32,73 @@ int16_t const QVideoDescriptionFormatGlTexture = 104;
 
 - (nonnull instancetype)initWithWidth:(int32_t)width
                                height:(int32_t)height
+                            framerate:(int32_t)framerate
                           pixelFormat:(int16_t)pixelFormat
                              rotation:(int32_t)rotation
                             isTexture:(BOOL)isTexture
+                              profile:(int32_t)profile
+                                level:(int32_t)level
+                           colorRange:(int32_t)colorRange
+                           colorSpace:(int32_t)colorSpace
+                             colorTrc:(int32_t)colorTrc
+                       colorPrimaries:(int32_t)colorPrimaries
+                       aspectRatioNum:(int32_t)aspectRatioNum
+                       aspectRatioDen:(int32_t)aspectRatioDen
 {
     if (self = [super init]) {
         _width = width;
         _height = height;
+        _framerate = framerate;
         _pixelFormat = pixelFormat;
         _rotation = rotation;
         _isTexture = isTexture;
+        _profile = profile;
+        _level = level;
+        _colorRange = colorRange;
+        _colorSpace = colorSpace;
+        _colorTrc = colorTrc;
+        _colorPrimaries = colorPrimaries;
+        _aspectRatioNum = aspectRatioNum;
+        _aspectRatioDen = aspectRatioDen;
     }
     return self;
 }
 
 + (nonnull instancetype)videoDescriptionWithWidth:(int32_t)width
                                            height:(int32_t)height
+                                        framerate:(int32_t)framerate
                                       pixelFormat:(int16_t)pixelFormat
                                          rotation:(int32_t)rotation
                                         isTexture:(BOOL)isTexture
+                                          profile:(int32_t)profile
+                                            level:(int32_t)level
+                                       colorRange:(int32_t)colorRange
+                                       colorSpace:(int32_t)colorSpace
+                                         colorTrc:(int32_t)colorTrc
+                                   colorPrimaries:(int32_t)colorPrimaries
+                                   aspectRatioNum:(int32_t)aspectRatioNum
+                                   aspectRatioDen:(int32_t)aspectRatioDen
 {
     return [(QVideoDescription*)[self alloc] initWithWidth:width
                                                     height:height
+                                                 framerate:framerate
                                                pixelFormat:pixelFormat
                                                   rotation:rotation
-                                                 isTexture:isTexture];
+                                                 isTexture:isTexture
+                                                   profile:profile
+                                                     level:level
+                                                colorRange:colorRange
+                                                colorSpace:colorSpace
+                                                  colorTrc:colorTrc
+                                            colorPrimaries:colorPrimaries
+                                            aspectRatioNum:aspectRatioNum
+                                            aspectRatioDen:aspectRatioDen];
 }
 
 
 - (NSString *)description
 {
-    return [NSString stringWithFormat:@"<%@ %p width:%@ height:%@ pixelFormat:%@ rotation:%@ isTexture:%@>", self.class, (void *)self, @(self.width), @(self.height), @(self.pixelFormat), @(self.rotation), @(self.isTexture)];
+    return [NSString stringWithFormat:@"<%@ %p width:%@ height:%@ framerate:%@ pixelFormat:%@ rotation:%@ isTexture:%@ profile:%@ level:%@ colorRange:%@ colorSpace:%@ colorTrc:%@ colorPrimaries:%@ aspectRatioNum:%@ aspectRatioDen:%@>", self.class, (void *)self, @(self.width), @(self.height), @(self.framerate), @(self.pixelFormat), @(self.rotation), @(self.isTexture), @(self.profile), @(self.level), @(self.colorRange), @(self.colorSpace), @(self.colorTrc), @(self.colorPrimaries), @(self.aspectRatioNum), @(self.aspectRatioDen)];
 }
 
 @end

@@ -27,7 +27,7 @@ typedef NS_ENUM(NSInteger, QExporterRetCode) {
 /** export the media edite status to a output target .
  *  only support QFileExporterTarget to set QVideoTarget and QAudioTarget  now.
  */
-@interface QExporter : QCombiner <QVideoRender ,QAudioRender>
+@interface QExporter : QCombiner <QVideoRender2 ,QAudioRender2>
 
 - (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audioTarget:(id<QAudioTarget>)audioTarget;
 - (instancetype)initWithTarget:(id<QVideoTarget>)videoTarget audioTarget:(id<QAudioTarget>)audioTarget cbQueue:(dispatch_queue_t)cbQueue;

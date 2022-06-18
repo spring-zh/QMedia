@@ -15,18 +15,20 @@ class EditorExporterInternal {
 public:
     virtual ~EditorExporterInternal() {}
     /** error code */
-    static const int32_t E_STATE = -3;
+    static const int32_t E_STATE;
 
-    static const int32_t E_SYSTEM = -2;
+    static const int32_t E_SYSTEM;
 
-    static const int32_t UNKNOW = -1;
+    static const int32_t UNKNOW;
 
-    static const int32_t OK = 0;
+    static const int32_t OK;
 
 
     virtual std::shared_ptr<MediaSessionInternal> getSession() = 0;
 
     virtual void setCallback(const std::shared_ptr<EditorExporterCallback> & callback) = 0;
+
+    virtual int64_t getPosition() = 0;
 
     virtual void cancel() = 0;
 };

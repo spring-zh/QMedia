@@ -21,6 +21,8 @@ public:
     /** set audio output paramenters */
     static void config_audio_out(const AudioDescription & desc);
 
+    static AudioDescription audio_out();
+
     static std::shared_ptr<EditorPlayerInternal> create_editor_player_internal();
 
     static std::shared_ptr<EditorExporterInternal> create_editor_exporter_internal();

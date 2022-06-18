@@ -12,14 +12,8 @@ struct Size final {
     int64_t width;
     int64_t height;
 
-    bool operator==(const Size& rhs) {
-        return width == rhs.width &&
-               height == rhs.height;
-    }
-
-    bool operator!=(const Size& rhs) {
-        return !((*this) == rhs);
-    }
+    friend bool operator==(const Size& lhs, const Size& rhs);
+    friend bool operator!=(const Size& lhs, const Size& rhs);
 
     Size() {}
 

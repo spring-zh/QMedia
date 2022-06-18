@@ -4,21 +4,36 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <string>
 #include <vector>
 
 namespace QMedia { namespace Api {
 
+class AudioRenderNode;
+class VideoRenderNode;
+struct MediaRange;
 struct MediaStreamInfo;
-struct TimeRange;
 
 class MediaSegment {
 public:
     virtual ~MediaSegment() {}
+    static const int32_t FLAG_VIDEO;
+
+    static const int32_t FLAG_AUDIO;
+
+    static const int32_t FLAG_SUBTITLE;
+
+    static const int32_t FLAG_ALL;
+
+
+    virtual std::shared_ptr<VideoRenderNode> getVideo() = 0;
+
+    virtual std::shared_ptr<AudioRenderNode> getAudio() = 0;
 
     virtual std::vector<MediaStreamInfo> getMediaStreamInfo() = 0;
 
-    virtual void enable(int32_t stream_id) = 0;
+    virtual bool isValid() = 0;
 
     virtual std::string getFileName() = 0;
 
@@ -26,13 +41,13 @@ public:
 
     virtual float getTimescale() = 0;
 
-    virtual void setSourceRange(const TimeRange & range) = 0;
+    virtual void setSourceRange(const MediaRange & range) = 0;
 
-    virtual TimeRange getSourceRange() = 0;
+    virtual MediaRange getSourceRange() = 0;
 
-    virtual void setDisplayRange(const TimeRange & range) = 0;
+    virtual void setDisplayRange(const MediaRange & range) = 0;
 
-    virtual TimeRange getDisplayRange() = 0;
+    virtual MediaRange getDisplayRange() = 0;
 
     virtual int64_t getMediaDuration() = 0;
 };

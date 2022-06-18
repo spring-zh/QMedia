@@ -159,7 +159,7 @@ private:
     return ((VideoRender*)_exporter.get())->onVideoRender(wantTime);
 }
 
-- (void)setDisplayMode:(QDisplayMode)mode viewW:(int)viewW viewH:(int)viewH {
+- (void)setDisplayMode:(QDisplayMode2)mode viewW:(int)viewW viewH:(int)viewH {
     return ((VideoRender*)_exporter.get())->setDisplayMode((DisplayMode)mode, viewW, viewH);
 }
 

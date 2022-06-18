@@ -6,7 +6,7 @@
 
 static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for this file");
 
-@class QEditorExporterCallback;
+@protocol QEditorExporterCallback;
 
 namespace djinni_generated {
 
@@ -15,7 +15,7 @@ class EditorExporterCallback
 public:
     using CppType = std::shared_ptr<::QMedia::Api::EditorExporterCallback>;
     using CppOptType = std::shared_ptr<::QMedia::Api::EditorExporterCallback>;
-    using ObjcType = QEditorExporterCallback*;
+    using ObjcType = id<QEditorExporterCallback>;
 
     using Boxed = EditorExporterCallback;
 

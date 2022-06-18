@@ -1,30 +1,27 @@
-media_stream_info = record {
-    const media_unknow: i32 = 0;
-    const media_video: i32 = 1;
-    const media_audio: i32 = 2;
-
-    media_type: i32;
-    duration: i64;
-    gops: list<i64>;
-    audio_desc: optional<audio_description>;
-    video_desc: optional<video_description>;
-}
 
 media_segment = interface +c {
 
+    const flag_video : i32 = 1;
+    const flag_audio : i32 = 2;
+    const flag_subtitle : i32 = 4;
+    const flag_all : i32 = 7;
+
+    getVideo(): video_render_node;
+    getAudio(): audio_render_node;
+
     getMediaStreamInfo(): list<media_stream_info>;
-    enable(stream_id: i32);
+    isValid(): bool;
 
     getFileName(): string;
 
     setTimescale(time_scale : f32);
     getTimescale(): f32;
 
-    setSourceRange(range : time_range);
-    getSourceRange(): time_range;
+    setSourceRange(range : media_range);
+    getSourceRange(): media_range;
 
-    setDisplayRange(range : time_range);
-    getDisplayRange(): time_range;
+    setDisplayRange(range : media_range);
+    getDisplayRange(): media_range;
 
     getMediaDuration(): i64;
 }

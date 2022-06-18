@@ -4,7 +4,7 @@
 #import <Foundation/Foundation.h>
 
 
-@interface QEditorExporterCallback : NSObject
+@protocol QEditorExporterCallback
 
 - (void)onStarted:(int32_t)code;
 

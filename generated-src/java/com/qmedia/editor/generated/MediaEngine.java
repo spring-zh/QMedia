@@ -20,6 +20,12 @@ public interface MediaEngine {
         CppProxy.configAudioOut(desc);
     }
 
+    @NonNull
+    public static AudioDescription audioOut()
+    {
+        return CppProxy.audioOut();
+    }
+
     @Nullable
     public static EditorPlayerInternal createEditorPlayerInternal()
     {
@@ -59,6 +65,9 @@ public interface MediaEngine {
         public static native String version();
 
         public static native void configAudioOut(@NonNull AudioDescription desc);
+
+        @NonNull
+        public static native AudioDescription audioOut();
 
         @Nullable
         public static native EditorPlayerInternal createEditorPlayerInternal();

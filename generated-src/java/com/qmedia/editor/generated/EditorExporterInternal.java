@@ -22,6 +22,8 @@ public interface EditorExporterInternal {
 
     public void setCallback(@Nullable EditorExporterCallback callback);
 
+    public long getPosition();
+
     public void cancel();
 
     static final class CppProxy implements EditorExporterInternal
@@ -62,6 +64,14 @@ public interface EditorExporterInternal {
             native_setCallback(this.nativeRef, callback);
         }
         private native void native_setCallback(long _nativeRef, EditorExporterCallback callback);
+
+        @Override
+        public long getPosition()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getPosition(this.nativeRef);
+        }
+        private native long native_getPosition(long _nativeRef);
 
         @Override
         public void cancel()

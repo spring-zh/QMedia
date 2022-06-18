@@ -7,9 +7,15 @@
 //
 
 #import <UIKit/UIKit.h>
-#import "QVideoTarget.h"
+#import "QVideoRunloop.h"
 
-@interface QPlayerView : UIView <QVideoTarget>
+typedef NS_ENUM(NSInteger, QDisplayMode) {
+    ModeStretch = 0,
+    ModeAdaptive,
+    ModeClip
+};
+
+@interface QPlayerView : UIView <QVideoRunloop>
 
 - (void)setDisplayMode:(QDisplayMode)mode;
 - (bool)capturePicture:(NSString *)filePath;

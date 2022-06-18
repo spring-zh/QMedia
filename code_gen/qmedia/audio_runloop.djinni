@@ -1,0 +1,17 @@
+
+audio_render = interface + c {
+    # SetPlayer(player: audio_player);
+    OnPlayBuffer(buffer: object, size_need: i32, wantTime: i64): i32;
+}
+
+audio_runloop= interface +j +o {
+    setAudioRender(render: audio_render);
+    audioInit(desc: audio_description): bool;
+    audioStart(): bool;
+    audioStop();
+    audioPause(bpause: bool);
+    audioFlush();
+
+    setVolume(volume: f32);
+    getVolume(): f32;
+}

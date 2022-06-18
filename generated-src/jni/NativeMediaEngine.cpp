@@ -39,6 +39,15 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_MediaEngine_00024CppPro
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaEngine_00024CppProxy_audioOut(JNIEnv* jniEnv, jobject /*this*/)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE0(jniEnv);
+        auto r = ::QMedia::Api::MediaEngine::audio_out();
+        return ::djinni::release(::djinni_generated::NativeAudioDescription::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaEngine_00024CppProxy_createEditorPlayerInternal(JNIEnv* jniEnv, jobject /*this*/)
 {
     try {

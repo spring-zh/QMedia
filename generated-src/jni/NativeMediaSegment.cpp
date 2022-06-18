@@ -3,8 +3,10 @@
 
 #include "NativeMediaSegment.h"  // my header
 #include "Marshal.hpp"
+#include "NativeAudioRenderNode.h"
+#include "NativeMediaRange.h"
 #include "NativeMediaStreamInfo.h"
-#include "NativeTimeRange.h"
+#include "NativeVideoRenderNode.h"
 
 namespace djinni_generated {
 
@@ -21,6 +23,26 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppPr
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppProxy_native_1getVideo(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSegment>(nativeRef);
+        auto r = ref->getVideo();
+        return ::djinni::release(::djinni_generated::NativeVideoRenderNode::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppProxy_native_1getAudio(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSegment>(nativeRef);
+        auto r = ref->getAudio();
+        return ::djinni::release(::djinni_generated::NativeAudioRenderNode::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppProxy_native_1getMediaStreamInfo(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
@@ -31,13 +53,14 @@ CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024Cp
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppProxy_native_1enable(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_streamId)
+CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppProxy_native_1isValid(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSegment>(nativeRef);
-        ref->enable(::djinni::I32::toCpp(jniEnv, j_streamId));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+        auto r = ref->isValid();
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
 CJNIEXPORT jstring JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppProxy_native_1getFileName(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
@@ -74,7 +97,7 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppPr
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSegment>(nativeRef);
-        ref->setSourceRange(::djinni_generated::NativeTimeRange::toCpp(jniEnv, j_range));
+        ref->setSourceRange(::djinni_generated::NativeMediaRange::toCpp(jniEnv, j_range));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
@@ -84,7 +107,7 @@ CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024Cp
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSegment>(nativeRef);
         auto r = ref->getSourceRange();
-        return ::djinni::release(::djinni_generated::NativeTimeRange::fromCpp(jniEnv, r));
+        return ::djinni::release(::djinni_generated::NativeMediaRange::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
@@ -93,7 +116,7 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024CppPr
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSegment>(nativeRef);
-        ref->setDisplayRange(::djinni_generated::NativeTimeRange::toCpp(jniEnv, j_range));
+        ref->setDisplayRange(::djinni_generated::NativeMediaRange::toCpp(jniEnv, j_range));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
@@ -103,7 +126,7 @@ CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaSegment_00024Cp
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSegment>(nativeRef);
         auto r = ref->getDisplayRange();
-        return ::djinni::release(::djinni_generated::NativeTimeRange::fromCpp(jniEnv, r));
+        return ::djinni::release(::djinni_generated::NativeMediaRange::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

@@ -7,6 +7,8 @@
 //
 
 #import "QPlayerView.h"
+#import "QSize.h"
+#import "QVideoRender.h"
 
 #import "OpenGL/CCEAGLView-ios.h"
 #import "OpenGL/CCDirectorCaller-ios.h"
@@ -21,7 +23,7 @@
     NSString *_outpath;
     bool _bTakePicture;
     CCEAGLView *_objView;
-    QVideoDescribe* _describe;
+    __weak QVideoRender *_render;
     bool _bStart;
     bool _updateView;
     CGSize _viewSize;
@@ -53,7 +55,7 @@
     _targetSize.height = 0;
     _bStart = false;
     
-    _displayMode = DisplayStretch;
+    _displayMode = ModeStretch;
 }
 
 - (instancetype)initWithFrame:(CGRect)frame
@@ -83,7 +85,7 @@
 
 - (void)onCreate
 {
-    [_videoRender onVideoCreate];
+    [_render onViewCreate:_viewSize.width height:_viewSize.height];
 }
 
 - (void)onDrawFrame
@@ -92,7 +94,7 @@
     if (_bStart || _updateView) {
         _updateView = false;
 
-        [_videoRender onVideoRender:-1];
+        [_render onDraw:-1];
     }
     
     if (_bTakePicture) {
@@ -103,13 +105,13 @@
 
 - (void)onRelease
 {
-    [_videoRender onVideoDestroy];
+    [_render onViewDestroy];
 }
 
 - (void)setDisplayMode:(QDisplayMode)mode {
     _displayMode = mode;
-    if (_videoRender) {
-        [_videoRender setDisplayMode:mode viewW:_viewSize.width viewH:_viewSize.height];
+    if (_render) {
+        [_render setDisplayMode:mode width:_viewSize.width height:_viewSize.height];
     }
 }
 
@@ -141,8 +143,6 @@
 
 #pragma mask XMVideoTarget implementation
 
-@synthesize videoRender = _videoRender;
-
 - (bool)startVideo{
     _bStart = true;
     return true;
@@ -163,32 +163,33 @@
 //    _viewSize = [self bounds].size;
     _viewSize.width = _objView.getWidth;
     _viewSize.height = _objView.getHeight;
-    [_videoRender setDisplayMode:_displayMode viewW:_viewSize.width viewH:_viewSize.height];
+    [_render OnViewSizeChange:_viewSize.width height:_viewSize.height];
     _updateView = true;
 }
 
-- (bool)initVideo:(QVideoDescribe*)describe
-{
-//    _iosTexture = [[IOSFastTexture alloc] initWithContext:_objView.context size:CGSizeMake(describe.width, describe.height)];
-    _describe = describe;
-    _targetSize = CGSizeMake(describe.width, describe.height);
-    _updateView = true;
-    return true;
-}
-- (int)getWidth
-{
-    return _describe.width;
-}
-- (int)getHeight
-{
-    return _describe.height;
-}
-- (float)getFrameRate
-{
-    return _describe.framerate;
-}
 - (id)getContext{
     return _objView.context;
+}
+
+- (void)setVideoRender:(nullable QVideoRender *)render {
+    _render = render;
+}
+
+- (BOOL)start {
+    _bStart = true;
+    return true;
+}
+
+- (void)stop {
+    _bStart = false;
+}
+
+- (void)pause:(BOOL)isPause {
+    _bStart = !isPause;
+}
+
+- (void)forceUpdate {
+    _updateView = true;
 }
 
 @end

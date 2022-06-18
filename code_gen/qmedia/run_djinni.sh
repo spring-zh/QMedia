@@ -83,7 +83,7 @@ fi
     --objc-out "$temp_out/objc" \
     --objcpp-out "$temp_out/objc" \
     --objc-type-prefix Q \
-    --objc-swift-bridging-header "Q-Include-All" \
+    --objc-swift-bridging-header "QMedia-Include-All" \
     \
     --idl "$in"
 
@@ -103,8 +103,8 @@ mirror "java" "$temp_out/java" "$java_out"
 mirror "jni" "$temp_out/jni" "$jni_out"
 mirror "objc" "$temp_out/objc" "$objc_out"
 
-# copy djinni support-lib to mmc project
-echo "Copy djinni support-lib to mmc project directories..."
+# copy djinni support-lib to project
+echo "Copy djinni support-lib to project directories..."
 djinni_support_file_out="$qmedia_project_dirctory/djinni_support_file"
 djinni_support_file_src="$djinni_src_dirctory/support-lib"
 mirror "support-lib" "$djinni_support_file_src" "$djinni_support_file_out"

@@ -9,37 +9,42 @@ import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface MediaSessionInternal {
     @Nullable
-    public MediaSegment cresteMediaSegment(@NonNull String filename, int mode);
+    public MediaSegment cresteMediaSegment(@NonNull String filename, int flag);
 
     public boolean addMediaSegment(@Nullable MediaSegment segment);
 
     public boolean removeMediaSegment(@Nullable MediaSegment segment);
 
+    /** getSegments(): list<media_segment>; */
     @NonNull
-    public TimeRange getTotalTimeRange();
+    public MediaRange getTotalTimeRange();
+
+    @Nullable
+    public VideoRender getVideoRender();
+
+    @Nullable
+    public AudioRender getAudioRender();
+
+    public void setAudioRunLoop(@Nullable AudioRunloop audioLoop);
+
+    public void setVideoRunLoop(@Nullable VideoRunloop videoLoop);
 
     public void setDisplayLayerSize(@NonNull Size size);
 
     @NonNull
     public Size getDisplayLayerSize();
 
-    public void setBkColor(@NonNull Vec4 color);
+    public void setBkColor(@NonNull Vec4f color);
 
     @NonNull
-    public Vec4 getBkColor();
+    public Vec4f getBkColor();
 
     /** control */
+    public void prepare();
+
     public void start();
 
     public void stop();
-
-    public void pause();
-
-    public void resume();
-
-    public void seek(long timeMs, int flag);
-
-    public long getPosition();
 
     static final class CppProxy implements MediaSessionInternal
     {
@@ -65,12 +70,12 @@ public interface MediaSessionInternal {
         }
 
         @Override
-        public MediaSegment cresteMediaSegment(String filename, int mode)
+        public MediaSegment cresteMediaSegment(String filename, int flag)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            return native_cresteMediaSegment(this.nativeRef, filename, mode);
+            return native_cresteMediaSegment(this.nativeRef, filename, flag);
         }
-        private native MediaSegment native_cresteMediaSegment(long _nativeRef, String filename, int mode);
+        private native MediaSegment native_cresteMediaSegment(long _nativeRef, String filename, int flag);
 
         @Override
         public boolean addMediaSegment(MediaSegment segment)
@@ -89,12 +94,44 @@ public interface MediaSessionInternal {
         private native boolean native_removeMediaSegment(long _nativeRef, MediaSegment segment);
 
         @Override
-        public TimeRange getTotalTimeRange()
+        public MediaRange getTotalTimeRange()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             return native_getTotalTimeRange(this.nativeRef);
         }
-        private native TimeRange native_getTotalTimeRange(long _nativeRef);
+        private native MediaRange native_getTotalTimeRange(long _nativeRef);
+
+        @Override
+        public VideoRender getVideoRender()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getVideoRender(this.nativeRef);
+        }
+        private native VideoRender native_getVideoRender(long _nativeRef);
+
+        @Override
+        public AudioRender getAudioRender()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getAudioRender(this.nativeRef);
+        }
+        private native AudioRender native_getAudioRender(long _nativeRef);
+
+        @Override
+        public void setAudioRunLoop(AudioRunloop audioLoop)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setAudioRunLoop(this.nativeRef, audioLoop);
+        }
+        private native void native_setAudioRunLoop(long _nativeRef, AudioRunloop audioLoop);
+
+        @Override
+        public void setVideoRunLoop(VideoRunloop videoLoop)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setVideoRunLoop(this.nativeRef, videoLoop);
+        }
+        private native void native_setVideoRunLoop(long _nativeRef, VideoRunloop videoLoop);
 
         @Override
         public void setDisplayLayerSize(Size size)
@@ -113,20 +150,28 @@ public interface MediaSessionInternal {
         private native Size native_getDisplayLayerSize(long _nativeRef);
 
         @Override
-        public void setBkColor(Vec4 color)
+        public void setBkColor(Vec4f color)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             native_setBkColor(this.nativeRef, color);
         }
-        private native void native_setBkColor(long _nativeRef, Vec4 color);
+        private native void native_setBkColor(long _nativeRef, Vec4f color);
 
         @Override
-        public Vec4 getBkColor()
+        public Vec4f getBkColor()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             return native_getBkColor(this.nativeRef);
         }
-        private native Vec4 native_getBkColor(long _nativeRef);
+        private native Vec4f native_getBkColor(long _nativeRef);
+
+        @Override
+        public void prepare()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_prepare(this.nativeRef);
+        }
+        private native void native_prepare(long _nativeRef);
 
         @Override
         public void start()
@@ -143,37 +188,5 @@ public interface MediaSessionInternal {
             native_stop(this.nativeRef);
         }
         private native void native_stop(long _nativeRef);
-
-        @Override
-        public void pause()
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_pause(this.nativeRef);
-        }
-        private native void native_pause(long _nativeRef);
-
-        @Override
-        public void resume()
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_resume(this.nativeRef);
-        }
-        private native void native_resume(long _nativeRef);
-
-        @Override
-        public void seek(long timeMs, int flag)
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_seek(this.nativeRef, timeMs, flag);
-        }
-        private native void native_seek(long _nativeRef, long timeMs, int flag);
-
-        @Override
-        public long getPosition()
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            return native_getPosition(this.nativeRef);
-        }
-        private native long native_getPosition(long _nativeRef);
     }
 }

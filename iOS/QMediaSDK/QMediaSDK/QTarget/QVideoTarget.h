@@ -10,19 +10,19 @@
 #import <CoreGraphics/CoreGraphics.h>
 #import "QMediaDescribe.h"
 
-typedef NS_ENUM(NSInteger, QDisplayMode) {
+typedef NS_ENUM(NSInteger, QDisplayMode2) {
     DisplayStretch = 0,
     DisplayAdaptive,
     DisplayClip
 };
 
-@protocol QVideoRender <NSObject>
+@protocol QVideoRender2 <NSObject>
 @required
 - (bool)onVideoRender:(int64_t)wantTime;
 - (bool)onVideoCreate;
 - (void)onVideoDestroy;
 
-- (void)setDisplayMode:(QDisplayMode)mode viewW:(int)viewW viewH:(int)viewH;
+- (void)setDisplayMode:(QDisplayMode2)mode viewW:(int)viewW viewH:(int)viewH;
 @end
 
 @protocol QVideoTarget <NSObject>
@@ -38,6 +38,6 @@ typedef NS_ENUM(NSInteger, QDisplayMode) {
 - (float)getFrameRate;
 - (id)getContext;
 
-@property (nonatomic, weak) id<QVideoRender> videoRender;
+@property (nonatomic, weak) id<QVideoRender2> videoRender;
 
 @end

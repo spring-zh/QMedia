@@ -39,9 +39,36 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)setCallback:(nullable QEditorPlayerCallback *)callback {
+- (void)setCallback:(nullable id<QEditorPlayerCallback>)callback {
     try {
         _cppRefHandle.get()->setCallback(::djinni_generated::EditorPlayerCallback::toCpp(callback));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (int64_t)getPosition {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getPosition();
+        return ::djinni::I64::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)play {
+    try {
+        _cppRefHandle.get()->play();
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)pause {
+    try {
+        _cppRefHandle.get()->pause();
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)seek:(int64_t)timeMs
+        flag:(int32_t)flag {
+    try {
+        _cppRefHandle.get()->seek(::djinni::I64::toCpp(timeMs),
+                                  ::djinni::I32::toCpp(flag));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -49,6 +76,13 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     try {
         auto objcpp_result_ = _cppRefHandle.get()->isUserPaused();
         return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (int32_t)getState {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getState();
+        return ::djinni::I32::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

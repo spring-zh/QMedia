@@ -27,6 +27,28 @@ private:
     friend ::djinni::JniClass<NativeEditorExporterCallback>;
     friend ::djinni::JniInterface<::QMedia::Api::EditorExporterCallback, NativeEditorExporterCallback>;
 
+    class JavaProxy final : ::djinni::JavaProxyHandle<JavaProxy>, public ::QMedia::Api::EditorExporterCallback
+    {
+    public:
+        JavaProxy(JniType j);
+        ~JavaProxy();
+
+        void onStarted(int32_t code) override;
+        void onStoped(int32_t code) override;
+        void onProgressUpdated(int64_t time_ms) override;
+        void onCanceled(int32_t code) override;
+        void onCompleted() override;
+
+    private:
+        friend ::djinni::JniInterface<::QMedia::Api::EditorExporterCallback, ::djinni_generated::NativeEditorExporterCallback>;
+    };
+
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/qmedia/editor/generated/EditorExporterCallback") };
+    const jmethodID method_onStarted { ::djinni::jniGetMethodID(clazz.get(), "onStarted", "(I)V") };
+    const jmethodID method_onStoped { ::djinni::jniGetMethodID(clazz.get(), "onStoped", "(I)V") };
+    const jmethodID method_onProgressUpdated { ::djinni::jniGetMethodID(clazz.get(), "onProgressUpdated", "(J)V") };
+    const jmethodID method_onCanceled { ::djinni::jniGetMethodID(clazz.get(), "onCanceled", "(I)V") };
+    const jmethodID method_onCompleted { ::djinni::jniGetMethodID(clazz.get(), "onCompleted", "()V") };
 };
 
 }  // namespace djinni_generated

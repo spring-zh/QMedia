@@ -14,6 +14,8 @@
 /** set audio output paramenters */
 + (void)configAudioOut:(nonnull QAudioDescription *)desc;
 
++ (nonnull QAudioDescription *)audioOut;
+
 + (nullable QEditorPlayerInternal *)createEditorPlayerInternal;
 
 + (nullable QEditorExporterInternal *)createEditorExporterInternal;

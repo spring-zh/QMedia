@@ -40,6 +40,44 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerInternal_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jlong JNICALL Java_com_qmedia_editor_generated_EditorPlayerInternal_00024CppProxy_native_1getPosition(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerInternal>(nativeRef);
+        auto r = ref->getPosition();
+        return ::djinni::release(::djinni::I64::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerInternal_00024CppProxy_native_1play(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerInternal>(nativeRef);
+        ref->play();
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerInternal_00024CppProxy_native_1pause(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerInternal>(nativeRef);
+        ref->pause();
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorPlayerInternal_00024CppProxy_native_1seek(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jlong j_timeMs, jint j_flag)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerInternal>(nativeRef);
+        ref->seek(::djinni::I64::toCpp(jniEnv, j_timeMs),
+                  ::djinni::I32::toCpp(jniEnv, j_flag));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
 CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_EditorPlayerInternal_00024CppProxy_native_1isUserPaused(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
@@ -47,6 +85,16 @@ CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_EditorPlayerInterna
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerInternal>(nativeRef);
         auto r = ref->isUserPaused();
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT jint JNICALL Java_com_qmedia_editor_generated_EditorPlayerInternal_00024CppProxy_native_1getState(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorPlayerInternal>(nativeRef);
+        auto r = ref->getState();
+        return ::djinni::release(::djinni::I32::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 

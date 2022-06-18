@@ -9,49 +9,78 @@
 namespace QMedia { namespace Api {
 
 struct VideoDescription final {
-    static const int16_t FORMAT_UNKNOW = -1;
+    static const int16_t FORMAT_UNKNOW;
 
-    static const int16_t FORMAT_I420 = 0;
+    static const int16_t FORMAT_I420;
 
-    static const int16_t FORMAT_YV12 = 1;
+    static const int16_t FORMAT_YV12;
 
-    static const int16_t FORMAT_NV12 = 2;
+    static const int16_t FORMAT_NV12;
 
-    static const int16_t FORMAT_NV21 = 3;
+    static const int16_t FORMAT_NV21;
 
-    static const int16_t FORMAT_RGBA = 4;
+    static const int16_t FORMAT_RGBA;
 
-    static const int16_t FORMAT_BGRA = 5;
+    static const int16_t FORMAT_BGRA;
 
     /**platform formats */
-    static const int16_t FORMAT_SURFACETEXTURE = 100;
+    static const int16_t FORMAT_SURFACETEXTURE;
 
-    static const int16_t FORMAT_CVPIXELBUFFER = 101;
+    static const int16_t FORMAT_CVPIXELBUFFER;
 
-    static const int16_t FORMAT_MEDIACODECBUFFER = 102;
+    static const int16_t FORMAT_MEDIACODECBUFFER;
 
-    static const int16_t FORMAT_OESTEXTURE = 103;
+    static const int16_t FORMAT_OESTEXTURE;
 
-    static const int16_t FORMAT_GLTEXTURE = 104;
+    static const int16_t FORMAT_GLTEXTURE;
 
     int32_t width;
     int32_t height;
+    int32_t framerate;
     int16_t pixel_format;
     int32_t rotation;
     bool is_texture;
+    /** ff field */
+    int32_t profile;
+    int32_t level;
+    int32_t color_range;
+    int32_t color_space;
+    int32_t color_trc;
+    int32_t color_primaries;
+    /** aspect_ratio */
+    int32_t aspect_ratio_num;
+    int32_t aspect_ratio_den;
 
     VideoDescription() {}
 
     VideoDescription(int32_t width_,
                      int32_t height_,
+                     int32_t framerate_,
                      int16_t pixel_format_,
                      int32_t rotation_,
-                     bool is_texture_)
+                     bool is_texture_,
+                     int32_t profile_,
+                     int32_t level_,
+                     int32_t color_range_,
+                     int32_t color_space_,
+                     int32_t color_trc_,
+                     int32_t color_primaries_,
+                     int32_t aspect_ratio_num_,
+                     int32_t aspect_ratio_den_)
     : width(std::move(width_))
     , height(std::move(height_))
+    , framerate(std::move(framerate_))
     , pixel_format(std::move(pixel_format_))
     , rotation(std::move(rotation_))
     , is_texture(std::move(is_texture_))
+    , profile(std::move(profile_))
+    , level(std::move(level_))
+    , color_range(std::move(color_range_))
+    , color_space(std::move(color_space_))
+    , color_trc(std::move(color_trc_))
+    , color_primaries(std::move(color_primaries_))
+    , aspect_ratio_num(std::move(aspect_ratio_num_))
+    , aspect_ratio_den(std::move(aspect_ratio_den_))
     {}
 };
 

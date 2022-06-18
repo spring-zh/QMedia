@@ -7,22 +7,17 @@
 //
 
 #import <Foundation/Foundation.h>
-#import "QAudioTarget.h"
+#import "QAudioRunloop.h"
+#import "QAudioRender.h"
 
-@interface QAudioPlayer : NSObject <QAudioTarget>
-- (bool)initAudio:(QAudioDescribe*)describe;
-- (void)unInitAudio;
-- (bool)startAudio;
-- (bool)stopAudio;
-- (void)pauseAudio;
-- (void)resumeAudio;
-- (void)flushAudio;
-- (void)setVolume:(float)volume;
-- (float)getVolume;
-- (int)getSampleRate;
-- (int)getChannels;
-- (QRawAudioFormat)getFormat;
+@interface AudioInputBuffer : NSObject
+@property (nonatomic, readonly) uint8_t* audio_data;
+@property (nonatomic, readonly) int audio_size;
+@end
+
+@interface QAudioPlayer : NSObject <QAudioRunloop>
 
 @property (nonatomic) int audioDelay;
+- (QAudioRender*)getRender;
 
 @end

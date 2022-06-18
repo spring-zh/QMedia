@@ -9,43 +9,50 @@
 
 namespace QMedia { namespace Api {
 
+class AudioRender;
+class AudioRunloop;
 class MediaSegment;
+class VideoRender;
+class VideoRunloop;
+struct MediaRange;
 struct Size;
-struct TimeRange;
-struct Vec4;
+struct Vec4f;
 
 class MediaSessionInternal {
 public:
     virtual ~MediaSessionInternal() {}
 
-    virtual std::shared_ptr<MediaSegment> cresteMediaSegment(const std::string & filename, int32_t mode) = 0;
+    virtual std::shared_ptr<MediaSegment> cresteMediaSegment(const std::string & filename, int32_t flag) = 0;
 
     virtual bool addMediaSegment(const std::shared_ptr<MediaSegment> & segment) = 0;
 
     virtual bool removeMediaSegment(const std::shared_ptr<MediaSegment> & segment) = 0;
 
-    virtual TimeRange getTotalTimeRange() = 0;
+    /** getSegments(): list<media_segment>; */
+    virtual MediaRange getTotalTimeRange() = 0;
+
+    virtual std::shared_ptr<VideoRender> getVideoRender() = 0;
+
+    virtual std::shared_ptr<AudioRender> getAudioRender() = 0;
+
+    virtual void setAudioRunLoop(const std::shared_ptr<AudioRunloop> & audio_loop) = 0;
+
+    virtual void setVideoRunLoop(const std::shared_ptr<VideoRunloop> & video_loop) = 0;
 
     virtual void setDisplayLayerSize(const Size & size) = 0;
 
     virtual Size getDisplayLayerSize() = 0;
 
-    virtual void setBkColor(const Vec4 & color) = 0;
+    virtual void setBkColor(const Vec4f & color) = 0;
 
-    virtual Vec4 getBkColor() = 0;
+    virtual Vec4f getBkColor() = 0;
 
     /** control */
+    virtual void prepare() = 0;
+
     virtual void start() = 0;
 
     virtual void stop() = 0;
-
-    virtual void pause() = 0;
-
-    virtual void resume() = 0;
-
-    virtual void seek(int64_t time_ms, int32_t flag) = 0;
-
-    virtual int64_t getPosition() = 0;
 };
 
 } }  // namespace QMedia::Api

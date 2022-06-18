@@ -15,7 +15,7 @@
 #include "MediaGraphicChannel.h"
 #include "MediaAudioChannel.h"
 
-#include "sequentail/SequentailDecoder.h"
+#include "SegmentDecoder.h"
 
 class MediaSupervisor {
 public:

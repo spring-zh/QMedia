@@ -15,22 +15,40 @@ auto NativeVideoDescription::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djin
     auto r = ::djinni::LocalRef<JniType>{jniEnv->NewObject(data.clazz.get(), data.jconstructor,
                                                            ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.width)),
                                                            ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.height)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.framerate)),
                                                            ::djinni::get(::djinni::I16::fromCpp(jniEnv, c.pixel_format)),
                                                            ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.rotation)),
-                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.is_texture)))};
+                                                           ::djinni::get(::djinni::Bool::fromCpp(jniEnv, c.is_texture)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.profile)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.level)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.color_range)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.color_space)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.color_trc)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.color_primaries)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.aspect_ratio_num)),
+                                                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c.aspect_ratio_den)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
 
 auto NativeVideoDescription::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
-    ::djinni::JniLocalScope jscope(jniEnv, 6);
+    ::djinni::JniLocalScope jscope(jniEnv, 15);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativeVideoDescription>::get();
     return {::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mWidth)),
             ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mHeight)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mFramerate)),
             ::djinni::I16::toCpp(jniEnv, jniEnv->GetShortField(j, data.field_mPixelFormat)),
             ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mRotation)),
-            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mIsTexture))};
+            ::djinni::Bool::toCpp(jniEnv, jniEnv->GetBooleanField(j, data.field_mIsTexture)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mProfile)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mLevel)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mColorRange)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mColorSpace)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mColorTrc)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mColorPrimaries)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mAspectRatioNum)),
+            ::djinni::I32::toCpp(jniEnv, jniEnv->GetIntField(j, data.field_mAspectRatioDen))};
 }
 
 }  // namespace djinni_generated

@@ -4,7 +4,9 @@
 #import <Foundation/Foundation.h>
 
 
-@interface QEditorPlayerCallback : NSObject
+@protocol QEditorPlayerCallback
+
+- (void)onPrepare:(int32_t)code;
 
 - (void)onStarted:(int32_t)code;
 

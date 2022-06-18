@@ -17,6 +17,9 @@
 
 class VideoFrameDrawer{
 public:
+    static VideoFrameDrawer* createVideoFrameDrawer(RawVideoFormat pixel_format);
+    
+    VideoFrameDrawer():_videoTarget(nullptr) {}
     VideoFrameDrawer(const VideoTarget *videoTarget):_videoTarget(videoTarget) {}
     virtual ~VideoFrameDrawer(){}
 

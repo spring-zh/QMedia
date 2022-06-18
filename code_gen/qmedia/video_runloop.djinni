@@ -1,0 +1,17 @@
+
+video_render = interface + c {
+    setDisplayMode(mode:i32, width: i32, height: i32);
+    OnViewSizeChange(width: i32, height: i32);
+    onViewCreate(width: i32, height: i32);
+    onDraw(pirv: i64): bool;
+    onViewDestroy();
+}
+
+video_runloop = interface +j +o {
+    setVideoRender(render: video_render);
+    start(): bool;
+    stop();
+    pause(isPause: bool);
+
+    forceUpdate();
+}

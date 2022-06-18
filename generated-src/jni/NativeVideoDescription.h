@@ -25,12 +25,21 @@ private:
     friend ::djinni::JniClass<NativeVideoDescription>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/qmedia/editor/generated/VideoDescription") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(IISIZ)V") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(IIISIZIIIIIIII)V") };
     const jfieldID field_mWidth { ::djinni::jniGetFieldID(clazz.get(), "mWidth", "I") };
     const jfieldID field_mHeight { ::djinni::jniGetFieldID(clazz.get(), "mHeight", "I") };
+    const jfieldID field_mFramerate { ::djinni::jniGetFieldID(clazz.get(), "mFramerate", "I") };
     const jfieldID field_mPixelFormat { ::djinni::jniGetFieldID(clazz.get(), "mPixelFormat", "S") };
     const jfieldID field_mRotation { ::djinni::jniGetFieldID(clazz.get(), "mRotation", "I") };
     const jfieldID field_mIsTexture { ::djinni::jniGetFieldID(clazz.get(), "mIsTexture", "Z") };
+    const jfieldID field_mProfile { ::djinni::jniGetFieldID(clazz.get(), "mProfile", "I") };
+    const jfieldID field_mLevel { ::djinni::jniGetFieldID(clazz.get(), "mLevel", "I") };
+    const jfieldID field_mColorRange { ::djinni::jniGetFieldID(clazz.get(), "mColorRange", "I") };
+    const jfieldID field_mColorSpace { ::djinni::jniGetFieldID(clazz.get(), "mColorSpace", "I") };
+    const jfieldID field_mColorTrc { ::djinni::jniGetFieldID(clazz.get(), "mColorTrc", "I") };
+    const jfieldID field_mColorPrimaries { ::djinni::jniGetFieldID(clazz.get(), "mColorPrimaries", "I") };
+    const jfieldID field_mAspectRatioNum { ::djinni::jniGetFieldID(clazz.get(), "mAspectRatioNum", "I") };
+    const jfieldID field_mAspectRatioDen { ::djinni::jniGetFieldID(clazz.get(), "mAspectRatioDen", "I") };
 };
 
 }  // namespace djinni_generated

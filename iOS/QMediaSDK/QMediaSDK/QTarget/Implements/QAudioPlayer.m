@@ -11,23 +11,32 @@
 #include <AudioToolbox/AudioQueue.h>
 
 #define AudioQueueNumberBuffers (4)
-const int REQUEST_SAMPLE_POINTS = 512;
-const int audio_delay = REQUEST_SAMPLE_POINTS * 2;
+static const int REQUEST_SAMPLE_POINTS = 512;
+static const int audio_delay = REQUEST_SAMPLE_POINTS * 2;
 
-static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
-    QAudioPlayer *audioPlayer = (__bridge QAudioPlayer *)(inUserData);
-    id<QAudioRender> audioRender = audioPlayer.audioRender;
-    if (audioRender != nil)
-    {
-        [audioRender onAudioRender:(uint8_t * const)inBuffer->mAudioData needBytes:inBuffer->mAudioDataByteSize wantTime:-1];
+@implementation AudioInputBuffer
+
+@synthesize audio_data = _audio_data;
+@synthesize audio_size = _audio_size;
+
+- (instancetype)initWith:(uint8_t*)data size:(int)data_size {
+    if (self = [super init]) {
+        _audio_data = data;
+        _audio_size = data_size;
     }
-    
-    AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
+    return self;
 }
 
+- (void)update:(uint8_t*)data size:(int)data_size {
+    _audio_data = data;
+    _audio_size = data_size;
+
+}
+
+@end
 
 @interface QAudioPlayer () {
-    
+    __weak QAudioRender* _render;
     AudioQueueRef _audioQueueRef;
     AudioQueueBufferRef _audioQueueBufferRefArray[AudioQueueNumberBuffers];
     bool _isInit;
@@ -36,12 +45,30 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
     int _sizebyte;
     int _bytePreSamplePoint;
     float _volume;
-    QAudioDescribe* _describe;
+
+    QAudioDescription *_description;
 }
+
+@property (nonatomic, readonly) AudioInputBuffer* buffer;
 
 @end
 
+static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
+    QAudioPlayer *audioPlayer = (__bridge QAudioPlayer *)(inUserData);
+    QAudioRender* audioRender = [audioPlayer getRender];
+    if (audioRender != nil)
+    {
+//        [audioRender onAudioRender:(uint8_t * const)inBuffer->mAudioData needBytes:inBuffer->mAudioDataByteSize wantTime:-1];
+        [audioPlayer.buffer update:inBuffer->mAudioData size:(NSUInteger)inBuffer->mAudioDataByteSize];
+        [audioRender OnPlayBuffer:audioPlayer.buffer sizeNeed:inBuffer->mAudioDataByteSize wantTime:-1];
+    }
+    
+    AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
+}
+
 @implementation QAudioPlayer
+
+@synthesize buffer = _buffer;
 
 - (instancetype)init
 {
@@ -51,46 +78,60 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
         _isPaused = true;
         _isStopped = true;
         _volume = 1.0f;
-        _describe = nil;
+        _description = nil;
+        _buffer = [AudioInputBuffer new];
     }
     return self;
 }
 
 - (void)dealloc
 {
-    [self unInitAudio];
+    [self audioUnInit];
     NSLog(@"XMAudioPlayer dealloc %@", [NSThread currentThread]);
 }
 
-@synthesize audioRender = _audioRender;
+- (void)setAudioDelay:(int)audioDelay {
+    //TODO: change audio target's delay
+}
+- (int)audioDelay {
+    return audio_delay;
+}
 
-- (bool)initAudio:(QAudioDescribe*)describe{
+- (QAudioRender*)getRender {
+    return _render;
+}
+
+- (void)setAudioRender:(nullable QAudioRender *)render {
+    _render = render;
+}
+
+- (BOOL)audioInit:(nonnull QAudioDescription *)desc {
     if (_isInit) {
         return true;
     }
+
+    _description = desc;
     
-    _describe = describe;
-    
-    _describe.rawFormat = QRawAudioFormatS16;
+//    _description.smapleFormat = QAudioDescriptionFormatS16;
 
     /* Get the current format */
-    AudioStreamBasicDescription desc;
+    AudioStreamBasicDescription audio_desc;
     
-    desc.mSampleRate = _describe.samplerate;
-    desc.mFormatID = kAudioFormatLinearPCM;
-    desc.mFormatFlags = kLinearPCMFormatFlagIsPacked;
-    desc.mChannelsPerFrame = _describe.nchannel;
-    desc.mFramesPerPacket = 1;
+    audio_desc.mSampleRate = _description.sampleRate;
+    audio_desc.mFormatID = kAudioFormatLinearPCM;
+    audio_desc.mFormatFlags = kLinearPCMFormatFlagIsPacked;
+    audio_desc.mChannelsPerFrame = _description.nchannel;
+    audio_desc.mFramesPerPacket = 1;
     
-    desc.mBitsPerChannel = 16;
-    desc.mFormatFlags |= kLinearPCMFormatFlagIsSignedInteger;
+    audio_desc.mBitsPerChannel = 16;
+    audio_desc.mFormatFlags |= kLinearPCMFormatFlagIsSignedInteger;
     
-    desc.mBytesPerFrame = desc.mBitsPerChannel * desc.mChannelsPerFrame / 8;
-    desc.mBytesPerPacket = desc.mBytesPerFrame * desc.mFramesPerPacket;
+    audio_desc.mBytesPerFrame = audio_desc.mBitsPerChannel * audio_desc.mChannelsPerFrame / 8;
+    audio_desc.mBytesPerPacket = audio_desc.mBytesPerFrame * audio_desc.mFramesPerPacket;
     
     /* Set the desired format */
     AudioQueueRef audioQueueRef;
-    OSStatus status = AudioQueueNewOutput(&desc,
+    OSStatus status = AudioQueueNewOutput(&audio_desc,
                                           AudioQueueOuptutCallback,
                                           (__bridge void*)self,
                                           NULL,
@@ -101,16 +142,16 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
         NSLog(@"AudioQueue: AudioQueueNewOutput failed (%d)\n", (int)status);
         return false;
     }
-
+    NSLog(@"audioInit 111");
     UInt32 propValue = 1;
     AudioQueueSetProperty(audioQueueRef, kAudioQueueProperty_EnableTimePitch, &propValue, sizeof(propValue));
     propValue = 1;
     AudioQueueSetProperty(_audioQueueRef, kAudioQueueProperty_TimePitchBypass, &propValue, sizeof(propValue));
     propValue = kAudioQueueTimePitchAlgorithm_Spectral;
     AudioQueueSetProperty(_audioQueueRef, kAudioQueueProperty_TimePitchAlgorithm, &propValue, sizeof(propValue));
-    
+    NSLog(@"audioInit 222");
     _audioQueueRef = audioQueueRef;
-    _bytePreSamplePoint = desc.mChannelsPerFrame * desc.mBitsPerChannel/8;
+    _bytePreSamplePoint = audio_desc.mChannelsPerFrame * audio_desc.mBitsPerChannel/8;
     _sizebyte = REQUEST_SAMPLE_POINTS * _bytePreSamplePoint;
     for (int i = 0;i < AudioQueueNumberBuffers; i++)
     {
@@ -119,15 +160,14 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
         memset(_audioQueueBufferRefArray[i]->mAudioData, 0, _sizebyte);
         AudioQueueEnqueueBuffer(audioQueueRef, _audioQueueBufferRefArray[i], 0, NULL);
     }
-    
+    NSLog(@"audioInit 333");
     _isInit = true;
     return true;
 }
 
-- (void)unInitAudio {
-    if (_isInit)
-    {
-        [self stopAudio];
+- (void)audioUnInit {
+    if (_isInit) {
+        [self audioStop];
         
         NSLog(@"AudioQueueDispose");
         AudioQueueDispose(_audioQueueRef, false);
@@ -139,7 +179,7 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
     }
 }
 
-- (bool)startAudio {
+- (BOOL)audioStart {
     if (!_isInit) {
         return false;
     }
@@ -160,34 +200,33 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
     
     return (status == noErr);
 }
-- (bool)stopAudio {
-    if(!_isInit)
-        return false;
-    NSLog(@"Audio Render Stop Entener...");
-    AudioQueueStop(_audioQueueRef, true);
-    _isStopped = true;
-    return true;
-}
-- (void)pauseAudio {
-    if (!_audioQueueRef)
-        return;
-    
-    if (_isStopped)
-        return;
-    
-    _isPaused = YES;
-    OSStatus status = AudioQueuePause(_audioQueueRef);
-    if (status != noErr)
-        NSLog(@"AudioQueue: AudioQueuePause failed (%d)\n", (int)status);
-}
 
-- (void)resumeAudio {
-    if(_isPaused){
-        [self startAudio];
+- (void)audioStop {
+    if (_isInit) {
+        NSLog(@"Audio Render Stop Entener...");
+        AudioQueueStop(_audioQueueRef, true);
+        _isStopped = true;
     }
 }
 
-- (void)flushAudio {
+- (void)audioPause:(BOOL)bpause {
+    if (bpause) {
+        if (!_audioQueueRef) return;
+        
+        if (_isStopped) return;
+        
+        _isPaused = YES;
+        OSStatus status = AudioQueuePause(_audioQueueRef);
+        if (status != noErr)
+            NSLog(@"AudioQueue: AudioQueuePause failed (%d)\n", (int)status);
+    } else {
+        if(_isPaused){
+            [self audioStart];
+        }
+    }
+}
+
+- (void)audioFlush {
     if (!_audioQueueRef)
         return;
     
@@ -197,8 +236,7 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
     AudioQueueFlush(_audioQueueRef);
 }
 
-- (void)setVolume:(float)volume
-{
+- (void)setVolume:(float)volume {
     if (!_audioQueueRef)
         return;
     
@@ -215,27 +253,6 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
 
 - (float)getVolume {
     return _volume;
-}
-
-- (int)getChannels {
-    return _describe.nchannel;
-}
-
-
-- (QRawAudioFormat)getFormat {
-    return _describe.rawFormat;
-}
-
-
-- (int)getSampleRate {
-    return _describe.samplerate;
-}
-
-- (void)setAudioDelay:(int)audioDelay {
-    //TODO: change audio target's delay
-}
-- (int)audioDelay {
-    return audio_delay;
 }
 
 @end

@@ -40,6 +40,16 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jlong JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_00024CppProxy_native_1getPosition(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorExporterInternal>(nativeRef);
+        auto r = ref->getPosition();
+        return ::djinni::release(::djinni::I64::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_00024CppProxy_native_1cancel(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {

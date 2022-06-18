@@ -189,7 +189,7 @@ EffectCombiner::RetCode EffectCombiner::_prepare()
     //FIXME: defualt dispaylayer's contentsize will set by target' size
     if (_videoTarget) _videoTarget->init(_videoConfig);
     if (_audioTarget) _audioTarget->init(_audioConfig);
-    _audioClock.init(_audioTarget);
+//xxx    _audioClock.init(_audioTarget);
     
     //TODO: start all media tracks
     _bAudioCompleted = _bVideoCompleted = false;

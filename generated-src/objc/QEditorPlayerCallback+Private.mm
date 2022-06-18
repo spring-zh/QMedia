@@ -3,70 +3,67 @@
 
 #import "QEditorPlayerCallback+Private.h"
 #import "QEditorPlayerCallback.h"
-#import "DJICppWrapperCache+Private.h"
-#import "DJIError.h"
 #import "DJIMarshal+Private.h"
-#include <exception>
+#import "DJIObjcWrapperCache+Private.h"
 #include <stdexcept>
-#include <utility>
 
 static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for this file");
 
-@interface QEditorPlayerCallback ()
+namespace djinni_generated {
 
-- (id)initWithCpp:(const std::shared_ptr<::QMedia::Api::EditorPlayerCallback>&)cppRef;
-
-@end
-
-@implementation QEditorPlayerCallback {
-    ::djinni::CppProxyCache::Handle<std::shared_ptr<::QMedia::Api::EditorPlayerCallback>> _cppRefHandle;
-}
-
-- (id)initWithCpp:(const std::shared_ptr<::QMedia::Api::EditorPlayerCallback>&)cppRef
+class EditorPlayerCallback::ObjcProxy final
+: public ::QMedia::Api::EditorPlayerCallback
+, private ::djinni::ObjcProxyBase<ObjcType>
 {
-    if (self = [super init]) {
-        _cppRefHandle.assign(cppRef);
+    friend class ::djinni_generated::EditorPlayerCallback;
+public:
+    using ObjcProxyBase::ObjcProxyBase;
+    void onPrepare(int32_t c_code) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onPrepare:(::djinni::I32::fromCpp(c_code))];
+        }
     }
-    return self;
-}
+    void onStarted(int32_t c_code) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onStarted:(::djinni::I32::fromCpp(c_code))];
+        }
+    }
+    void onStoped(int32_t c_code) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onStoped:(::djinni::I32::fromCpp(c_code))];
+        }
+    }
+    void onSeekTo(int64_t c_time_ms) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onSeekTo:(::djinni::I64::fromCpp(c_time_ms))];
+        }
+    }
+    void onProgressUpdated(int64_t c_time_ms) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onProgressUpdated:(::djinni::I64::fromCpp(c_time_ms))];
+        }
+    }
+    void onPlayerStateChanged(int32_t c_new_state, int32_t c_old_state) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onPlayerStateChanged:(::djinni::I32::fromCpp(c_new_state))
+                                                                  oldState:(::djinni::I32::fromCpp(c_old_state))];
+        }
+    }
+    void onCompleted() override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onCompleted];
+        }
+    }
+};
 
-- (void)onStarted:(int32_t)code {
-    try {
-        _cppRefHandle.get()->onStarted(::djinni::I32::toCpp(code));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)onStoped:(int32_t)code {
-    try {
-        _cppRefHandle.get()->onStoped(::djinni::I32::toCpp(code));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)onSeekTo:(int64_t)timeMs {
-    try {
-        _cppRefHandle.get()->onSeekTo(::djinni::I64::toCpp(timeMs));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)onProgressUpdated:(int64_t)timeMs {
-    try {
-        _cppRefHandle.get()->onProgressUpdated(::djinni::I64::toCpp(timeMs));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)onPlayerStateChanged:(int32_t)newState
-                    oldState:(int32_t)oldState {
-    try {
-        _cppRefHandle.get()->onPlayerStateChanged(::djinni::I32::toCpp(newState),
-                                                  ::djinni::I32::toCpp(oldState));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)onCompleted {
-    try {
-        _cppRefHandle.get()->onCompleted();
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
+}  // namespace djinni_generated
 
 namespace djinni_generated {
 
@@ -75,7 +72,7 @@ auto EditorPlayerCallback::toCpp(ObjcType objc) -> CppType
     if (!objc) {
         return nullptr;
     }
-    return objc->_cppRefHandle.get();
+    return ::djinni::get_objc_proxy<ObjcProxy>(objc);
 }
 
 auto EditorPlayerCallback::fromCppOpt(const CppOptType& cpp) -> ObjcType
@@ -83,9 +80,7 @@ auto EditorPlayerCallback::fromCppOpt(const CppOptType& cpp) -> ObjcType
     if (!cpp) {
         return nil;
     }
-    return ::djinni::get_cpp_proxy<QEditorPlayerCallback>(cpp);
+    return dynamic_cast<ObjcProxy&>(*cpp).djinni_private_get_proxied_objc_object();
 }
 
 }  // namespace djinni_generated
-
-@end

@@ -38,23 +38,59 @@ public class VideoDescription {
 
     /*package*/ final int mHeight;
 
+    /*package*/ final int mFramerate;
+
     /*package*/ final short mPixelFormat;
 
     /*package*/ final int mRotation;
 
     /*package*/ final boolean mIsTexture;
 
+    /*package*/ final int mProfile;
+
+    /*package*/ final int mLevel;
+
+    /*package*/ final int mColorRange;
+
+    /*package*/ final int mColorSpace;
+
+    /*package*/ final int mColorTrc;
+
+    /*package*/ final int mColorPrimaries;
+
+    /*package*/ final int mAspectRatioNum;
+
+    /*package*/ final int mAspectRatioDen;
+
     public VideoDescription(
             int width,
             int height,
+            int framerate,
             short pixelFormat,
             int rotation,
-            boolean isTexture) {
+            boolean isTexture,
+            int profile,
+            int level,
+            int colorRange,
+            int colorSpace,
+            int colorTrc,
+            int colorPrimaries,
+            int aspectRatioNum,
+            int aspectRatioDen) {
         this.mWidth = width;
         this.mHeight = height;
+        this.mFramerate = framerate;
         this.mPixelFormat = pixelFormat;
         this.mRotation = rotation;
         this.mIsTexture = isTexture;
+        this.mProfile = profile;
+        this.mLevel = level;
+        this.mColorRange = colorRange;
+        this.mColorSpace = colorSpace;
+        this.mColorTrc = colorTrc;
+        this.mColorPrimaries = colorPrimaries;
+        this.mAspectRatioNum = aspectRatioNum;
+        this.mAspectRatioDen = aspectRatioDen;
     }
 
     public int getWidth() {
@@ -63,6 +99,10 @@ public class VideoDescription {
 
     public int getHeight() {
         return mHeight;
+    }
+
+    public int getFramerate() {
+        return mFramerate;
     }
 
     public short getPixelFormat() {
@@ -77,15 +117,58 @@ public class VideoDescription {
         return mIsTexture;
     }
 
+    /** ff field */
+    public int getProfile() {
+        return mProfile;
+    }
+
+    public int getLevel() {
+        return mLevel;
+    }
+
+    public int getColorRange() {
+        return mColorRange;
+    }
+
+    public int getColorSpace() {
+        return mColorSpace;
+    }
+
+    public int getColorTrc() {
+        return mColorTrc;
+    }
+
+    public int getColorPrimaries() {
+        return mColorPrimaries;
+    }
+
+    /** aspect_ratio */
+    public int getAspectRatioNum() {
+        return mAspectRatioNum;
+    }
+
+    public int getAspectRatioDen() {
+        return mAspectRatioDen;
+    }
+
 
     @Override
     public String toString() {
         return "VideoDescription{" +
                 "mWidth=" + mWidth +
                 "," + "mHeight=" + mHeight +
+                "," + "mFramerate=" + mFramerate +
                 "," + "mPixelFormat=" + mPixelFormat +
                 "," + "mRotation=" + mRotation +
                 "," + "mIsTexture=" + mIsTexture +
+                "," + "mProfile=" + mProfile +
+                "," + "mLevel=" + mLevel +
+                "," + "mColorRange=" + mColorRange +
+                "," + "mColorSpace=" + mColorSpace +
+                "," + "mColorTrc=" + mColorTrc +
+                "," + "mColorPrimaries=" + mColorPrimaries +
+                "," + "mAspectRatioNum=" + mAspectRatioNum +
+                "," + "mAspectRatioDen=" + mAspectRatioDen +
         "}";
     }
 

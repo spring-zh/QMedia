@@ -12,6 +12,8 @@
 #import <Foundation/Foundation.h>
 #import <CoreGraphics/CoreGraphics.h>
 
+#import "QMediaRange.h"
+
 #ifdef __cplusplus
 extern "C" {
 #endif
@@ -34,6 +36,8 @@ typedef struct QTimeRange{
 QTimeRange QTimeRangeMake(int64_t startPoint, int64_t endPoint);
 bool QTimeRangeIsVaild(QTimeRange qrange);
 int64_t QTimeRangeGetLenght(QTimeRange qrange);
+
+int64_t QMediaRangeGetLenght(QMediaRange* qrange);
 
 NSString * QGetMediaSDKVersion();
     

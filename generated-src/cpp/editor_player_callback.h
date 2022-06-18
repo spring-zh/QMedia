@@ -11,6 +11,8 @@ class EditorPlayerCallback {
 public:
     virtual ~EditorPlayerCallback() {}
 
+    virtual void onPrepare(int32_t code) = 0;
+
     virtual void onStarted(int32_t code) = 0;
 
     virtual void onStoped(int32_t code) = 0;

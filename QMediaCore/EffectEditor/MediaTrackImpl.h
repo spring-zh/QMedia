@@ -12,9 +12,9 @@
 #include <memory>
 #include "MediaTrack.h"
 #include "Utils/ThreadTaskFuture.h"
-#include "sequentail/SequentailDecoder.h"
+#include "SegmentDecoder.h"
 
-class MediaTrackImpl : public MediaTrack, public SequentailDecoder::CallBack {
+class MediaTrackImpl : public MediaTrack, public SegmentDecoder::CallBack {
 public:
     explicit MediaTrackImpl(MediaSourceRef source, MediaType media_type);
     virtual ~MediaTrackImpl();
@@ -71,7 +71,7 @@ private:
     virtual VideoFrame getVideoFrame(int64_t mSec , bool& isEnd) override;
     virtual AudioFrame getAudioFrame(int64_t mSec , bool& isEnd) override;
     
-    void OnSequentailError(int error) override;
+    void OnSegmentDecodeError(int error) override {}
     
 protected:
     ThreadTaskFuture thread_task_;
@@ -96,8 +96,8 @@ protected:
     bool _after_seek_audio;
     
     DecoderFactory * dec_factory;
-    SequentailDecoder::UPtr sequentail_decoder_;
-    std::vector<SequentailSlice> slices;
+    SegmentDecoder::UPtr sequentail_decoder_;
+//    std::vector<MediaSegmentImpl*> slices;
     
     MediaType media_type_;
 };

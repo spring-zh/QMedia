@@ -1,6 +1,11 @@
-time_range = record {
+media_range = record {
     start : i64;
     end : i64;
+} deriving (eq, json)
+
+point = record {
+    x : i64;
+    y : i64;
 } deriving (eq, json)
 
 size = record {
@@ -8,7 +13,7 @@ size = record {
     height : i64;
 } deriving (eq, json)
 
-vec4 = record {
+vec4f = record {
     v1 : f32;
     v2 : f32;
     v3 : f32;
@@ -53,7 +58,52 @@ video_description = record {
 
     width: i32;
     height: i32;
+    framerate: i32;
     pixel_format: i16;
     rotation: i32;
     is_texture: bool;
+    # ff field
+    profile: i32;
+    level: i32;
+    color_range: i32;
+    color_space: i32;
+    color_trc: i32;
+    color_primaries: i32;
+
+    # aspect_ratio
+    aspect_ratio_num: i32;
+    aspect_ratio_den: i32;
+}
+
+media_stream_info = record {
+    # media type
+    const media_unknow: i32 = 0;
+    const media_video: i32 = 1;
+    const media_audio: i32 = 2;
+
+    # codec type
+    const codec_unknow: i32 = 0;
+    const codec_h264: i32 = 1;
+    const codec_h265: i32 = 2;
+    const codec_mpeg4: i32 = 3;
+    const codec_vp8: i32 = 4;
+    const codec_vp9: i32 = 5;
+
+    const codec_mp3: i32 = 11;
+    const codec_aac: i32 = 12;
+    const codec_opus: i32 = 11;
+    const codec_pcma: i32 = 13;
+    const codec_pcmu: i32 = 14;
+
+    media_type: i32;
+    codec_type: i32;
+    duration: i64;
+    bitrate: i64;
+    stream_id: i32;
+    gops: list<i64>;
+    # timebase
+    timebase_num: i32;
+    timebase_den: i32;
+    a_desc: audio_description;
+    v_desc: video_description;
 }

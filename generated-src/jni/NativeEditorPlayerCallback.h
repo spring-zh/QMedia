@@ -27,6 +27,32 @@ private:
     friend ::djinni::JniClass<NativeEditorPlayerCallback>;
     friend ::djinni::JniInterface<::QMedia::Api::EditorPlayerCallback, NativeEditorPlayerCallback>;
 
+    class JavaProxy final : ::djinni::JavaProxyHandle<JavaProxy>, public ::QMedia::Api::EditorPlayerCallback
+    {
+    public:
+        JavaProxy(JniType j);
+        ~JavaProxy();
+
+        void onPrepare(int32_t code) override;
+        void onStarted(int32_t code) override;
+        void onStoped(int32_t code) override;
+        void onSeekTo(int64_t time_ms) override;
+        void onProgressUpdated(int64_t time_ms) override;
+        void onPlayerStateChanged(int32_t new_state, int32_t old_state) override;
+        void onCompleted() override;
+
+    private:
+        friend ::djinni::JniInterface<::QMedia::Api::EditorPlayerCallback, ::djinni_generated::NativeEditorPlayerCallback>;
+    };
+
+    const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/qmedia/editor/generated/EditorPlayerCallback") };
+    const jmethodID method_onPrepare { ::djinni::jniGetMethodID(clazz.get(), "onPrepare", "(I)V") };
+    const jmethodID method_onStarted { ::djinni::jniGetMethodID(clazz.get(), "onStarted", "(I)V") };
+    const jmethodID method_onStoped { ::djinni::jniGetMethodID(clazz.get(), "onStoped", "(I)V") };
+    const jmethodID method_onSeekTo { ::djinni::jniGetMethodID(clazz.get(), "onSeekTo", "(J)V") };
+    const jmethodID method_onProgressUpdated { ::djinni::jniGetMethodID(clazz.get(), "onProgressUpdated", "(J)V") };
+    const jmethodID method_onPlayerStateChanged { ::djinni::jniGetMethodID(clazz.get(), "onPlayerStateChanged", "(II)V") };
+    const jmethodID method_onCompleted { ::djinni::jniGetMethodID(clazz.get(), "onCompleted", "()V") };
 };
 
 }  // namespace djinni_generated
