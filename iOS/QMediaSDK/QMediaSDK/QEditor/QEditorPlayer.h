@@ -44,6 +44,8 @@ typedef NS_ENUM(NSInteger, QEditorPlayerState) {
 @property (nonatomic, readonly) QEditorPlayerState state;
 @property (nonatomic, strong) QPlayerView* _Nullable playerView;
 
+@property (nonatomic, readonly) NSArray<QMediaSegment *>* segments;
+
 - (void)addObserver:(id<QEditorPlayerObserver>)observer;
 - (void)removeObserver:(id<QEditorPlayerObserver>)observer;
 - (void)removeAllObservers;

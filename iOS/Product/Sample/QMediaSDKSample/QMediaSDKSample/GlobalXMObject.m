@@ -14,7 +14,7 @@
 @end
 
 @implementation GlobalXMObject {
-    NSMutableArray<id<QTrack>>* _tracks;
+    NSMutableArray<QMediaSegment*>* _tracks;
     NSMutableArray<id<GlobalMeidaManageObserver>>* _observers;
     NSInteger _selectedPixelSizeIndex;
 }
@@ -56,11 +56,11 @@
     }
 }
 
-- (void)addTrack:(id<QTrack>)track {
+- (void)addTrack:(QMediaSegment*)track {
     [_tracks addObject:track];
     [self notifyTrackChange];
 }
-- (void)removeTrack:(id<QTrack>)track {
+- (void)removeTrack:(QMediaSegment*)track {
     [_tracks removeObject:track];
     [self notifyTrackChange];
 }
@@ -70,10 +70,10 @@
 }
 
 - (void)updateDisplay {
-    [_player seekTo:_player.position :0];
+    [_player seek:[_player getPosition] flag:0];
 }
 
-- (NSMutableArray<id<QTrack>> *)tracks {
+- (NSMutableArray<QMediaSegment*> *)tracks {
     return _tracks;
 }
 

@@ -5,8 +5,8 @@ media_session_internal = interface +c {
     cresteMediaSegment(filename: string, flag :i32): media_segment;
     addMediaSegment(segment: media_segment): bool;
     removeMediaSegment(segment: media_segment): bool;
-    # getSegments(): list<media_segment>;
-
+    
+    getSegments(): list<media_segment>;
     getTotalTimeRange(): media_range;
 
     getVideoRender(): video_render;

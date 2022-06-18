@@ -74,9 +74,12 @@
 
 - (void)resetTrimLeftAndTrimRightState
 {
-    float fileStartTime = self.player.mediaTimeRange.startPoint/1000.0f;
-    float fileEndTime = self.player.mediaTimeRange.endPoint/1000.0f;
-    float fileTotalTime = QTimeRangeGetLenght(self.player.mediaTimeRange)/1000.0f;
+//    float fileStartTime = self.player.mediaTimeRange.startPoint/1000.0f;
+//    float fileEndTime = self.player.mediaTimeRange.endPoint/1000.0f;
+//    float fileTotalTime = QTimeRangeGetLenght(self.player.mediaTimeRange)/1000.0f;
+    float fileStartTime = [self.player getTotalTimeRange].start/1000.0f;
+    float fileEndTime = [self.player getTotalTimeRange].end/1000.0f;
+    float fileTotalTime = fileEndTime - fileStartTime;
     self.sliderBarCtrl.totalTimeLength = fileEndTime;
     if (self.sliderBarCtrl.totalTimeLength == 0) {
         self.sliderBarCtrl.trimLeftProgress = 0;
@@ -102,7 +105,8 @@
     if(_isDraging)
         return;
     CGFloat currentTime = [cgfTime floatValue];
-    self.sliderBarCtrl.progress = (float)_player.position/QTimeRangeGetLenght(_player.mediaTimeRange);
+//    self.sliderBarCtrl.progress = (float)_player.position/QTimeRangeGetLenght(_player.mediaTimeRange);
+    self.sliderBarCtrl.progress = (float)[_player getPosition]/QMediaRangeGetLenght([_player getTotalTimeRange]);
 }
 -(void)onCompleted
 {
@@ -122,16 +126,16 @@
 
 - (void)onPreviewSliderBarControllerProgressChanged:(PreviewSliderBarController*)sliderBarCtrl
 {
-    float seekTime = self.sliderBarCtrl.progress * QTimeRangeGetLenght(_player.mediaTimeRange);
-    [self.player seekTo:seekTime :0];
+    float seekTime = self.sliderBarCtrl.progress * QMediaRangeGetLenght([_player getTotalTimeRange]);
+    [self.player seek:seekTime flag:0];
 //    [self.player seekTo:self.sliderBarCtrl.progress*((self.player.objectToPlay.layoutedEndTime-self.player.objectToPlay.timeLayout.startTime))+self.player.objectToPlay.timeLayout.startTime :0];
 
 }
 
 - (void)onPreviewSliderBarControllerProgressRelease:(PreviewSliderBarController*)sliderBarCtrl
 {
-    float seekTime = self.sliderBarCtrl.progress * QTimeRangeGetLenght(_player.mediaTimeRange);
-    [self.player seekTo:seekTime :1];
+    float seekTime = self.sliderBarCtrl.progress * QMediaRangeGetLenght([_player getTotalTimeRange]);
+    [self.player seek:seekTime flag:1];
 //    [self.player seekTo:self.sliderBarCtrl.progress*((self.player.objectToPlay.layoutedEndTime-self.player.objectToPlay.timeLayout.startTime))+self.player.objectToPlay.timeLayout.startTime :1];
     _isDraging = FALSE;
 }

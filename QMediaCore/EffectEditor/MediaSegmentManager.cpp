@@ -9,6 +9,7 @@
 #include "MediaSegmentManager.h"
 #include "medianode/VideoRenderNodeImpl.h"
 #include "medianode/AudioRenderNodeImpl.h"
+#include "Utils/Logger.h"
 //#include "MediaCore/core/SteadyClock.h"
 //#include "Utils/Logger.h"
 
@@ -87,7 +88,8 @@ void MediaSegmentManager::ResetDecoders() {
             audio_segment_decoders_.push_back(SegmentDecoder::UPtr(new SegmentDecoder(MediaType::Audio, this)));
         }
     }
-    
+    LOGI("ResetDecoders video_segment_decoders(%ld), audio_segment_decoders(%ld)",
+         video_segment_decoders_.size(), audio_segment_decoders_.size());
     for (auto& fet : stop_futures) {
         fet.get();
     }

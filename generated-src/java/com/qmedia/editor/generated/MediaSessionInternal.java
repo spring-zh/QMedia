@@ -5,6 +5,7 @@ package com.qmedia.editor.generated;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface MediaSessionInternal {
@@ -15,7 +16,9 @@ public interface MediaSessionInternal {
 
     public boolean removeMediaSegment(@Nullable MediaSegment segment);
 
-    /** getSegments(): list<media_segment>; */
+    @NonNull
+    public ArrayList<MediaSegment> getSegments();
+
     @NonNull
     public MediaRange getTotalTimeRange();
 
@@ -92,6 +95,14 @@ public interface MediaSessionInternal {
             return native_removeMediaSegment(this.nativeRef, segment);
         }
         private native boolean native_removeMediaSegment(long _nativeRef, MediaSegment segment);
+
+        @Override
+        public ArrayList<MediaSegment> getSegments()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getSegments(this.nativeRef);
+        }
+        private native ArrayList<MediaSegment> native_getSegments(long _nativeRef);
 
         @Override
         public MediaRange getTotalTimeRange()

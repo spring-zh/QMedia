@@ -16,6 +16,10 @@
 @property (nonatomic, weak) QEditorPlayer* player;
 @end
 
+NSString* GetFileNameFromPath(NSString* path) {
+    return [path lastPathComponent];
+}
+
 @implementation ResTrackTableViewController
 
 - (instancetype)initWithCoder:(NSCoder *)aDecoder
@@ -115,12 +119,12 @@
     ResTrackTableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"ResTrackTableViewCell" forIndexPath:indexPath];
     
     cell.cellIndex = indexPath.row;
-    id<QTrack> track = [self.globalXMObject.tracks objectAtIndex:indexPath.row];
-    cell.globalTimeLength = QTimeRangeGetLenght(self.player.mediaTimeRange)/1000.0f ;
-    cell.sourceTimeLength = QTimeRangeGetLenght(track.sourceRange)/1000.0f;
-    cell.resTimeLength = QTimeRangeGetLenght(track.displayRange)/1000.0f;
-    cell.resStartTimePoint = track.displayRange.startPoint/1000.0f ;
-    cell.resNameLabel.text = track.displayName;
+    QMediaSegment* track = [self.globalXMObject.tracks objectAtIndex:indexPath.row];
+    cell.globalTimeLength = QMediaRangeGetLenght([self.player getTotalTimeRange])/1000.0f ;
+    cell.sourceTimeLength = QMediaRangeGetLenght([track getSourceRange])/1000.0f;
+    cell.resTimeLength = QMediaRangeGetLenght(([track getDisplayRange]))/1000.0f;
+    cell.resStartTimePoint = ([track getDisplayRange]).start/1000.0f ;
+    cell.resNameLabel.text = GetFileNameFromPath([track getFileName]);
     cell.tableViewController = self;
     return cell;
 }

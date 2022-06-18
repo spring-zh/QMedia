@@ -6,6 +6,7 @@
 #include <cstdint>
 #include <memory>
 #include <string>
+#include <vector>
 
 namespace QMedia { namespace Api {
 
@@ -28,7 +29,8 @@ public:
 
     virtual bool removeMediaSegment(const std::shared_ptr<MediaSegment> & segment) = 0;
 
-    /** getSegments(): list<media_segment>; */
+    virtual std::vector<std::shared_ptr<MediaSegment>> getSegments() = 0;
+
     virtual MediaRange getTotalTimeRange() = 0;
 
     virtual std::shared_ptr<VideoRender> getVideoRender() = 0;

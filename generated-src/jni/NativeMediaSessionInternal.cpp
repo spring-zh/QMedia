@@ -58,6 +58,16 @@ CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_MediaSessionInterna
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaSessionInternal_00024CppProxy_native_1getSegments(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSessionInternal>(nativeRef);
+        auto r = ref->getSegments();
+        return ::djinni::release(::djinni::List<::djinni_generated::NativeMediaSegment>::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_MediaSessionInternal_00024CppProxy_native_1getTotalTimeRange(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {

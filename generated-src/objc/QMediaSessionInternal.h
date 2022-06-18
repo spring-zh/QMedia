@@ -21,7 +21,8 @@
 
 - (BOOL)removeMediaSegment:(nullable QMediaSegment *)segment;
 
-/** getSegments(): list<media_segment>; */
+- (nonnull NSArray<QMediaSegment *> *)getSegments;
+
 - (nonnull QMediaRange *)getTotalTimeRange;
 
 - (nullable QVideoRender *)getVideoRender;

@@ -54,25 +54,38 @@
     
     const int targetW = 640;
     const int targetH = 480;
-    
+    QAudioDescription* audio_setting = [[QAudioDescription alloc] initWithSmapleFormat:QAudioDescriptionFormatS16 nchannel:2 sampleRate:44100 sampleBits:16];
+    [QMediaEngine configAudioOut: audio_setting];
     self.player.playerView = _renderView;
 //    self.player.rootNode.color4 = QColorMake(0, 0, 1, 1);
 
-    QVideoDescribe* vdesc = [[QVideoDescribe alloc] initWithParamenters:QVideoCodecH264 framerate:25 width:targetW height:targetH bitrate:2*1024*1024];
-    QAudioDescribe* adesc = [[QAudioDescribe alloc] initWithParamenters:QAudioCodecAAC rawFormat:QRawAudioFormatS16 samplerate:44100 nchannel:2 bitrate:128000];
-    
-    [self.player setAudioConfig:adesc];
-    [self.player setVideoConfig:vdesc];
     NSString* testVideoFile2 = [QFileUtils getFileFromMainbundleAbsolutePath:@"video/test.mp4"];
     NSString* testAudioFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"audio/LR.mp3"];
     
-    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2 combiner:self.player];
-    videoTrack.displayName = [QFileUtils fileComponentOfPath:testVideoFile2];
-    QMediaTrack* audioTrack = [self.player.mediaFactory createAudioTrack:testAudioFile combiner:self.player];
-    audioTrack.displayName = [QFileUtils fileComponentOfPath:testAudioFile];
+    QMediaSegment* video_segment = [_player cresteMediaSegment:testVideoFile2 flag:QMediaSegmentFlagAll];
+    [video_segment setDisplayRange:[QMediaRange mediaRangeWithStart:0 end:5000]];
+    
+    QMediaSegment* audio_segment = [_player cresteMediaSegment:testAudioFile flag:2];
+//    [audio_segment setTimescale:0.6];
+    
+    QMediaSegment* video_segment2 = [_player cresteMediaSegment:testVideoFile2 flag:QMediaSegmentFlagAll];
+    [video_segment2 setSourceRange:[QMediaRange mediaRangeWithStart:5000 end:10000]];
+    [video_segment2 setDisplayRange:[QMediaRange mediaRangeWithStart:10000 end:15000]];
+    
+    QVideoRenderNode* graphic = [video_segment getVideo];
+    [graphic setPosition:[QPoint pointWithX:targetW/4 y:targetH/4]];
+    [graphic setContentSize:[QSize sizeWithWidth:targetW/2 height:targetH/2]];
+    
+    QVideoRenderNode* graphic2 = [video_segment2 getVideo];
+    [graphic2 setContentSize:[QSize sizeWithWidth:targetW/2 height:targetH/2]];
+    
+//    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2 combiner:self.player];
+//    videoTrack.displayName = [QFileUtils fileComponentOfPath:testVideoFile2];
+//    QMediaTrack* audioTrack = [self.player.mediaFactory createAudioTrack:testAudioFile combiner:self.player];
+//    audioTrack.displayName = [QFileUtils fileComponentOfPath:testAudioFile];
 
-    videoTrack.graphic.position = CGPointMake(targetW/4, targetH/4);
-    videoTrack.graphic.contentSize = CGSizeMake(targetW/2, targetH/2);//self.player.layerSize;
+//    videoTrack.graphic.position = CGPointMake(targetW/4, targetH/4);
+//    videoTrack.graphic.contentSize = CGSizeMake(targetW/2, targetH/2);//self.player.layerSize;
 
     
 #if 0 //don't use CaptureTrack in edit mode
@@ -101,13 +114,17 @@
 //    duplicatenodeR.rotation3d = QVectorV3(0, -90, 0);
     
     //add videoTrack
-    [self.player addMediaTrack:videoTrack];
+//    [self.player addMediaTrack:videoTrack];
+    [self.player addMediaSegment:video_segment];
+    [self.player addMediaSegment:video_segment2];
     //add audioTrack
-    [self.player addMediaTrack:audioTrack];
+//    [self.player addMediaSegment:audio_segment];
+    [self.player addMediaSegment:audio_segment];
     
     /*--------------------  GlobalXMObject  -----------------------*/
-    [[GlobalXMObject sharedInstance] addTrack:videoTrack];
-    [[GlobalXMObject sharedInstance] addTrack:audioTrack];
+    [[GlobalXMObject sharedInstance] addTrack:video_segment];
+    [[GlobalXMObject sharedInstance] addTrack:video_segment2];
+    [[GlobalXMObject sharedInstance] addTrack:audio_segment];
 //    [[GlobalXMObject sharedInstance] addTrack:duplicatenodeL];
 //    [[GlobalXMObject sharedInstance] addTrack:duplicatenodeR];
     /*--------------------  GlobalXMObject  -----------------------*/
@@ -129,12 +146,12 @@
     
 //    [layer addChildNode:composeNode];
 //    [self.player.rootNode addChildNode:layer];
-    self.player.rootNode.enable3d = true;
+//    self.player.rootNode.enable3d = true;
 //    [self.player.rootNode addEffect:colorInvert];
 //    [self.player.rootNode addEffect:polarPixellate];
-    [self.player.rootNode addChildNode:videoTrack.graphic];
-    self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
-    
+//    [self.player.rootNode addChildNode:videoTrack.graphic];
+//    self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
+    [self.player setDisplayLayerSize:[QSize sizeWithWidth:targetW height:targetH]];
     [self.player start];
     
     UIPanGestureRecognizer *panGesture = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panAction:)];
@@ -228,7 +245,7 @@
 
 - (IBAction)onPlayPauseButton:(UIButton *)sender
 {
-    if (self.player.isPaused || self.player.state == XMPlayerState_Stopped) {
+    if ([self.player isUserPaused] || self.player.state == XMPlayerState_Stopped) {
         [self.player play];
         [self.playButton setImage:[UIImage imageNamed:@"Edit Preview Pause_12x18_"]
         forState:UIControlStateNormal];

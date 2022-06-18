@@ -119,10 +119,6 @@ const AudioSampleCache* AudioRenderNodeImpl::getAudioSample(int64_t time_ms) {
                 }else if(_resampler) {
                     cacheLen = _resampler->process((void*)nativebuffer->Data(), nativebuffer->Size(), _cacheBuffer);
                 }else if(_audioEffect) {
-//                    int reqoutSamples = nativebuffer->Samples() * _mediaTrack->getTimeScale() + 512;
-//                    _cacheBuffer.resize(reqoutSamples * target_channels * 2);
-//                    int outSample = _audioEffect->process((void*)nativebuffer->Data(), nativebuffer->Samples(), _cacheBuffer.data(), reqoutSamples);
-//                    cacheLen = outSample *target_channels * 2;
                     cacheLen = _audioEffect->process((void*)nativebuffer->Data(), nativebuffer->Size(), _cacheBuffer);
                 }else {
                     cacheLen = nativebuffer->Size();

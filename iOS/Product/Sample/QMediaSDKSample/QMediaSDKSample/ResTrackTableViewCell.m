@@ -191,7 +191,7 @@
                 int64_t trackLenght = QTimeRangeGetLenght( track.displayRange);
                 track.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
                 
-                [self.player seekTo:self.player.position :0];
+                [self.player seek:[self.player getPosition] flag:0];
             }
         }
             break;
@@ -207,7 +207,7 @@
             id<QTrack> track = [self.globalXMObject.tracks objectAtIndex:self.cellIndex];
             int64_t trackLenght = QTimeRangeGetLenght( track.displayRange);
             track.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
-            [self.player seekTo:self.player.position :0];
+            [self.player seek:[self.player getPosition] flag:0];
         }
             break;
             

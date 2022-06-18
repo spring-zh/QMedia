@@ -74,9 +74,12 @@
     _player_view = playerView;
 }
 
-- (QEditorPlayerState)state
-{
+- (QEditorPlayerState)state {
     return (QEditorPlayerState)[_internal getState];
+}
+
+- (NSArray<QMediaSegment *>*)segments {
+    return [_session getSegments];
 }
 
 #pragma mark - Observer Logic

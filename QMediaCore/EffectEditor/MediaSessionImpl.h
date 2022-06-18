@@ -100,6 +100,8 @@ public:
     bool addMediaSegment(const std::shared_ptr<MediaSegment> & segment) override;
 
     bool removeMediaSegment(const std::shared_ptr<MediaSegment> & segment) override;
+                             
+    std::vector<std::shared_ptr<MediaSegment>> getSegments() override { return source_segments_;}
 
     MediaRange getTotalTimeRange() override;
 

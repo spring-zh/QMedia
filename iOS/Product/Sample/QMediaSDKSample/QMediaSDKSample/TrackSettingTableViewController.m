@@ -348,14 +348,10 @@
                                               style:UIAlertActionStyleDestructive
                                             handler:^(UIAlertAction * _Nonnull action) {
 //                                                [self.globalXMObject removeSubObjectAtIndex:self.cellIndex];
-        if ([_track isKindOfClass:QGraphicNode.class]) {
-            QGraphicNode* graphicNode = (QGraphicNode*)_track;
-            if (graphicNode.parent) {
-                [graphicNode.parent removeChildNode:graphicNode];
-            }
-            [graphicNode releaseIndex];
-        }else if ([_track isKindOfClass:QMediaTrack.class]) {
-            [[GlobalXMObject sharedInstance].player removeMediaTrack:_track];
+
+        if ([_track isKindOfClass:QMediaSegment.class]) {
+
+            [[GlobalXMObject sharedInstance].player removeMediaSegment:_track];
         }
         [[GlobalXMObject sharedInstance] removeTrack:_track];
         [GlobalXMObject sharedInstance].selectTrackIndex = -1;

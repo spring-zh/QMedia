@@ -15,3 +15,4 @@ Android/QMediaSDK/.idea
 Android/QMediaSDK/app/build/generated
 Android/QMediaSDK/app/build/intermediates
 Android/QMediaSDK/qmediasdk/.cxx
+code_gen/qmedia/djinni-output-temp
