@@ -54,39 +54,47 @@ bool MediaSegmentManager::RebuildSegmentTracks(SegmentTrack& ord_segments, std::
             seg_tracks[seg_tracks.size()-1].push_back(ord_segments[i]);
         }
     }
-//    if (segment_tracks.size() != seg_tracks.size()) {
-//        segment_tracks = seg_tracks;
-//        return true;
-//    }
-//    return false;
+
     segment_tracks = seg_tracks;
     return true;
 }
 
-void MediaSegmentManager::ResetDecoders() {
-    std::vector<std::future<void>> stop_futures;
+void MediaSegmentManager::ResetDecoders(int64_t position) {
+    std::list<std::future<bool>> stop_futures;
+    std::list<SegmentDecoder::UPtr> stop_decoders;
     if (video_track_segments_.size() != video_segment_decoders_.size()) {
         //TODO: reset video decoders
         while (video_track_segments_.size() < video_segment_decoders_.size()) {
-            auto decoder = std::move(video_segment_decoders_.back());
+//            auto decoder = std::move(video_segment_decoders_.back());
+            stop_decoders.push_back( std::move(video_segment_decoders_.back()));
             video_segment_decoders_.pop_back();
-            stop_futures.push_back(decoder->StopMedia());
+            stop_futures.push_back(stop_decoders.back()->StopMedia());
         }
         while (video_track_segments_.size() > video_segment_decoders_.size()) {
             video_segment_decoders_.push_back(SegmentDecoder::UPtr(new SegmentDecoder(MediaType::Video, this)));
+
         }
+    }
+    
+    for (int i = 0; i < video_segment_decoders_.size(); i++ ) {
+        stop_futures.push_back(video_segment_decoders_[i]->StartMedia(video_track_segments_[i], position));
     }
     
     if (audio_track_segments_.size() != audio_segment_decoders_.size()) {
         //TODO: reset audio decoders
         while (audio_track_segments_.size() < audio_segment_decoders_.size()) {
-            auto decoder = std::move(audio_segment_decoders_.back());
+//            auto decoder = std::move(audio_segment_decoders_.back());
+            stop_decoders.push_back( std::move(audio_segment_decoders_.back()));
             audio_segment_decoders_.pop_back();
-            stop_futures.push_back(decoder->StopMedia());
+            stop_futures.push_back(stop_decoders.back()->StopMedia());
         }
         while (audio_track_segments_.size() > audio_segment_decoders_.size()) {
             audio_segment_decoders_.push_back(SegmentDecoder::UPtr(new SegmentDecoder(MediaType::Audio, this)));
+
         }
+    }
+    for (int i = 0; i < audio_segment_decoders_.size(); i++ ) {
+        stop_futures.push_back(audio_segment_decoders_[i]->StartMedia(audio_track_segments_[i], position));
     }
     LOGI("ResetDecoders video_segment_decoders(%ld), audio_segment_decoders(%ld)",
          video_segment_decoders_.size(), audio_segment_decoders_.size());
@@ -146,24 +154,18 @@ MediaRange MediaSegmentManager::getMediaTimeRange() const {
 
 void MediaSegmentManager::start()
 {
-    ResetDecoders();
-//    setPositionTo(0);
-    std::vector<std::future<bool>> futures;
-    for (int i = 0; i< video_segment_decoders_.size(); ++i) {
-        futures.push_back(video_segment_decoders_[i]->StartMedia(video_track_segments_[i], 0));
-    }
-    
-    for (int i = 0; i< audio_segment_decoders_.size(); ++i) {
-        futures.push_back(audio_segment_decoders_[i]->StartMedia(audio_track_segments_[i], 0));
-    }
-
-    for (auto& future : futures) {
-        future.get();
-    }
+    ResetDecoders(0);
 }
 
-void MediaSegmentManager::setPositionTo(int64_t time_ms)
+void MediaSegmentManager::setPositionTo(int64_t time_ms, bool update)
 {
+    if (update) {
+        video_ord_segments_.SortList();
+        audio_ord_segments_.SortList();
+        RebuildSegmentTracks(video_ord_segments_, video_track_segments_);
+        RebuildSegmentTracks(audio_ord_segments_, audio_track_segments_);
+        ResetDecoders(time_ms);
+    } else {
     std::vector<std::future<bool>> futures;
     for (auto &decoder : video_segment_decoders_) {
         futures.push_back(decoder->SetPositionTo(time_ms));
@@ -174,10 +176,11 @@ void MediaSegmentManager::setPositionTo(int64_t time_ms)
     for (auto& future : futures) {
         future.get();
     }
+    }
 }
 
 void MediaSegmentManager::stop() {
-    std::vector<std::future<void>> futures;
+    std::vector<std::future<bool>> futures;
     for (auto &decoder : video_segment_decoders_) {
         futures.push_back(decoder->StopMedia());
     }

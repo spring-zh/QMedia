@@ -63,14 +63,15 @@
     NSString* testAudioFile = [QFileUtils getFileFromMainbundleAbsolutePath:@"audio/LR.mp3"];
     
     QMediaSegment* video_segment = [_player cresteMediaSegment:testVideoFile2 flag:QMediaSegmentFlagAll];
-    [video_segment setDisplayRange:[QMediaRange mediaRangeWithStart:0 end:5000]];
+    [video_segment setDisplayRange:[QMediaRange mediaRangeWithStart:5000 end:15000]];
+    [video_segment setTimescale:2];
     
     QMediaSegment* audio_segment = [_player cresteMediaSegment:testAudioFile flag:2];
 //    [audio_segment setTimescale:0.6];
     
     QMediaSegment* video_segment2 = [_player cresteMediaSegment:testVideoFile2 flag:QMediaSegmentFlagAll];
     [video_segment2 setSourceRange:[QMediaRange mediaRangeWithStart:5000 end:10000]];
-    [video_segment2 setDisplayRange:[QMediaRange mediaRangeWithStart:10000 end:15000]];
+//    [video_segment2 setDisplayRange:[QMediaRange mediaRangeWithStart:5000 end:15000]];
     
     QVideoRenderNode* graphic = [video_segment getVideo];
     [graphic setPosition:[QPoint pointWithX:targetW/4 y:targetH/4]];

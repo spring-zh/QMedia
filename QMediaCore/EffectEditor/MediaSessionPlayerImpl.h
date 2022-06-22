@@ -63,7 +63,7 @@ private:
     
     RetCode _start();
     RetCode _pause(bool bPause);
-    RetCode _seek(int64_t mSec, int flag);
+    RetCode _seek(int64_t mSec, int cnt, int flag);
     
     std::shared_ptr<MediaSessionImpl> session_;
     //other

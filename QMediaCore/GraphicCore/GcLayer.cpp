@@ -10,7 +10,39 @@
 #include "Utils/Comm.h"
 #include "opengl/Drawable2D.h"
 #include "opengl/shaders/ccShaders.h"
+#if 0
+#import <UIKit/UIKit.h>
 
+UIImage * convertBitmapRGBA8ToUIImage(unsigned char * buffer, int width, int height ){
+
+    CGDataProviderRef ref = CGDataProviderCreateWithData(NULL, buffer, width * height * 4, NULL);
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGImageRef iref = CGImageCreate(width, height, 8, 32, width * 4, colorspace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast, ref, NULL, true, kCGRenderingIntentDefault);
+
+    float scale = 1.0f;
+
+
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(width/scale, height/scale), NO, scale);
+    CGContextRef cgcontext = UIGraphicsGetCurrentContext();
+
+    CGContextSetBlendMode(cgcontext, kCGBlendModeCopy);
+
+    // Image needs to be flipped BACK for CG
+    CGContextTranslateCTM(cgcontext, 0, height/scale);
+    CGContextScaleCTM(cgcontext, 1, -1);
+    CGContextDrawImage(cgcontext, CGRectMake(0.0, 0.0, width/scale, height/scale), iref);
+
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+
+    UIGraphicsEndImageContext();
+
+    CFRelease(ref);
+    CFRelease(colorspace);
+    CGImageRelease(iref);
+
+    return image;
+}
+#endif
 GRAPHICCORE_BEGIN
 
 Layer::Layer(Size size):
@@ -56,6 +88,9 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
         //TODO: reset layer size
         _texture.reset();
         _texture = std::shared_ptr<Texture2D>(GeneralTexture2D::createTexture(Texture2D::RGBA, _layerSize.width,_layerSize.height));
+        GraphicCore::Rect svp = GraphicCore::Rect(0,0,_layerSize.width,_layerSize.height);
+        _scene.setViewPort(svp);
+        _scene.setProjection(GraphicCore::Projection::_3D);
     }
     gle->setCurrentFrameBuffer(_framebuffer.get());
     Rect layerViewPort(0, 0,_texture->width(),_texture->height());
@@ -73,9 +108,21 @@ void Layer::visit(GraphicCore::Scene *scene, const Mat4& parentTransform, uint32
             node->visit(&_scene, layerTransform, parentFlags);
         }
     }
+//    std::vector<uint8_t> dddd(_texture->width()*_texture->height()*4);
+//    glReadPixels(0, 0, _texture->width(), _texture->height(), GL_RGBA, GL_UNSIGNED_BYTE, dddd.data());
+//
+//    UIImage* ddd = convertBitmapRGBA8ToUIImage(dddd.data(), _texture->width(), _texture->height());
+    
     gle->recoverStatus();
     gle->setEnableDepthTest(isDepthTest);
     this->draw(scene, _modelViewTransform, parentFlags);
+    
+//    Rect np;
+//     gle->getViewPort(np);
+//    std::vector<uint8_t> bbbb(np.size.width*np.size.height*4);
+//        glReadPixels(0, 0, np.size.width, np.size.height, GL_RGBA, GL_UNSIGNED_BYTE, bbbb.data());
+//    
+//    UIImage* iii = convertBitmapRGBA8ToUIImage(bbbb.data(), np.size.width, np.size.height);
     
     scene->popMatrix(MATRIX_STACK_MODELVIEW);
 }

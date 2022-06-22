@@ -19,7 +19,7 @@ public:
     virtual bool prepare() = 0;
     
     virtual std::future<bool> setPositionTo(int64_t mSec) = 0;
-    virtual std::future<void> stopMedia() = 0;
+    virtual std::future<bool> stopMedia() = 0;
     /**
      * timeScale(float) time scale for track, the equivalent of (1.0f / playe speed)
      * default 1.0f

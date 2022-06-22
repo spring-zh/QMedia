@@ -73,11 +73,16 @@ void SegmentDecoder::ReadDecode() {
 
 std::future<bool> SegmentDecoder::StartMedia(std::vector<MediaSegmentImpl*>& segments, int64_t time_ms) {
     //TODO: merge continuous slices
+    frame_cv_.Notify([this]()->bool{
+        is_runing_ = false;
+        return true;
+    });
     return thread_task_.PostTask(CMD_START, [this, &segments, time_ms]()->bool {
         segments_ = segments;
         if (segments.empty()) {
             return false;
         }
+        thread_task_.RemoveTask(CMD_READ_DECODE);
         return __SetPositionTo(time_ms, true);
     });
 }
@@ -93,13 +98,13 @@ std::future<bool> SegmentDecoder::SetPositionTo(int64_t time_ms) {
     });
 }
 
-std::future<void> SegmentDecoder::StopMedia() {
+std::future<bool> SegmentDecoder::StopMedia() {
     frame_cv_.Notify([this]()->bool{
         is_runing_ = false;
         return true;
     });
     
-    return thread_task_.InsertTask(CMD_STOP, [this](){
+    return thread_task_.InsertTask(CMD_STOP, [this]()->bool {
         thread_task_.RemoveTask(CMD_READ_DECODE);
         if (decoder_) {
             decoder_->Release();
@@ -121,6 +126,7 @@ std::future<void> SegmentDecoder::StopMedia() {
         in_display_pos_ = -1;
         in_slice_index_ = -1;
         out_slice_index_ = -1;
+        return true;
     });
 
 }

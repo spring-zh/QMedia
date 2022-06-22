@@ -30,7 +30,7 @@ public:
     const Texture2D* getOutputTexture() override { return _texture.get(); }
 
     Size getLayerSize() const { return _layerSize; }
-    void setLayerSize(const Size& size) { _layerSize = size; }
+    virtual void setLayerSize(const Size& size) { _layerSize = size; }
     
     const Color4F& getBKColor() const { return _bkColor; }
     void setBKColor(const Color4F& color) { _bkColor = color; }

@@ -76,17 +76,23 @@ public:
     }
     
     bool beginRender() {
-        _gle.useAsDefaultFrameBuffer();
         if (!_isInit) {
-            _targetW = getContentSize().width;
-            _targetH = getContentSize().height;
-            _layerSize = GraphicCore::Size(_targetW, _targetH);
-
+            _gle.useAsDefaultFrameBuffer();
+//            _targetW = getContentSize().width;
+//            _targetH = getContentSize().height;
+//            _layerSize = GraphicCore::Size(_targetW, _targetH);
+//            _layerSize = getContentSize();
             createRes();
             _isInit = true;
         }
 
         return true;
+    }
+    void setLayerSize(const GraphicCore::Size& size) override {
+//        _targetW = size.width;
+//        _targetH = size.height;
+//        setContentSize(size);
+        GraphicCore::Layer::setLayerSize(size);
     }
     void setDisplayMode(DisplayMode mode, int viewW, int viewH) {
         _displayMode = mode;
@@ -100,11 +106,10 @@ public:
         _playerScene.setDelta(timeStamp);
         // read dec frame to medianode
         session_->ReadVideoFrames(timeStamp);
-        
-        GraphicCore::Rect region = calculateDisplayRegion(_displayMode, _targetW, _targetH, _viewW, _viewH);
+        GraphicCore::Rect region = calculateDisplayRegion(_displayMode, getLayerSize().width, getLayerSize().height, _viewW, _viewH);
         setPosition(region.origin);
         setContentSize(region.size);
-
+        _gle.setViewPort(GraphicCore::Rect(0, 0, _viewW, _viewH));
         Layer::visit(&_playerScene, _playerScene.getMatrix(GraphicCore::MATRIX_STACK_MODELVIEW), 0);
     }
     
@@ -117,7 +122,7 @@ private:
     
     DisplayMode _displayMode;
     int _viewW,_viewH;
-    int _targetW, _targetH;
+//    int _targetW, _targetH;
 };
 
 MediaSessionImpl::MediaSessionImpl(): MediaSessionImpl(nullptr, nullptr) {
@@ -207,7 +212,7 @@ void MediaSessionImpl::setVideoRunLoop(const std::shared_ptr<VideoRunloop> & vid
 }
 
 void MediaSessionImpl::setDisplayLayerSize(const Size & size) {
-    display_layer_->setContentSize(GraphicCore::Size(size.width, size.height));
+    display_layer_->setLayerSize(GraphicCore::Size(size.width, size.height));
 }
 
 Size MediaSessionImpl::getDisplayLayerSize() {
@@ -299,11 +304,11 @@ void MediaSessionImpl::stop() {
     });
 }
 
-void MediaSessionImpl::setPositionTo(int64_t time_ms) {
+void MediaSessionImpl::setPositionTo(int64_t time_ms, int flag) {
     _bAudioCompleted = false;
     _bVideoCompleted = false;
     
-    MediaSegmentManager::setPositionTo(time_ms);
+    MediaSegmentManager::setPositionTo(time_ms, flag == 1);
     for (auto& ac : audio_nodes_) {
         ((AudioRenderNodeImpl*)ac.get())->ClearAudioFrame();
     }
@@ -348,7 +353,7 @@ bool MediaSessionImpl::onRenderCreate()
 bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs)
 {
     //FIXME: must use TimeMapper to calculate real time stamp after.
-        
+        display_layer_->beginRender();
     runRenderCmd();
     
     int64_t position = wantTimeMs;

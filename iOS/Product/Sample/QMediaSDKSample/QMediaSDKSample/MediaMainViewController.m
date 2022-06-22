@@ -39,7 +39,7 @@
     if (self) {
         [[GlobalXMObject sharedInstance].observers addObject:self];
         self.player = [GlobalXMObject sharedInstance].player;
-        self.player.loopPlay = YES;
+//        self.player.loopPlay = YES;
     }
     return self;
 }
@@ -171,13 +171,15 @@
     if ([mediaType isEqualToString:(NSString*) kUTTypeMovie] || [mediaType isEqualToString:(NSString*) kUTTypeVideo]) {
         NSURL *videoURL = [info objectForKey:UIImagePickerControllerMediaURL];
         NSLog(@"%@", videoURL);
+        QMediaSegment* videoTrack = [self.player cresteMediaSegment:videoURL.absoluteString flag:QMediaSegmentFlagAll];
+        [[videoTrack getVideo] setContentSize:[QSize sizeWithWidth:640 height:480]];
+//        QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:videoURL.absoluteString combiner:self.player];
+//        videoTrack.graphic.contentSize = CGSizeMake([self.player.videoTarget getWidth]/2, [self.player.videoTarget getHeight]/2);
+//        [self.player.rootNode addChildNode:videoTrack.graphic];
         
-        QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:videoURL.absoluteString combiner:self.player];
-        videoTrack.graphic.contentSize = CGSizeMake([self.player.videoTarget getWidth]/2, [self.player.videoTarget getHeight]/2);
-        [self.player.rootNode addChildNode:videoTrack.graphic];
-        
-        videoTrack.displayName = [QFileUtils fileComponentOfPath:videoURL.absoluteString];
-        [self.player addMediaTrack:videoTrack];
+//        videoTrack.displayName = [QFileUtils fileComponentOfPath:videoURL.absoluteString];
+//        [self.player addMediaTrack:videoTrack];
+        [self.player addMediaSegment:videoTrack];
         [[GlobalXMObject sharedInstance] addTrack:videoTrack];
     }
     else if ([mediaType isEqualToString:(NSString*) kUTTypeImage]) {
@@ -186,14 +188,14 @@
         NSData* imageData = UIImageJPEGRepresentation(image, 1.0);
         NSString* imagePath = [NSString stringWithFormat:@"%@%ld.jpg", [CommonKits tmpPath], (long)[[NSDate date] timeIntervalSince1970]];
         [imageData writeToFile:imagePath atomically:NO];
-        QImageNode* imageNode = [[QImageNode alloc] initWithPath:imagePath combiner:self.player];
-        imageNode.contentSize = CGSizeMake([self.player.videoTarget getWidth]/2, [self.player.videoTarget getHeight]/2);
-        imageNode.displayRange = QTimeRangeMake(0, 10000);
-        imageNode.name = [QFileUtils fileComponentOfPath:imagePath];
-        [self.player.rootNode addChildNode:imageNode];
-        [[GlobalXMObject sharedInstance] addTrack:imageNode];
+//        QImageNode* imageNode = [[QImageNode alloc] initWithPath:imagePath combiner:self.player];
+//        imageNode.contentSize = CGSizeMake([self.player.videoTarget getWidth]/2, [self.player.videoTarget getHeight]/2);
+//        imageNode.displayRange = QTimeRangeMake(0, 10000);
+//        imageNode.name = [QFileUtils fileComponentOfPath:imagePath];
+//        [self.player.rootNode addChildNode:imageNode];
+//        [[GlobalXMObject sharedInstance] addTrack:imageNode];
     }
-    [self.player seekTo:self.player.position :0];
+    [self.player seek:[self.player getPosition] flag:0];
     [picker dismissViewControllerAnimated:YES completion:nil];
 }
 
@@ -206,8 +208,10 @@
                       savedToFilePath:(NSString*)path
 {
 //    XMVideoTrack* videoTrack = [[XMMediaFactory sharedInstance] createVideoTrack:self.player filePath:path];
-    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:path combiner:self.player];
-    [self.player addMediaTrack:videoTrack];
+//    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:path combiner:self.player];
+//    [self.player addMediaTrack:videoTrack];
+    QMediaSegment* videoTrack = [self.player cresteMediaSegment:path flag:QMediaSegmentFlagAll];
+    [self.player addMediaSegment:videoTrack];
 //    CGFloat duration = [self getVideoLength:[NSURL fileURLWithPath:path]];
 //    CGSize dspSize = [GlobalXMObject sharedInstance].pixelSize;
 //    XMObject* videoObject = [self addXMObjectOfTypeClass:[XMVideoObject class]

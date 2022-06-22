@@ -69,7 +69,7 @@ void MediaSupervisor::setPositionTo(int64_t mSec)
 
 void MediaSupervisor::stop()
 {
-    std::vector<std::future<void>> futures;
+    std::vector<std::future<bool>> futures;
     for (auto &track : _mediaTracks) {
         futures.push_back(track->stopMedia());
     }

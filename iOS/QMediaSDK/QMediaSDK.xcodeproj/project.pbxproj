@@ -136,6 +136,7 @@
 		6F47DD1B24659AD10045C9DC /* QNodeAnimator.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F47DD1924659AD10045C9DC /* QNodeAnimator.mm */; };
 		6F47DD1C24659AD10045C9DC /* QNodeAnimator.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F47DD1A24659AD10045C9DC /* QNodeAnimator.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F47DD222468FD0A0045C9DC /* QAudioTrackNode_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F47DD212468FD0A0045C9DC /* QAudioTrackNode_internal.h */; };
+		6F50D8022860D05F005BF291 /* QPixelbufferFrameBuffer.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F50D8012860D05F005BF291 /* QPixelbufferFrameBuffer.mm */; };
 		6F5117A92409F94F0013BC9E /* QVideoTarget.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5117A72409F94F0013BC9E /* QVideoTarget.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		6F5117BD240A0EDB0013BC9E /* QVideoTarget_internal.h in Headers */ = {isa = PBXBuildFile; fileRef = 6F5117BB240A0EDB0013BC9E /* QVideoTarget_internal.h */; };
 		6F5117C7240D50540013BC9E /* QGraphicNode.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6F5117C5240D50540013BC9E /* QGraphicNode.mm */; };
@@ -381,6 +382,7 @@
 		6F47DD1924659AD10045C9DC /* QNodeAnimator.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QNodeAnimator.mm; sourceTree = "<group>"; };
 		6F47DD1A24659AD10045C9DC /* QNodeAnimator.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QNodeAnimator.h; sourceTree = "<group>"; };
 		6F47DD212468FD0A0045C9DC /* QAudioTrackNode_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QAudioTrackNode_internal.h; sourceTree = "<group>"; };
+		6F50D8012860D05F005BF291 /* QPixelbufferFrameBuffer.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QPixelbufferFrameBuffer.mm; sourceTree = "<group>"; };
 		6F5117A72409F94F0013BC9E /* QVideoTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QVideoTarget.h; sourceTree = "<group>"; };
 		6F5117BB240A0EDB0013BC9E /* QVideoTarget_internal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QVideoTarget_internal.h; sourceTree = "<group>"; };
 		6F5117C5240D50540013BC9E /* QGraphicNode.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = QGraphicNode.mm; sourceTree = "<group>"; };
@@ -756,6 +758,7 @@
 				6FACC4332462564A008F1B41 /* QObserverHoster.m */,
 				6FA69F96244E8E3700BC3294 /* IOSTexture.h */,
 				6FA69F97244E8E3700BC3294 /* IOSTexture.m */,
+				6F50D8012860D05F005BF291 /* QPixelbufferFrameBuffer.mm */,
 				6FBD025F24552F0F00372404 /* IOSGLTextureDrawable.h */,
 				6FBD025E24552F0F00372404 /* IOSGLTextureDrawable.mm */,
 			);
@@ -1145,6 +1148,7 @@
 				6FBD028A245A8B4D00372404 /* QDuplicateNode.mm in Sources */,
 				6F5117D6240E756F0013BC9E /* QAudioFrame.mm in Sources */,
 				13D086C028577733007DD14D /* QEditorPlayerInternal.mm in Sources */,
+				6F50D8022860D05F005BF291 /* QPixelbufferFrameBuffer.mm in Sources */,
 				6FA69F99244E8E3700BC3294 /* IOSTexture.m in Sources */,
 				1324360D2859E15C00AD6BA8 /* QVec4f.mm in Sources */,
 				132436142859E15C00AD6BA8 /* QVec4f+Private.mm in Sources */,

@@ -24,7 +24,7 @@ public:
     virtual bool prepare() override;
     
     virtual std::future<bool> setPositionTo(int64_t mSec) override;//set read position to designated location
-    virtual std::future<void> stopMedia() override;//stop
+    virtual std::future<bool> stopMedia() override;//stop
     /**
      * timeScale(float) time scale for track, the equivalent of (1.0f / playe speed)
      * default 1.0f

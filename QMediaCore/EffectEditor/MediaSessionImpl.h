@@ -129,7 +129,7 @@ public:
     virtual void stop() override;
     
                              
-    void setPositionTo(int64_t time_ms);
+    void setPositionTo(int64_t time_ms, int flag);
                              
     bool onRenderCreate();
     bool onVideoRender(int64_t wantTimeMs);

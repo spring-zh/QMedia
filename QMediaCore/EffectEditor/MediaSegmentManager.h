@@ -72,7 +72,7 @@ public:
     MediaRange getMediaTimeRange() const;
     
     void start();
-    void setPositionTo(int64_t time_ms);
+    void setPositionTo(int64_t time_ms, bool update);
     void stop();
     
     void ReadVideoFrames(int64_t time_ms);
@@ -81,7 +81,7 @@ private:
     void OnSegmentDecodeError(int error) override {}
 protected:
     bool RebuildSegmentTracks(SegmentTrack& ord_segments, std::vector<SegmentTrack>& segment_tracks);
-    void ResetDecoders();
+    void ResetDecoders(int64_t position);
     SegmentTrack video_ord_segments_;
     SegmentTrack audio_ord_segments_;
 

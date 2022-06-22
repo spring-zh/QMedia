@@ -49,6 +49,7 @@
 		6F224A7524AEDDBF000244FF /* AudioFrame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A7124AEDDBF000244FF /* AudioFrame.cpp */; };
 		6F3720702469896800356951 /* speex_resampler.c in Sources */ = {isa = PBXBuildFile; fileRef = 6F37206F2469896800356951 /* speex_resampler.c */; };
 		6F45922A2461ADE800FABEAF /* QPlayer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F4592292461ADE800FABEAF /* QPlayer.cpp */; };
+		6F50D8002860C5B4005BF291 /* TextureFrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F50D7FF2860C5B4005BF291 /* TextureFrameBuffer.cpp */; };
 		6F5118C1240F9CCB0013BC9E /* Logger.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F5118BF240F9CCB0013BC9E /* Logger.cpp */; };
 		6F6214552446A84900AF70A0 /* GcRenderNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F6214542446A84900AF70A0 /* GcRenderNode.cpp */; };
 		6F637EC523D0477A0004E053 /* GcNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E6323D047790004E053 /* GcNode.cpp */; };
@@ -204,6 +205,8 @@
 		6F372072246A3E4000356951 /* resample_neon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = resample_neon.h; sourceTree = "<group>"; };
 		6F4592282461ADE800FABEAF /* QPlayer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = QPlayer.h; sourceTree = "<group>"; };
 		6F4592292461ADE800FABEAF /* QPlayer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = QPlayer.cpp; sourceTree = "<group>"; };
+		6F50D7FE2860C5B4005BF291 /* TextureFrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextureFrameBuffer.h; sourceTree = "<group>"; };
+		6F50D7FF2860C5B4005BF291 /* TextureFrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = TextureFrameBuffer.cpp; sourceTree = "<group>"; };
 		6F5117BF240B65600013BC9E /* VideoFrameDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoFrameDrawer.h; sourceTree = "<group>"; };
 		6F5117FC240F9BD40013BC9E /* stb_image_write.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image_write.h; sourceTree = "<group>"; };
 		6F5117FD240F9BD40013BC9E /* stb_image.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = stb_image.h; sourceTree = "<group>"; };
@@ -616,6 +619,8 @@
 				6F1874A22490DFF3009C4B94 /* Texture2DDrawer.h */,
 				6F637E8F23D047790004E053 /* FrameBuffer.cpp */,
 				6F637E9123D047790004E053 /* FrameBuffer.h */,
+				6F50D7FF2860C5B4005BF291 /* TextureFrameBuffer.cpp */,
+				6F50D7FE2860C5B4005BF291 /* TextureFrameBuffer.h */,
 				6F224A292499AF0D000244FF /* ShaderProgram.cpp */,
 				6F224A282499AF0D000244FF /* ShaderProgram.h */,
 				6F637E9423D047790004E053 /* GLEngine.cpp */,
@@ -933,6 +938,7 @@
 				6F81B3D424DAD83D00A8449B /* sonic.c in Sources */,
 				6FF02930221EECFC0011E6CB /* MediaSupervisor.cpp in Sources */,
 				6F224A57249CEEF7000244FF /* WhiteBalanceConfig.cpp in Sources */,
+				6F50D8002860C5B4005BF291 /* TextureFrameBuffer.cpp in Sources */,
 				1324365B285A2DE300AD6BA8 /* size.cpp in Sources */,
 				13E51E9D284A3A6500EC9179 /* Mp4Demuxer.cpp in Sources */,
 				6F224A2A2499AF0D000244FF /* ShaderProgram.cpp in Sources */,

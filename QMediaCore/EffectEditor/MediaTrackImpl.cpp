@@ -134,7 +134,7 @@ std::future<bool> MediaTrackImpl::setPositionTo(int64_t mSec)
     return sequentail_decoder_->SetPositionTo(mSec);
 }
 
-std::future<void> MediaTrackImpl::stopMedia()
+std::future<bool> MediaTrackImpl::stopMedia()
 {
 //    return thread_task_.PostTask([this](){
 //        wrlock_guard wrlock(_rwlock);

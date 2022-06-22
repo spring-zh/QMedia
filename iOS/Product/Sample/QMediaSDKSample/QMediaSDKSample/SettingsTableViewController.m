@@ -129,7 +129,9 @@
     CGFloat blue = 0.0;
     CGFloat alpha = 0.0;
     [color getRed:&red green:&green blue:&blue alpha:&alpha];
-    self.globalXMObject.player.rootNode.bkColor = QColorMake(red, green, blue, alpha);
+    
+    [self.globalXMObject.player setBkColor:[QVec4f vec4fWithV1:red v2:green v3:blue v4:alpha]];
+//    self.globalXMObject.player.rootNode.bkColor = QColorMake(red, green, blue, alpha);
     [self.globalXMObject updateDisplay];
 }
 

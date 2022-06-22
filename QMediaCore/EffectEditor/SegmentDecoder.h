@@ -37,7 +37,7 @@ public:
     
     virtual std::future<bool> SetPositionTo(int64_t time_ms);//set read position to designated location
     
-    virtual std::future<void> StopMedia();//stop
+    virtual std::future<bool> StopMedia();//stop
     
     virtual DecodedFrame ReadFrame(int64_t time_ms, int& index, MediaSegmentImpl** psegment);
     

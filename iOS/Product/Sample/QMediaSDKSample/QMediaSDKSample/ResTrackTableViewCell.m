@@ -187,11 +187,12 @@
                 
                 int64_t start_point = self.resStartTimePoint * 1000;
                 
-                id<QTrack> track = [self.globalXMObject.tracks objectAtIndex:self.cellIndex];
-                int64_t trackLenght = QTimeRangeGetLenght( track.displayRange);
-                track.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
+                QMediaSegment* track = [self.globalXMObject.tracks objectAtIndex:self.cellIndex];
+                int64_t trackLenght = QMediaRangeGetLenght([track getDisplayRange]);
+                [track setDisplayRange:[QMediaRange mediaRangeWithStart:start_point end:(start_point + trackLenght)]];
+//                track.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
                 
-                [self.player seek:[self.player getPosition] flag:0];
+                [self.player seek:[self.player getPosition] flag:1];
             }
         }
             break;
@@ -201,13 +202,13 @@
         case UIGestureRecognizerStateFailed:
         {
             int64_t start_point = self.resStartTimePoint * 1000;
-//            QMediaTrack* subObject = self.globalXMObject.player.subObjects.allValues[self.cellIndex];
-//            int64_t trackLenght = QTimeRangeGetLenght( subObject.displayRange);
-//            subObject.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
-            id<QTrack> track = [self.globalXMObject.tracks objectAtIndex:self.cellIndex];
-            int64_t trackLenght = QTimeRangeGetLenght( track.displayRange);
-            track.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
-            [self.player seek:[self.player getPosition] flag:0];
+            QMediaSegment* track = [self.globalXMObject.tracks objectAtIndex:self.cellIndex];
+            int64_t trackLenght = QMediaRangeGetLenght([track getDisplayRange]);
+            [track setDisplayRange:[QMediaRange mediaRangeWithStart:start_point end:(start_point + trackLenght)]];
+//            id<QTrack> track = [self.globalXMObject.tracks objectAtIndex:self.cellIndex];
+//            int64_t trackLenght = QTimeRangeGetLenght( track.displayRange);
+//            track.displayRange = QTimeRangeMake(start_point, start_point + trackLenght);
+            [self.player seek:[self.player getPosition] flag:1];
         }
             break;
             

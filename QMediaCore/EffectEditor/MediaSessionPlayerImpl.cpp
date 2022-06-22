@@ -120,7 +120,7 @@ void MediaSessionPlayerImpl::seek(int64_t time_ms, int32_t flag) {
     _bSeeking.store(true);
     _seekIdx ++;
     _playerPosition = time_ms;
-    session_->thread_task_.PostTask(CMD_SEEK, &MediaSessionPlayerImpl::_seek, this, time_ms, _seekIdx.load());
+    session_->thread_task_.PostTask(CMD_SEEK, &MediaSessionPlayerImpl::_seek, this, time_ms, _seekIdx.load(), flag);
 }
 
 
@@ -164,7 +164,7 @@ RetCode MediaSessionPlayerImpl::_pause(bool bPause)
     _state = bPause? SessionState::Paused : SessionState::Started;
     return RetCode::ok;
 }
-RetCode MediaSessionPlayerImpl::_seek(int64_t mSec, int flag)
+RetCode MediaSessionPlayerImpl::_seek(int64_t mSec, int cnt, int flag)
 {
     t_lock_guard<ticket_lock> clk(_render_mutex);
     MPST_RET_IF_EQ(_state, SessionState::Idle);
@@ -186,7 +186,7 @@ RetCode MediaSessionPlayerImpl::_seek(int64_t mSec, int flag)
     
     _playerClock.SetClock(mSec);
     session_->_audioClock.setClock(mSec);
-    session_->setPositionTo(mSec);
+    session_->setPositionTo(mSec, flag);
     if(_state == SessionState::Completed) {
         _state = SessionState::Paused;
         _userPaused = true;
@@ -196,7 +196,7 @@ RetCode MediaSessionPlayerImpl::_seek(int64_t mSec, int flag)
         session_->audio_loop_->audioPause(false);
         _playerClock.SetPaused(false);
     }
-    if (_seekIdx.load() == flag) { //clear seeking state
+    if (_seekIdx.load() == cnt) { //clear seeking state
         _bSeeking.store(false);
     }
 //    _callback->onSeekTo(mSec);
