@@ -1,12 +1,12 @@
 
 #include "QVideoFrame.h"
 #include "Utils/Comm.h"
-#include "GraphicCore/opengl/Drawable2D.h"
-#include "GraphicCore/opengl/shaders/ccShaders.h"
+#include "RenderEngine/opengl/Drawable2D.h"
+#include "RenderEngine/opengl/shader_code.h"
 #import <OpenGLES/EAGL.h>
 #import <CoreFoundation/CoreFoundation.h>
 
-USING_GRAPHICCORE
+using namespace QMedia::RenderEngine;
 
 PixelFrameBuffer::PixelFrameBuffer(CMSampleBufferRef sampleBuffer){
 //    _sampleBuffer = sampleBuffer;
@@ -296,28 +296,28 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
     return true;
 }
 
-void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, QMedia::Api::SceneNode* node) {
-    GraphicCore::Mat4 mvpMatrix;
-    GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
-    GraphicCore::Rect region(0,0, node->getContentSize().width, node->getContentSize().height);
+void PixelFrameNV12Drawer::drawFrame(const RenderEngine::Scene* scene, const RenderEngine::Mat4 & transform, QMedia::Api::SceneNode* node) {
+    RenderEngine::Mat4 mvpMatrix;
+    RenderEngine::Mat4::multiply(scene->getMatrix(Api::MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+    RenderEngine::Rect region(0,0, node->getContentSize().width, node->getContentSize().height);
     auto crop_v = node->getCrop();
-    GraphicCore::Rect crop(crop_v.left, crop_v.top, crop_v.right, crop_v.bottom);
+    RenderEngine::Rect crop(crop_v.left, crop_v.top, crop_v.right, crop_v.bottom);
     auto color_v = node->getColor4F();
-    GraphicCore::Color4F color = GraphicCore::Color4F(color_v.r, color_v.g, color_v.b, color_v.a);
-    GraphicCore::BlendFunc bf = BlendFunc::DISABLE;
+    RenderEngine::Color4F color = RenderEngine::Color4F(color_v.r, color_v.g, color_v.b, color_v.a);
+    RenderEngine::BlendFunc bf = BlendFunc::DISABLE;
     drawFrame(mvpMatrix, region, (float)node->getPositionZ(), crop, color, bf, _rotation);
 }
 
-//void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
+//void PixelFrameNV12Drawer::drawFrame(const RenderEngine::Scene* scene, const RenderEngine::Mat4 & transform, const RenderEngine::Node* node)
 //{
-//    GraphicCore::Mat4 mvpMatrix;
-//    GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
-//    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
+//    RenderEngine::Mat4 mvpMatrix;
+//    RenderEngine::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+//    RenderEngine::Rect region(Vec2(0,0), node->getContentSize());
 //    drawFrame(mvpMatrix, region, node->getPositionZ(), node->getCrop(), node->getColor(), node->getBlendFunc(), _rotation);
 //}
 
-void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
-const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) {
+void PixelFrameNV12Drawer::drawFrame(const RenderEngine::Mat4& mvpMatrix, const RenderEngine::Rect & region, float positionZ, const RenderEngine::Rect crop, RenderEngine::Color4F color,
+const RenderEngine::BlendFunc& blend, VideoRotation rotation, RenderEngine::Drawable2D::FlipMode flipMode) {
     
     if (_program && _program->use()) {
         GLfloat posArray[] = {
@@ -341,27 +341,23 @@ const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawab
             default:
                 texArray = Drawable2D::RECTANGLE_TEX_COORDS;
                 break;
-
         }
-        _program->setVertexAttribValue("a_texCoord", VertexAttrib::TEXCOORD, texArray, 8);
-        _program->setVertexAttribValue("a_position", VertexAttrib::VERTEX3 ,posArray, GET_ARRAY_COUNT(posArray));
+        
+        _program->setVertexAttribValue("a_texCoord", (Uniform::Vec2<float>*)texArray, 4);
+        _program->setVertexAttribValue("a_position", (Uniform::Vec3<float>*)posArray, 4);
         
         if(_lumaTexture) {
-            Uniform::Value texture_y;
-            texture_y._texture = CVOpenGLESTextureGetName(_lumaTexture);
-            texture_y._textureTarget = CVOpenGLESTextureGetTarget(_lumaTexture);
-            _program->setUniformValue("SamplerY", Uniform::TEXTURE, texture_y);
+            Uniform::TextureUnit texture_y(CVOpenGLESTextureGetName(_lumaTexture), CVOpenGLESTextureGetTarget(_lumaTexture));
+            _program->setUniformValue("SamplerY", texture_y);
         }
         if (_chromaTexture) {
-            Uniform::Value texture_uv;
-            texture_uv._texture = CVOpenGLESTextureGetName(_chromaTexture);
-            texture_uv._textureTarget = CVOpenGLESTextureGetTarget(_chromaTexture);
-            _program->setUniformValue("SamplerUV", Uniform::TEXTURE, texture_uv);
+            Uniform::TextureUnit texture_uv(CVOpenGLESTextureGetName(_chromaTexture), CVOpenGLESTextureGetTarget(_chromaTexture));
+            _program->setUniformValue("SamplerUV", texture_uv);
         }
         
-        GraphicCore::Mat4 texMatrix;
+        RenderEngine::Mat4 texMatrix;
         //TODO: check crop
-        if (! crop.size.equals(GraphicCore::Size::ZERO)) {
+        if (! crop.size.equals(RenderEngine::Size::ZERO)) {
             //TODO: need crop
             float crop_arr[16] = {
                     crop.size.width, 0, 0, 0,
@@ -371,17 +367,11 @@ const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawab
             };
             texMatrix.multiply(crop_arr);
         }
-        _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m, 16);
-        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, (float*)mvpMatrix.m, 16);
-        _program->setUniformValue("colorConversionMatrix", Uniform::MATRIX3, _colorConversionMatrix, 9);
+        _program->setUniformValue("uTexMatrix", Uniform::Matrix(texMatrix.m, 4, 1));
+        _program->setUniformValue("uMVPMatrix", Uniform::Matrix(mvpMatrix.m, 4, 1));
+        _program->setUniformValue("colorConversionMatrix", Uniform::Matrix(_colorConversionMatrix, 3, 1));
         
-        Uniform::Value colorVal;
-        colorVal._floatOrmatrix_array = {
-            color.r,
-            color.g,
-            color.b,
-            color.a};
-        _program->setUniformValue("uColor", Uniform::FLOAT4, colorVal);
+        _program->setUniformValue("uColor", Uniform::Vec4<float>(color.r,color.g,color.b,color.a));
         if (blend != BlendFunc::DISABLE) {
             _program->setBlendFunc(blend);
         } else if (! FLOAT_ISEQUAL(color.a, 1.0f)){
@@ -501,28 +491,28 @@ bool PixelFrameBGRADrawer::setFrame(const VideoFrame& videoFrame)
     
     _duplicateTexture.updateTexture(_textures, Texture2D::RGBA, frameWidth, frameHeight);
     if (!_textureDrawer) {
-        _textureDrawer = std::shared_ptr<GraphicCore::Texture2DDrawer>(new GraphicCore::Texture2DDrawer());
+        _textureDrawer = std::shared_ptr<RenderEngine::Texture2DDrawer>(new RenderEngine::Texture2DDrawer());
     }
     
     return true;
 }
 
-//void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
+//void PixelFrameBGRADrawer::drawFrame(const RenderEngine::Scene* scene, const RenderEngine::Mat4 & transform, const RenderEngine::Node* node)
 //{
 //    if (_textureDrawer) {
 //        _textureDrawer->draw(&_duplicateTexture, scene, transform, node);
 //    }
 //}
 
-void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
-const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode)
+void PixelFrameBGRADrawer::drawFrame(const RenderEngine::Mat4& mvpMatrix, const RenderEngine::Rect & region, float positionZ, const RenderEngine::Rect crop, RenderEngine::Color4F color,
+const RenderEngine::BlendFunc& blend, VideoRotation rotation, RenderEngine::Drawable2D::FlipMode flipMode)
 {
     if (_textureDrawer) {
         _textureDrawer->draw(&_duplicateTexture, mvpMatrix, region, positionZ, crop, color, blend, flipMode);
     }
 }
 
-const GraphicCore::Texture2D* PixelFrameBGRADrawer::getOutputTexture() {
+const RenderEngine::Texture2D* PixelFrameBGRADrawer::getOutputTexture() {
     return &_duplicateTexture;
 }
 

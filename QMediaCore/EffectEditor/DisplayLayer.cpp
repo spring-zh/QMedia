@@ -12,10 +12,10 @@
 
 namespace QMedia { namespace Api {
 
-using namespace GraphicCore;
+using namespace RenderEngine;
 
-GraphicCore::Rect calculateDisplayRegion(DisplayMode mode, int srcW, int srcH, int dstW, int dstH) {
-    GraphicCore::Rect dstRegion;
+RenderEngine::Rect calculateDisplayRegion(DisplayMode mode, int srcW, int srcH, int dstW, int dstH) {
+    RenderEngine::Rect dstRegion;
     switch (mode) {
         case DisplayMode::Stretch:
             dstRegion.size.width = dstW;
@@ -48,10 +48,11 @@ GraphicCore::Rect calculateDisplayRegion(DisplayMode mode, int srcW, int srcH, i
     return dstRegion;
 }
 
-DisplayLayer::DisplayLayer(MediaSessionImpl *session): Layer2(GraphicCore::Size(0,0)),
+DisplayLayer::DisplayLayer(MediaSessionImpl *session): Layer2(RenderEngine::Size(0,0)),
 session_(session),
 _displayMode(DisplayMode::Adaptive) {
-    _playerScene.setGLEngine(&_gle);
+    _gle = RenderDeviceGL::createDevice(0);
+    _playerScene.setGLEngine(_gle.get());
     _renderRange = Range<int64_t>(0, std::numeric_limits<int64_t>::max());
     _isInit = false;
 }
@@ -63,14 +64,14 @@ const Range<int64_t> DisplayLayer::getRange() {
 }
 
 void DisplayLayer::releaseRes() {
-    _gle.releaseAll();
+    _gle->releaseAll();
     SceneNode::releaseRes();
 }
 
 bool DisplayLayer::beginRender() {
     LOGI("beginRender");
     if (!_isInit) {
-        _gle.useAsDefaultFrameBuffer();
+        _gle->useAsDefaultFrameBuffer();
 //            _targetW = getContentSize().width;
 //            _targetH = getContentSize().height;
 //            _layerSize = GraphicCore::Size(_targetW, _targetH);
@@ -81,7 +82,7 @@ bool DisplayLayer::beginRender() {
 
     return true;
 }
-void DisplayLayer::setLayerSize(const GraphicCore::Size& size) {
+void DisplayLayer::setLayerSize(const RenderEngine::Size& size) {
     LOGI("setLayerSize width:%f, height:%f", size.width, size.height);
     Layer2::setLayerSize(size);
 }
@@ -89,9 +90,9 @@ void DisplayLayer::setTargetSize(int viewW, int viewH) {
     LOGI("setTargetSize viewW:%d, viewH:%d", viewW, viewH);
     _viewW = viewW;
     _viewH = viewH;
-    GraphicCore::Rect vp(0, 0, _viewW, _viewH);
+    RenderEngine::Rect vp(0, 0, _viewW, _viewH);
     _playerScene.setViewPort(vp);
-    _playerScene.setProjection(GraphicCore::Projection::_2D);
+    _playerScene.setProjection(PROJ_2D);
 }
 void DisplayLayer::setDisplayMode(DisplayMode mode, bool filp_v) {
     LOGI("setDisplayMode");
@@ -108,13 +109,13 @@ void DisplayLayer::render(int64_t timeStamp){
     _playerScene.setDelta(timeStamp);
     // read dec frame to medianode
     session_->ReadVideoFrames(timeStamp);
-    GraphicCore::Rect region = calculateDisplayRegion(_displayMode, getLayerSize().width, getLayerSize().height, _viewW, _viewH);
+    RenderEngine::Rect region = calculateDisplayRegion(_displayMode, getLayerSize().width, getLayerSize().height, _viewW, _viewH);
 //        setPosition(region.origin);
 //        setContentSize(region.size);
     setPosition(Point(region.origin.x, region.origin.y));
     setContentSize(Size(region.size.width, region.size.height));
-    _gle.setViewPort(GraphicCore::Rect(0, 0, _viewW, _viewH));
-    Layer2::visit(&_playerScene, _playerScene.getMatrix(GraphicCore::MATRIX_STACK_MODELVIEW), 0);
+    _gle->setViewPort(Api::Vec4f(0, 0, _viewW, _viewH));
+    Layer2::visit(&_playerScene, _playerScene.getMatrix(MATRIX_STACK_MODELVIEW), 0);
 }
     
 }

@@ -9,17 +9,17 @@
 #import "QEffect_internal.h"
 
 @implementation QEffect {
-    GraphicCore::EffectRef _native;
+    QMedia::RenderEngine::EffectRef _native;
 }
 
-- (instancetype)initWithNative:(GraphicCore::EffectRef)effect {
+- (instancetype)initWithNative:(QMedia::RenderEngine::EffectRef)effect {
     if ((self = [self init]) != nil) {
         _native = effect;
     }
     return self;
 }
 
-- (GraphicCore::EffectRef)native {
+- (QMedia::RenderEngine::EffectRef)native {
     return _native;
 }
 

@@ -8,9 +8,9 @@
 
 #import "QEffectManage.h"
 #import "QEffect_internal.h"
-#include "GraphicCore/effect/EffectManage.h"
+#include "RenderEngine/effect/EffectManage.h"
 
-using EffectManage = GraphicCore::EffectManage;
+using QMedia::RenderEngine::EffectManage;
 
 @implementation QEffectConfig {
     NSString* _name;
@@ -57,9 +57,9 @@ using EffectManage = GraphicCore::EffectManage;
 }
 
 + (QEffect*)createEffect:(NSString*)name {
-    GraphicCore::Effect* effect = EffectManage::instance()->createEffect([name UTF8String]);
+    QMedia::RenderEngine::Effect* effect = EffectManage::instance()->createEffect([name UTF8String]);
     if (effect) {
-        return [[QEffect alloc] initWithNative:GraphicCore::EffectRef(effect)];
+        return [[QEffect alloc] initWithNative:QMedia::RenderEngine::EffectRef(effect)];
     }else
         return nil;
 }

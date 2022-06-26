@@ -9,7 +9,7 @@
 #ifndef EFFECTEDITOR_DIAPLAY_LAYER_H
 #define EFFECTEDITOR_DIAPLAY_LAYER_H
 
-#include "GraphicCore/Layer2.h"
+#include "RenderEngine/Layer2.h"
 
 namespace QMedia { namespace Api {
 
@@ -31,7 +31,7 @@ public:
     void releaseRes() override;
     
     bool beginRender() ;
-    void setLayerSize(const GraphicCore::Size& size) override ;
+    void setLayerSize(const RenderEngine::Size& size) override ;
     void setTargetSize(int viewW, int viewH) ;
     void setDisplayMode(DisplayMode mode, bool filp_v) ;
     void render(int64_t timeStamp) ;
@@ -40,8 +40,8 @@ public:
 
 private:
     MediaSessionImpl * session_;
-    GraphicCore::Scene _playerScene;
-    GraphicCore::GLEngine _gle;
+    RenderEngine::Scene _playerScene;
+    RenderEngine::RenderDeviceGL::UPtr _gle;
     
     DisplayMode _displayMode;
     bool filp_v_ = false;

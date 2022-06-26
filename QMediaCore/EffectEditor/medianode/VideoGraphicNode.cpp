@@ -22,18 +22,18 @@ void VideoGraphicNode::PutVideoFrame(DecodedFrame decodeframe) {
     _drawer->setFrame(videoframe);
 }
 
-void VideoGraphicNode::draw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, uint32_t flags) {
+void VideoGraphicNode::draw(RenderEngine::Scene* scene, const RenderEngine::Mat4 & transform, uint32_t flags) {
     
     int64_t duration = scene->getDelta() - _renderRange._start;
     if (_effect_group.has_effect() && _drawer->getOutputTexture()) {
-        const GraphicCore::Texture2D* texture = _drawer->getOutputTexture();
+        const RenderEngine::Texture2D* texture = _drawer->getOutputTexture();
         SceneNode::drawEffects(duration, scene, transform, texture);
     }else {
         _drawer->drawFrame(scene,transform, this);
     }
 }
 
-void VideoGraphicNode::duplicateDraw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, SceneNode* diaplayNode) {
+void VideoGraphicNode::duplicateDraw(RenderEngine::Scene* scene, const RenderEngine::Mat4 & transform, SceneNode* diaplayNode) {
     _drawer->drawFrame(scene,transform, diaplayNode);
 }
 

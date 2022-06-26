@@ -9,7 +9,7 @@
 #include "EditorPlayerImpl.h"
 #include "Utils/Logger.h"
 
-USING_GRAPHICCORE
+using namespace QMedia::RenderEngine;
 
 #define MP_RET_IF_FAILED(ret) \
 do { \

@@ -119,3 +119,13 @@ std::string ValueToString(const T &value){
 #define FLOAT_ISEQUAL(val, eqVal) (fabs(val - eqVal) < FLT_EPSILON)
 
 #define CLASSREF(c) using c##Ref = std::shared_ptr<c> ;
+
+/** @def DEGREES_TO_RADIANS
+ converts degrees to radians
+ */
+#define DEGREES_TO_RADIANS(__ANGLE__) ((__ANGLE__) * 0.01745329252f) // PI / 180
+
+/** @def RADIANS_TO_DEGREES
+ converts radians to degrees
+ */
+#define RADIANS_TO_DEGREES(__ANGLE__) ((__ANGLE__) * 57.29577951f) // PI * 180

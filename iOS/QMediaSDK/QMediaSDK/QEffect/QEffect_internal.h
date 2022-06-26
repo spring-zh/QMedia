@@ -6,12 +6,12 @@
 //  Copyright © 2020 QMedia. All rights reserved.
 //
 
-#include "GraphicCore/effect/Effect.h"
+#include "RenderEngine/effect/Effect.h"
 #import "QEffect.h"
 
 @interface QEffect(internal)
 
-- (instancetype)initWithNative:(GraphicCore::EffectRef)effect;
-@property (nonatomic, readonly) GraphicCore::EffectRef native;
+- (instancetype)initWithNative:(QMedia::RenderEngine::EffectRef)effect;
+@property (nonatomic, readonly) QMedia::RenderEngine::EffectRef native;
 
 @end

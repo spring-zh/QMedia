@@ -7,10 +7,10 @@
 //
 
 #import "IOSGLTextureDrawable.h"
-#include "GraphicCore/opengl/Drawable2D.h"
-#include "GraphicCore/opengl/ShaderProgram.h"
+#include "RenderEngine/opengl/Drawable2D.h"
+#include "RenderEngine/opengl/shader_program_gl.h"
 
-USING_GRAPHICCORE
+using namespace QMedia::RenderEngine;
 
 #define SHADER_STRING(A)  #A
 
@@ -60,7 +60,7 @@ static GLint prev_fbo;
 @implementation IOSGLTextureDrawable {
     id<IOSTexture> _iosTexture;
     GLuint _glFbId;
-    GraphicCore::ShaderProgram _shaderProgram;
+    ShaderProgram _shaderProgram;
 }
 
 - (instancetype)initWithTexture:(id<IOSTexture>)iosTexture
@@ -127,14 +127,16 @@ static GLint prev_fbo;
 
 - (bool)draw:(QFilpMode)filpMode{
     if (_shaderProgram.use()) {
-        _shaderProgram.setUniformValue("inputImageTexture", Uniform::TEXTURE, (int)_iosTexture.glTexid);
-        _shaderProgram.setVertexAttribValue("position", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_COORDS, 8);
+        Uniform::TextureUnit tex_val(_iosTexture.glTexid);
+        _shaderProgram.setUniformValue("inputImageTexture", tex_val);
+        
+        _shaderProgram.setVertexAttribValue("position", (Uniform::Vec2<float>*)Drawable2D::RECTANGLE_COORDS, 4);
         if (filpMode == QFilpH) {
-            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_TEX_COORDS_FLIPH, 8);
+            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", (Uniform::Vec2<float>*)Drawable2D::RECTANGLE_TEX_COORDS_FLIPH, 4);
         }else if (filpMode == QFilpV)
-            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_TEX_COORDS_FLIPV, 8);
+            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", (Uniform::Vec2<float>*)Drawable2D::RECTANGLE_TEX_COORDS_FLIPV, 4);
         else
-            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", VertexAttrib::VERTEX2, Drawable2D::RECTANGLE_TEX_COORDS, 8);
+            _shaderProgram.setVertexAttribValue("inputTextureCoordinate", (Uniform::Vec2<float>*)Drawable2D::RECTANGLE_TEX_COORDS, 4);
         
         return _shaderProgram.drawRectangle() == 0;
     }

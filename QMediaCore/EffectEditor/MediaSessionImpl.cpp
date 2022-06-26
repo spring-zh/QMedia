@@ -105,7 +105,7 @@ void MediaSessionImpl::setVideoRunLoop(const std::shared_ptr<VideoRunloop> & vid
 }
 
 void MediaSessionImpl::setDisplayLayerSize(const Size & size) {
-    display_layer_->setLayerSize(GraphicCore::Size(size.width, size.height));
+    display_layer_->setLayerSize(RenderEngine::Size(size.width, size.height));
 }
 
 Size MediaSessionImpl::getDisplayLayerSize() {
@@ -113,12 +113,11 @@ Size MediaSessionImpl::getDisplayLayerSize() {
 }
 
 void MediaSessionImpl::setBkColor(const Vec4f & color) {
-    display_layer_->setBKColor(GraphicCore::Color4F(color.v1, color.v2, color.v3, color.v4));
+    display_layer_->setBKColor(color);
 }
 
 Vec4f MediaSessionImpl::getBkColor() {
-    auto color = display_layer_->getBKColor();
-    return Vec4f(color.r, color.g, color.b, color.a);
+    return display_layer_->getBKColor();
 }
 
 /** control */

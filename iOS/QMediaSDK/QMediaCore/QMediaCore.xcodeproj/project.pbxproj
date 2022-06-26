@@ -40,7 +40,6 @@
 		6F17362F28636F4D00FD15F3 /* BaseNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F17362D28636F4D00FD15F3 /* BaseNode.cpp */; };
 		6F1874A32490DFF3009C4B94 /* Texture2DDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F1874A12490DFF3009C4B94 /* Texture2DDrawer.cpp */; };
 		6F224A1D249385DD000244FF /* PolarPixellateConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A1B249385DD000244FF /* PolarPixellateConfig.cpp */; };
-		6F224A2A2499AF0D000244FF /* ShaderProgram.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A292499AF0D000244FF /* ShaderProgram.cpp */; };
 		6F224A34249A3C8E000244FF /* FilterConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A32249A3C8E000244FF /* FilterConfig.cpp */; };
 		6F224A39249B0FC3000244FF /* FilterDrawer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A38249B0FC3000244FF /* FilterDrawer.cpp */; };
 		6F224A4E249C67BA000244FF /* ColorInvertConfig.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F224A4D249C67BA000244FF /* ColorInvertConfig.cpp */; };
@@ -63,13 +62,11 @@
 		6F637ECC23D0477A0004E053 /* Vec3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E7F23D047790004E053 /* Vec3.cpp */; };
 		6F637ECD23D0477A0004E053 /* CCAffineTransform.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8023D047790004E053 /* CCAffineTransform.cpp */; };
 		6F637ECE23D0477A0004E053 /* Filter.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8323D047790004E053 /* Filter.cpp */; };
-		6F637ED123D0477A0004E053 /* GcScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8623D047790004E053 /* GcScene.cpp */; };
-		6F637ED223D0477A0004E053 /* ColorTypes.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8923D047790004E053 /* ColorTypes.cpp */; };
-		6F637ED323D0477A0004E053 /* FrameBuffer.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8F23D047790004E053 /* FrameBuffer.cpp */; };
+		6F637ED123D0477A0004E053 /* RenderScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8623D047790004E053 /* RenderScene.cpp */; };
+		6F637ED223D0477A0004E053 /* color_types.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8923D047790004E053 /* color_types.cpp */; };
+		6F637ED323D0477A0004E053 /* frame_buffer_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E8F23D047790004E053 /* frame_buffer_gl.cpp */; };
 		6F637ED423D0477A0004E053 /* Drawable2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E9323D047790004E053 /* Drawable2D.cpp */; };
-		6F637ED523D0477A0004E053 /* GLEngine.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637E9423D047790004E053 /* GLEngine.cpp */; };
-		6F637ED623D0477A0004E053 /* ccShaders.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637EBB23D047790004E053 /* ccShaders.cpp */; };
-		6F637ED823D0477A0004E053 /* Texture2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637EC423D047790004E053 /* Texture2D.cpp */; };
+		6F637ED823D0477A0004E053 /* texture2d_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637EC423D047790004E053 /* texture2d_gl.cpp */; };
 		6F637EE023D6AB8B0004E053 /* AudioProcess.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637EDE23D6AB8B0004E053 /* AudioProcess.cpp */; };
 		6F637EE323D9BF1D0004E053 /* ResamplerSpeex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F637EE223D9BF1D0004E053 /* ResamplerSpeex.cpp */; };
 		6F7329DF2865EEFC00C7D3DE /* VideoGraphicNode.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6F7329DE2865EEFC00C7D3DE /* VideoGraphicNode.cpp */; };
@@ -81,6 +78,9 @@
 		6FD33BC92866CFA900548102 /* EditorExporterImpl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BC82866CFA800548102 /* EditorExporterImpl.cpp */; };
 		6FD33BD32866ED7E00548102 /* video_encode_option.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BD12866ED7E00548102 /* video_encode_option.cpp */; };
 		6FD33BD42866ED7E00548102 /* audio_encode_option.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BD22866ED7E00548102 /* audio_encode_option.cpp */; };
+		6FD33BEE2868A8BE00548102 /* render_device_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BE92868A8BE00548102 /* render_device_gl.cpp */; };
+		6FD33BEF2868A8BE00548102 /* shader_program_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BEA2868A8BE00548102 /* shader_program_gl.cpp */; };
+		6FD33BF02868A8BE00548102 /* shader_code.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BED2868A8BE00548102 /* shader_code.cpp */; };
 		6FF0292C221D28A50011E6CB /* MediaAudioChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0292A221D28A50011E6CB /* MediaAudioChannel.cpp */; };
 /* End PBXBuildFile section */
 
@@ -181,8 +181,6 @@
 		6F1874A12490DFF3009C4B94 /* Texture2DDrawer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2DDrawer.cpp; sourceTree = "<group>"; };
 		6F1874A22490DFF3009C4B94 /* Texture2DDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture2DDrawer.h; sourceTree = "<group>"; };
 		6F224A1B249385DD000244FF /* PolarPixellateConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = PolarPixellateConfig.cpp; sourceTree = "<group>"; };
-		6F224A282499AF0D000244FF /* ShaderProgram.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShaderProgram.h; sourceTree = "<group>"; };
-		6F224A292499AF0D000244FF /* ShaderProgram.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ShaderProgram.cpp; sourceTree = "<group>"; };
 		6F224A32249A3C8E000244FF /* FilterConfig.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FilterConfig.cpp; sourceTree = "<group>"; };
 		6F224A33249A3C8E000244FF /* FilterConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterConfig.h; sourceTree = "<group>"; };
 		6F224A37249B0FC3000244FF /* FilterDrawer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilterDrawer.h; sourceTree = "<group>"; };
@@ -219,7 +217,7 @@
 		6F5118BF240F9CCB0013BC9E /* Logger.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Logger.cpp; sourceTree = "<group>"; };
 		6F5118C0240F9CCB0013BC9E /* Logger.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Logger.h; sourceTree = "<group>"; };
 		6F56B736234C232B000F5122 /* PlatformConfig.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PlatformConfig.h; sourceTree = "<group>"; };
-		6F637E6423D047790004E053 /* GcScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GcScene.h; sourceTree = "<group>"; };
+		6F637E6423D047790004E053 /* RenderScene.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RenderScene.h; sourceTree = "<group>"; };
 		6F637E6723D047790004E053 /* Vec2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Vec2.h; sourceTree = "<group>"; };
 		6F637E6823D047790004E053 /* Mat4.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Mat4.h; sourceTree = "<group>"; };
 		6F637E6923D047790004E053 /* Quaternion.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Quaternion.inl; sourceTree = "<group>"; };
@@ -249,63 +247,16 @@
 		6F637E8123D047790004E053 /* MathUtilNeon.inl */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = MathUtilNeon.inl; sourceTree = "<group>"; };
 		6F637E8223D047790004E053 /* Filter.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Filter.h; sourceTree = "<group>"; };
 		6F637E8323D047790004E053 /* Filter.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Filter.cpp; sourceTree = "<group>"; };
-		6F637E8623D047790004E053 /* GcScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GcScene.cpp; sourceTree = "<group>"; };
-		6F637E8923D047790004E053 /* ColorTypes.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ColorTypes.cpp; sourceTree = "<group>"; };
-		6F637E8A23D047790004E053 /* Macros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Macros.h; sourceTree = "<group>"; };
-		6F637E8B23D047790004E053 /* ColorTypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ColorTypes.h; sourceTree = "<group>"; };
-		6F637E8D23D047790004E053 /* Texture2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Texture2D.h; sourceTree = "<group>"; };
+		6F637E8623D047790004E053 /* RenderScene.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = RenderScene.cpp; sourceTree = "<group>"; };
+		6F637E8923D047790004E053 /* color_types.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = color_types.cpp; sourceTree = "<group>"; };
+		6F637E8B23D047790004E053 /* color_types.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = color_types.h; sourceTree = "<group>"; };
+		6F637E8D23D047790004E053 /* texture2d_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = texture2d_gl.h; sourceTree = "<group>"; };
 		6F637E8E23D047790004E053 /* Drawable2D.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Drawable2D.h; sourceTree = "<group>"; };
-		6F637E8F23D047790004E053 /* FrameBuffer.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = FrameBuffer.cpp; sourceTree = "<group>"; };
-		6F637E9123D047790004E053 /* FrameBuffer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FrameBuffer.h; sourceTree = "<group>"; };
-		6F637E9223D047790004E053 /* GLMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLMacros.h; sourceTree = "<group>"; };
+		6F637E8F23D047790004E053 /* frame_buffer_gl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = frame_buffer_gl.cpp; sourceTree = "<group>"; };
+		6F637E9123D047790004E053 /* frame_buffer_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = frame_buffer_gl.h; sourceTree = "<group>"; };
+		6F637E9223D047790004E053 /* gl_platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gl_platform.h; sourceTree = "<group>"; };
 		6F637E9323D047790004E053 /* Drawable2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Drawable2D.cpp; sourceTree = "<group>"; };
-		6F637E9423D047790004E053 /* GLEngine.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = GLEngine.cpp; sourceTree = "<group>"; };
-		6F637E9623D047790004E053 /* ccShader_3D_Terrain.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_Terrain.vert; sourceTree = "<group>"; };
-		6F637E9723D047790004E053 /* ccShader_PositionTextureColor.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTextureColor.frag; sourceTree = "<group>"; };
-		6F637E9823D047790004E053 /* ccShader_PositionTextureColor_noMVP.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTextureColor_noMVP.vert; sourceTree = "<group>"; };
-		6F637E9923D047790004E053 /* ccShader_Position_uColor.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_Position_uColor.frag; sourceTree = "<group>"; };
-		6F637E9A23D047790004E053 /* ccShader_3D_ColorNormalTex.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_ColorNormalTex.frag; sourceTree = "<group>"; };
-		6F637E9B23D047790004E053 /* ccShader_Position.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_Position.vert; sourceTree = "<group>"; };
-		6F637E9C23D047790004E053 /* ccShaders.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ccShaders.h; sourceTree = "<group>"; };
-		6F637E9D23D047790004E053 /* ccShader_PositionTextureA8Color.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTextureA8Color.frag; sourceTree = "<group>"; };
-		6F637E9E23D047790004E053 /* ccShader_LayerRadialGradient.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_LayerRadialGradient.frag; sourceTree = "<group>"; };
-		6F637E9F23D047790004E053 /* ccShader_PositionColorLengthTexture.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionColorLengthTexture.vert; sourceTree = "<group>"; };
-		6F637EA023D047790004E053 /* ccShader_Label_df_glow.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_Label_df_glow.frag; sourceTree = "<group>"; };
-		6F637EA123D047790004E053 /* ccShader_Label_outline.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_Label_outline.frag; sourceTree = "<group>"; };
-		6F637EA223D047790004E053 /* ccShader_3D_Particle.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_Particle.frag; sourceTree = "<group>"; };
-		6F637EA323D047790004E053 /* ccShader_PositionTexture_uColor.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTexture_uColor.vert; sourceTree = "<group>"; };
-		6F637EA423D047790004E053 /* ccShader_3D_Skybox.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_Skybox.frag; sourceTree = "<group>"; };
-		6F637EA523D047790004E053 /* ccShader_Label_df.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_Label_df.frag; sourceTree = "<group>"; };
-		6F637EA623D047790004E053 /* ccShader_PositionColor.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionColor.frag; sourceTree = "<group>"; };
-		6F637EA723D047790004E053 /* ccShader_3D_ColorTex.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_ColorTex.frag; sourceTree = "<group>"; };
-		6F637EA823D047790004E053 /* ccShader_PositionTexture.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTexture.frag; sourceTree = "<group>"; };
-		6F637EA923D047790004E053 /* ccShader_CameraClear.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_CameraClear.vert; sourceTree = "<group>"; };
-		6F637EAA23D047790004E053 /* ccShader_Label.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_Label.vert; sourceTree = "<group>"; };
-		6F637EAB23D047790004E053 /* ccShader_ETC1AS_PositionTextureColor.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_ETC1AS_PositionTextureColor.frag; sourceTree = "<group>"; };
-		6F637EAC23D047790004E053 /* ccShader_PositionColorLengthTexture.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionColorLengthTexture.frag; sourceTree = "<group>"; };
-		6F637EAD23D047790004E053 /* ccShader_PositionColorTextureAsPointsize.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionColorTextureAsPointsize.vert; sourceTree = "<group>"; };
-		6F637EAE23D047790004E053 /* ccShader_PositionTextureA8Color.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTextureA8Color.vert; sourceTree = "<group>"; };
-		6F637EAF23D047790004E053 /* ccShader_Label_normal.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_Label_normal.frag; sourceTree = "<group>"; };
-		6F637EB023D047790004E053 /* ccShader_PositionTextureColorAlphaTest.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTextureColorAlphaTest.frag; sourceTree = "<group>"; };
-		6F637EB123D047790004E053 /* ccShader_Position_uColor.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_Position_uColor.vert; sourceTree = "<group>"; };
-		6F637EB223D047790004E053 /* ccShader_ETC1AS_PositionTextureGray.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_ETC1AS_PositionTextureGray.frag; sourceTree = "<group>"; };
-		6F637EB323D047790004E053 /* ccShader_PositionTextureColor.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTextureColor.vert; sourceTree = "<group>"; };
-		6F637EB423D047790004E053 /* ccShader_PositionTextureColor_noMVP.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTextureColor_noMVP.frag; sourceTree = "<group>"; };
-		6F637EB523D047790004E053 /* ccShader_3D_Color.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_Color.frag; sourceTree = "<group>"; };
-		6F637EB623D047790004E053 /* ccShader_3D_Terrain.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_Terrain.frag; sourceTree = "<group>"; };
-		6F637EB723D047790004E053 /* ccShader_PositionTexture.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTexture.vert; sourceTree = "<group>"; };
-		6F637EB823D047790004E053 /* ccShader_CameraClear.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_CameraClear.frag; sourceTree = "<group>"; };
-		6F637EB923D047790004E053 /* ccShader_3D_Skybox.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_Skybox.vert; sourceTree = "<group>"; };
-		6F637EBA23D047790004E053 /* ccShader_3D_ColorNormal.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_ColorNormal.frag; sourceTree = "<group>"; };
-		6F637EBB23D047790004E053 /* ccShaders.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = ccShaders.cpp; sourceTree = "<group>"; };
-		6F637EBC23D047790004E053 /* ccShader_PositionColor.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionColor.vert; sourceTree = "<group>"; };
-		6F637EBD23D047790004E053 /* ccShader_PositionTexture_uColor.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_PositionTexture_uColor.frag; sourceTree = "<group>"; };
-		6F637EBE23D047790004E053 /* ccShader_3D_PositionNormalTex.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_PositionNormalTex.vert; sourceTree = "<group>"; };
-		6F637EBF23D047790004E053 /* ccShader_UI_Gray.frag */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_UI_Gray.frag; sourceTree = "<group>"; };
-		6F637EC023D047790004E053 /* ccShader_3D_PositionTex.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_PositionTex.vert; sourceTree = "<group>"; };
-		6F637EC123D047790004E053 /* ccShader_3D_Particle.vert */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.glsl; path = ccShader_3D_Particle.vert; sourceTree = "<group>"; };
-		6F637EC323D047790004E053 /* GLEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GLEngine.h; sourceTree = "<group>"; };
-		6F637EC423D047790004E053 /* Texture2D.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = Texture2D.cpp; sourceTree = "<group>"; };
+		6F637EC423D047790004E053 /* texture2d_gl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = texture2d_gl.cpp; sourceTree = "<group>"; };
 		6F637EDC23D434200004E053 /* spin_lock.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = spin_lock.h; sourceTree = "<group>"; };
 		6F637EDE23D6AB8B0004E053 /* AudioProcess.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = AudioProcess.cpp; sourceTree = "<group>"; };
 		6F637EDF23D6AB8B0004E053 /* AudioProcess.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioProcess.h; sourceTree = "<group>"; };
@@ -330,6 +281,14 @@
 		6FD33BD02866ED7E00548102 /* audio_encode_option.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = audio_encode_option.h; sourceTree = "<group>"; };
 		6FD33BD12866ED7E00548102 /* video_encode_option.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = video_encode_option.cpp; sourceTree = "<group>"; };
 		6FD33BD22866ED7E00548102 /* audio_encode_option.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = audio_encode_option.cpp; sourceTree = "<group>"; };
+		6FD33BE82868A8BD00548102 /* shader_program_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader_program_gl.h; sourceTree = "<group>"; };
+		6FD33BE92868A8BE00548102 /* render_device_gl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = render_device_gl.cpp; sourceTree = "<group>"; };
+		6FD33BEA2868A8BE00548102 /* shader_program_gl.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader_program_gl.cpp; sourceTree = "<group>"; };
+		6FD33BEB2868A8BE00548102 /* render_device_gl.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = render_device_gl.h; sourceTree = "<group>"; };
+		6FD33BEC2868A8BE00548102 /* shader_code.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = shader_code.h; sourceTree = "<group>"; };
+		6FD33BED2868A8BE00548102 /* shader_code.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = shader_code.cpp; sourceTree = "<group>"; };
+		6FD33BF12868B10300548102 /* Variant.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Variant.h; sourceTree = "<group>"; };
+		6FD33BF22868B10300548102 /* optional.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = optional.hpp; sourceTree = "<group>"; };
 		6FF0290D221BFEE40011E6CB /* DecodedFrameQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DecodedFrameQueue.h; sourceTree = "<group>"; };
 		6FF02918221BFEE40011E6CB /* AudioDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioDecoder.h; sourceTree = "<group>"; };
 		6FF02919221BFEE40011E6CB /* VideoDecoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VideoDecoder.h; sourceTree = "<group>"; };
@@ -358,7 +317,7 @@
 			children = (
 				13D0867728577674007DD14D /* generated-src */,
 				6FF02922221BFEE40011E6CB /* Utils */,
-				6F637E6123D047790004E053 /* GraphicCore */,
+				6F637E6123D047790004E053 /* RenderEngine */,
 				6FF0290B221BFEE40011E6CB /* MediaCore */,
 				6FF0291E221BFEE40011E6CB /* EffectEditor */,
 				6F5117D7240F9BD40013BC9E /* Thirdparty */,
@@ -533,7 +492,7 @@
 			path = stb;
 			sourceTree = "<group>";
 		};
-		6F637E6123D047790004E053 /* GraphicCore */ = {
+		6F637E6123D047790004E053 /* RenderEngine */ = {
 			isa = PBXGroup;
 			children = (
 				6F637E8823D047790004E053 /* base */,
@@ -547,13 +506,13 @@
 				6F11A33F2864A7D000786CE5 /* AnimateNode.h */,
 				6F11A3412864D3BC00786CE5 /* SceneNode.cpp */,
 				6F11A3422864D3BC00786CE5 /* SceneNode.h */,
-				6F637E8623D047790004E053 /* GcScene.cpp */,
-				6F637E6423D047790004E053 /* GcScene.h */,
+				6F637E8623D047790004E053 /* RenderScene.cpp */,
+				6F637E6423D047790004E053 /* RenderScene.h */,
 				6F7329E02865F9C100C7D3DE /* Layer2.cpp */,
 				6F7329E12865F9C100C7D3DE /* Layer2.h */,
 			);
-			name = GraphicCore;
-			path = ../../../QMediaCore/GraphicCore;
+			name = RenderEngine;
+			path = ../../../QMediaCore/RenderEngine;
 			sourceTree = "<group>";
 		};
 		6F637E6623D047790004E053 /* math */ = {
@@ -593,9 +552,8 @@
 		6F637E8823D047790004E053 /* base */ = {
 			isa = PBXGroup;
 			children = (
-				6F637E8A23D047790004E053 /* Macros.h */,
-				6F637E8923D047790004E053 /* ColorTypes.cpp */,
-				6F637E8B23D047790004E053 /* ColorTypes.h */,
+				6F637E8923D047790004E053 /* color_types.cpp */,
+				6F637E8B23D047790004E053 /* color_types.h */,
 				6FBD028D24607B0B00372404 /* Image.cpp */,
 				6FBD028E24607B0B00372404 /* Image.h */,
 			);
@@ -605,75 +563,25 @@
 		6F637E8C23D047790004E053 /* opengl */ = {
 			isa = PBXGroup;
 			children = (
-				6F637E9523D047790004E053 /* shaders */,
-				6F637E9223D047790004E053 /* GLMacros.h */,
-				6F637E8D23D047790004E053 /* Texture2D.h */,
-				6F637EC423D047790004E053 /* Texture2D.cpp */,
+				6F637E9223D047790004E053 /* gl_platform.h */,
+				6FD33BED2868A8BE00548102 /* shader_code.cpp */,
+				6FD33BEC2868A8BE00548102 /* shader_code.h */,
+				6FD33BE92868A8BE00548102 /* render_device_gl.cpp */,
+				6FD33BEB2868A8BE00548102 /* render_device_gl.h */,
+				6FD33BEA2868A8BE00548102 /* shader_program_gl.cpp */,
+				6FD33BE82868A8BD00548102 /* shader_program_gl.h */,
+				6F637E8D23D047790004E053 /* texture2d_gl.h */,
+				6F637EC423D047790004E053 /* texture2d_gl.cpp */,
+				6F637E8F23D047790004E053 /* frame_buffer_gl.cpp */,
+				6F637E9123D047790004E053 /* frame_buffer_gl.h */,
 				6F637E9323D047790004E053 /* Drawable2D.cpp */,
 				6F637E8E23D047790004E053 /* Drawable2D.h */,
 				6F1874A12490DFF3009C4B94 /* Texture2DDrawer.cpp */,
 				6F1874A22490DFF3009C4B94 /* Texture2DDrawer.h */,
-				6F637E8F23D047790004E053 /* FrameBuffer.cpp */,
-				6F637E9123D047790004E053 /* FrameBuffer.h */,
 				6F50D7FF2860C5B4005BF291 /* TextureFrameBuffer.cpp */,
 				6F50D7FE2860C5B4005BF291 /* TextureFrameBuffer.h */,
-				6F224A292499AF0D000244FF /* ShaderProgram.cpp */,
-				6F224A282499AF0D000244FF /* ShaderProgram.h */,
-				6F637E9423D047790004E053 /* GLEngine.cpp */,
-				6F637EC323D047790004E053 /* GLEngine.h */,
 			);
 			path = opengl;
-			sourceTree = "<group>";
-		};
-		6F637E9523D047790004E053 /* shaders */ = {
-			isa = PBXGroup;
-			children = (
-				6F637E9623D047790004E053 /* ccShader_3D_Terrain.vert */,
-				6F637E9723D047790004E053 /* ccShader_PositionTextureColor.frag */,
-				6F637E9823D047790004E053 /* ccShader_PositionTextureColor_noMVP.vert */,
-				6F637E9923D047790004E053 /* ccShader_Position_uColor.frag */,
-				6F637E9A23D047790004E053 /* ccShader_3D_ColorNormalTex.frag */,
-				6F637E9B23D047790004E053 /* ccShader_Position.vert */,
-				6F637E9D23D047790004E053 /* ccShader_PositionTextureA8Color.frag */,
-				6F637E9E23D047790004E053 /* ccShader_LayerRadialGradient.frag */,
-				6F637E9F23D047790004E053 /* ccShader_PositionColorLengthTexture.vert */,
-				6F637EA023D047790004E053 /* ccShader_Label_df_glow.frag */,
-				6F637EA123D047790004E053 /* ccShader_Label_outline.frag */,
-				6F637EA223D047790004E053 /* ccShader_3D_Particle.frag */,
-				6F637EA323D047790004E053 /* ccShader_PositionTexture_uColor.vert */,
-				6F637EA423D047790004E053 /* ccShader_3D_Skybox.frag */,
-				6F637EA523D047790004E053 /* ccShader_Label_df.frag */,
-				6F637EA623D047790004E053 /* ccShader_PositionColor.frag */,
-				6F637EA723D047790004E053 /* ccShader_3D_ColorTex.frag */,
-				6F637EA823D047790004E053 /* ccShader_PositionTexture.frag */,
-				6F637EA923D047790004E053 /* ccShader_CameraClear.vert */,
-				6F637EAA23D047790004E053 /* ccShader_Label.vert */,
-				6F637EAB23D047790004E053 /* ccShader_ETC1AS_PositionTextureColor.frag */,
-				6F637EAC23D047790004E053 /* ccShader_PositionColorLengthTexture.frag */,
-				6F637EAD23D047790004E053 /* ccShader_PositionColorTextureAsPointsize.vert */,
-				6F637EAE23D047790004E053 /* ccShader_PositionTextureA8Color.vert */,
-				6F637EAF23D047790004E053 /* ccShader_Label_normal.frag */,
-				6F637EB023D047790004E053 /* ccShader_PositionTextureColorAlphaTest.frag */,
-				6F637EB123D047790004E053 /* ccShader_Position_uColor.vert */,
-				6F637EB223D047790004E053 /* ccShader_ETC1AS_PositionTextureGray.frag */,
-				6F637EB323D047790004E053 /* ccShader_PositionTextureColor.vert */,
-				6F637EB423D047790004E053 /* ccShader_PositionTextureColor_noMVP.frag */,
-				6F637EB523D047790004E053 /* ccShader_3D_Color.frag */,
-				6F637EB623D047790004E053 /* ccShader_3D_Terrain.frag */,
-				6F637EB723D047790004E053 /* ccShader_PositionTexture.vert */,
-				6F637EB823D047790004E053 /* ccShader_CameraClear.frag */,
-				6F637EB923D047790004E053 /* ccShader_3D_Skybox.vert */,
-				6F637EBA23D047790004E053 /* ccShader_3D_ColorNormal.frag */,
-				6F637EBC23D047790004E053 /* ccShader_PositionColor.vert */,
-				6F637EBD23D047790004E053 /* ccShader_PositionTexture_uColor.frag */,
-				6F637EBE23D047790004E053 /* ccShader_3D_PositionNormalTex.vert */,
-				6F637EBF23D047790004E053 /* ccShader_UI_Gray.frag */,
-				6F637EC023D047790004E053 /* ccShader_3D_PositionTex.vert */,
-				6F637EC123D047790004E053 /* ccShader_3D_Particle.vert */,
-				6F637E9C23D047790004E053 /* ccShaders.h */,
-				6F637EBB23D047790004E053 /* ccShaders.cpp */,
-			);
-			path = shaders;
 			sourceTree = "<group>";
 		};
 		6F81B3B724C8265000A8449B /* audiocore */ = {
@@ -785,15 +693,17 @@
 		6FF02922221BFEE40011E6CB /* Utils */ = {
 			isa = PBXGroup;
 			children = (
+				6F56B736234C232B000F5122 /* PlatformConfig.h */,
+				6FF02923221BFEE40011E6CB /* Comm.h */,
+				6FD33BF12868B10300548102 /* Variant.h */,
+				6FD33BF22868B10300548102 /* optional.hpp */,
 				6F5118BF240F9CCB0013BC9E /* Logger.cpp */,
 				6F5118C0240F9CCB0013BC9E /* Logger.h */,
 				136C13F228391CE3004BCF13 /* ConditionVariable.h */,
 				136C13F128391CE3004BCF13 /* ThreadTaskFuture.h */,
-				6FF02923221BFEE40011E6CB /* Comm.h */,
 				136C13F328391CE3004BCF13 /* circle_buffer.h */,
 				6F8F0C7A24444733000EB0A1 /* rw_lock.h */,
 				6F637EDC23D434200004E053 /* spin_lock.h */,
-				6F56B736234C232B000F5122 /* PlatformConfig.h */,
 				6FF029392221657F0011E6CB /* BlockingQueue.h */,
 			);
 			name = Utils;
@@ -872,13 +782,12 @@
 				13243655285A2DE300AD6BA8 /* media_range.cpp in Sources */,
 				6F224A1D249385DD000244FF /* PolarPixellateConfig.cpp in Sources */,
 				6F5118C1240F9CCB0013BC9E /* Logger.cpp in Sources */,
-				6F637ED223D0477A0004E053 /* ColorTypes.cpp in Sources */,
+				6F637ED223D0477A0004E053 /* color_types.cpp in Sources */,
 				6F637ECB23D0477A0004E053 /* Vec2.cpp in Sources */,
 				6F637EC823D0477A0004E053 /* Mat4.cpp in Sources */,
 				13243659285A2DE300AD6BA8 /* point.cpp in Sources */,
 				6F81B3BA24C827B500A8449B /* AudioEffect.cpp in Sources */,
-				6F637ED623D0477A0004E053 /* ccShaders.cpp in Sources */,
-				6F637ED123D0477A0004E053 /* GcScene.cpp in Sources */,
+				6F637ED123D0477A0004E053 /* RenderScene.cpp in Sources */,
 				6F224A54249CBE93000244FF /* SobelEdgeDetectionConfig.cpp in Sources */,
 				6F224A4E249C67BA000244FF /* ColorInvertConfig.cpp in Sources */,
 				6F637EC623D0477A0004E053 /* MathUtil.cpp in Sources */,
@@ -895,18 +804,19 @@
 				6F17360728636E5D00FD15F3 /* blendfunc.cpp in Sources */,
 				13243658285A2DE300AD6BA8 /* media_segment.cpp in Sources */,
 				1324365D285A2DE300AD6BA8 /* vec4f.cpp in Sources */,
-				6F637ED323D0477A0004E053 /* FrameBuffer.cpp in Sources */,
+				6FD33BF02868A8BE00548102 /* shader_code.cpp in Sources */,
+				6F637ED323D0477A0004E053 /* frame_buffer_gl.cpp in Sources */,
 				13243685285B447B00AD6BA8 /* animator.cpp in Sources */,
 				6F637ECD23D0477A0004E053 /* CCAffineTransform.cpp in Sources */,
 				13E51EB4284BB47200EC9179 /* SoftwareFrameDrawer.cpp in Sources */,
-				6F637ED523D0477A0004E053 /* GLEngine.cpp in Sources */,
 				6F3720702469896800356951 /* speex_resampler.c in Sources */,
 				13E51E9C284A3A6500EC9179 /* GeneralDemuxer.cpp in Sources */,
 				6F17360828636E5D00FD15F3 /* vec3f.cpp in Sources */,
 				1324365A285A2DE300AD6BA8 /* editor_exporter_internal.cpp in Sources */,
 				13D086F228577762007DD14D /* MediaSegmentImpl.cpp in Sources */,
+				6FD33BEE2868A8BE00548102 /* render_device_gl.cpp in Sources */,
 				6F17360628636E5D00FD15F3 /* color4f.cpp in Sources */,
-				6F637ED823D0477A0004E053 /* Texture2D.cpp in Sources */,
+				6F637ED823D0477A0004E053 /* texture2d_gl.cpp in Sources */,
 				1324365C285A2DE300AD6BA8 /* video_description.cpp in Sources */,
 				6F637ECA23D0477A0004E053 /* Vec4.cpp in Sources */,
 				6FD33BD42866ED7E00548102 /* audio_encode_option.cpp in Sources */,
@@ -922,12 +832,12 @@
 				6F7329DF2865EEFC00C7D3DE /* VideoGraphicNode.cpp in Sources */,
 				6F81B3D424DAD83D00A8449B /* sonic.c in Sources */,
 				6F17360528636E5D00FD15F3 /* rect4f.cpp in Sources */,
+				6FD33BEF2868A8BE00548102 /* shader_program_gl.cpp in Sources */,
 				6F224A57249CEEF7000244FF /* WhiteBalanceConfig.cpp in Sources */,
 				6FD33BC92866CFA900548102 /* EditorExporterImpl.cpp in Sources */,
 				6F50D8002860C5B4005BF291 /* TextureFrameBuffer.cpp in Sources */,
 				1324365B285A2DE300AD6BA8 /* size.cpp in Sources */,
 				13E51E9D284A3A6500EC9179 /* Mp4Demuxer.cpp in Sources */,
-				6F224A2A2499AF0D000244FF /* ShaderProgram.cpp in Sources */,
 				6F637EC923D0477A0004E053 /* Quaternion.cpp in Sources */,
 				6F637ECC23D0477A0004E053 /* Vec3.cpp in Sources */,
 				13243656285A2DE300AD6BA8 /* media_stream_info.cpp in Sources */,

@@ -1,13 +1,13 @@
 
 #include "Utils/Comm.h"
-#include "GraphicCore/opengl/TextureFrameBuffer.h"
+#include "RenderEngine/opengl/TextureFrameBuffer.h"
 #include <CoreVideo/CoreVideo.h>
 #include <CoreMedia/CoreMedia.h>
 #import <CoreFoundation/CoreFoundation.h>
 #import "IOSTexture.h"
 
-using GraphicCore::Texture2D;
-using GraphicCore::TextureFrameBuffer;
+using QMedia::RenderEngine::Texture2D;
+using QMedia::RenderEngine::TextureFrameBuffer;
 
 class PixelbufferTexture : public Texture2D {
 public:

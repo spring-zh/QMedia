@@ -12,7 +12,7 @@
 #include "MediaCore/core/DecodedFrame.h"
 #include "EffectEditor/VideoFrameDrawer.h"
 #include "EffectEditor/MediaSegmentImpl.h"
-#include "GraphicCore/SceneNode.h"
+#include "RenderEngine/SceneNode.h"
 
 namespace QMedia { namespace Api {
 
@@ -23,9 +23,9 @@ public:
     
     void PutVideoFrame(DecodedFrame decodeframe);
     
-    virtual void draw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, uint32_t flags) override ;
+    virtual void draw(RenderEngine::Scene* scene, const RenderEngine::Mat4 & transform, uint32_t flags) override ;
     
-    virtual void duplicateDraw(GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, SceneNode* diaplayNode);
+    virtual void duplicateDraw(RenderEngine::Scene* scene, const RenderEngine::Mat4 & transform, SceneNode* diaplayNode);
     
     virtual const Range<int64_t> getRange() override ;
     

@@ -9,12 +9,12 @@
 #ifndef QMEDIASDK_SOFTWAREFRAMEDRAWER_H
 #define QMEDIASDK_SOFTWAREFRAMEDRAWER_H
 
-#include "GraphicCore/opengl/ShaderProgram.h"
+#include "RenderEngine/opengl/shader_program_gl.h"
+#include "RenderEngine/opengl/Texture2DDrawer.h"
 #include "MediaCore/core/VideoFrame.h"
-#include "GraphicCore/opengl/Texture2DDrawer.h"
 #include "EffectEditor/VideoFrameDrawer.h"
 
-using GraphicCore::ShaderProgram;
+using QMedia::RenderEngine::ShaderProgram;
 
 class YUVFrameDrawer : public VideoFrameDrawer {
 public:
@@ -22,10 +22,10 @@ public:
     ~YUVFrameDrawer() = default;
 
     bool setFrame(const VideoFrame &videoFrame) override;
-    void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, QMedia::Api::SceneNode* node) override { }
+    void drawFrame(const RenderEngine::Scene* /*scene*/, const RenderEngine::Mat4 & /*transform*/, QMedia::Api::SceneNode* node) override { }
 
-    virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
-                           const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode = GraphicCore::Drawable2D::NONE) override ;
+    virtual void drawFrame(const RenderEngine::Mat4& mvpMatrix, const RenderEngine::Rect & /*region*/, float positionZ, const RenderEngine::Rect crop, RenderEngine::Color4F color,
+                           const RenderEngine::BlendFunc& blend, VideoRotation rotation, RenderEngine::Drawable2D::FlipMode flipMode = RenderEngine::Drawable2D::NONE) override ;
     virtual void release() override;
 
 protected:
@@ -41,18 +41,18 @@ public:
     ~RGBAFrameDrawer();
 
     virtual bool setFrame(const VideoFrame& videoFrame) override;
-    void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, QMedia::Api::SceneNode* node) override { }
-    virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
-                           const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode = GraphicCore::Drawable2D::NONE) override;
-    const GraphicCore::Texture2D* getOutputTexture() override { return &_duplicateTexture; }
+    void drawFrame(const RenderEngine::Scene* /*scene*/, const RenderEngine::Mat4 & /*transform*/, QMedia::Api::SceneNode* node) override { }
+    virtual void drawFrame(const RenderEngine::Mat4& mvpMatrix, const RenderEngine::Rect & /*region*/, float positionZ, const RenderEngine::Rect crop, RenderEngine::Color4F color,
+                           const RenderEngine::BlendFunc& blend, VideoRotation rotation, RenderEngine::Drawable2D::FlipMode flipMode = RenderEngine::Drawable2D::NONE) override;
+    const RenderEngine::Texture2D* getOutputTexture() override { return &_duplicateTexture; }
     virtual void release() override ;
 private:
 
     GLuint _texture;
     int _texWidth, _texHeight;
 
-    std::shared_ptr<GraphicCore::Texture2DDrawer> _textureDrawer;
-    GraphicCore::DuplicateTexture2D _duplicateTexture;
+    std::shared_ptr<RenderEngine::Texture2DDrawer> _textureDrawer;
+    RenderEngine::DuplicateTexture2D _duplicateTexture;
 };
 
 #endif //QMEDIASDK_SOFTWAREFRAMEDRAWER_H

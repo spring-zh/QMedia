@@ -3,10 +3,10 @@
 //
 
 #include "SoftwareFrameDrawer.h"
-#include "GraphicCore/opengl/Drawable2D.h"
-#include "GraphicCore/opengl/shaders/ccShaders.h"
+#include "RenderEngine/opengl/Drawable2D.h"
+#include "RenderEngine/opengl/shader_code.h"
 
-USING_GRAPHICCORE
+using namespace QMedia::RenderEngine;
 
 const char* YUVPositionTexture_frag = R"(
 #ifdef GL_ES
@@ -112,16 +112,22 @@ bool YUVFrameDrawer::setFrame(const VideoFrame &videoFrame) {
 //    drawFrame(mvpMatrix,region,node->getPositionZ(),node->getCrop(),node->getColor(),node->getBlendFunc(),_rotation);
 //}
 
-void YUVFrameDrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
-                               const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode)
+void YUVFrameDrawer::drawFrame(const RenderEngine::Mat4& mvpMatrix, const RenderEngine::Rect & region, float positionZ, const RenderEngine::Rect crop, RenderEngine::Color4F color,
+                               const RenderEngine::BlendFunc& blend, VideoRotation rotation, RenderEngine::Drawable2D::FlipMode flipMode)
 {
     if (_program && _program->use()) {
-        GLfloat posArray[] = {
-                region.getMinX(), region.getMinY(), positionZ,
-                region.getMaxX(), region.getMinY(), positionZ,
-                region.getMinX(), region.getMaxY(), positionZ,
-                region.getMaxX(), region.getMaxY(), positionZ
+        VertexAttrib::Vec3<float> pos_vertex[] = {
+            {region.getMinX(), region.getMinY(), positionZ},
+            {region.getMaxX(), region.getMinY(), positionZ},
+            {region.getMinX(), region.getMaxY(), positionZ},
+            {region.getMaxX(), region.getMaxY(), positionZ}
         };
+//        GLfloat posArray[] = {
+//                region.getMinX(), region.getMinY(), positionZ,
+//                region.getMaxX(), region.getMinY(), positionZ,
+//                region.getMinX(), region.getMaxY(), positionZ,
+//                region.getMaxX(), region.getMaxY(), positionZ
+//        };
         float *texArray = Drawable2D::RECTANGLE_TEX_COORDS;
         switch (rotation) {
             case kVideoRotation_90:
@@ -146,19 +152,16 @@ void YUVFrameDrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const Graphic
         } else
             _program->setBlendFunc(BlendFunc::DISABLE);
 
-        _program->setVertexAttribValue("a_texCoord", VertexAttrib::VERTEX2, texArray, 8);
-        _program->setVertexAttribValue("a_position", VertexAttrib::VERTEX3 ,posArray, GET_ARRAY_COUNT(posArray));
-        Uniform::Value textureYVal;
-        textureYVal._texture = _textureY;
-        _program->setUniformValue("SamplerY", Uniform::TEXTURE, textureYVal);
-        Uniform::Value textureUVal;
-        textureUVal._texture = _textureU;
-        _program->setUniformValue("SamplerU", Uniform::TEXTURE, textureUVal);
-        Uniform::Value textureVVal;
-        textureVVal._texture = _textureV;
-        _program->setUniformValue("SamplerV", Uniform::TEXTURE, textureVVal);
+        _program->setVertexAttribValue("a_texCoord", (VertexAttrib::Vec2<float>*)(texArray), 4);
+        _program->setVertexAttribValue("a_position", pos_vertex, 4);
+        Uniform::TextureUnit textureYVal(_textureY);
+        _program->setUniformValue("SamplerY", textureYVal);
+        Uniform::TextureUnit textureUVal(_textureU);
+        _program->setUniformValue("SamplerU", textureUVal);
+        Uniform::TextureUnit textureVVal(_textureV);
+        _program->setUniformValue("SamplerV", textureVVal);
 
-        GraphicCore::Mat4 texMatrix;
+        RenderEngine::Mat4 texMatrix;
         //TODO: check filp mode
         switch (flipMode) {
             case Drawable2D::FlipH:
@@ -182,11 +185,11 @@ void YUVFrameDrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const Graphic
             };
             texMatrix.multiply(crop_arr);
         }
-        _program->setUniformValue("uTexMatrix", Uniform::MATRIX4, texMatrix.m, 16);
-        _program->setUniformValue("uMVPMatrix", Uniform::MATRIX4, (float*)mvpMatrix.m, 16);
+        _program->setUniformValue("uTexMatrix", Uniform::Matrix(texMatrix.m, 4, 1));
+        _program->setUniformValue("uMVPMatrix", Uniform::Matrix(mvpMatrix.m, 4, 1));
 
-        float colorArr[] = { color.r, color.g, color.b, color.a };
-        _program->setUniformValue("uColor", Uniform::FLOAT4, colorArr, GET_ARRAY_COUNT(colorArr));
+        Uniform::Vec4<float> color4 = { color.r, color.g, color.b, color.a };
+        _program->setUniformValue("uColor", color4);
 
         _program->drawRectangle();
     }
@@ -235,7 +238,7 @@ bool RGBAFrameDrawer::setFrame(const VideoFrame& videoFrame) {
 
     _duplicateTexture.updateTexture(_texture, Texture2D::RGBA, _texWidth, _texHeight);
     if (!_textureDrawer) {
-        _textureDrawer = std::shared_ptr<GraphicCore::Texture2DDrawer>(new GraphicCore::Texture2DDrawer());
+        _textureDrawer = std::shared_ptr<RenderEngine::Texture2DDrawer>(new RenderEngine::Texture2DDrawer());
     }
 
     return true;
@@ -245,8 +248,8 @@ bool RGBAFrameDrawer::setFrame(const VideoFrame& videoFrame) {
 //        _textureDrawer->draw(&_duplicateTexture, scene, transform, node);
 //    }
 //}
-void RGBAFrameDrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
-                                     const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) {
+void RGBAFrameDrawer::drawFrame(const RenderEngine::Mat4& mvpMatrix, const RenderEngine::Rect & region, float positionZ, const RenderEngine::Rect crop, RenderEngine::Color4F color,
+                                     const RenderEngine::BlendFunc& blend, VideoRotation rotation, RenderEngine::Drawable2D::FlipMode flipMode) {
     if (_textureDrawer) {
         _textureDrawer->draw(&_duplicateTexture, mvpMatrix, region, positionZ, crop, color, blend, flipMode);
     }
