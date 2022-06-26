@@ -50,9 +50,6 @@ void EditorPlayerImpl::setDisplayMode(int mode, bool filp_v) {
 void EditorPlayerImpl::OnViewSizeChange(int32_t width, int32_t height) {
     session_->OnViewSizeChange(width, height);
 }
-void EditorPlayerImpl::onViewCreate(int32_t width, int32_t height) {
-    session_->onRenderCreate();
-}
 bool EditorPlayerImpl::onDraw(int64_t pirv) {
     t_lock_guard<ticket_lock> clk(_render_mutex);
     int64_t current_video_time = _playerClock.GetClock();

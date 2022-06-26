@@ -31,10 +31,6 @@ void EditorExporterImpl::setDisplayMode(int mode, bool filp_v) {
 void EditorExporterImpl::OnViewSizeChange(int32_t width, int32_t height) {
     session_->OnViewSizeChange(width, height);
 }
-void EditorExporterImpl::onViewCreate(int32_t width, int32_t height) {
-    session_->OnViewSizeChange(width, height);
-    session_->onRenderCreate();
-}
 bool EditorExporterImpl::onDraw(int64_t pirv) {
 //    t_lock_guard<ticket_lock> clk(_render_mutex);
     if (session_->_bVideoCompleted) return false;

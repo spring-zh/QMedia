@@ -12,8 +12,6 @@ public interface VideoRender {
 
     public void OnViewSizeChange(int width, int height);
 
-    public void onViewCreate(int width, int height);
-
     public boolean onDraw(long pirv);
 
     public void onViewDestroy();
@@ -56,14 +54,6 @@ public interface VideoRender {
             native_OnViewSizeChange(this.nativeRef, width, height);
         }
         private native void native_OnViewSizeChange(long _nativeRef, int width, int height);
-
-        @Override
-        public void onViewCreate(int width, int height)
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_onViewCreate(this.nativeRef, width, height);
-        }
-        private native void native_onViewCreate(long _nativeRef, int width, int height);
 
         @Override
         public boolean onDraw(long pirv)

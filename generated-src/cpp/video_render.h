@@ -15,8 +15,6 @@ public:
 
     virtual void OnViewSizeChange(int32_t width, int32_t height) = 0;
 
-    virtual void onViewCreate(int32_t width, int32_t height) = 0;
-
     virtual bool onDraw(int64_t pirv) = 0;
 
     virtual void onViewDestroy() = 0;

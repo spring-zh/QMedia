@@ -241,7 +241,6 @@ void MediaSessionImpl::__removeAudioRenderNode(std::shared_ptr<AudioRenderNode> 
 bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs)
 {
     //FIXME: must use TimeMapper to calculate real time stamp after.
-//        display_layer_->beginRender();
     runRenderCmd();
     
     int64_t position = wantTimeMs;
@@ -249,8 +248,8 @@ bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs)
     if (position >= getTotalTimeRange().end)
     {
         if( !_bVideoCompleted) {
-            _bVideoCompleted = true;
             thread_task_.PostTask(&MediaSessionImpl::onStreamCompleted, this, MediaType::Video);
+            _bVideoCompleted = true;
         }
         position = getTotalTimeRange().end;
     }else
@@ -269,12 +268,13 @@ bool MediaSessionImpl::onRenderDestroy()
     return true;
 }
 
-bool MediaSessionImpl::onRenderCreate() {
-    return display_layer_->beginRender();
-}
 void MediaSessionImpl::OnViewSizeChange(int32_t width, int32_t height) {
     //TODO: init render resource
     display_layer_->setTargetSize(width, height);
+    postRenderTask([this](){
+        display_layer_->beginRender();
+    });
+    video_loop_->forceUpdate();
 }
 
 void MediaSessionImpl::setDisplayMode(DisplayMode mode, bool filp_v) {
@@ -327,8 +327,8 @@ bool MediaSessionImpl::onAudioRender(uint8_t * const buffer, unsigned needBytes)
     if (audio_pts >= getTotalTimeRange().end)
     {
         if (!_bAudioCompleted) {
-            _bAudioCompleted = true;
             thread_task_.PostTask(&MediaSessionImpl::onStreamCompleted, this, MediaType::Audio);
+            _bAudioCompleted = true;
         }
     }else
         _bAudioCompleted = false;

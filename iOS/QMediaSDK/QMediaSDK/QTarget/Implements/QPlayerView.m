@@ -85,7 +85,7 @@
 
 - (void)onCreate
 {
-    [_render onViewCreate:_viewSize.width height:_viewSize.height];
+    [_render OnViewSizeChange:_viewSize.width height:_viewSize.height];
 }
 
 - (void)onDrawFrame

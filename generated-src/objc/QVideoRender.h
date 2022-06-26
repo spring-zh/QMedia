@@ -12,9 +12,6 @@
 - (void)OnViewSizeChange:(int32_t)width
                   height:(int32_t)height;
 
-- (void)onViewCreate:(int32_t)width
-              height:(int32_t)height;
-
 - (BOOL)onDraw:(int64_t)pirv;
 
 - (void)onViewDestroy;

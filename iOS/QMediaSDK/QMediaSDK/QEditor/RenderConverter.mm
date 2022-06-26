@@ -37,11 +37,6 @@ public:
         player_->OnViewSizeChange(width, height);
     }
 
-    void onViewCreate(int32_t width, int32_t height) override {
-        setDisplayMode(0, true);
-        player_->onViewCreate(width, height);
-    }
-
     bool onDraw(int64_t pirv) override {
         return player_->onDraw(pirv);
     }
@@ -76,11 +71,6 @@ public:
     void OnViewSizeChange(int32_t width, int32_t height) override {
         setDisplayMode(0, false);
         exporter_->OnViewSizeChange(width, height);
-    }
-
-    void onViewCreate(int32_t width, int32_t height) override {
-        setDisplayMode(0, false);
-        exporter_->onViewCreate(width, height);
     }
 
     bool onDraw(int64_t pirv) override {

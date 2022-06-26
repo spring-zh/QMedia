@@ -2,7 +2,6 @@
 video_render = interface + c {
     setDisplayMode(mode:i32, flip_v: bool);
     OnViewSizeChange(width: i32, height: i32);
-    onViewCreate(width: i32, height: i32);
     onDraw(pirv: i64): bool;
     onViewDestroy();
 }

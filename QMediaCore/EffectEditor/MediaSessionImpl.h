@@ -132,7 +132,6 @@ public:
                              
     void setPositionTo(int64_t time_ms, int flag);
                              
-    bool onRenderCreate();
     bool onVideoRender(int64_t wantTimeMs);
     bool onRenderDestroy();
     void OnViewSizeChange(int32_t width, int32_t height);

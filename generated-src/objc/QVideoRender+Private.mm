@@ -46,14 +46,6 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)onViewCreate:(int32_t)width
-              height:(int32_t)height {
-    try {
-        _cppRefHandle.get()->onViewCreate(::djinni::I32::toCpp(width),
-                                          ::djinni::I32::toCpp(height));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
 - (BOOL)onDraw:(int64_t)pirv {
     try {
         auto objcpp_result_ = _cppRefHandle.get()->onDraw(::djinni::I64::toCpp(pirv));

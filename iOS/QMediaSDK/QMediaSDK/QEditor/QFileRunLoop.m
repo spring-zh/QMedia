@@ -85,6 +85,8 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
     bool _alreadyFinishedRecording;
     bool _videoEncodingIsFinished;
     bool _audioEncodingIsFinished;
+    
+    NSData* _audio_in_data;
 }
 
 @synthesize hw_samplerate = _hw_samplerate;
@@ -104,6 +106,7 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
         _isAllKeyFrame = false;
         _encodingLiveVideo = false;
         _framebuffer = 0;
+        _audio_in_data = nil;
         
         _isRecording = false;
         _alreadyFinishedRecording = true;
@@ -261,6 +264,9 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
         _writerAudioInput = [[AVAssetWriterInput alloc] initWithMediaType:AVMediaTypeAudio outputSettings:audioOutputSettings];
         _writerAudioInput.expectsMediaDataInRealTime = _encodingLiveVideo;
         [_writer addInput:_writerAudioInput];
+        
+        const int bufferlen = 1024 * _audio_description.nchannel * 2;
+        _audio_in_data = [[NSMutableData alloc] initWithLength:bufferlen];
     };
     
     runSynchronously(_glContextQueue, _glContextQueueKey, block);
@@ -287,7 +293,7 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _movieRenderbuffer);
         }
         
-        [_video_render onViewCreate:_venc_opt.width height:_venc_opt.height];
+        [_video_render OnViewSizeChange:_venc_opt.width height:_venc_opt.height];
         
         [EAGLContext setCurrentContext:nil];
     });
@@ -524,11 +530,9 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
 - (BOOL)handleAudioRequest
 {
     bool bRet = false;
-    const int bufferlen = 1024 * _audio_description.nchannel * 2;
-//    uint8_t cbuffer[bufferlen];
-    NSData* ns_data = [[NSMutableData alloc] initWithLength:bufferlen];
     _audio_pts = _audio_write_bytes*1000/(_audio_description.sampleRate * _audio_description.nchannel * 2);
-    if([_audio_render OnPlayBuffer:ns_data sizeNeed:bufferlen wantTime:_audio_pts])
+    int bufferlen = _audio_in_data.length;
+    if([_audio_render OnPlayBuffer:_audio_in_data sizeNeed:bufferlen wantTime:_audio_pts])
     {
         OSStatus status;
         CMBlockBufferRef blockBuffer = NULL;
@@ -540,7 +544,7 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
             NSAssert(NO,@"CMBlockBufferCreateWithMemoryBlock error(%d)", (int)status);
         }
         
-        status = CMBlockBufferReplaceDataBytes(ns_data.bytes, blockBuffer, 0, bufferlen);
+        status = CMBlockBufferReplaceDataBytes(_audio_in_data.bytes, blockBuffer, 0, bufferlen);
         if (kCMBlockBufferNoErr != status) {
             NSAssert(NO,@"CMBlockBufferReplaceDataBytes error(%d)", (int)status);
         }

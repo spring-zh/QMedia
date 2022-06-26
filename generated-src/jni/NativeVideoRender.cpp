@@ -39,16 +39,6 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppPro
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppProxy_native_1onViewCreate(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_width, jint j_height)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRender>(nativeRef);
-        ref->onViewCreate(::djinni::I32::toCpp(jniEnv, j_width),
-                          ::djinni::I32::toCpp(jniEnv, j_height));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
-}
-
 CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppProxy_native_1onDraw(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jlong j_pirv)
 {
     try {
