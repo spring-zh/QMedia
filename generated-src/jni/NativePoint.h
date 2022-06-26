@@ -25,9 +25,9 @@ private:
     friend ::djinni::JniClass<NativePoint>;
 
     const ::djinni::GlobalRef<jclass> clazz { ::djinni::jniFindClass("com/qmedia/editor/generated/Point") };
-    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(JJ)V") };
-    const jfieldID field_mX { ::djinni::jniGetFieldID(clazz.get(), "mX", "J") };
-    const jfieldID field_mY { ::djinni::jniGetFieldID(clazz.get(), "mY", "J") };
+    const jmethodID jconstructor { ::djinni::jniGetMethodID(clazz.get(), "<init>", "(FF)V") };
+    const jfieldID field_mX { ::djinni::jniGetFieldID(clazz.get(), "mX", "F") };
+    const jfieldID field_mY { ::djinni::jniGetFieldID(clazz.get(), "mY", "F") };
 };
 
 }  // namespace djinni_generated

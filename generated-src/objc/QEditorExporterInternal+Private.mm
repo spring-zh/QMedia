@@ -6,8 +6,10 @@
 #import "DJICppWrapperCache+Private.h"
 #import "DJIError.h"
 #import "DJIMarshal+Private.h"
+#import "QAudioEncodeOption+Private.h"
 #import "QEditorExporterCallback+Private.h"
 #import "QMediaSessionInternal+Private.h"
+#import "QVideoEncodeOption+Private.h"
 #include <exception>
 #include <stdexcept>
 #include <utility>
@@ -45,10 +47,28 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
+- (void)setAudioOption:(nonnull QAudioEncodeOption *)option {
+    try {
+        _cppRefHandle.get()->setAudioOption(::djinni_generated::AudioEncodeOption::toCpp(option));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setVideoOption:(nonnull QVideoEncodeOption *)option {
+    try {
+        _cppRefHandle.get()->setVideoOption(::djinni_generated::VideoEncodeOption::toCpp(option));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 - (int64_t)getPosition {
     try {
         auto objcpp_result_ = _cppRefHandle.get()->getPosition();
         return ::djinni::I64::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)start {
+    try {
+        _cppRefHandle.get()->start();
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

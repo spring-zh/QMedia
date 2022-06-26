@@ -6,35 +6,44 @@ audio_render_node = interface +c {
     setVolume(volume: f32);
 }
 
-animator = record {
-    const positionxyz: string = "positionxyz";
-    const rotation: string = "rotation";
-    const rotationxyz: string = "rotationxyz";
-    name: string;
-    property: string;
-    timerang: media_range;
-    startpoint: vec4f;
-    endpoint: vec4f;
-    easefunction: i32;
-    repleat: bool;
-}
-
 video_render_node = interface +c {
     setVisible(visible: bool);
-    setAlpha(alpha: f32);
-    setCrop(crop: vec4f);
+    getVisible():bool;
 
-    setContentSize(content_size: size);
-    setAnchorPoint(anchor_point: point);
     setPosition(position: point);
+    getPosition():point;
     setPositionZ(positionz: i32);
-
-    setRotation(rotation: i32);
-    setRotation3d(rotation3d: vec4f);
+    getPositionZ():i32;
 
     setScaleX(scalex: f32);
+    getScaleX():f32;
     setScaleY(scaley: f32);
+    getScaleY():f32;
     setScaleZ(scalez: f32);
+    getScaleZ():f32;
+
+    setContentSize(content_size: size);
+    getContentSize():size;
+
+    setRotation(rotation: i32);
+    getRotation():i32;
+    setRotation3d(rotation3d: vec3f);
+    getRotation3d():vec3f;
+
+    setAnchorPoint(anchor_point: point);
+    getAnchorPoint():point;
+
+    setColor4F(color: color4f);
+    getColor4F():color4f;
+
+    setAlpha(alpha: f32);
+    getAlpha():f32;
+
+    setBlendFunc(bf : blendfunc);
+    getBlendFunc():blendfunc;
+
+    setCrop(crop: rect4f);
+    getCrop(): rect4f;
 
     getAnimators(): list<animator>;
     addAnimator(animator: animator): bool;

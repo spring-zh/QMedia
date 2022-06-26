@@ -54,20 +54,21 @@ void NativeEditorPlayerCallback::JavaProxy::onProgressUpdated(int64_t c_time_ms)
                            ::djinni::get(::djinni::I64::fromCpp(jniEnv, c_time_ms)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
-void NativeEditorPlayerCallback::JavaProxy::onPlayerStateChanged(int32_t c_new_state, int32_t c_old_state) {
+void NativeEditorPlayerCallback::JavaProxy::onCompleted(int32_t c_code) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
-    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onPlayerStateChanged,
-                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_new_state)),
-                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_old_state)));
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onCompleted,
+                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_code)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
-void NativeEditorPlayerCallback::JavaProxy::onCompleted() {
+void NativeEditorPlayerCallback::JavaProxy::onEvent(int32_t c_eventid, const std::unordered_map<std::string, std::string> & c_msg) {
     auto jniEnv = ::djinni::jniGetThreadEnv();
     ::djinni::JniLocalScope jscope(jniEnv, 10);
     const auto& data = ::djinni::JniClass<::djinni_generated::NativeEditorPlayerCallback>::get();
-    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onCompleted);
+    jniEnv->CallVoidMethod(Handle::get().get(), data.method_onEvent,
+                           ::djinni::get(::djinni::I32::fromCpp(jniEnv, c_eventid)),
+                           ::djinni::get(::djinni::Map<::djinni::String, ::djinni::String>::fromCpp(jniEnv, c_msg)));
     ::djinni::jniExceptionCheck(jniEnv);
 }
 

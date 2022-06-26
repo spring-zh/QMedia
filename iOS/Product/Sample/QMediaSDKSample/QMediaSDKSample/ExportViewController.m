@@ -20,7 +20,7 @@
 @property (nonatomic) IBOutlet UIView* playerViewContainer;
 @property (nonatomic) IBOutlet UIActivityIndicatorView* activityIndicator;
 @property (nonatomic, strong) AVPlayerViewController* playerCtrl;
-@property (nonatomic, strong) QFileExporter* exporter;
+@property (nonatomic, strong) QExporter* exporter;
 @property (nonatomic, copy) NSString* filePath;
 @end
 
@@ -43,17 +43,32 @@
         [fileManager removeItemAtPath:self.filePath error:nil];
     }
     self.buttonLayer.hidden = YES;
-    QVideoDescribe* vdesc = [[QVideoDescribe alloc] initWithParamenters:QVideoCodecH264 framerate:25 width:640 height:480 bitrate:2*1024*1024];
-    QAudioDescribe* adesc = [[QAudioDescribe alloc] initWithParamenters:QAudioCodecAAC rawFormat:QRawAudioFormatS16 samplerate:44100 nchannel:2 bitrate:128000];
-
-    self.exporter = [[QFileExporter alloc] initWithPath:self.filePath];
-    [self.exporter addObserver:self];
-    [self.exporter setAudioConfig:adesc];
-    [self.exporter setVideoConfig:vdesc];
+//    QVideoDescribe* vdesc = [[QVideoDescribe alloc] initWithParamenters:QVideoCodecH264 framerate:25 width:640 height:480 bitrate:2*1024*1024];
+//    QAudioDescribe* adesc = [[QAudioDescribe alloc] initWithParamenters:QAudioCodecAAC rawFormat:QRawAudioFormatS16 samplerate:44100 nchannel:2 bitrate:128000];
+//
+    int targetW = 640;
+    int targetH = 480;
     
-//    [self.exporter loadSerializeSettings:[[GlobalXMObject sharedInstance].player serialize]];
-    [self.exporter copyFrom:[GlobalXMObject sharedInstance].player];
-
+    QVideoEncodeOption* vopt = [QVideoEncodeOption videoEncodeOptionWithCodectype:QVideoEncodeOptionKH264 width:targetW height:targetH bitrate:2*1024*1024 framerate:25 gop:120 profile:QVideoEncodeOptionProfileHigh level:31 ext:nil];
+    QAudioEncodeOption* aopt = [QAudioEncodeOption audioEncodeOptionWithCodectype:QAudioEncodeOptionKAAC nchannel:2 samplerate:44100 bitrate:128000 sampleformat:QAudioDescriptionFormatS16];
+    self.exporter = [[QExporter alloc] initWithPath:self.filePath];
+    [self.exporter addObserver:self];
+    [self.exporter setAudioOption:aopt];
+    [self.exporter setVideoOption:vopt];
+    
+    NSString* testVideoFile2 = [QFileUtils getFileFromMainbundleAbsolutePath:@"video/test.mp4"];
+    QMediaSegment* video_segment = [_exporter cresteMediaSegment:testVideoFile2 flag:QMediaSegmentFlagAll];
+    [video_segment setDisplayRange:[QMediaRange mediaRangeWithStart:0 end:10000]];
+//    [video_segment setTimescale:2];
+    QVideoRenderNode* graphic = [video_segment getVideo];
+    [graphic setPosition:[QPoint pointWithX:targetW/4 y:targetH/4]];
+    [graphic setAnchorPoint:[QPoint pointWithX:0.5 y:0.5]];
+    [graphic setContentSize:[QSize sizeWithWidth:targetW/2 height:targetH/2]];
+//
+////    [self.exporter loadSerializeSettings:[[GlobalXMObject sharedInstance].player serialize]];
+//    [self.exporter copyFrom:[GlobalXMObject sharedInstance].player];
+//
+    [self.exporter addMediaSegment:video_segment];
     [self.exporter start];
 }
 
@@ -70,25 +85,20 @@
     // Pass the selected object to the new view controller.
 }
 
-- (void)onExporterStarted:(QExporterRetCode)code
-{
-    
-}
-- (void)onExporterStoped:(QExporterRetCode)code
-{
-    
-}
-- (void)onExporterProgressUpdated:(CGFloat)progress
-{
-    float value = (float)progress * 1000/ QTimeRangeGetLenght(_exporter.mediaTimeRange);
+- (void)onExporterProgressUpdated:(nonnull QExporter*)exporter time:(NSNumber*)cgfTime {
+    CGFloat value = [cgfTime floatValue]*1000 / QMediaRangeGetLenght([_exporter getTotalTimeRange]);
     self.progressLabel.text = [NSString stringWithFormat:@"%d%%", (int)(value*100)];
 }
-- (void)onExporterCanceled:(QExporterRetCode)code
-{
+- (void)onExporterStarted:(nonnull QExporter*)exporter error:(int)errcode {
     
 }
-- (void)onExporterCompleted
-{
+- (void)onExporterStoped:(nonnull QExporter*)exporter {
+    [exporter removeObserver:self];
+}
+- (void)onExporterCanceled:(nonnull QExporter*)exporter {
+    
+}
+- (void)onExporterCompleted:(nonnull QExporter*)exporter error:(int)errcode {
     self.progressLabel.text = @"导出成功！";
     
     self.buttonLayer.hidden = NO;
@@ -102,7 +112,10 @@
     [self.playerViewContainer addSubview:self.playerCtrl.view];
     
     [self.exporter removeAllObservers];
-    self.exporter = nil;
+     self.exporter = nil;
+}
+- (void)onExporterEvent:(nonnull QExporter*)exporter eventid:(int32_t)eventid msg:(nonnull NSDictionary<NSString *, NSString *> *)msg {
+    
 }
 
 

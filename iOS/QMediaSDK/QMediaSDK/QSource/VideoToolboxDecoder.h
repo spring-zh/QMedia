@@ -72,7 +72,7 @@ protected:
 class VideoToolboxDecoder : public Decoder {
 public:
     VideoToolboxDecoder();
-	virtual ~VideoToolboxDecoder() {}
+    virtual ~VideoToolboxDecoder();
 
 	virtual int32_t InitDecode(const MediaDescribe& media_describe,
 							   int32_t number_of_cores, const CodecSpecificInfo& codec_specific_info) override ;
@@ -109,6 +109,7 @@ private:
     VTDecompressionSessionRef _Nullable session_ = nullptr;
     OSType pixelFormatType_ = kCVPixelFormatType_420YpCbCr8BiPlanarFullRange;
     CMVideoFormatDescriptionRef _Nullable format_desc_ = nullptr;
+    bool enable_async_decode = false;
     bool is_hevc_ = false;
     bool is_avcc_;
     DecodedFrameCallback *callback_ = nullptr;

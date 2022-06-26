@@ -10,6 +10,8 @@ namespace QMedia { namespace Api {
 
 class EditorExporterCallback;
 class MediaSessionInternal;
+struct AudioEncodeOption;
+struct VideoEncodeOption;
 
 class EditorExporterInternal {
 public:
@@ -28,7 +30,13 @@ public:
 
     virtual void setCallback(const std::shared_ptr<EditorExporterCallback> & callback) = 0;
 
+    virtual void setAudioOption(const AudioEncodeOption & option) = 0;
+
+    virtual void setVideoOption(const VideoEncodeOption & option) = 0;
+
     virtual int64_t getPosition() = 0;
+
+    virtual void start() = 0;
 
     virtual void cancel() = 0;
 };

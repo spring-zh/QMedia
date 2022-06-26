@@ -6,7 +6,8 @@
 #import <CoreFoundation/CoreFoundation.h>
 #import "IOSTexture.h"
 
-USING_GRAPHICCORE
+using GraphicCore::Texture2D;
+using GraphicCore::TextureFrameBuffer;
 
 class PixelbufferTexture : public Texture2D {
 public:
@@ -39,16 +40,15 @@ public:
         PixelbufferFrameBuffer* frame_buffer = new PixelbufferFrameBuffer();
         frame_buffer->pixelbuffer_texture_ = std::unique_ptr<PixelbufferTexture>(new PixelbufferTexture(width, height));
         glGenFramebuffers(1, &frame_buffer->fbo_);
-        if(frame_buffer->use()) {
-            glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-            frame_buffer->pixelbuffer_texture_->getTextureId(), 0);
-            const int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
-            if (status != GL_FRAMEBUFFER_COMPLETE) {
-                NSLog(@"glCheckFramebufferStatus: %d", status);
-                frame_buffer->restore();
-                delete frame_buffer;
-                return nullptr;
-            }
+        frame_buffer->use();
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+        frame_buffer->pixelbuffer_texture_->getTextureId(), 0);
+        const int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+        if (status != GL_FRAMEBUFFER_COMPLETE) {
+            NSLog(@"glCheckFramebufferStatus: %d", status);
+            frame_buffer->restore();
+            delete frame_buffer;
+            return nullptr;
         }
         return frame_buffer;
     }
@@ -91,7 +91,11 @@ private:
     std::unique_ptr<PixelbufferTexture> pixelbuffer_texture_;
 };
 
-
+#define ENABLE_HW_TEXTURE 0
 TextureFrameBuffer* TextureFrameBuffer::createNew(int width, int height, bool enable_depth, bool use_multisample) {
-    return PixelbufferFrameBuffer::create(width, height, false, false);
+    if ([QGLContext supportsFastTextureUpload]) {
+        return PixelbufferFrameBuffer::create(width, height, enable_depth, use_multisample);
+    } else {
+        return GeneralTextureFrameBuffer::create(width, height, enable_depth, use_multisample);
+    }
 }

@@ -27,26 +27,26 @@
                                                aDesc:(nonnull QAudioDescription *)aDesc
                                                vDesc:(nonnull QVideoDescription *)vDesc;
 
-@property (nonatomic, readonly) int32_t mediaType;
+@property (nonatomic ) int32_t mediaType;
 
-@property (nonatomic, readonly) int32_t codecType;
+@property (nonatomic ) int32_t codecType;
 
-@property (nonatomic, readonly) int64_t duration;
+@property (nonatomic ) int64_t duration;
 
-@property (nonatomic, readonly) int64_t bitrate;
+@property (nonatomic ) int64_t bitrate;
 
-@property (nonatomic, readonly) int32_t streamId;
+@property (nonatomic ) int32_t streamId;
 
-@property (nonatomic, readonly, nonnull) NSArray<NSNumber *> * gops;
+@property (nonatomic , nonnull) NSArray<NSNumber *> * gops;
 
 /** timebase */
-@property (nonatomic, readonly) int32_t timebaseNum;
+@property (nonatomic ) int32_t timebaseNum;
 
-@property (nonatomic, readonly) int32_t timebaseDen;
+@property (nonatomic ) int32_t timebaseDen;
 
-@property (nonatomic, readonly, nonnull) QAudioDescription * aDesc;
+@property (nonatomic , nonnull) QAudioDescription * aDesc;
 
-@property (nonatomic, readonly, nonnull) QVideoDescription * vDesc;
+@property (nonatomic , nonnull) QVideoDescription * vDesc;
 
 @end
 

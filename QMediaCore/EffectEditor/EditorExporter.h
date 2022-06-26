@@ -8,7 +8,7 @@
 
 #ifndef EFFECTEDITOR_EXPORTER_H
 #define EFFECTEDITOR_EXPORTER_H
-
+#if 0
 #include "EffectCombiner.h"
 
 class EditorExporter : public EffectCombiner, public EffectCombiner::Callback {
@@ -53,5 +53,5 @@ private:
     
     int64_t _lastRenderTime;
 };
-
+#endif
 #endif /* EFFECTEDITOR_EXPORTER_H */

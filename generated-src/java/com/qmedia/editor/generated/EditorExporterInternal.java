@@ -22,7 +22,13 @@ public interface EditorExporterInternal {
 
     public void setCallback(@Nullable EditorExporterCallback callback);
 
+    public void setAudioOption(@NonNull AudioEncodeOption option);
+
+    public void setVideoOption(@NonNull VideoEncodeOption option);
+
     public long getPosition();
+
+    public void start();
 
     public void cancel();
 
@@ -66,12 +72,36 @@ public interface EditorExporterInternal {
         private native void native_setCallback(long _nativeRef, EditorExporterCallback callback);
 
         @Override
+        public void setAudioOption(AudioEncodeOption option)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setAudioOption(this.nativeRef, option);
+        }
+        private native void native_setAudioOption(long _nativeRef, AudioEncodeOption option);
+
+        @Override
+        public void setVideoOption(VideoEncodeOption option)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setVideoOption(this.nativeRef, option);
+        }
+        private native void native_setVideoOption(long _nativeRef, VideoEncodeOption option);
+
+        @Override
         public long getPosition()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             return native_getPosition(this.nativeRef);
         }
         private native long native_getPosition(long _nativeRef);
+
+        @Override
+        public void start()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_start(this.nativeRef);
+        }
+        private native void native_start(long _nativeRef);
 
         @Override
         public void cancel()

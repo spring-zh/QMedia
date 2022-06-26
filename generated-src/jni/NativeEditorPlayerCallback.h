@@ -38,8 +38,8 @@ private:
         void onStoped(int32_t code) override;
         void onSeekTo(int64_t time_ms) override;
         void onProgressUpdated(int64_t time_ms) override;
-        void onPlayerStateChanged(int32_t new_state, int32_t old_state) override;
-        void onCompleted() override;
+        void onCompleted(int32_t code) override;
+        void onEvent(int32_t eventid, const std::unordered_map<std::string, std::string> & msg) override;
 
     private:
         friend ::djinni::JniInterface<::QMedia::Api::EditorPlayerCallback, ::djinni_generated::NativeEditorPlayerCallback>;
@@ -51,8 +51,8 @@ private:
     const jmethodID method_onStoped { ::djinni::jniGetMethodID(clazz.get(), "onStoped", "(I)V") };
     const jmethodID method_onSeekTo { ::djinni::jniGetMethodID(clazz.get(), "onSeekTo", "(J)V") };
     const jmethodID method_onProgressUpdated { ::djinni::jniGetMethodID(clazz.get(), "onProgressUpdated", "(J)V") };
-    const jmethodID method_onPlayerStateChanged { ::djinni::jniGetMethodID(clazz.get(), "onPlayerStateChanged", "(II)V") };
-    const jmethodID method_onCompleted { ::djinni::jniGetMethodID(clazz.get(), "onCompleted", "()V") };
+    const jmethodID method_onCompleted { ::djinni::jniGetMethodID(clazz.get(), "onCompleted", "(I)V") };
+    const jmethodID method_onEvent { ::djinni::jniGetMethodID(clazz.get(), "onEvent", "(ILjava/util/HashMap;)V") };
 };
 
 }  // namespace djinni_generated

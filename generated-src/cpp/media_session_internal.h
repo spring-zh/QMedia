@@ -52,8 +52,7 @@ public:
     /** control */
     virtual void prepare() = 0;
 
-    virtual void start() = 0;
-
+    /** start(); */
     virtual void stop() = 0;
 };
 

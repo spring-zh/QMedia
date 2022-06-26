@@ -16,12 +16,12 @@
 - (nonnull instancetype)initWithJson:(nonnull NSDictionary*)json;
 - (nonnull NSDictionary*)toJson;
 
-@property (nonatomic, readonly) float v1;
+@property (nonatomic ) float v1;
 
-@property (nonatomic, readonly) float v2;
+@property (nonatomic ) float v2;
 
-@property (nonatomic, readonly) float v3;
+@property (nonatomic ) float v3;
 
-@property (nonatomic, readonly) float v4;
+@property (nonatomic ) float v4;
 
 @end

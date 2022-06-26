@@ -163,15 +163,6 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_MediaSessionInternal_00
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_MediaSessionInternal_00024CppProxy_native_1start(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::MediaSessionInternal>(nativeRef);
-        ref->start();
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
-}
-
 CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_MediaSessionInternal_00024CppProxy_native_1stop(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {

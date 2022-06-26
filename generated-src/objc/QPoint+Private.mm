@@ -10,14 +10,14 @@ namespace djinni_generated {
 auto Point::toCpp(ObjcType obj) -> CppType
 {
     assert(obj);
-    return {::djinni::I64::toCpp(obj.x),
-            ::djinni::I64::toCpp(obj.y)};
+    return {::djinni::F32::toCpp(obj.x),
+            ::djinni::F32::toCpp(obj.y)};
 }
 
 auto Point::fromCpp(const CppType& cpp) -> ObjcType
 {
-    return [[QPoint alloc] initWithX:(::djinni::I64::fromCpp(cpp.x))
-                                   y:(::djinni::I64::fromCpp(cpp.y))];
+    return [[QPoint alloc] initWithX:(::djinni::F32::fromCpp(cpp.x))
+                                   y:(::djinni::F32::fromCpp(cpp.y))];
 }
 
 }  // namespace djinni_generated

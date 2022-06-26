@@ -12,8 +12,8 @@
 - (nonnull instancetype)initWithJson:(nonnull NSDictionary*)json;
 - (nonnull NSDictionary*)toJson;
 
-@property (nonatomic, readonly) int64_t width;
+@property (nonatomic ) int64_t width;
 
-@property (nonatomic, readonly) int64_t height;
+@property (nonatomic ) int64_t height;
 
 @end

@@ -58,7 +58,8 @@ public:
     ~PixelFrameNV12Drawer();
 
     virtual bool setFrame(const VideoFrame& videoFrame) override;
-    virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) override;
+    void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, QMedia::Api::SceneNode* node) override;
+
     virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
     const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode = GraphicCore::Drawable2D::NONE) override;
     virtual void release() override ;
@@ -84,7 +85,8 @@ public:
     ~PixelFrameBGRADrawer();
 
     virtual bool setFrame(const VideoFrame& videoFrame) override;
-    virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) override;
+    void drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, QMedia::Api::SceneNode* node) override {}
+    
     virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
     const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) override;
     const GraphicCore::Texture2D* getOutputTexture() override;

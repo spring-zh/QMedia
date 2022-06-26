@@ -6,8 +6,8 @@
 
 @implementation QPoint
 
-- (nonnull instancetype)initWithX:(int64_t)x
-                                y:(int64_t)y
+- (nonnull instancetype)initWithX:(float)x
+                                y:(float)y
 {
     if (self = [super init]) {
         _x = x;
@@ -16,8 +16,8 @@
     return self;
 }
 
-+ (nonnull instancetype)pointWithX:(int64_t)x
-                                 y:(int64_t)y
++ (nonnull instancetype)pointWithX:(float)x
+                                 y:(float)y
 {
     return [(QPoint*)[self alloc] initWithX:x
                                           y:y];
@@ -45,11 +45,11 @@
     if (self = [super init]) {
         NSNumber* x = [json valueForKey:@"x"];
         if (x != nil) {
-            _x = [x longValue];
+            _x = [x floatValue];
         }
         NSNumber* y = [json valueForKey:@"y"];
         if (y != nil) {
-            _y = [y longValue];
+            _y = [y floatValue];
         }
     }
     return self;

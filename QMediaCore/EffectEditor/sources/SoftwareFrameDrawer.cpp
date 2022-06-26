@@ -103,14 +103,14 @@ bool YUVFrameDrawer::setFrame(const VideoFrame &videoFrame) {
     return true;
 }
 
-void YUVFrameDrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
-{
-    GraphicCore::Mat4 mvpMatrix;
-    //FIXME: translation of position already contain in transform matrix
-    GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
-    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
-    drawFrame(mvpMatrix,region,node->getPositionZ(),node->getCrop(),node->getColor(),node->getBlendFunc(),_rotation);
-}
+//void YUVFrameDrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
+//{
+//    GraphicCore::Mat4 mvpMatrix;
+//    //FIXME: translation of position already contain in transform matrix
+//    GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+//    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
+//    drawFrame(mvpMatrix,region,node->getPositionZ(),node->getCrop(),node->getColor(),node->getBlendFunc(),_rotation);
+//}
 
 void YUVFrameDrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
                                const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode)
@@ -240,11 +240,11 @@ bool RGBAFrameDrawer::setFrame(const VideoFrame& videoFrame) {
 
     return true;
 }
-void RGBAFrameDrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node) {
-    if (_textureDrawer) {
-        _textureDrawer->draw(&_duplicateTexture, scene, transform, node);
-    }
-}
+//void RGBAFrameDrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node) {
+//    if (_textureDrawer) {
+//        _textureDrawer->draw(&_duplicateTexture, scene, transform, node);
+//    }
+//}
 void RGBAFrameDrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
                                      const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) {
     if (_textureDrawer) {

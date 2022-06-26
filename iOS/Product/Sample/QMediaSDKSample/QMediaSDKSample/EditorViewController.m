@@ -90,27 +90,28 @@
     self.sliderBarCtrl.trimRightProgress = (self.sliderBarCtrl.totalTimeLength-fileStartTime)/self.sliderBarCtrl.totalTimeLength;
 }
 
-- (void)onPrepare
-{
+- (void)onPrepared:(nonnull QEditorPlayer*)player {
     NSLog(@"onPrepare");
 }
+
+- (void)onStarted:(nonnull QEditorPlayer*)player error:(int)errcode{
+    NSLog(@"onStarted error %d", errcode);
+}
+
+- (void)onProgressUpdated:(nonnull QEditorPlayer*)player time:(CGFloat)cgfTime {
+    if(_isDraging)
+        return;
+    self.sliderBarCtrl.progress = (float)[_player getPosition]/QMediaRangeGetLenght([_player getTotalTimeRange]);
+}
+- (void)onCompleted:(nonnull QEditorPlayer*)player error:(int)errcode;
+{
+    NSLog(@"onCompleted");
+}
+
 
 - (void)onPlayerChangedObjectToPlay
 {
     [self resetTrimLeftAndTrimRightState];
-}
-
-- (void)onPlayerTimeProgressUpdated:(NSNumber*)cgfTime
-{
-    if(_isDraging)
-        return;
-    CGFloat currentTime = [cgfTime floatValue];
-//    self.sliderBarCtrl.progress = (float)_player.position/QTimeRangeGetLenght(_player.mediaTimeRange);
-    self.sliderBarCtrl.progress = (float)[_player getPosition]/QMediaRangeGetLenght([_player getTotalTimeRange]);
-}
--(void)onCompleted
-{
-    NSLog(@"onCompleted");
 }
 
 - (void)onPreviewSliderBarControllerDidLoad:(PreviewSliderBarController*)sliderBarCtrl

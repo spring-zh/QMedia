@@ -5,15 +5,18 @@ package com.qmedia.editor.generated;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import java.util.HashMap;
 
 public interface EditorExporterCallback {
     public void onStarted(int code);
 
-    public void onStoped(int code);
+    public void onStoped();
 
     public void onProgressUpdated(long timeMs);
 
-    public void onCanceled(int code);
+    public void onCanceled();
 
-    public void onCompleted();
+    public void onCompleted(int code);
+
+    public void onEvent(int eventid, @NonNull HashMap<String, String> msg);
 }

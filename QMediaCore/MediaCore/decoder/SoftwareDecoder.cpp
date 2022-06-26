@@ -31,8 +31,7 @@ _is_bframe(is_bframe){
 
 }
 SoftwareEncodedPacketBuffer::~SoftwareEncodedPacketBuffer() {
-    av_packet_unref(_avPacket);
-    _avPacket = NULL;
+    av_packet_free(&_avPacket);
 }
 
 int64_t SoftwareEncodedPacketBuffer::pts() const {
@@ -74,8 +73,7 @@ _sample_bits(16){
     }
 }
 SoftwareDecodedFrameBuffer::~SoftwareDecodedFrameBuffer() {
-    av_frame_unref(_avFrame);
-    _avFrame = NULL;
+    av_frame_free(&_avFrame);
 }
 
 int SoftwareDecodedFrameBuffer::Channels() const {

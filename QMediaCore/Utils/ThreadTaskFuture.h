@@ -9,9 +9,9 @@
 #ifndef UTILS_THREADTASK_FUTURE_H_
 #define UTILS_THREADTASK_FUTURE_H_
 
-#include "BlockingQueue.h"
 #include <thread>
 #include <future>
+#include "BlockingQueue.h"
 
 #if defined(_PTHREAD_H) && (defined(__GNUC__) || defined(__clang__))
 #define SET_CURRENT_THREAD_NAME(n) pthread_setname_np(n);

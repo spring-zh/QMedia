@@ -6,6 +6,7 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
+#include "GraphicCore/SceneNode.h"
 #include "Texture2DDrawer.h"
 #include "Utils/Comm.h"
 #include "shaders/ccShaders.h"
@@ -23,12 +24,25 @@ Texture2DDrawer::~Texture2DDrawer() {
     _shaderProgram.releaseProgram();
 }
 
-void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Mat4 & transform, const Node* node, Drawable2D::FlipMode flipMode ) {
-    Mat4 mvpMatrix;
-    Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
-    //FIXME: translation of position already contain in transform matrix
-    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
-    draw(texture, mvpMatrix, region, node->getPositionZ(),node->getCrop(),node->getColor(),node->getBlendFunc(), flipMode);
+//void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Mat4 & transform, const Node* node, Drawable2D::FlipMode flipMode ) {
+//    Mat4 mvpMatrix;
+//    Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+//    //FIXME: translation of position already contain in transform matrix
+//    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
+//    draw(texture, mvpMatrix, region, node->getPositionZ(),node->getCrop(),node->getColor(),node->getBlendFunc(), flipMode);
+//}
+
+void Texture2DDrawer::draw(const Texture2D* texture,const Scene* scene, const Mat4 & transform, QMedia::Api::SceneNode* node, Drawable2D::FlipMode flipMode) {
+    GraphicCore::Mat4 mvpMatrix;
+    GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+    GraphicCore::Rect region(0,0, node->getContentSize().width, node->getContentSize().height);
+    auto crop_v = node->getCrop();
+    GraphicCore::Rect crop(crop_v.left, crop_v.top, crop_v.right, crop_v.bottom);
+    auto color_v = node->getColor4F();
+    GraphicCore::Color4F color = GraphicCore::Color4F(color_v.r, color_v.g, color_v.b, color_v.a);
+    GraphicCore::BlendFunc bf = BlendFunc::DISABLE;
+    
+    draw(texture, mvpMatrix, region, node->getPositionZ(),crop,color,bf, flipMode);
 }
 
 void Texture2DDrawer::draw(const Texture2D* texture, const Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,

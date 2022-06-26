@@ -9,9 +9,12 @@
 namespace QMedia { namespace Api {
 
 struct Animator;
+struct Blendfunc;
+struct Color4f;
 struct Point;
+struct Rect4f;
 struct Size;
-struct Vec4f;
+struct Vec3f;
 
 class VideoRenderNode {
 public:
@@ -19,27 +22,59 @@ public:
 
     virtual void setVisible(bool visible) = 0;
 
-    virtual void setAlpha(float alpha) = 0;
-
-    virtual void setCrop(const Vec4f & crop) = 0;
-
-    virtual void setContentSize(const Size & content_size) = 0;
-
-    virtual void setAnchorPoint(const Point & anchor_point) = 0;
+    virtual bool getVisible() = 0;
 
     virtual void setPosition(const Point & position) = 0;
 
+    virtual Point getPosition() = 0;
+
     virtual void setPositionZ(int32_t positionz) = 0;
 
-    virtual void setRotation(int32_t rotation) = 0;
-
-    virtual void setRotation3d(const Vec4f & rotation3d) = 0;
+    virtual int32_t getPositionZ() = 0;
 
     virtual void setScaleX(float scalex) = 0;
 
+    virtual float getScaleX() = 0;
+
     virtual void setScaleY(float scaley) = 0;
 
+    virtual float getScaleY() = 0;
+
     virtual void setScaleZ(float scalez) = 0;
+
+    virtual float getScaleZ() = 0;
+
+    virtual void setContentSize(const Size & content_size) = 0;
+
+    virtual Size getContentSize() = 0;
+
+    virtual void setRotation(int32_t rotation) = 0;
+
+    virtual int32_t getRotation() = 0;
+
+    virtual void setRotation3d(const Vec3f & rotation3d) = 0;
+
+    virtual Vec3f getRotation3d() = 0;
+
+    virtual void setAnchorPoint(const Point & anchor_point) = 0;
+
+    virtual Point getAnchorPoint() = 0;
+
+    virtual void setColor4F(const Color4f & color) = 0;
+
+    virtual Color4f getColor4F() = 0;
+
+    virtual void setAlpha(float alpha) = 0;
+
+    virtual float getAlpha() = 0;
+
+    virtual void setBlendFunc(const Blendfunc & bf) = 0;
+
+    virtual Blendfunc getBlendFunc() = 0;
+
+    virtual void setCrop(const Rect4f & crop) = 0;
+
+    virtual Rect4f getCrop() = 0;
 
     virtual std::vector<Animator> getAnimators() = 0;
 

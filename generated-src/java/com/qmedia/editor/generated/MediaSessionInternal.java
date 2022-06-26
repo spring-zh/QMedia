@@ -45,8 +45,7 @@ public interface MediaSessionInternal {
     /** control */
     public void prepare();
 
-    public void start();
-
+    /** start(); */
     public void stop();
 
     static final class CppProxy implements MediaSessionInternal
@@ -183,14 +182,6 @@ public interface MediaSessionInternal {
             native_prepare(this.nativeRef);
         }
         private native void native_prepare(long _nativeRef);
-
-        @Override
-        public void start()
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_start(this.nativeRef);
-        }
-        private native void native_start(long _nativeRef);
 
         @Override
         public void stop()

@@ -8,7 +8,8 @@
 
 #include "MediaEngineImpl.h"
 #include "MediaSegmentImpl.h"
-#include "MediaSessionPlayerImpl.h"
+#include "EditorPlayerImpl.h"
+#include "EditorExporterImpl.h"
 
 namespace QMedia { namespace Api {
 
@@ -31,11 +32,11 @@ AudioDescription MediaEngine::audio_out() {
 }
 
 std::shared_ptr<EditorPlayerInternal> MediaEngine::create_editor_player_internal() {
-    return std::shared_ptr<EditorPlayerInternal>(new MediaSessionPlayerImpl());
+    return std::shared_ptr<EditorPlayerInternal>(new EditorPlayerImpl());
 }
 
 std::shared_ptr<EditorExporterInternal> MediaEngine::create_editor_exporter_internal() {
-    return nullptr;
+    return std::shared_ptr<EditorExporterInternal>(new EditorExporterImpl());
 }
 
 }

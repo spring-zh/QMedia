@@ -4,6 +4,8 @@
 #pragma once
 
 #include <cstdint>
+#include <string>
+#include <unordered_map>
 
 namespace QMedia { namespace Api {
 
@@ -13,13 +15,15 @@ public:
 
     virtual void onStarted(int32_t code) = 0;
 
-    virtual void onStoped(int32_t code) = 0;
+    virtual void onStoped() = 0;
 
     virtual void onProgressUpdated(int64_t time_ms) = 0;
 
-    virtual void onCanceled(int32_t code) = 0;
+    virtual void onCanceled() = 0;
 
-    virtual void onCompleted() = 0;
+    virtual void onCompleted(int32_t code) = 0;
+
+    virtual void onEvent(int32_t eventid, const std::unordered_map<std::string, std::string> & msg) = 0;
 };
 
 } }  // namespace QMedia::Api

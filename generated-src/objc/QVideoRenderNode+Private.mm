@@ -7,9 +7,12 @@
 #import "DJIError.h"
 #import "DJIMarshal+Private.h"
 #import "QAnimator+Private.h"
+#import "QBlendfunc+Private.h"
+#import "QColor4f+Private.h"
 #import "QPoint+Private.h"
+#import "QRect4f+Private.h"
 #import "QSize+Private.h"
-#import "QVec4f+Private.h"
+#import "QVec3f+Private.h"
 #include <exception>
 #include <stdexcept>
 #include <utility>
@@ -40,27 +43,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)setAlpha:(float)alpha {
+- (BOOL)getVisible {
     try {
-        _cppRefHandle.get()->setAlpha(::djinni::F32::toCpp(alpha));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)setCrop:(nonnull QVec4f *)crop {
-    try {
-        _cppRefHandle.get()->setCrop(::djinni_generated::Vec4f::toCpp(crop));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)setContentSize:(nonnull QSize *)contentSize {
-    try {
-        _cppRefHandle.get()->setContentSize(::djinni_generated::Size::toCpp(contentSize));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)setAnchorPoint:(nonnull QPoint *)anchorPoint {
-    try {
-        _cppRefHandle.get()->setAnchorPoint(::djinni_generated::Point::toCpp(anchorPoint));
+        auto objcpp_result_ = _cppRefHandle.get()->getVisible();
+        return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -70,21 +56,23 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
+- (nonnull QPoint *)getPosition {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getPosition();
+        return ::djinni_generated::Point::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 - (void)setPositionZ:(int32_t)positionz {
     try {
         _cppRefHandle.get()->setPositionZ(::djinni::I32::toCpp(positionz));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)setRotation:(int32_t)rotation {
+- (int32_t)getPositionZ {
     try {
-        _cppRefHandle.get()->setRotation(::djinni::I32::toCpp(rotation));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (void)setRotation3d:(nonnull QVec4f *)rotation3d {
-    try {
-        _cppRefHandle.get()->setRotation3d(::djinni_generated::Vec4f::toCpp(rotation3d));
+        auto objcpp_result_ = _cppRefHandle.get()->getPositionZ();
+        return ::djinni::I32::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
@@ -94,15 +82,140 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
+- (float)getScaleX {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getScaleX();
+        return ::djinni::F32::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 - (void)setScaleY:(float)scaley {
     try {
         _cppRefHandle.get()->setScaleY(::djinni::F32::toCpp(scaley));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
+- (float)getScaleY {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getScaleY();
+        return ::djinni::F32::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
 - (void)setScaleZ:(float)scalez {
     try {
         _cppRefHandle.get()->setScaleZ(::djinni::F32::toCpp(scalez));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (float)getScaleZ {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getScaleZ();
+        return ::djinni::F32::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setContentSize:(nonnull QSize *)contentSize {
+    try {
+        _cppRefHandle.get()->setContentSize(::djinni_generated::Size::toCpp(contentSize));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nonnull QSize *)getContentSize {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getContentSize();
+        return ::djinni_generated::Size::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setRotation:(int32_t)rotation {
+    try {
+        _cppRefHandle.get()->setRotation(::djinni::I32::toCpp(rotation));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (int32_t)getRotation {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getRotation();
+        return ::djinni::I32::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setRotation3d:(nonnull QVec3f *)rotation3d {
+    try {
+        _cppRefHandle.get()->setRotation3d(::djinni_generated::Vec3f::toCpp(rotation3d));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nonnull QVec3f *)getRotation3d {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getRotation3d();
+        return ::djinni_generated::Vec3f::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setAnchorPoint:(nonnull QPoint *)anchorPoint {
+    try {
+        _cppRefHandle.get()->setAnchorPoint(::djinni_generated::Point::toCpp(anchorPoint));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nonnull QPoint *)getAnchorPoint {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getAnchorPoint();
+        return ::djinni_generated::Point::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setColor4F:(nonnull QColor4f *)color {
+    try {
+        _cppRefHandle.get()->setColor4F(::djinni_generated::Color4f::toCpp(color));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nonnull QColor4f *)getColor4F {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getColor4F();
+        return ::djinni_generated::Color4f::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setAlpha:(float)alpha {
+    try {
+        _cppRefHandle.get()->setAlpha(::djinni::F32::toCpp(alpha));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (float)getAlpha {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getAlpha();
+        return ::djinni::F32::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setBlendFunc:(nonnull QBlendfunc *)bf {
+    try {
+        _cppRefHandle.get()->setBlendFunc(::djinni_generated::Blendfunc::toCpp(bf));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nonnull QBlendfunc *)getBlendFunc {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getBlendFunc();
+        return ::djinni_generated::Blendfunc::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)setCrop:(nonnull QRect4f *)crop {
+    try {
+        _cppRefHandle.get()->setCrop(::djinni_generated::Rect4f::toCpp(crop));
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (nonnull QRect4f *)getCrop {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->getCrop();
+        return ::djinni_generated::Rect4f::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

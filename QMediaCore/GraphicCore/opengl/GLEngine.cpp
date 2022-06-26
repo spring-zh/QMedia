@@ -194,7 +194,7 @@ GLenum glCheckError_(const char* file, int line) {
             break;
         }
 
-        LOGW("glCheckError: %s", error.c_str());
+        LOGW("[%s:%d] glCheckError: %s", file,line,error.c_str());
 //        std::cout << error << " | " << file << " (" << line << ") " << std::endl;
     }
     

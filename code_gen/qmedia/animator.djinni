@@ -1,0 +1,73 @@
+ease_function = enum {
+    CUSTOM_EASING = -1;
+    
+    Linear;
+    
+    Sine_EaseIn;
+    Sine_EaseOut;
+    Sine_EaseInOut;
+    
+    Quad_EaseIn;
+    Quad_EaseOut;
+    Quad_EaseInOut;
+    
+    Cubic_EaseIn;
+    Cubic_EaseOut;
+    Cubic_EaseInOut;
+    
+    Quart_EaseIn;
+    Quart_EaseOut;
+    Quart_EaseInOut;
+    
+    Quint_EaseIn;
+    Quint_EaseOut;
+    Quint_EaseInOut;
+    
+    Expo_EaseIn;
+    Expo_EaseOut;
+    Expo_EaseInOut;
+    
+    Circ_EaseIn;
+    Circ_EaseOut;
+    Circ_EaseInOut;
+    
+    Elastic_EaseIn;
+    Elastic_EaseOut;
+    Elastic_EaseInOut;
+    
+    Back_EaseIn;
+    Back_EaseOut;
+    Back_EaseInOut;
+    
+    Bounce_EaseIn;
+    Bounce_EaseOut;
+    Bounce_EaseInOut;
+    
+    TWEEN_EASING_MAX = 10000;
+}
+
+animator = record {
+    # property
+    const positionxyz: string = "positionxyz";
+    const rotation: string = "rotation";
+    const rotationxyz: string = "rotationxyz";
+    const scalex: string = "scalex";
+    const scaley: string = "scaley";
+    const scalez: string = "scalez";
+    const scalexy: string = "scalexy";
+    const scalexyz: string = "scalexyz";
+    const contentsizew: string = "contentsizew";
+    const contentsizeh: string = "contentsizeh";
+    const contentsize: string = "contentsize";
+    const alpha: string = "alpha";
+    const mixcolor: string = "mixcolor";
+    const crop: string = "crop";
+    
+    name: string;
+    property: string;
+    timerang: media_range;
+    startpoint: vec4f;
+    endpoint: vec4f;
+    easefunc: ease_function;
+    repleat: bool;
+} 

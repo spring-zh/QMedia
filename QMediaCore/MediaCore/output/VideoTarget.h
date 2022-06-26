@@ -11,12 +11,6 @@
 #include "OutputTarget.h"
 #include "MediaCore/core/VideoFrame.h"
 
-enum class DisplayMode : int{
-    Stretch = 0,
-    Adaptive,
-    Clip
-};
-
 class VideoRender
 {
 public:
@@ -26,7 +20,7 @@ public:
     virtual bool onRenderDestroy() = 0;
     
     //set output display mode
-    virtual void setDisplayMode(DisplayMode mode, int dstW, int dstH) = 0;
+//    virtual void setDisplayMode(DisplayMode mode, int dstW, int dstH) = 0;
 };
 
 class VideoTarget :public OutputTarget{

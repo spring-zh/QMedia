@@ -24,10 +24,10 @@ public:
             [djinni_private_get_proxied_objc_object() onStarted:(::djinni::I32::fromCpp(c_code))];
         }
     }
-    void onStoped(int32_t c_code) override
+    void onStoped() override
     {
         @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() onStoped:(::djinni::I32::fromCpp(c_code))];
+            [djinni_private_get_proxied_objc_object() onStoped];
         }
     }
     void onProgressUpdated(int64_t c_time_ms) override
@@ -36,16 +36,23 @@ public:
             [djinni_private_get_proxied_objc_object() onProgressUpdated:(::djinni::I64::fromCpp(c_time_ms))];
         }
     }
-    void onCanceled(int32_t c_code) override
+    void onCanceled() override
     {
         @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() onCanceled:(::djinni::I32::fromCpp(c_code))];
+            [djinni_private_get_proxied_objc_object() onCanceled];
         }
     }
-    void onCompleted() override
+    void onCompleted(int32_t c_code) override
     {
         @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() onCompleted];
+            [djinni_private_get_proxied_objc_object() onCompleted:(::djinni::I32::fromCpp(c_code))];
+        }
+    }
+    void onEvent(int32_t c_eventid, const std::unordered_map<std::string, std::string> & c_msg) override
+    {
+        @autoreleasepool {
+            [djinni_private_get_proxied_objc_object() onEvent:(::djinni::I32::fromCpp(c_eventid))
+                                                          msg:(::djinni::Map<::djinni::String, ::djinni::String>::fromCpp(c_msg))];
         }
     }
 };

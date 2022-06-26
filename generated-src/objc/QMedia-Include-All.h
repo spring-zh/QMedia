@@ -12,6 +12,8 @@ FOUNDATION_EXPORT double QMediaIncludeAllVersionNumber;
 //! Project version string for QMediaIncludeAll.
 FOUNDATION_EXPORT const unsigned char QMediaIncludeAllVersionString[];
 
+#import "QEaseFunction.h"
+#import "QAnimator.h"
 #import "QAudioRender.h"
 #import "QAudioRunloop.h"
 #import "QVideoRender.h"
@@ -24,12 +26,17 @@ FOUNDATION_EXPORT const unsigned char QMediaIncludeAllVersionString[];
 #import "QMediaSegment.h"
 #import "QMediaEngine.h"
 #import "QAudioRenderNode.h"
-#import "QAnimator.h"
 #import "QVideoRenderNode.h"
+#import "QVideoEncodeOption.h"
+#import "QAudioEncodeOption.h"
 #import "QMediaRange.h"
 #import "QPoint.h"
 #import "QSize.h"
+#import "QVec3f.h"
 #import "QVec4f.h"
+#import "QColor4f.h"
+#import "QRect4f.h"
+#import "QBlendfunc.h"
 #import "QAudioDescription.h"
 #import "QVideoDescription.h"
 #import "QMediaStreamInfo.h"

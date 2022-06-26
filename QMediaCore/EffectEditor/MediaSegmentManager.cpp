@@ -7,7 +7,7 @@
 //
 
 #include "MediaSegmentManager.h"
-#include "medianode/VideoRenderNodeImpl.h"
+#include "medianode/VideoGraphicNode.h"
 #include "medianode/AudioRenderNodeImpl.h"
 #include "Utils/Logger.h"
 //#include "MediaCore/core/SteadyClock.h"
@@ -38,15 +38,17 @@ MediaSegmentManager::~MediaSegmentManager() {
 }
 
 bool MediaSegmentManager::RebuildSegmentTracks(SegmentTrack& ord_segments, std::vector<SegmentTrack>& segment_tracks) {
-    std::vector<SegmentTrack> seg_tracks(1);
-    seg_tracks[0].push_back(ord_segments[0]);
-    for (int i = 1; i < ord_segments.size(); ++i) {
+    std::vector<SegmentTrack> seg_tracks;
+//    seg_tracks[0].push_back(ord_segments[0]);
+    for (int i = 0; i < ord_segments.size(); ++i) {
         bool is_overlap = true;
-        for (auto& track : seg_tracks) {
-            if (track[track.size()-1]->getDisplayRange().end <= ord_segments[i]->getDisplayRange().start) {
-                track.push_back(ord_segments[i]);
-                is_overlap = false;
-                break;
+        if (i != 0) {
+            for (auto& track : seg_tracks) {
+                if (track[track.size()-1]->getDisplayRange().end <= ord_segments[i]->getDisplayRange().start) {
+                    track.push_back(ord_segments[i]);
+                    is_overlap = false;
+                    break;
+                }
             }
         }
         if (is_overlap) {
@@ -198,7 +200,7 @@ void MediaSegmentManager::ReadVideoFrames(int64_t time_ms) {
         MediaSegmentImpl *psegment;
         DecodedFrame vframe = v_decoder->ReadFrame(time_ms, index, &psegment);
         if (vframe.frame_buffer_ && psegment) {
-            ((VideoRenderNodeImpl*)psegment->getVideo().get())->PutVideoFrame(vframe);
+            ((VideoGraphicNode*)psegment->getVideo().get())->PutVideoFrame(vframe);
         }
     }
 }

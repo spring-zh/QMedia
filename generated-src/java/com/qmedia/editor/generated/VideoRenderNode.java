@@ -11,27 +11,66 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public interface VideoRenderNode {
     public void setVisible(boolean visible);
 
-    public void setAlpha(float alpha);
-
-    public void setCrop(@NonNull Vec4f crop);
-
-    public void setContentSize(@NonNull Size contentSize);
-
-    public void setAnchorPoint(@NonNull Point anchorPoint);
+    public boolean getVisible();
 
     public void setPosition(@NonNull Point position);
 
+    @NonNull
+    public Point getPosition();
+
     public void setPositionZ(int positionz);
 
-    public void setRotation(int rotation);
-
-    public void setRotation3d(@NonNull Vec4f rotation3d);
+    public int getPositionZ();
 
     public void setScaleX(float scalex);
 
+    public float getScaleX();
+
     public void setScaleY(float scaley);
 
+    public float getScaleY();
+
     public void setScaleZ(float scalez);
+
+    public float getScaleZ();
+
+    public void setContentSize(@NonNull Size contentSize);
+
+    @NonNull
+    public Size getContentSize();
+
+    public void setRotation(int rotation);
+
+    public int getRotation();
+
+    public void setRotation3d(@NonNull Vec3f rotation3d);
+
+    @NonNull
+    public Vec3f getRotation3d();
+
+    public void setAnchorPoint(@NonNull Point anchorPoint);
+
+    @NonNull
+    public Point getAnchorPoint();
+
+    public void setColor4F(@NonNull Color4f color);
+
+    @NonNull
+    public Color4f getColor4F();
+
+    public void setAlpha(float alpha);
+
+    public float getAlpha();
+
+    public void setBlendFunc(@NonNull Blendfunc bf);
+
+    @NonNull
+    public Blendfunc getBlendFunc();
+
+    public void setCrop(@NonNull Rect4f crop);
+
+    @NonNull
+    public Rect4f getCrop();
 
     @NonNull
     public ArrayList<Animator> getAnimators();
@@ -72,36 +111,12 @@ public interface VideoRenderNode {
         private native void native_setVisible(long _nativeRef, boolean visible);
 
         @Override
-        public void setAlpha(float alpha)
+        public boolean getVisible()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_setAlpha(this.nativeRef, alpha);
+            return native_getVisible(this.nativeRef);
         }
-        private native void native_setAlpha(long _nativeRef, float alpha);
-
-        @Override
-        public void setCrop(Vec4f crop)
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_setCrop(this.nativeRef, crop);
-        }
-        private native void native_setCrop(long _nativeRef, Vec4f crop);
-
-        @Override
-        public void setContentSize(Size contentSize)
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_setContentSize(this.nativeRef, contentSize);
-        }
-        private native void native_setContentSize(long _nativeRef, Size contentSize);
-
-        @Override
-        public void setAnchorPoint(Point anchorPoint)
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_setAnchorPoint(this.nativeRef, anchorPoint);
-        }
-        private native void native_setAnchorPoint(long _nativeRef, Point anchorPoint);
+        private native boolean native_getVisible(long _nativeRef);
 
         @Override
         public void setPosition(Point position)
@@ -112,6 +127,14 @@ public interface VideoRenderNode {
         private native void native_setPosition(long _nativeRef, Point position);
 
         @Override
+        public Point getPosition()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getPosition(this.nativeRef);
+        }
+        private native Point native_getPosition(long _nativeRef);
+
+        @Override
         public void setPositionZ(int positionz)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
@@ -120,20 +143,12 @@ public interface VideoRenderNode {
         private native void native_setPositionZ(long _nativeRef, int positionz);
 
         @Override
-        public void setRotation(int rotation)
+        public int getPositionZ()
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_setRotation(this.nativeRef, rotation);
+            return native_getPositionZ(this.nativeRef);
         }
-        private native void native_setRotation(long _nativeRef, int rotation);
-
-        @Override
-        public void setRotation3d(Vec4f rotation3d)
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_setRotation3d(this.nativeRef, rotation3d);
-        }
-        private native void native_setRotation3d(long _nativeRef, Vec4f rotation3d);
+        private native int native_getPositionZ(long _nativeRef);
 
         @Override
         public void setScaleX(float scalex)
@@ -144,6 +159,14 @@ public interface VideoRenderNode {
         private native void native_setScaleX(long _nativeRef, float scalex);
 
         @Override
+        public float getScaleX()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getScaleX(this.nativeRef);
+        }
+        private native float native_getScaleX(long _nativeRef);
+
+        @Override
         public void setScaleY(float scaley)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
@@ -152,12 +175,156 @@ public interface VideoRenderNode {
         private native void native_setScaleY(long _nativeRef, float scaley);
 
         @Override
+        public float getScaleY()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getScaleY(this.nativeRef);
+        }
+        private native float native_getScaleY(long _nativeRef);
+
+        @Override
         public void setScaleZ(float scalez)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
             native_setScaleZ(this.nativeRef, scalez);
         }
         private native void native_setScaleZ(long _nativeRef, float scalez);
+
+        @Override
+        public float getScaleZ()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getScaleZ(this.nativeRef);
+        }
+        private native float native_getScaleZ(long _nativeRef);
+
+        @Override
+        public void setContentSize(Size contentSize)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setContentSize(this.nativeRef, contentSize);
+        }
+        private native void native_setContentSize(long _nativeRef, Size contentSize);
+
+        @Override
+        public Size getContentSize()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getContentSize(this.nativeRef);
+        }
+        private native Size native_getContentSize(long _nativeRef);
+
+        @Override
+        public void setRotation(int rotation)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setRotation(this.nativeRef, rotation);
+        }
+        private native void native_setRotation(long _nativeRef, int rotation);
+
+        @Override
+        public int getRotation()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getRotation(this.nativeRef);
+        }
+        private native int native_getRotation(long _nativeRef);
+
+        @Override
+        public void setRotation3d(Vec3f rotation3d)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setRotation3d(this.nativeRef, rotation3d);
+        }
+        private native void native_setRotation3d(long _nativeRef, Vec3f rotation3d);
+
+        @Override
+        public Vec3f getRotation3d()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getRotation3d(this.nativeRef);
+        }
+        private native Vec3f native_getRotation3d(long _nativeRef);
+
+        @Override
+        public void setAnchorPoint(Point anchorPoint)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setAnchorPoint(this.nativeRef, anchorPoint);
+        }
+        private native void native_setAnchorPoint(long _nativeRef, Point anchorPoint);
+
+        @Override
+        public Point getAnchorPoint()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getAnchorPoint(this.nativeRef);
+        }
+        private native Point native_getAnchorPoint(long _nativeRef);
+
+        @Override
+        public void setColor4F(Color4f color)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setColor4F(this.nativeRef, color);
+        }
+        private native void native_setColor4F(long _nativeRef, Color4f color);
+
+        @Override
+        public Color4f getColor4F()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getColor4F(this.nativeRef);
+        }
+        private native Color4f native_getColor4F(long _nativeRef);
+
+        @Override
+        public void setAlpha(float alpha)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setAlpha(this.nativeRef, alpha);
+        }
+        private native void native_setAlpha(long _nativeRef, float alpha);
+
+        @Override
+        public float getAlpha()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getAlpha(this.nativeRef);
+        }
+        private native float native_getAlpha(long _nativeRef);
+
+        @Override
+        public void setBlendFunc(Blendfunc bf)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setBlendFunc(this.nativeRef, bf);
+        }
+        private native void native_setBlendFunc(long _nativeRef, Blendfunc bf);
+
+        @Override
+        public Blendfunc getBlendFunc()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getBlendFunc(this.nativeRef);
+        }
+        private native Blendfunc native_getBlendFunc(long _nativeRef);
+
+        @Override
+        public void setCrop(Rect4f crop)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_setCrop(this.nativeRef, crop);
+        }
+        private native void native_setCrop(long _nativeRef, Rect4f crop);
+
+        @Override
+        public Rect4f getCrop()
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_getCrop(this.nativeRef);
+        }
+        private native Rect4f native_getCrop(long _nativeRef);
 
         @Override
         public ArrayList<Animator> getAnimators()

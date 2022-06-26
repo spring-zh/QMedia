@@ -87,3 +87,7 @@
 + (BOOL)isTorchAvailableForDevice:(AVCaptureDevice *)device;
 
 @end
+
+@interface QDeviceUtils (PixelDump)
++ (UIImage*)convertBitmapRGBA8ToUIImage:(unsigned char *)buffer :(int)width :(int)height;
+@end

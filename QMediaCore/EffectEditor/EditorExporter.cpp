@@ -9,7 +9,7 @@
 #include "EditorExporter.h"
 
 //#define CMD_CANCEL 100
-
+#if 0
 EditorExporter::EditorExporter():_callback(nullptr),_renderPosition(0),_lastRenderTime(0)
 {
     EffectCombiner::setCallBack(this);
@@ -103,3 +103,4 @@ EditorExporter::RetCode EditorExporter::_cancel()
     _callback->onCanceled(ret);
     return ret;
 }
+#endif

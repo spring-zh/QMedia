@@ -31,12 +31,10 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
 }
 
 - (void)setDisplayMode:(int32_t)mode
-                 width:(int32_t)width
-                height:(int32_t)height {
+                 flipV:(BOOL)flipV {
     try {
         _cppRefHandle.get()->setDisplayMode(::djinni::I32::toCpp(mode),
-                                            ::djinni::I32::toCpp(width),
-                                            ::djinni::I32::toCpp(height));
+                                            ::djinni::Bool::toCpp(flipV));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

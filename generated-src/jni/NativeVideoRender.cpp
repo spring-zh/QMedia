@@ -19,14 +19,13 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppPro
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppProxy_native_1setDisplayMode(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_mode, jint j_width, jint j_height)
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppProxy_native_1setDisplayMode(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_mode, jboolean j_flipV)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRender>(nativeRef);
         ref->setDisplayMode(::djinni::I32::toCpp(jniEnv, j_mode),
-                            ::djinni::I32::toCpp(jniEnv, j_width),
-                            ::djinni::I32::toCpp(jniEnv, j_height));
+                            ::djinni::Bool::toCpp(jniEnv, j_flipV));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 

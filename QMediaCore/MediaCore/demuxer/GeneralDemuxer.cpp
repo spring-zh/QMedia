@@ -281,7 +281,7 @@ int32_t GeneralDemuxer::ReadPacket(EncodedPacket& packet) {
     } else {
         if (ret ==  AVERROR_EOF)
             _isEOF = true;
-        av_packet_unref(avPacket);
+        av_packet_free(&avPacket);
     }
     return ret;
 }

@@ -33,35 +33,35 @@
                                    aspectRatioNum:(int32_t)aspectRatioNum
                                    aspectRatioDen:(int32_t)aspectRatioDen;
 
-@property (nonatomic, readonly) int32_t width;
+@property (nonatomic ) int32_t width;
 
-@property (nonatomic, readonly) int32_t height;
+@property (nonatomic ) int32_t height;
 
-@property (nonatomic, readonly) int32_t framerate;
+@property (nonatomic ) int32_t framerate;
 
-@property (nonatomic, readonly) int16_t pixelFormat;
+@property (nonatomic ) int16_t pixelFormat;
 
-@property (nonatomic, readonly) int32_t rotation;
+@property (nonatomic ) int32_t rotation;
 
-@property (nonatomic, readonly) BOOL isTexture;
+@property (nonatomic ) BOOL isTexture;
 
 /** ff field */
-@property (nonatomic, readonly) int32_t profile;
+@property (nonatomic ) int32_t profile;
 
-@property (nonatomic, readonly) int32_t level;
+@property (nonatomic ) int32_t level;
 
-@property (nonatomic, readonly) int32_t colorRange;
+@property (nonatomic ) int32_t colorRange;
 
-@property (nonatomic, readonly) int32_t colorSpace;
+@property (nonatomic ) int32_t colorSpace;
 
-@property (nonatomic, readonly) int32_t colorTrc;
+@property (nonatomic ) int32_t colorTrc;
 
-@property (nonatomic, readonly) int32_t colorPrimaries;
+@property (nonatomic ) int32_t colorPrimaries;
 
 /** aspect_ratio */
-@property (nonatomic, readonly) int32_t aspectRatioNum;
+@property (nonatomic ) int32_t aspectRatioNum;
 
-@property (nonatomic, readonly) int32_t aspectRatioDen;
+@property (nonatomic ) int32_t aspectRatioDen;
 
 @end
 

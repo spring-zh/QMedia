@@ -31,35 +31,35 @@ TextureFrameBuffer* GeneralTextureFrameBuffer::create(int width, int height, boo
     
     glGenFramebuffers(1, &texture_framebuffer->fbo_);
     texture_framebuffer->attach_texture_ = std::unique_ptr<Texture2D>(GeneralTexture2D::createTexture(Texture2D::RGBA, width, height));
-    if(texture_framebuffer->use()) {
-        #if __ANDROID_NDK__
-            bool uspport_multisample = GLEngine::checkSupportExtension("GL_EXT_multisampled_render_to_texture");
-            glFramebufferTexture2DMultisampleEXT_ = (PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC) eglGetProcAddress(
-                    "glFramebufferTexture2DMultisampleEXT");
-            if (!glFramebufferTexture2DMultisampleEXT_) {
-                LOGW("Couldn't get function pointer to glFramebufferTexture2DMultisampleEXT()");
-                uspport_multisample = false;
-            }
-
-            if (uspport_multisample && _useMultisample) {
-                GLint samples = 0;
-                glGetIntegerv(GL_MAX_SAMPLES_EXT, &samples);
-                if (samples > 4 || samples <= 0)
-                {
-                    samples = 4;
-                }
-                glFramebufferTexture2DMultisampleEXT_(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D,
-                                                     texture2D->getTextureId(), 0, samples);
-                GLenum  err = glGetError();
-                if (err) {
-                    glCheckError();
-                    glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture2D->getTextureId(), 0);
-                }
-            } else
-    #endif
-                glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-                                       texture_framebuffer->attach_texture_->getTextureId(), 0);
+    texture_framebuffer->use();
+#if __ANDROID_NDK__
+    bool uspport_multisample = GLEngine::checkSupportExtension("GL_EXT_multisampled_render_to_texture");
+    glFramebufferTexture2DMultisampleEXT_ = (PFNGLFRAMEBUFFERTEXTURE2DMULTISAMPLEIMGPROC) eglGetProcAddress(
+            "glFramebufferTexture2DMultisampleEXT");
+    if (!glFramebufferTexture2DMultisampleEXT_) {
+        LOGW("Couldn't get function pointer to glFramebufferTexture2DMultisampleEXT()");
+        uspport_multisample = false;
     }
+
+    if (uspport_multisample && _useMultisample) {
+        GLint samples = 0;
+        glGetIntegerv(GL_MAX_SAMPLES_EXT, &samples);
+        if (samples > 4 || samples <= 0)
+        {
+            samples = 4;
+        }
+        glFramebufferTexture2DMultisampleEXT_(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D,
+                                             texture2D->getTextureId(), 0, samples);
+        GLenum  err = glGetError();
+        if (err) {
+            glCheckError();
+            glFramebufferTexture2D(GL_FRAMEBUFFER, attachment, GL_TEXTURE_2D, texture2D->getTextureId(), 0);
+        }
+    } else
+#endif
+        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+                               texture_framebuffer->attach_texture_->getTextureId(), 0);
+
     if (texture_framebuffer->enable_depth_) {
         texture_framebuffer->depth_texture_ = std::unique_ptr<Texture2D>(GeneralTexture2D::createTexture(Texture2D::DEPTH, width, height));
         glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D,

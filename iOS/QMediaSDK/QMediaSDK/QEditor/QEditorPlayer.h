@@ -27,27 +27,25 @@ typedef NS_ENUM(NSInteger, QEditorPlayerState) {
 
 @protocol QEditorPlayerObserver <NSObject>
 @optional
-- (void)onPrepare;
-- (void)onPlayerChangedFromOldState:(nonnull QEditorPlayer*)player oldState:(int)xmsOldState
-                         toNewState:(int)xmsNewState;
-- (void)onPlayerTimeProgressUpdated:(NSNumber*)cgfTime;
-- (void)onPlayerSeekedTo:(nonnull QEditorPlayer*)player position:(int64_t)cgfTime;
-- (void)onStarted:(nonnull QEditorPlayer*)player;
+- (void)onPrepared:(nonnull QEditorPlayer*)player;
+- (void)onProgressUpdated:(nonnull QEditorPlayer*)player time:(CGFloat)cgfTime;
+- (void)onPlayerSeekedTo:(nonnull QEditorPlayer*)player position:(CGFloat)cgfTime;
+- (void)onStarted:(nonnull QEditorPlayer*)player error:(int)errcode;
 - (void)onStoped:(nonnull QEditorPlayer*)player;
-- (void)onCompleted:(nonnull QEditorPlayer*)player;
+- (void)onCompleted:(nonnull QEditorPlayer*)player error:(int)errcode;
+- (void)onEvent:(nonnull QEditorPlayer*)player eventid:(int32_t)eventid msg:(nonnull NSDictionary<NSString *, NSString *> *)msg;
 @end
 
-
 @interface QEditorPlayer : NSObject
-- (instancetype)initWithQueue:(dispatch_queue_t)cbQueue;
+- (instancetype _Nullable )initWithQueue:(dispatch_queue_t _Nullable )cbQueue;
 
 @property (nonatomic, readonly) QEditorPlayerState state;
 @property (nonatomic, strong) QPlayerView* _Nullable playerView;
 
-@property (nonatomic, readonly) NSArray<QMediaSegment *>* segments;
+@property (nonatomic, readonly) NSArray<QMediaSegment *>* _Nonnull segments;
 
-- (void)addObserver:(id<QEditorPlayerObserver>)observer;
-- (void)removeObserver:(id<QEditorPlayerObserver>)observer;
+- (void)addObserver:(id<QEditorPlayerObserver>_Nonnull)observer;
+- (void)removeObserver:(id<QEditorPlayerObserver>_Nonnull)observer;
 - (void)removeAllObservers;
 
 - (nullable QMediaSegment *)cresteMediaSegment:(nonnull NSString *)filename
@@ -83,5 +81,7 @@ typedef NS_ENUM(NSInteger, QEditorPlayerState) {
         flag:(int32_t)flag;
 
 - (BOOL)isUserPaused;
+
+- (int)getState;
 
 @end

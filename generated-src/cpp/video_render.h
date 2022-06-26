@@ -11,7 +11,7 @@ class VideoRender {
 public:
     virtual ~VideoRender() {}
 
-    virtual void setDisplayMode(int32_t mode, int32_t width, int32_t height) = 0;
+    virtual void setDisplayMode(int32_t mode, bool flip_v) = 0;
 
     virtual void OnViewSizeChange(int32_t width, int32_t height) = 0;
 

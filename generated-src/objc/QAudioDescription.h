@@ -13,13 +13,13 @@
                                               sampleRate:(int32_t)sampleRate
                                               sampleBits:(int32_t)sampleBits;
 
-@property (nonatomic, readonly) int16_t smapleFormat;
+@property (nonatomic ) int16_t smapleFormat;
 
-@property (nonatomic, readonly) int16_t nchannel;
+@property (nonatomic ) int16_t nchannel;
 
-@property (nonatomic, readonly) int32_t sampleRate;
+@property (nonatomic ) int32_t sampleRate;
 
-@property (nonatomic, readonly) int32_t sampleBits;
+@property (nonatomic ) int32_t sampleBits;
 
 @end
 

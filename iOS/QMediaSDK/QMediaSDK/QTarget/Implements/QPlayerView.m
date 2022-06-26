@@ -111,7 +111,7 @@
 - (void)setDisplayMode:(QDisplayMode)mode {
     _displayMode = mode;
     if (_render) {
-        [_render setDisplayMode:mode width:_viewSize.width height:_viewSize.height];
+        [_render setDisplayMode:mode flipV:true];
     }
 }
 

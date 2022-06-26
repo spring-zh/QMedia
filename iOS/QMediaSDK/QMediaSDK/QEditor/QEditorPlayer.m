@@ -30,7 +30,6 @@
     QAudioPlayer * _audio_player;
     QVideoRender * _video_render;
     QAudioRender * _audio_render;
-    dispatch_queue_t _cb_queue;
 }
 
 @synthesize observerHoster = _observerHoster;
@@ -52,7 +51,7 @@
         _audio_player = [[QAudioPlayer alloc] init];
         [_audio_player setAudioRender:_audio_render];
         [_session setAudioRunLoop:_audio_player];
-        _cb_queue = cbQueue;
+        _cbQueue = cbQueue;
         //FIXME: call audioplayer init in session
         [_audio_player audioInit:[QMediaEngine audioOut]];
     }
@@ -135,52 +134,48 @@
 }
 
 #pragma mark Player Control
-- (void)start
-{
+- (void)start {
     NSLog(@"QEditorPlayer start in");
     [_internal setCallback:self];
     [_session prepare];
 }
 
-- (void)play
-{
+- (void)play {
     NSLog(@"QEditorPlayer play in");
     [_internal play];
 }
 
-- (void)pause
-{
+- (void)pause {
     [_internal pause];
 }
 
-- (void)stop
-{
+- (void)stop {
     [_session stop];
 }
 
 - (void)seek:(int64_t)timeMs
-        flag:(int32_t)flag
-{
+        flag:(int32_t)flag {
     [_internal seek:timeMs flag:flag];
 }
 
-- (BOOL)isUserPaused
-{
+- (BOOL)isUserPaused {
     return [_internal isUserPaused];
 }
 
-- (int64_t)getPosition
-{
-    return [_internal getPosition];
+- (int)getState {
+    return [_internal getState];
 }
 
+- (int64_t)getPosition {
+    return [_internal getPosition];
+}
 
 
 #pragma mark --------implemention QEditorPlayerCallback ---------
 
 - (void)onPrepare:(int32_t)code {
     NSLog(@"QEditorPlayer onPrepare");
-    dispatch_async(_cb_queue, ^{
+    dispatch_async(_cbQueue, ^{
         @autoreleasepool{
             [self.observerHoster notifyObservers:@selector(onPrepare:) withObjects:self];
         }
@@ -188,18 +183,19 @@
 }
 
 - (void)onStarted:(int32_t)code {
-    NSLog(@"QEditorPlayer onStarted");
-    dispatch_async(_cb_queue, ^{
+    NSLog(@"QEditorPlayer onStarted code:%d", code);
+    dispatch_async(_cbQueue, ^{
         @autoreleasepool{
-            [self.observerHoster notifyObservers:@selector(onStarted:) withObjects:self];
+            [self.observerHoster notifyObservers:@selector(onStarted:error:) withObjects:self, code, nil];
         }
     });
 }
 
 - (void)onStoped:(int32_t)code {
-    dispatch_async(_cb_queue, ^{
+    NSLog(@"QEditorPlayer onStoped code:%d", code);
+    dispatch_async(_cbQueue, ^{
         @autoreleasepool{
-            [self.observerHoster notifyObservers:@selector(onStoped:) withObjects:self];
+            [self.observerHoster notifyObservers:@selector(onStoped:) withObjects:self, nil];
             [_internal setCallback:nil];
         }
     });
@@ -207,34 +203,35 @@
 
 - (void)onSeekTo:(int64_t)timeMs {
 //    NSNumber* time_ms = @(timeMs);
-    dispatch_async(_cb_queue, ^{
+    dispatch_async(_cbQueue, ^{
         @autoreleasepool{
-            [self.observerHoster notifyObservers:@selector(onPlayerSeekedTo:position:) withObjects:self, timeMs];
+            [self.observerHoster notifyObservers:@selector(onPlayerSeekedTo:position:) withObjects:self, timeMs, nil];
         }
     });
 }
 
 - (void)onProgressUpdated:(int64_t)timeMs {
-    dispatch_async(_cb_queue, ^{
+    dispatch_async(_cbQueue, ^{
         @autoreleasepool{
-            [self.observerHoster notifyObservers:@selector(onPlayerTimeProgressUpdated:) withObjects:@((CGFloat)timeMs/1000), nil];
+            [self.observerHoster notifyObservers:@selector(onProgressUpdated:time:) withObjects:self, @((CGFloat)timeMs/1000), nil];
         }
     });
 }
 
-- (void)onPlayerStateChanged:(int32_t)newState
-                    oldState:(int32_t)oldState {
-    dispatch_async(_cb_queue, ^{
+- (void)onCompleted:(int)code {
+    NSLog(@"QEditorPlayer onCompleted code:%d", code);
+    dispatch_async(_cbQueue, ^{
         @autoreleasepool{
-            [self.observerHoster notifyObservers:@selector(onPlayerChangedFromOldState:oldState:toNewState:) withObjects:self, oldState, newState];
+            [self.observerHoster notifyObservers:@selector(onCompleted:error:) withObjects:self, code, nil];
         }
     });
 }
 
-- (void)onCompleted {
-    dispatch_async(_cb_queue, ^{
+- (void)onEvent:(int32_t)eventid
+            msg:(nonnull NSDictionary<NSString *, NSString *> *)msg {
+    dispatch_async(_cbQueue, ^{
         @autoreleasepool{
-            [self.observerHoster notifyObservers:@selector(onCompleted:) withObjects:self];
+            [self.observerHoster notifyObservers:@selector(onEvent:eventid:msg:) withObjects:self, eventid, msg, nil];
         }
     });
 }

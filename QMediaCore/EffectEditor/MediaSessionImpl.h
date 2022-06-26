@@ -13,6 +13,7 @@
 #include "MediaCore/core/SteadyClock.h"
 #include "MediaCore/audiocore/AudioClock.h"
 #include "MediaSegmentManager.h"
+#include "DisplayLayer.h"
 
 #include "audio_runloop.h"
 #include "video_runloop.h"
@@ -82,10 +83,10 @@ public:
     class Callback {
     public:
         virtual void onPrepared(RetCode code) = 0;
-        virtual void onStarted(RetCode code) = 0;
+//        virtual void onStarted(RetCode code) = 0;
         virtual void onStoped(RetCode code) = 0;
         virtual void onStreamEnd(MediaType mediaType) = 0;
-        virtual void onCompleted() = 0;
+        virtual void onCompleted(RetCode code) = 0;
     };
     
     MediaSessionImpl();
@@ -124,8 +125,8 @@ public:
     /** control */
     virtual void prepare() override;
 
-    virtual void start() override;
-                             
+//    virtual void start() override;
+//                             
     virtual void stop() override;
     
                              
@@ -134,10 +135,14 @@ public:
     bool onRenderCreate();
     bool onVideoRender(int64_t wantTimeMs);
     bool onRenderDestroy();
-    void setDisplayMode(DisplayMode mode, int dstW, int dstH);
+    void OnViewSizeChange(int32_t width, int32_t height);
+    void setDisplayMode(DisplayMode mode, bool filp_v);
+                             
+    DisplayLayer *GetDisplayLayer() const { return display_layer_.get(); }
 protected:
                              
-    friend class MediaSessionPlayerImpl;
+    friend class EditorPlayerImpl;
+    friend class EditorExporterImpl;
     
     bool onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs);
     
@@ -153,6 +158,7 @@ protected:
     void __removeAudioRenderNode(std::shared_ptr<AudioRenderNode> audio_render_node);
         
     RetCode __start();
+    RetCode __stop();
     
     //output target pointer
     VideoDescribe _videoConfig;
@@ -168,6 +174,7 @@ protected:
     
     bool _bVideoCompleted;
     bool _bAudioCompleted;
+    int media_complete_flag_{0};
 //    int64_t _playerPosition;
     Callback *_callback;
     

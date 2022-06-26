@@ -44,8 +44,7 @@
 /** control */
 - (void)prepare;
 
-- (void)start;
-
+/** start(); */
 - (void)stop;
 
 @end

@@ -14,28 +14,18 @@
 static const int REQUEST_SAMPLE_POINTS = 512;
 static const int audio_delay = REQUEST_SAMPLE_POINTS * 2;
 
-@implementation AudioInputBuffer
-
-@synthesize audio_data = _audio_data;
-@synthesize audio_size = _audio_size;
-
-- (instancetype)initWith:(uint8_t*)data size:(int)data_size {
-    if (self = [super init]) {
-        _audio_data = data;
-        _audio_size = data_size;
+static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
+    QAudioPlayer *audioPlayer = (__bridge QAudioPlayer *)(inUserData);
+    QAudioRender* audioRender = [audioPlayer getRender];
+    if (audioRender != nil) {
+        NSData *data_tmp = [NSData dataWithBytesNoCopy:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+        [audioRender OnPlayBuffer:data_tmp sizeNeed:inBuffer->mAudioDataByteSize wantTime:-1];
     }
-    return self;
+    
+    AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
 }
 
-- (void)update:(uint8_t*)data size:(int)data_size {
-    _audio_data = data;
-    _audio_size = data_size;
-
-}
-
-@end
-
-@interface QAudioPlayer () {
+@implementation QAudioPlayer {
     __weak QAudioRender* _render;
     AudioQueueRef _audioQueueRef;
     AudioQueueBufferRef _audioQueueBufferRefArray[AudioQueueNumberBuffers];
@@ -49,27 +39,6 @@ static const int audio_delay = REQUEST_SAMPLE_POINTS * 2;
     QAudioDescription *_description;
 }
 
-@property (nonatomic, readonly) AudioInputBuffer* buffer;
-
-@end
-
-static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, AudioQueueBufferRef inBuffer) {
-    QAudioPlayer *audioPlayer = (__bridge QAudioPlayer *)(inUserData);
-    QAudioRender* audioRender = [audioPlayer getRender];
-    if (audioRender != nil)
-    {
-//        [audioRender onAudioRender:(uint8_t * const)inBuffer->mAudioData needBytes:inBuffer->mAudioDataByteSize wantTime:-1];
-        [audioPlayer.buffer update:inBuffer->mAudioData size:(NSUInteger)inBuffer->mAudioDataByteSize];
-        [audioRender OnPlayBuffer:audioPlayer.buffer sizeNeed:inBuffer->mAudioDataByteSize wantTime:-1];
-    }
-    
-    AudioQueueEnqueueBuffer(inAQ, inBuffer, 0, NULL);
-}
-
-@implementation QAudioPlayer
-
-@synthesize buffer = _buffer;
-
 - (instancetype)init
 {
     NSLog(@"XMAudioPlayer internalInit %@", [NSThread currentThread]);
@@ -79,7 +48,6 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
         _isStopped = true;
         _volume = 1.0f;
         _description = nil;
-        _buffer = [AudioInputBuffer new];
     }
     return self;
 }

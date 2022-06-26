@@ -4,9 +4,12 @@
 #include "NativeVideoRenderNode.h"  // my header
 #include "Marshal.hpp"
 #include "NativeAnimator.h"
+#include "NativeBlendfunc.h"
+#include "NativeColor4f.h"
 #include "NativePoint.h"
+#include "NativeRect4f.h"
 #include "NativeSize.h"
-#include "NativeVec4f.h"
+#include "NativeVec3f.h"
 
 namespace djinni_generated {
 
@@ -32,40 +35,14 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024Cp
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setAlpha(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jfloat j_alpha)
+CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getVisible(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
-        ref->setAlpha(::djinni::F32::toCpp(jniEnv, j_alpha));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
-}
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setCrop(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_crop)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
-        ref->setCrop(::djinni_generated::NativeVec4f::toCpp(jniEnv, j_crop));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
-}
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setContentSize(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_contentSize)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
-        ref->setContentSize(::djinni_generated::NativeSize::toCpp(jniEnv, j_contentSize));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
-}
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setAnchorPoint(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_anchorPoint)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
-        ref->setAnchorPoint(::djinni_generated::NativePoint::toCpp(jniEnv, j_anchorPoint));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+        auto r = ref->getVisible();
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
 CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setPosition(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_position)
@@ -77,6 +54,16 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024Cp
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getPosition(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getPosition();
+        return ::djinni::release(::djinni_generated::NativePoint::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setPositionZ(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_positionz)
 {
     try {
@@ -86,22 +73,14 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024Cp
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setRotation(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_rotation)
+CJNIEXPORT jint JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getPositionZ(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
-        ref->setRotation(::djinni::I32::toCpp(jniEnv, j_rotation));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
-}
-
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setRotation3d(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_rotation3d)
-{
-    try {
-        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
-        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
-        ref->setRotation3d(::djinni_generated::NativeVec4f::toCpp(jniEnv, j_rotation3d));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+        auto r = ref->getPositionZ();
+        return ::djinni::release(::djinni::I32::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
 CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setScaleX(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jfloat j_scalex)
@@ -113,6 +92,16 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024Cp
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jfloat JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getScaleX(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getScaleX();
+        return ::djinni::release(::djinni::F32::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setScaleY(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jfloat j_scaley)
 {
     try {
@@ -122,6 +111,16 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024Cp
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT jfloat JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getScaleY(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getScaleY();
+        return ::djinni::release(::djinni::F32::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
 CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setScaleZ(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jfloat j_scalez)
 {
     try {
@@ -129,6 +128,168 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024Cp
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
         ref->setScaleZ(::djinni::F32::toCpp(jniEnv, j_scalez));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jfloat JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getScaleZ(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getScaleZ();
+        return ::djinni::release(::djinni::F32::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setContentSize(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_contentSize)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        ref->setContentSize(::djinni_generated::NativeSize::toCpp(jniEnv, j_contentSize));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getContentSize(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getContentSize();
+        return ::djinni::release(::djinni_generated::NativeSize::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setRotation(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jint j_rotation)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        ref->setRotation(::djinni::I32::toCpp(jniEnv, j_rotation));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jint JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getRotation(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getRotation();
+        return ::djinni::release(::djinni::I32::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setRotation3d(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_rotation3d)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        ref->setRotation3d(::djinni_generated::NativeVec3f::toCpp(jniEnv, j_rotation3d));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getRotation3d(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getRotation3d();
+        return ::djinni::release(::djinni_generated::NativeVec3f::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setAnchorPoint(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_anchorPoint)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        ref->setAnchorPoint(::djinni_generated::NativePoint::toCpp(jniEnv, j_anchorPoint));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getAnchorPoint(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getAnchorPoint();
+        return ::djinni::release(::djinni_generated::NativePoint::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setColor4F(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_color)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        ref->setColor4F(::djinni_generated::NativeColor4f::toCpp(jniEnv, j_color));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getColor4F(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getColor4F();
+        return ::djinni::release(::djinni_generated::NativeColor4f::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setAlpha(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jfloat j_alpha)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        ref->setAlpha(::djinni::F32::toCpp(jniEnv, j_alpha));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jfloat JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getAlpha(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getAlpha();
+        return ::djinni::release(::djinni::F32::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setBlendFunc(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_bf)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        ref->setBlendFunc(::djinni_generated::NativeBlendfunc::toCpp(jniEnv, j_bf));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getBlendFunc(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getBlendFunc();
+        return ::djinni::release(::djinni_generated::NativeBlendfunc::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1setCrop(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_crop)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        ref->setCrop(::djinni_generated::NativeRect4f::toCpp(jniEnv, j_crop));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getCrop(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRenderNode>(nativeRef);
+        auto r = ref->getCrop();
+        return ::djinni::release(::djinni_generated::NativeRect4f::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
 CJNIEXPORT jobject JNICALL Java_com_qmedia_editor_generated_VideoRenderNode_00024CppProxy_native_1getAnimators(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)

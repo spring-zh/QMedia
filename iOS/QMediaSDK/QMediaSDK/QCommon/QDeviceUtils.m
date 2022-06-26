@@ -6,6 +6,7 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
+#import <UIKit/UIKit.h>
 #import "QDeviceUtils.h"
 #import <sys/utsname.h>
 
@@ -93,6 +94,47 @@
     
     return [device hasTorch] && [device isTorchAvailable];
     
+}
+
+@end
+
+@implementation QDeviceUtils (PixelDump)
+
++(UIImage*)convertBitmapRGBA8ToUIImage:(unsigned char *)buffer :(int)width :(int)height {
+
+    CGDataProviderRef ref = CGDataProviderCreateWithData(NULL, buffer, width * height * 4, NULL);
+    CGColorSpaceRef colorspace = CGColorSpaceCreateDeviceRGB();
+    CGImageRef iref = CGImageCreate(width, height, 8, 32, width * 4, colorspace, kCGBitmapByteOrder32Big | kCGImageAlphaPremultipliedLast, ref, NULL, true, kCGRenderingIntentDefault);
+
+    float scale = 1.0f;
+
+
+    UIGraphicsBeginImageContextWithOptions(CGSizeMake(width/scale, height/scale), NO, scale);
+    CGContextRef cgcontext = UIGraphicsGetCurrentContext();
+
+    CGContextSetBlendMode(cgcontext, kCGBlendModeCopy);
+
+    // Image needs to be flipped BACK for CG
+    CGContextTranslateCTM(cgcontext, 0, height/scale);
+    CGContextScaleCTM(cgcontext, 1, -1);
+    CGContextDrawImage(cgcontext, CGRectMake(0.0, 0.0, width/scale, height/scale), iref);
+
+    UIImage *image = UIGraphicsGetImageFromCurrentImageContext();
+
+    UIGraphicsEndImageContext();
+
+    CFRelease(ref);
+    CFRelease(colorspace);
+    CGImageRelease(iref);
+
+    return image;
+}
+
+#pragma mark ------- this function can be called in c++ source file  ---------------
+void DumpRGBAPixelToUIImage(unsigned char * buffer, int width, int height ) {
+    UIImage *img = [QDeviceUtils convertBitmapRGBA8ToUIImage:buffer :width :height];
+    //TODO: you can make breakpoint here to show image
+    NSLog(@"breakpoint this log DumpRGBAPixelToUIImage %@", img);
 }
 
 @end

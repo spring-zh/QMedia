@@ -12,28 +12,28 @@ import org.json.JSONObject;
 public class Point {
 
 
-    /*package*/ final long mX;
+    /*package*/ final float mX;
 
-    /*package*/ final long mY;
+    /*package*/ final float mY;
 
     public Point(
-            long x,
-            long y) {
+            float x,
+            float y) {
         this.mX = x;
         this.mY = y;
     }
 
     // consturct from json
     public Point(JSONObject json) throws JSONException {
-        this.mX = json.getLong("x");
-        this.mY = json.getLong("y");
+        this.mX = json.getDouble("x");
+        this.mY = json.getDouble("y");
     }
 
-    public long getX() {
+    public float getX() {
         return mX;
     }
 
-    public long getY() {
+    public float getY() {
         return mY;
     }
 
@@ -51,8 +51,8 @@ public class Point {
     public int hashCode() {
         // Pick an arbitrary non-zero starting value
         int hashCode = 17;
-        hashCode = hashCode * 31 + ((int) (mX ^ (mX >>> 32)));
-        hashCode = hashCode * 31 + ((int) (mY ^ (mY >>> 32)));
+        hashCode = hashCode * 31 + Float.floatToIntBits(mX);
+        hashCode = hashCode * 31 + Float.floatToIntBits(mY);
         return hashCode;
     }
 

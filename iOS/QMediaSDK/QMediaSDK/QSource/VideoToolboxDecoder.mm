@@ -328,7 +328,12 @@ static void CFDictionarySetBoolean(CFMutableDictionaryRef dictionary, CFStringRe
 }
 
 VideoToolboxDecoder::VideoToolboxDecoder() {
-    
+    LOGI("alloc");
+}
+
+VideoToolboxDecoder::~VideoToolboxDecoder() {
+    LOGI("free");
+    Release();
 }
 
 int32_t VideoToolboxDecoder::InitDecode(const MediaDescribe& media_describe,
@@ -390,13 +395,15 @@ int32_t VideoToolboxDecoder::Decode(const EncodedPacket &input_packet) {
     if (input_packet.flags() & EncodedPacket::FLAG_DISCARD) {
         flags |= kVTDecodeFrame_DoNotOutputFrame;
     }
-    bool async = true;
-    if (async) {
+
+    if (enable_async_decode) {
       flags |= kVTDecodeFrame_EnableAsynchronousDecompression;
     }
+
     OSStatus status = VTDecompressionSessionDecodeFrame(session_, sample_buff, flags, 0, nullptr);
     CFRelease(sample_buff);
     if (status != noErr) {
+        LOGI("VTDecompressionSessionDecodeFrame error, status=%d", status);
         if (status == kVTInvalidSessionErr) {
             //TODO: need restart
             dec_ret = DEC_INVALID_DECODER;
@@ -410,6 +417,7 @@ int32_t VideoToolboxDecoder::Decode(const EncodedPacket &input_packet) {
 }
 
 int32_t VideoToolboxDecoder::Flush(bool wait_completed) {
+    LOGI("wait_completed : %s", wait_completed? "true":"false");
     OSStatus status = VTDecompressionSessionFinishDelayedFrames(session_);
     if (wait_completed) {
         status = VTDecompressionSessionWaitForAsynchronousFrames(session_);
@@ -418,8 +426,15 @@ int32_t VideoToolboxDecoder::Flush(bool wait_completed) {
 }
 
 int32_t VideoToolboxDecoder::Release() {
-    VTDecompressionSessionInvalidate(session_);
-    CFRelease(session_);
+    if (session_) {
+        VTDecompressionSessionInvalidate(session_);
+        CFRelease(session_);
+        session_ = NULL;
+    }
+    if (format_desc_) {
+        CFRelease(format_desc_);
+        format_desc_ = NULL;
+    }
     return 0;
 }
  

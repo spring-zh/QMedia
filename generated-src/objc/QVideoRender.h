@@ -7,8 +7,7 @@
 @interface QVideoRender : NSObject
 
 - (void)setDisplayMode:(int32_t)mode
-                 width:(int32_t)width
-                height:(int32_t)height;
+                 flipV:(BOOL)flipV;
 
 - (void)OnViewSizeChange:(int32_t)width
                   height:(int32_t)height;

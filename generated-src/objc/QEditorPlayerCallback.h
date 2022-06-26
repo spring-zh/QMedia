@@ -16,9 +16,9 @@
 
 - (void)onProgressUpdated:(int64_t)timeMs;
 
-- (void)onPlayerStateChanged:(int32_t)newState
-                    oldState:(int32_t)oldState;
+- (void)onCompleted:(int32_t)code;
 
-- (void)onCompleted;
+- (void)onEvent:(int32_t)eventid
+            msg:(nonnull NSDictionary<NSString *, NSString *> *)msg;
 
 @end

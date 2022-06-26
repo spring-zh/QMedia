@@ -1,0 +1,45 @@
+video_encode_option = record {
+    # codectype
+    const kUnknown: i32 = 0;
+    const kVP8: i32 = 1;
+    const kVP9: i32 = 2;
+    const kMPEG4: i32 = 3;
+    const kH264: i32 = 4;
+    const kH265: i32 = 5;
+    const kI420: i32 = 6;
+
+    # profile
+    const profile_baseline: i32 = 0;
+    const profile_main: i32 = 1;
+    const profile_high: i32 = 2;
+
+    codectype: i32;
+    width: i32;
+    height: i32;
+    bitrate: i32;
+    framerate: i32;
+    gop: i32;
+    profile: i32;
+    level: i32;
+    ext: optional<string>;
+}
+
+audio_encode_option = record {
+    # codectype
+    const kUnknown: i32 = 0;
+    const kAAC: i32 = 10;
+    const kOpus: i32 = 11;
+    const kMPEG4: i32 = 12;
+    const kPcmA: i32 = 13;
+    const kPcmU: i32 = 14;
+    const kG722: i32 = 15;
+    const kAAC_LATM: i32 = 16;
+    const kMP3: i32 = 17;
+
+    codectype: i32;
+    nchannel: i32;
+    samplerate: i32;
+    bitrate: i32;
+    # see audio_description format
+    sampleformat: i32;
+} 

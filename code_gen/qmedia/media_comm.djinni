@@ -4,8 +4,8 @@ media_range = record {
 } deriving (eq, json)
 
 point = record {
-    x : i64;
-    y : i64;
+    x : f32;
+    y : f32;
 } deriving (eq, json)
 
 size = record {
@@ -13,11 +13,49 @@ size = record {
     height : i64;
 } deriving (eq, json)
 
+vec3f = record {
+    v1 : f32;
+    v2 : f32;
+    v3 : f32;
+} deriving (eq, json)
+
 vec4f = record {
     v1 : f32;
     v2 : f32;
     v3 : f32;
     v4 : f32;
+} deriving (eq, json)
+
+color4f = record {
+    r : f32;
+    g : f32;
+    b : f32;
+    a : f32;
+} deriving (eq, json)
+
+rect4f = record {
+    left : f32;
+    top : f32;
+    right : f32;
+    bottom : f32;
+} deriving (eq, json)
+
+blendfunc = record {
+    const ZERO : i32 = 0;
+    const ONE : i32 = 1;
+    const SRC_COLOR : i32 = 768;
+    const ONE_MINUS_SRC_COLOR : i32 = 769;
+    const SRC_ALPHA : i32 = 770;
+    const ONE_MINUS_SRC_ALPHA : i32 = 771;
+    const DST_ALPHA : i32 = 772;
+    const ONE_MINUS_DST_ALPHA : i32 = 773;
+
+    const DST_COLOR : i32 = 774;
+    const ONE_MINUS_DST_COLOR : i32 = 775;
+    const SRC_ALPHA_SATURATE : i32 = 776;
+
+    src : i32;
+    dst : i32;
 } deriving (eq, json)
 
 audio_description = record {

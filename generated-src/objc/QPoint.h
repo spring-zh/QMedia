@@ -5,15 +5,15 @@
 #import <Foundation/NSDictionary.h>
 
 @interface QPoint : NSObject
-- (nonnull instancetype)initWithX:(int64_t)x
-                                y:(int64_t)y;
-+ (nonnull instancetype)pointWithX:(int64_t)x
-                                 y:(int64_t)y;
+- (nonnull instancetype)initWithX:(float)x
+                                y:(float)y;
++ (nonnull instancetype)pointWithX:(float)x
+                                 y:(float)y;
 - (nonnull instancetype)initWithJson:(nonnull NSDictionary*)json;
 - (nonnull NSDictionary*)toJson;
 
-@property (nonatomic, readonly) int64_t x;
+@property (nonatomic ) float x;
 
-@property (nonatomic, readonly) int64_t y;
+@property (nonatomic ) float y;
 
 @end

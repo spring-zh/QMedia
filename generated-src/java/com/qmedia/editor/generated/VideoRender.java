@@ -8,7 +8,7 @@ import androidx.annotation.Nullable;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 public interface VideoRender {
-    public void setDisplayMode(int mode, int width, int height);
+    public void setDisplayMode(int mode, boolean flipV);
 
     public void OnViewSizeChange(int width, int height);
 
@@ -42,12 +42,12 @@ public interface VideoRender {
         }
 
         @Override
-        public void setDisplayMode(int mode, int width, int height)
+        public void setDisplayMode(int mode, boolean flipV)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_setDisplayMode(this.nativeRef, mode, width, height);
+            native_setDisplayMode(this.nativeRef, mode, flipV);
         }
-        private native void native_setDisplayMode(long _nativeRef, int mode, int width, int height);
+        private native void native_setDisplayMode(long _nativeRef, int mode, boolean flipV);
 
         @Override
         public void OnViewSizeChange(int width, int height)

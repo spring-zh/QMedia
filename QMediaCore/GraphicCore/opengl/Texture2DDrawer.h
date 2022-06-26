@@ -9,10 +9,15 @@
 #ifndef GRAPHICCORE_TEXTURE2D_DRAWER_H
 #define GRAPHICCORE_TEXTURE2D_DRAWER_H
 
-#include "GraphicCore/GcNode.h"
+#include "GraphicCore/GcScene.h"
 #include "Drawable2D.h"
 #include "GLEngine.h"
 #include "ShaderProgram.h"
+
+namespace QMedia { namespace Api {
+class SceneNode;
+}
+}
 
 GRAPHICCORE_BEGIN
 
@@ -37,7 +42,8 @@ public:
     ShaderProgram& getShaderProgram() { return _shaderProgram; }
 
     //draw with node's settings
-    virtual void draw(const Texture2D* texture,const Scene* scene, const Mat4 & /*transform*/, const Node* /*node*/, Drawable2D::FlipMode flipMode = Drawable2D::NONE) ;
+    
+    virtual void draw(const Texture2D* texture,const Scene* scene, const Mat4 & transform, QMedia::Api::SceneNode* node, Drawable2D::FlipMode flipMode = Drawable2D::NONE) ;
     
     virtual void draw(const Texture2D* texture, const Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
                             const BlendFunc& blend, Drawable2D::FlipMode flipMode);

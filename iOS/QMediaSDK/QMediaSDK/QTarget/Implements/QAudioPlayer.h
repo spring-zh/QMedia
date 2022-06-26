@@ -10,11 +10,6 @@
 #import "QAudioRunloop.h"
 #import "QAudioRender.h"
 
-@interface AudioInputBuffer : NSObject
-@property (nonatomic, readonly) uint8_t* audio_data;
-@property (nonatomic, readonly) int audio_size;
-@end
-
 @interface QAudioPlayer : NSObject <QAudioRunloop>
 
 @property (nonatomic) int audioDelay;

@@ -45,12 +45,12 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     
-    NSArray<QEffectConfig*>* filterConfigs = [QEffectManage getAllEffectConfig];
-    QEffect* colorInvert = [QEffectManage createEffect:@"FlashEffect"];
-    QEffect* polarPixellate = [QEffectManage createEffect:@"SobelEdgeDetection"];
-    [polarPixellate setFloatValue:@"edgeStrength" value:2];
-    colorInvert.renderRange = NSMakeRange(0, 5000);
-    polarPixellate.renderRange = NSMakeRange(3000, 10000);
+//    NSArray<QEffectConfig*>* filterConfigs = [QEffectManage getAllEffectConfig];
+//    QEffect* colorInvert = [QEffectManage createEffect:@"FlashEffect"];
+//    QEffect* polarPixellate = [QEffectManage createEffect:@"SobelEdgeDetection"];
+//    [polarPixellate setFloatValue:@"edgeStrength" value:2];
+//    colorInvert.renderRange = NSMakeRange(0, 5000);
+//    polarPixellate.renderRange = NSMakeRange(3000, 10000);
     
     const int targetW = 640;
     const int targetH = 480;
@@ -66,7 +66,7 @@
     [video_segment setDisplayRange:[QMediaRange mediaRangeWithStart:5000 end:15000]];
     [video_segment setTimescale:2];
     
-    QMediaSegment* audio_segment = [_player cresteMediaSegment:testAudioFile flag:2];
+    QMediaSegment* audio_segment = [_player cresteMediaSegment:testAudioFile flag:QMediaSegmentFlagAll];
 //    [audio_segment setTimescale:0.6];
     
     QMediaSegment* video_segment2 = [_player cresteMediaSegment:testVideoFile2 flag:QMediaSegmentFlagAll];
@@ -75,83 +75,31 @@
     
     QVideoRenderNode* graphic = [video_segment getVideo];
     [graphic setPosition:[QPoint pointWithX:targetW/4 y:targetH/4]];
+    [graphic setAnchorPoint:[QPoint pointWithX:0.5 y:0.5]];
     [graphic setContentSize:[QSize sizeWithWidth:targetW/2 height:targetH/2]];
+//    [graphic setRotation:45];
+    QAnimator* animator = [QAnimator animatorWithName:@"" property:QAnimatorRotation timerang:[QMediaRange mediaRangeWithStart:0 end:5000] startpoint:[QVec4f vec4fWithV1:0 v2:0 v3:0 v4:0] endpoint:[QVec4f vec4fWithV1:180 v2:0 v3:0 v4:0] easefunc:QEaseFunctionElasticEaseOut repleat:false];
+    
+    QAnimator* animator_alpha = [QAnimator animatorWithName:@"" property:QAnimatorAlpha timerang:[QMediaRange mediaRangeWithStart:0 end:2000] startpoint:[QVec4f vec4fWithV1:0 v2:0 v3:0 v4:0] endpoint:[QVec4f vec4fWithV1:1.0 v2:0 v3:0 v4:0] easefunc:QEaseFunctionLinear repleat:false];
+    
+    [graphic addAnimator:animator];
+    [graphic addAnimator:animator_alpha];
     
     QVideoRenderNode* graphic2 = [video_segment2 getVideo];
     [graphic2 setContentSize:[QSize sizeWithWidth:targetW/2 height:targetH/2]];
-    
-//    QMediaTrack* videoTrack = [self.player.mediaFactory createVideoTrack:testVideoFile2 combiner:self.player];
-//    videoTrack.displayName = [QFileUtils fileComponentOfPath:testVideoFile2];
-//    QMediaTrack* audioTrack = [self.player.mediaFactory createAudioTrack:testAudioFile combiner:self.player];
-//    audioTrack.displayName = [QFileUtils fileComponentOfPath:testAudioFile];
 
-//    videoTrack.graphic.position = CGPointMake(targetW/4, targetH/4);
-//    videoTrack.graphic.contentSize = CGSizeMake(targetW/2, targetH/2);//self.player.layerSize;
-
-    
-#if 0 //don't use CaptureTrack in edit mode
-    QMediaTrack* captureTrack = [self.player.mediaFactory createCaptureTrack:AVCaptureSessionPreset640x480 position:AVCaptureDevicePositionBack video:true audio:false];
-    [self.player addMediaTrack:captureTrack];
-    [self.player addGraphicNode:captureTrack.graphic];
-    [captureTrack setDisplayTrackRange:NSMakeRange(0, 20000)];
-    captureTrack.sourceRange = NSMakeRange(0, 20000);
-    captureTrack.graphic.contentSize = CGSizeMake(320, 240);
-    captureTrack.graphic.position = CGPointMake(400, 0);
-    [self.player attachRenderNode:captureTrack.graphic parent:self.player.rootNode];
-#endif
-    
-//    QDuplicateNode* duplicatenodeL = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic combiner:self.player];
-//    duplicatenodeL.name = @"videoTrack Copy Left";
-//    duplicatenodeL.contentSize = CGSizeMake(targetW/2, targetH/2);
-//    duplicatenodeL.position = CGPointMake(0, targetH/4);
-//    duplicatenodeL.anchorPoint = CGPointMake(0.5, 0.5);
-//    duplicatenodeL.rotation3d = QVectorV3(0, 90, 0);
-
-//    QDuplicateNode* duplicatenodeR = [[QDuplicateNode alloc] initFromNode:videoTrack.graphic combiner:self.player];
-//    duplicatenodeR.name = @"videoTrack Copy Right";
-//    duplicatenodeR.contentSize = CGSizeMake(targetW/2, targetH/2);
-//    duplicatenodeR.position = CGPointMake(targetW/2, targetH/4);
-//    duplicatenodeR.anchorPoint = CGPointMake(0.5, 0.5);
-//    duplicatenodeR.rotation3d = QVectorV3(0, -90, 0);
     
     //add videoTrack
-//    [self.player addMediaTrack:videoTrack];
     [self.player addMediaSegment:video_segment];
     [self.player addMediaSegment:video_segment2];
-    //add audioTrack
-//    [self.player addMediaSegment:audio_segment];
+
     [self.player addMediaSegment:audio_segment];
     
     /*--------------------  GlobalXMObject  -----------------------*/
-    [[GlobalXMObject sharedInstance] addTrack:video_segment];
-    [[GlobalXMObject sharedInstance] addTrack:video_segment2];
-    [[GlobalXMObject sharedInstance] addTrack:audio_segment];
-//    [[GlobalXMObject sharedInstance] addTrack:duplicatenodeL];
-//    [[GlobalXMObject sharedInstance] addTrack:duplicatenodeR];
-    /*--------------------  GlobalXMObject  -----------------------*/
+    for (QMediaSegment* segment in _player.segments) {
+        [[GlobalXMObject sharedInstance] addTrack:segment];
+    }
     
-//    QGraphicNode* composeNode = [[QGraphicNode alloc] initWithName:@"composeNode" combiner:self.player];
-//    composeNode.contentSize = CGSizeMake(targetW, targetH);
-//    composeNode.anchorPoint = CGPointMake(0.5, 0.5);
-//    QNodeAnimator * an1 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:QTimeRangeMake(0, 5000) begin:QVectorV3(0, 0, 0) end:QVectorV3(-180, 180, 180) functype:Linear repleat:false];
-//    [composeNode addAnimator:an1];
-//    QNodeAnimator * an2 = [[QNodeAnimator alloc] initWith:property_rotationxyz range:QTimeRangeMake(5000, 10000) begin:QVectorV3(-180, 180, 180) end:QVectorV3(-360, 360, 360) functype:Linear repleat:false];
-//    [composeNode addAnimator:an2];
-//    [composeNode addChildNode:videoTrack.graphic];
-//    [composeNode addChildNode:duplicatenodeL];
-//    [composeNode addChildNode:duplicatenodeR];
-
-//    [layer addEffect:colorInvert];
-//    [layer addEffect:polarPixellate];
-//    layer.bkColor = QColorMake(1, 0, 1, 1);
-    
-//    [layer addChildNode:composeNode];
-//    [self.player.rootNode addChildNode:layer];
-//    self.player.rootNode.enable3d = true;
-//    [self.player.rootNode addEffect:colorInvert];
-//    [self.player.rootNode addEffect:polarPixellate];
-//    [self.player.rootNode addChildNode:videoTrack.graphic];
-//    self.player.rootNode.anchorPoint = CGPointMake(0.5, 0.5);
     [self.player setDisplayLayerSize:[QSize sizeWithWidth:targetW height:targetH]];
     [self.player start];
     

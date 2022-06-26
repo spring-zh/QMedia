@@ -48,17 +48,17 @@ public:
             [djinni_private_get_proxied_objc_object() onProgressUpdated:(::djinni::I64::fromCpp(c_time_ms))];
         }
     }
-    void onPlayerStateChanged(int32_t c_new_state, int32_t c_old_state) override
+    void onCompleted(int32_t c_code) override
     {
         @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() onPlayerStateChanged:(::djinni::I32::fromCpp(c_new_state))
-                                                                  oldState:(::djinni::I32::fromCpp(c_old_state))];
+            [djinni_private_get_proxied_objc_object() onCompleted:(::djinni::I32::fromCpp(c_code))];
         }
     }
-    void onCompleted() override
+    void onEvent(int32_t c_eventid, const std::unordered_map<std::string, std::string> & c_msg) override
     {
         @autoreleasepool {
-            [djinni_private_get_proxied_objc_object() onCompleted];
+            [djinni_private_get_proxied_objc_object() onEvent:(::djinni::I32::fromCpp(c_eventid))
+                                                          msg:(::djinni::Map<::djinni::String, ::djinni::String>::fromCpp(c_msg))];
         }
     }
 };

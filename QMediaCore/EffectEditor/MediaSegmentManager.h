@@ -12,7 +12,7 @@
 #include <algorithm>
 #include <vector>
 #include "MediaSegmentImpl.h"
-#include "MediaGraphicChannel.h"
+#include "medianode/VideoGraphicNode.h"
 #include "MediaAudioChannel.h"
 
 #include "SegmentDecoder.h"

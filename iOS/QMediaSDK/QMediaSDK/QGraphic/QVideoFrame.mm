@@ -296,13 +296,25 @@ bool PixelFrameNV12Drawer::setFrame(const VideoFrame& videoFrame)
     return true;
 }
 
-void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
-{
+void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, QMedia::Api::SceneNode* node) {
     GraphicCore::Mat4 mvpMatrix;
     GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
-    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
-    drawFrame(mvpMatrix, region, node->getPositionZ(), node->getCrop(), node->getColor(), node->getBlendFunc(), _rotation);
+    GraphicCore::Rect region(0,0, node->getContentSize().width, node->getContentSize().height);
+    auto crop_v = node->getCrop();
+    GraphicCore::Rect crop(crop_v.left, crop_v.top, crop_v.right, crop_v.bottom);
+    auto color_v = node->getColor4F();
+    GraphicCore::Color4F color = GraphicCore::Color4F(color_v.r, color_v.g, color_v.b, color_v.a);
+    GraphicCore::BlendFunc bf = BlendFunc::DISABLE;
+    drawFrame(mvpMatrix, region, (float)node->getPositionZ(), crop, color, bf, _rotation);
 }
+
+//void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
+//{
+//    GraphicCore::Mat4 mvpMatrix;
+//    GraphicCore::Mat4::multiply(scene->getMatrix(MATRIX_STACK_PROJECTION), transform, &mvpMatrix);
+//    GraphicCore::Rect region(Vec2(0,0), node->getContentSize());
+//    drawFrame(mvpMatrix, region, node->getPositionZ(), node->getCrop(), node->getColor(), node->getBlendFunc(), _rotation);
+//}
 
 void PixelFrameNV12Drawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
 const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) {
@@ -495,12 +507,12 @@ bool PixelFrameBGRADrawer::setFrame(const VideoFrame& videoFrame)
     return true;
 }
 
-void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
-{
-    if (_textureDrawer) {
-        _textureDrawer->draw(&_duplicateTexture, scene, transform, node);
-    }
-}
+//void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, const GraphicCore::Node* node)
+//{
+//    if (_textureDrawer) {
+//        _textureDrawer->draw(&_duplicateTexture, scene, transform, node);
+//    }
+//}
 
 void PixelFrameBGRADrawer::drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & region, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
 const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode)

@@ -22,7 +22,7 @@ media_session_internal = interface +c {
 
     # control
     prepare();
-    start();
+    # start();
     stop();
 }
 
@@ -33,8 +33,9 @@ editor_player_callback = interface +o +j {
     onStoped(code: i32);
     onSeekTo(time_ms: i64);
     onProgressUpdated(time_ms: i64);
-    onPlayerStateChanged(new_state: i32, old_state: i32);
-    onCompleted();
+    onCompleted(code: i32);
+
+    onEvent(eventid: i32, msg: map<string, string>);
 }
 
 editor_player_internal = interface +c {
@@ -58,10 +59,12 @@ editor_player_internal = interface +c {
 
 editor_exporter_callback = interface +o +j {
     onStarted(code: i32);
-    onStoped(code: i32);
+    onStoped();
     onProgressUpdated(time_ms: i64);
-    onCanceled(code: i32);
-    onCompleted();
+    onCanceled();
+    onCompleted(code: i32);
+
+    onEvent(eventid: i32, msg: map<string, string>);
 }
 
 editor_exporter_internal = interface +c {
@@ -74,6 +77,10 @@ editor_exporter_internal = interface +c {
     getSession(): media_session_internal;
     setCallback(callback: editor_exporter_callback);
 
+    setAudioOption(option: audio_encode_option);
+    setVideoOption(option: video_encode_option);
+
     getPosition(): i64;
+    start();
     cancel();
 }

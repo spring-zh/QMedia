@@ -10,7 +10,7 @@
 #include "Utils/Logger.h"
 
 #include "medianode/AudioRenderNodeImpl.h"
-#include "medianode/VideoRenderNodeImpl.h"
+#include "medianode/VideoGraphicNode.h"
 
 extern "C" {
 #include "libavformat/avformat.h"
@@ -157,7 +157,7 @@ static bool AVStreamToMediaStreamInfo(AVStream* avstream, MediaStreamInfo& strea
 MediaSegmentImpl::MediaSegmentImpl(const char* file_name, int flag) : file_name_(file_name) {
     is_valid_ = Load(file_name, flag) >= 0;
     audio_node_ = std::shared_ptr<AudioRenderNodeImpl>(new AudioRenderNodeImpl(this));
-    video_node_ = std::shared_ptr<VideoRenderNodeImpl>(new VideoRenderNodeImpl(this));
+    video_node_ = std::shared_ptr<VideoGraphicNode>(new VideoGraphicNode(this));
 }
 MediaSegmentImpl::~MediaSegmentImpl() {
     

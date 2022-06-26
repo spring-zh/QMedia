@@ -11,7 +11,8 @@
 
 #include "Utils/Comm.h"
 #include "GraphicCore/opengl/Texture2D.h"
-#include "GraphicCore/GcNode.h"
+#include "GraphicCore/SceneNode.h"
+#include "GraphicCore/GcScene.h"
 #include "MediaCore/core/VideoFrame.h"
 #include "MediaCore/output/VideoTarget.h"
 
@@ -24,7 +25,7 @@ public:
     virtual ~VideoFrameDrawer(){}
 
     virtual bool setFrame(const VideoFrame& videoFrame) = 0;
-    virtual void drawFrame(const GraphicCore::Scene* /*scene*/, const GraphicCore::Mat4 & /*transform*/, const GraphicCore::Node* node) = 0;
+    virtual void drawFrame(const GraphicCore::Scene* scene, const GraphicCore::Mat4 & transform, QMedia::Api::SceneNode* node) = 0;
     virtual void drawFrame(const GraphicCore::Mat4& mvpMatrix, const GraphicCore::Rect & /*region*/, float positionZ, const GraphicCore::Rect crop, GraphicCore::Color4F color,
                            const GraphicCore::BlendFunc& blend, VideoRotation rotation, GraphicCore::Drawable2D::FlipMode flipMode) = 0;
     virtual const GraphicCore::Texture2D* getOutputTexture() { return nullptr; }

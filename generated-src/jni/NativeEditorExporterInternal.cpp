@@ -3,8 +3,10 @@
 
 #include "NativeEditorExporterInternal.h"  // my header
 #include "Marshal.hpp"
+#include "NativeAudioEncodeOption.h"
 #include "NativeEditorExporterCallback.h"
 #include "NativeMediaSessionInternal.h"
+#include "NativeVideoEncodeOption.h"
 
 namespace djinni_generated {
 
@@ -40,6 +42,24 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_00024CppProxy_native_1setAudioOption(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_option)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorExporterInternal>(nativeRef);
+        ref->setAudioOption(::djinni_generated::NativeAudioEncodeOption::toCpp(jniEnv, j_option));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_00024CppProxy_native_1setVideoOption(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_option)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorExporterInternal>(nativeRef);
+        ref->setVideoOption(::djinni_generated::NativeVideoEncodeOption::toCpp(jniEnv, j_option));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+}
+
 CJNIEXPORT jlong JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_00024CppProxy_native_1getPosition(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
 {
     try {
@@ -48,6 +68,15 @@ CJNIEXPORT jlong JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal
         auto r = ref->getPosition();
         return ::djinni::release(::djinni::I64::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
+}
+
+CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_00024CppProxy_native_1start(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)
+{
+    try {
+        DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
+        const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::EditorExporterInternal>(nativeRef);
+        ref->start();
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
 CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_EditorExporterInternal_00024CppProxy_native_1cancel(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef)

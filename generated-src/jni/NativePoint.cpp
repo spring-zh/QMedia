@@ -13,8 +13,8 @@ NativePoint::~NativePoint() = default;
 auto NativePoint::fromCpp(JNIEnv* jniEnv, const CppType& c) -> ::djinni::LocalRef<JniType> {
     const auto& data = ::djinni::JniClass<NativePoint>::get();
     auto r = ::djinni::LocalRef<JniType>{jniEnv->NewObject(data.clazz.get(), data.jconstructor,
-                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.x)),
-                                                           ::djinni::get(::djinni::I64::fromCpp(jniEnv, c.y)))};
+                                                           ::djinni::get(::djinni::F32::fromCpp(jniEnv, c.x)),
+                                                           ::djinni::get(::djinni::F32::fromCpp(jniEnv, c.y)))};
     ::djinni::jniExceptionCheck(jniEnv);
     return r;
 }
@@ -23,8 +23,8 @@ auto NativePoint::toCpp(JNIEnv* jniEnv, JniType j) -> CppType {
     ::djinni::JniLocalScope jscope(jniEnv, 3);
     assert(j != nullptr);
     const auto& data = ::djinni::JniClass<NativePoint>::get();
-    return {::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mX)),
-            ::djinni::I64::toCpp(jniEnv, jniEnv->GetLongField(j, data.field_mY))};
+    return {::djinni::F32::toCpp(jniEnv, jniEnv->GetFloatField(j, data.field_mX)),
+            ::djinni::F32::toCpp(jniEnv, jniEnv->GetFloatField(j, data.field_mY))};
 }
 
 }  // namespace djinni_generated

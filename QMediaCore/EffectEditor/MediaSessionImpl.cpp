@@ -9,121 +9,14 @@
 #include "MediaSessionImpl.h"
 #include "MediaSegmentImpl.h"
 #include "Utils/Logger.h"
-#include "GraphicCore/GcLayer.h"
 #include "MediaCore/audiocore/AudioProcess.h"
 #include "MediaEngineImpl.h"
-#include "medianode/VideoRenderNodeImpl.h"
+#include "medianode/VideoGraphicNode.h"
 #include "medianode/AudioRenderNodeImpl.h"
 
 namespace QMedia { namespace Api {
 
 #define STATE_ISRUNING(state) (state == CombinerState::Prepared || state == CombinerState::Started || state == CombinerState::Paused )
-
-GraphicCore::Rect calculateDisplayRegion(DisplayMode mode, int srcW, int srcH, int dstW, int dstH) {
-    GraphicCore::Rect dstRegion;
-    switch (mode) {
-        case DisplayMode::Stretch:
-            dstRegion.size.width = dstW;
-            dstRegion.size.height = dstH;
-            break;
-        case DisplayMode::Adaptive:
-        {
-            float dstRatio = (float) dstW / dstH;
-            float srcRatio = (float) srcW / srcH;
-            if (srcRatio > dstRatio) {
-                dstRegion.origin.x = 0;
-                dstRegion.size.width = dstW;
-                int newH = (int) (dstW / srcRatio);
-                dstRegion.origin.y = (dstH - newH)/2;
-                dstRegion.size.height = newH;
-            } else {
-                dstRegion.origin.y = 0;
-                dstRegion.size.height = dstH;
-                int newW = (int) (dstH * srcRatio);
-                dstRegion.origin.x = (dstW - newW) / 2;
-                dstRegion.size.width = newW;
-            }
-        }
-            break;
-        case DisplayMode::Clip:
-
-            break;
-
-    }
-    return dstRegion;
-}
-
-class DisplayLayer : public GraphicCore::Layer {
-public:
-    DisplayLayer(MediaSessionImpl *session):
-    GraphicCore::Layer(GraphicCore::Size(0,0)),
-    session_(session),
-    _displayMode(DisplayMode::Adaptive) {
-        _playerScene.setGLEngine(&_gle);
-        _renderRange = Range<int64_t>(0, std::numeric_limits<int64_t>::max());
-        _isInit = false;
-    }
-    ~DisplayLayer(){}
-    
-    const Range<int64_t> getRange() override {
-        auto range = session_->getTotalTimeRange();
-        return Range<int64_t>(range.start, range.end);
-    }
-    
-    void releaseRes() override {
-        _gle.releaseAll();
-        RenderNode::releaseRes();
-    }
-    
-    bool beginRender() {
-        if (!_isInit) {
-            _gle.useAsDefaultFrameBuffer();
-//            _targetW = getContentSize().width;
-//            _targetH = getContentSize().height;
-//            _layerSize = GraphicCore::Size(_targetW, _targetH);
-//            _layerSize = getContentSize();
-            createRes();
-            _isInit = true;
-        }
-
-        return true;
-    }
-    void setLayerSize(const GraphicCore::Size& size) override {
-//        _targetW = size.width;
-//        _targetH = size.height;
-//        setContentSize(size);
-        GraphicCore::Layer::setLayerSize(size);
-    }
-    void setDisplayMode(DisplayMode mode, int viewW, int viewH) {
-        _displayMode = mode;
-        _viewW = viewW;
-        _viewH = viewH;
-        GraphicCore::Rect vp(0, 0, _viewW, _viewH);
-        _playerScene.setViewPort(vp);
-        _playerScene.setProjection(GraphicCore::Projection::_2D);
-    }
-    void render(int64_t timeStamp){
-        _playerScene.setDelta(timeStamp);
-        // read dec frame to medianode
-        session_->ReadVideoFrames(timeStamp);
-        GraphicCore::Rect region = calculateDisplayRegion(_displayMode, getLayerSize().width, getLayerSize().height, _viewW, _viewH);
-        setPosition(region.origin);
-        setContentSize(region.size);
-        _gle.setViewPort(GraphicCore::Rect(0, 0, _viewW, _viewH));
-        Layer::visit(&_playerScene, _playerScene.getMatrix(GraphicCore::MATRIX_STACK_MODELVIEW), 0);
-    }
-    
-    bool _isInit;
-
-private:
-    MediaSessionImpl * session_;
-    GraphicCore::Scene _playerScene;
-    GraphicCore::GLEngine _gle;
-    
-    DisplayMode _displayMode;
-    int _viewW,_viewH;
-//    int _targetW, _targetH;
-};
 
 MediaSessionImpl::MediaSessionImpl(): MediaSessionImpl(nullptr, nullptr) {
 }
@@ -257,10 +150,6 @@ void MediaSessionImpl::prepare() {
     });
 }
 
-void MediaSessionImpl::start() {
-    thread_task_.PostTask(CMD_START, &MediaSessionImpl::__start, this);
-}
-
 RetCode MediaSessionImpl::__start() {
     assert(thread_task_.IsCurrent());
     MPST_RET_IF_EQ(_state, SessionState::Idle);
@@ -277,34 +166,43 @@ RetCode MediaSessionImpl::__start() {
     if (video_loop_) video_loop_->start();
     if (audio_loop_) audio_loop_->audioStart();
     _state = SessionState::Started;
-    _callback->onStarted(RetCode::ok);
     return RetCode::ok;
 }
 
+RetCode MediaSessionImpl::__stop() {
+    MPST_RET_IF_EQ(_state, SessionState::Idle);
+    MPST_RET_IF_EQ(_state, SessionState::Initialized);
+    // MPST_RET_IF_EQ(_state, PlayerState_Prepared);
+//    MPST_RET_IF_EQ(_state, PlayerState::Started);
+    // MPST_RET_IF_EQ(_state, PlayerState_Paused);
+    // MPST_RET_IF_EQ(_state, PlayerState_Completed);
+    MPST_RET_IF_EQ(_state, SessionState::Stopped);
+    MPST_RET_IF_EQ(_state, SessionState::Error);
+    MPST_RET_IF_EQ(_state, SessionState::Ended);
+    
+    if (video_loop_) video_loop_->stop();
+    if (audio_loop_) audio_loop_->audioStop();
+    //stop all media tracks
+    MediaSegmentManager::stop();
+    
+    _state = SessionState::Stopped;
+    return RetCode::ok;
+}
+
+//void MediaSessionImpl::start() {
+//    thread_task_.PostTask(CMD_START, [this](){
+//        _callback->onStarted(__start());
+//    });
+//}
+//
 void MediaSessionImpl::stop() {
-    thread_task_.PostTask([this]()->RetCode {
-        MPST_RET_IF_EQ(_state, SessionState::Idle);
-        MPST_RET_IF_EQ(_state, SessionState::Initialized);
-        // MPST_RET_IF_EQ(_state, PlayerState_Prepared);
-    //    MPST_RET_IF_EQ(_state, PlayerState::Started);
-        // MPST_RET_IF_EQ(_state, PlayerState_Paused);
-        // MPST_RET_IF_EQ(_state, PlayerState_Completed);
-        MPST_RET_IF_EQ(_state, SessionState::Stopped);
-        MPST_RET_IF_EQ(_state, SessionState::Error);
-        MPST_RET_IF_EQ(_state, SessionState::Ended);
-        
-        if (video_loop_) video_loop_->stop();
-        if (audio_loop_) audio_loop_->audioStop();
-        //stop all media tracks
-        MediaSegmentManager::stop();
-        
-        _state = SessionState::Stopped;
-        _callback->onStoped(RetCode::ok);
-        return RetCode::ok;
+    thread_task_.PostTask([this](){
+        _callback->onStoped(__stop());
     });
 }
 
 void MediaSessionImpl::setPositionTo(int64_t time_ms, int flag) {
+    media_complete_flag_ = 0;
     _bAudioCompleted = false;
     _bVideoCompleted = false;
     
@@ -317,14 +215,12 @@ void MediaSessionImpl::setPositionTo(int64_t time_ms, int flag) {
 
 void MediaSessionImpl::__addVideoRenderNode(std::shared_ptr<VideoRenderNode> video_render_node) {
     postRenderTask([this](std::shared_ptr<VideoRenderNode> video_render_node){
-        auto graphic_node = ((VideoRenderNodeImpl*)video_render_node.get())->getMediaGraphicNode();
-        display_layer_->addChildren(graphic_node);
+        display_layer_->addChildren((VideoGraphicNode*)video_render_node.get());
     }, video_render_node);
 }
 void MediaSessionImpl::__removeVideoRenderNode(std::shared_ptr<VideoRenderNode> video_render_node) {
     postRenderTask([this](std::shared_ptr<VideoRenderNode> video_render_node){
-        auto graphic_node = ((VideoRenderNodeImpl*)video_render_node.get())->getMediaGraphicNode();
-        display_layer_->removeChildren(graphic_node);
+        display_layer_->removeChildren((VideoGraphicNode*)video_render_node.get());
     }, video_render_node);
 }
 
@@ -342,18 +238,10 @@ void MediaSessionImpl::__removeAudioRenderNode(std::shared_ptr<AudioRenderNode> 
     }, audio_render_node);
 }
 
-
-bool MediaSessionImpl::onRenderCreate()
-{
-    //TODO: init render resource
-    display_layer_->beginRender();
-    return true;
-}
-
 bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs)
 {
     //FIXME: must use TimeMapper to calculate real time stamp after.
-        display_layer_->beginRender();
+//        display_layer_->beginRender();
     runRenderCmd();
     
     int64_t position = wantTimeMs;
@@ -373,6 +261,7 @@ bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs)
     return true;
 }
 
+// run on render thread
 bool MediaSessionImpl::onRenderDestroy()
 {
     runRenderCmd();
@@ -380,9 +269,16 @@ bool MediaSessionImpl::onRenderDestroy()
     return true;
 }
 
-void MediaSessionImpl::setDisplayMode(DisplayMode mode, int dstW, int dstH)
-{
-    display_layer_->setDisplayMode(mode, dstW, dstH);
+bool MediaSessionImpl::onRenderCreate() {
+    return display_layer_->beginRender();
+}
+void MediaSessionImpl::OnViewSizeChange(int32_t width, int32_t height) {
+    //TODO: init render resource
+    display_layer_->setTargetSize(width, height);
+}
+
+void MediaSessionImpl::setDisplayMode(DisplayMode mode, bool filp_v) {
+    display_layer_->setDisplayMode(mode, filp_v);
 }
 
 bool MediaSessionImpl::onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs)
@@ -443,9 +339,9 @@ bool MediaSessionImpl::onAudioRender(uint8_t * const buffer, unsigned needBytes)
 MediaSessionImpl::RetCode MediaSessionImpl::onStreamCompleted(MediaType mediaType) {
     assert(thread_task_.IsCurrent());
     _callback->onStreamEnd(mediaType);
-    
-    if (_bVideoCompleted && (_bAudioCompleted || !_hasAudio )) {
-        _callback->onCompleted();
+    media_complete_flag_ |= (int)mediaType;
+    if ((media_complete_flag_ & (int)MediaType::Video) && ((media_complete_flag_ & (int)MediaType::Audio) || !_hasAudio )) {
+        _callback->onCompleted(RetCode::ok);
     }
     
     return MediaSessionImpl::ok;

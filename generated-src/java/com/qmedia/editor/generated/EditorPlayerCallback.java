@@ -5,6 +5,7 @@ package com.qmedia.editor.generated;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import java.util.HashMap;
 
 public interface EditorPlayerCallback {
     public void onPrepare(int code);
@@ -17,7 +18,7 @@ public interface EditorPlayerCallback {
 
     public void onProgressUpdated(long timeMs);
 
-    public void onPlayerStateChanged(int newState, int oldState);
+    public void onCompleted(int code);
 
-    public void onCompleted();
+    public void onEvent(int eventid, @NonNull HashMap<String, String> msg);
 }

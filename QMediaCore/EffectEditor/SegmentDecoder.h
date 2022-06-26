@@ -16,7 +16,7 @@
 #include "MediaCore/decoder/Decoder.h"
 #include "MediaCore/demuxer/GeneralDemuxer.h"
 
-using MediaSegmentImpl = QMedia::Api::MediaSegmentImpl;
+using QMedia::Api::MediaSegmentImpl;
 
 class SegmentDecoder : public DecodedFrameCallback {
 public:

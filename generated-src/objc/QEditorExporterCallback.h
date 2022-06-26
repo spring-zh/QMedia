@@ -8,12 +8,15 @@
 
 - (void)onStarted:(int32_t)code;
 
-- (void)onStoped:(int32_t)code;
+- (void)onStoped;
 
 - (void)onProgressUpdated:(int64_t)timeMs;
 
-- (void)onCanceled:(int32_t)code;
+- (void)onCanceled;
 
-- (void)onCompleted;
+- (void)onCompleted:(int32_t)code;
+
+- (void)onEvent:(int32_t)eventid
+            msg:(nonnull NSDictionary<NSString *, NSString *> *)msg;
 
 @end
