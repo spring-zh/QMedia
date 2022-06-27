@@ -9,8 +9,6 @@
 using namespace QMedia::RenderEngine;
 
 PixelFrameBuffer::PixelFrameBuffer(CMSampleBufferRef sampleBuffer){
-//    _sampleBuffer = sampleBuffer;
-//    CFRetain(_sampleBuffer);
     _imageBuffer = CMSampleBufferGetImageBuffer(sampleBuffer);
     CFRetain(_imageBuffer);
     pixel_format_ = RawVideoFormat::kHardware;
@@ -327,23 +325,7 @@ const RenderEngine::BlendFunc& blend, VideoRotation rotation, RenderEngine::Draw
             region.getMaxX(), region.getMaxY(), positionZ
         };
         
-        float *texArray = Drawable2D::RECTANGLE_TEX_COORDS;
-        switch (rotation) {
-            case kVideoRotation_90:
-                texArray = Drawable2D::RECTANGLE_TEX_COORDS90;
-                break;
-            case kVideoRotation_180:
-                texArray = Drawable2D::RECTANGLE_TEX_COORDS180;
-                break;
-            case kVideoRotation_270:
-                texArray = Drawable2D::RECTANGLE_TEX_COORDS270;
-                break;
-            default:
-                texArray = Drawable2D::RECTANGLE_TEX_COORDS;
-                break;
-        }
-        
-        _program->setVertexAttribValue("a_texCoord", (Uniform::Vec2<float>*)texArray, 4);
+        _program->setVertexAttribValue("a_texCoord", (Uniform::Vec2<float>*)(Drawable2D::GetTexVertex(rotation)), 4);
         _program->setVertexAttribValue("a_position", (Uniform::Vec3<float>*)posArray, 4);
         
         if(_lumaTexture) {

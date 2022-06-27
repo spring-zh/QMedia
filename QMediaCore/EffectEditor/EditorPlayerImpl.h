@@ -48,7 +48,7 @@ public:
     void setDisplayMode(int mode, bool filp_v);
     void OnViewSizeChange(int32_t width, int32_t height);
     void onViewCreate(int32_t width, int32_t height);
-    bool onDraw(int64_t pirv);
+    bool onDraw(int64_t pirv, bool no_display);
     void onViewDestroy();
 
 protected:

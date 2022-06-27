@@ -13,11 +13,13 @@ public:
 
     virtual void setDisplayMode(int32_t mode, bool flip_v) = 0;
 
-    virtual void OnViewSizeChange(int32_t width, int32_t height) = 0;
-
-    virtual bool onDraw(int64_t pirv) = 0;
+    virtual void onViewSizeChange(int32_t width, int32_t height) = 0;
 
     virtual void onViewDestroy() = 0;
+
+    virtual bool onDraw(int64_t pirv, bool no_display) = 0;
+
+    virtual void readRGBA(void* buffer, int32_t width, int32_t height, int32_t format) = 0;
 };
 
 } }  // namespace QMedia::Api

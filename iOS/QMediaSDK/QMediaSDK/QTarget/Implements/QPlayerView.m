@@ -85,7 +85,7 @@
 
 - (void)onCreate
 {
-    [_render OnViewSizeChange:_viewSize.width height:_viewSize.height];
+    [_render onViewSizeChange:_viewSize.width height:_viewSize.height];
 }
 
 - (void)onDrawFrame
@@ -94,7 +94,7 @@
     if (_bStart || _updateView) {
         _updateView = false;
 
-        [_render onDraw:-1];
+        [_render onDraw:-1 noDisplay:false];
     }
     
     if (_bTakePicture) {
@@ -163,7 +163,7 @@
 //    _viewSize = [self bounds].size;
     _viewSize.width = _objView.getWidth;
     _viewSize.height = _objView.getHeight;
-    [_render OnViewSizeChange:_viewSize.width height:_viewSize.height];
+    [_render onViewSizeChange:_viewSize.width height:_viewSize.height];
     _updateView = true;
 }
 

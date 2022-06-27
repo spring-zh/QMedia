@@ -14,6 +14,19 @@
 namespace QMedia {
 namespace RenderEngine {
 
+template <class T>
+class Holder {
+public:
+    explicit Holder(T* t):__t(t) {
+        __t->use();
+    }
+    ~Holder() {
+        __t->restore();
+    }
+private:
+    T* const __t;
+};
+
 class TextureFrameBuffer {
 public:
     static TextureFrameBuffer* createNew(int width, int height, bool enable_depth, bool use_multisample);

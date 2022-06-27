@@ -132,12 +132,12 @@ public:
                              
     void setPositionTo(int64_t time_ms, int flag);
                              
-    bool onVideoRender(int64_t wantTimeMs);
+    bool onVideoRender(int64_t wantTimeMs, bool no_display);
     bool onRenderDestroy();
     void OnViewSizeChange(int32_t width, int32_t height);
     void setDisplayMode(DisplayMode mode, bool filp_v);
                              
-    DisplayLayer *GetDisplayLayer() const { return display_layer_.get(); }
+    DisplayLayer *GetDisplayLayer() { return display_layer_.get(); }
 protected:
                              
     friend class EditorPlayerImpl;
@@ -171,16 +171,16 @@ protected:
     std::list<std::shared_ptr<AudioRenderNode>> audio_nodes_;
     std::vector<std::shared_ptr<MediaSegment>> source_segments_;
     
-    bool _bVideoCompleted;
-    bool _bAudioCompleted;
+    bool _bVideoCompleted = false;
+    bool _bAudioCompleted = false;
     int media_complete_flag_{0};
 //    int64_t _playerPosition;
-    Callback *_callback;
+    Callback *_callback = nullptr;
     
     SessionState _state;
 
     AudioClock _audioClock;
-    bool _hasAudio;
+    bool _hasAudio = true;
     
     //push task to render thread
     template <typename Fn, class... Args, typename RetT = typename std::result_of<Fn(Args...)>::type>

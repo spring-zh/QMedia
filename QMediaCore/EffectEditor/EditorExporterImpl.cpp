@@ -31,7 +31,7 @@ void EditorExporterImpl::setDisplayMode(int mode, bool filp_v) {
 void EditorExporterImpl::OnViewSizeChange(int32_t width, int32_t height) {
     session_->OnViewSizeChange(width, height);
 }
-bool EditorExporterImpl::onDraw(int64_t pirv) {
+bool EditorExporterImpl::onDraw(int64_t pirv, bool no_display) {
 //    t_lock_guard<ticket_lock> clk(_render_mutex);
     if (session_->_bVideoCompleted) return false;
     _renderPosition = pirv;
@@ -40,7 +40,7 @@ bool EditorExporterImpl::onDraw(int64_t pirv) {
         callback_->onProgressUpdated(_renderPosition);
         _lastRenderTime = currentRenderTime;
     }
-    return session_->onVideoRender(_renderPosition);
+    return session_->onVideoRender(_renderPosition, no_display);
 }
 void EditorExporterImpl::onViewDestroy() {
     session_->onRenderDestroy();

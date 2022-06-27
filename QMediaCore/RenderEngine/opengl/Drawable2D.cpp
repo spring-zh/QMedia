@@ -89,5 +89,21 @@ float Drawable2D::MtxFlipV[16] =
     0, 1, 0, 1,
 };
 
+const float* Drawable2D::GetTexVertex(int rotation) {
+    switch (rotation) {
+    case 90:
+        return Drawable2D::RECTANGLE_TEX_COORDS90;
+        break;
+    case 180:
+        return Drawable2D::RECTANGLE_TEX_COORDS180;
+        break;
+    case 270:
+        return Drawable2D::RECTANGLE_TEX_COORDS270;
+        break;
+    default:
+        return Drawable2D::RECTANGLE_TEX_COORDS;
+    }
+}
+
 }
 }

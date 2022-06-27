@@ -38,24 +38,38 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)OnViewSizeChange:(int32_t)width
+- (void)onViewSizeChange:(int32_t)width
                   height:(int32_t)height {
     try {
-        _cppRefHandle.get()->OnViewSizeChange(::djinni::I32::toCpp(width),
+        _cppRefHandle.get()->onViewSizeChange(::djinni::I32::toCpp(width),
                                               ::djinni::I32::toCpp(height));
-    } DJINNI_TRANSLATE_EXCEPTIONS()
-}
-
-- (BOOL)onDraw:(int64_t)pirv {
-    try {
-        auto objcpp_result_ = _cppRefHandle.get()->onDraw(::djinni::I64::toCpp(pirv));
-        return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
 - (void)onViewDestroy {
     try {
         _cppRefHandle.get()->onViewDestroy();
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (BOOL)onDraw:(int64_t)pirv
+     noDisplay:(BOOL)noDisplay {
+    try {
+        auto objcpp_result_ = _cppRefHandle.get()->onDraw(::djinni::I64::toCpp(pirv),
+                                                          ::djinni::Bool::toCpp(noDisplay));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
+    } DJINNI_TRANSLATE_EXCEPTIONS()
+}
+
+- (void)readRGBA:(nonnull id)buffer
+           width:(int32_t)width
+          height:(int32_t)height
+          format:(int32_t)format {
+    try {
+        _cppRefHandle.get()->readRGBA(::djinni::Object::toCpp(buffer),
+                                      ::djinni::I32::toCpp(width),
+                                      ::djinni::I32::toCpp(height),
+                                      ::djinni::I32::toCpp(format));
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

@@ -1,5 +1,6 @@
 
 #include "Utils/Comm.h"
+#include "RenderEngine/opengl/render_device_gl.h"
 #include "RenderEngine/opengl/TextureFrameBuffer.h"
 #include <CoreVideo/CoreVideo.h>
 #include <CoreMedia/CoreMedia.h>
@@ -8,6 +9,7 @@
 
 using QMedia::RenderEngine::Texture2D;
 using QMedia::RenderEngine::TextureFrameBuffer;
+using QMedia::RenderEngine::GetGlErrorString;
 
 class PixelbufferTexture : public Texture2D {
 public:
@@ -39,10 +41,10 @@ public:
     static TextureFrameBuffer* create(int width, int height, bool enable_depth, bool use_multisample) {
         PixelbufferFrameBuffer* frame_buffer = new PixelbufferFrameBuffer();
         frame_buffer->pixelbuffer_texture_ = std::unique_ptr<PixelbufferTexture>(new PixelbufferTexture(width, height));
-        glGenFramebuffers(1, &frame_buffer->fbo_);
-        frame_buffer->use();
-        glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
-        frame_buffer->pixelbuffer_texture_->getTextureId(), 0);
+        CHECK_GL_ERROR(glGenFramebuffers(1, &frame_buffer->fbo_));
+        CHECK_GL_ERROR(frame_buffer->use());
+        CHECK_GL_ERROR(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D,
+        frame_buffer->pixelbuffer_texture_->getTextureId(), 0));
         const int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
         if (status != GL_FRAMEBUFFER_COMPLETE) {
             NSLog(@"glCheckFramebufferStatus: %d", status);
@@ -50,6 +52,7 @@ public:
             delete frame_buffer;
             return nullptr;
         }
+        frame_buffer->restore();
         return frame_buffer;
     }
     ~PixelbufferFrameBuffer() {

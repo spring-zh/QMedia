@@ -9,6 +9,7 @@
 #include "EffectEditor/EditorPlayerImpl.h"
 #include "EffectEditor/EditorExporterImpl.h"
 #import "QAudioPlayer.h"
+#import <CoreVideo/CoreVideo.h>
 
 namespace QMedia { namespace Api {
 
@@ -32,17 +33,26 @@ public:
         player_->setDisplayMode(mode, flip_v);
     }
 
-    void OnViewSizeChange(int32_t width, int32_t height) override {
+    void onViewSizeChange(int32_t width, int32_t height) override {
         setDisplayMode(0, true);
         player_->OnViewSizeChange(width, height);
     }
 
-    bool onDraw(int64_t pirv) override {
-        return player_->onDraw(pirv);
+    bool onDraw(int64_t pirv, bool no_display) override {
+        return player_->onDraw(pirv, no_display);
     }
 
     void onViewDestroy() override {
         player_->onViewDestroy();
+    }
+    
+    void readRGBA(void* buffer, int32_t width, int32_t height, int32_t format) override {
+        CVPixelBufferRef renderTarget = (CVPixelBufferRef)buffer;
+        CVPixelBufferLockBaseAddress(renderTarget, 0);
+        GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(renderTarget);
+        MediaSessionImpl* session = (MediaSessionImpl*)(player_->getSession().get());
+        session->GetDisplayLayer()->readRGB(buffer, width, height, format);
+        CVPixelBufferUnlockBaseAddress(renderTarget, 0);
     }
     
     EditorPlayerImpl* player_;
@@ -68,17 +78,26 @@ public:
         exporter_->setDisplayMode(mode, flip_v);
     }
 
-    void OnViewSizeChange(int32_t width, int32_t height) override {
+    void onViewSizeChange(int32_t width, int32_t height) override {
         setDisplayMode(0, false);
         exporter_->OnViewSizeChange(width, height);
     }
 
-    bool onDraw(int64_t pirv) override {
-        return exporter_->onDraw(pirv);
+    bool onDraw(int64_t pirv, bool no_display) override {
+        return exporter_->onDraw(pirv, no_display);
     }
 
     void onViewDestroy() override {
         exporter_->onViewDestroy();
+    }
+    
+    void readRGBA(void* buffer, int32_t width, int32_t height, int32_t format) override {
+        CVPixelBufferRef renderTarget = (CVPixelBufferRef)buffer;
+        CVPixelBufferLockBaseAddress(renderTarget, 0);
+        GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(renderTarget);
+        MediaSessionImpl* session = (MediaSessionImpl*)(exporter_->getSession().get());
+        session->GetDisplayLayer()->readRGB(pixelBufferData, width, height, format);
+        CVPixelBufferUnlockBaseAddress(renderTarget, 0);
     }
     
     EditorExporterImpl* exporter_;

@@ -24,13 +24,14 @@ namespace RenderEngine {
 
 TextureFrameBuffer* GeneralTextureFrameBuffer::create(int width, int height, bool enable_depth, bool use_multisample) {
     auto texture_framebuffer = new GeneralTextureFrameBuffer();
+    glGenFramebuffers(1, &texture_framebuffer->fbo_);
+    
     texture_framebuffer->enable_depth_ = enable_depth;
     texture_framebuffer->use_multisample_ = use_multisample;
     texture_framebuffer->width_ = width;
     texture_framebuffer->height_ = height;
-    
-    glGenFramebuffers(1, &texture_framebuffer->fbo_);
     texture_framebuffer->attach_texture_ = std::unique_ptr<Texture2D>(GeneralTexture2D::createTexture(Texture2D::RGBA, width, height));
+    
     texture_framebuffer->use();
 #if __ANDROID_NDK__
     bool uspport_multisample = GLEngine::checkSupportExtension("GL_EXT_multisampled_render_to_texture");
@@ -67,13 +68,12 @@ TextureFrameBuffer* GeneralTextureFrameBuffer::create(int width, int height, boo
     }
     
     const int status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    texture_framebuffer->restore();
     if (status != GL_FRAMEBUFFER_COMPLETE) {
         LOGW("glCheckFramebufferStatus: %d", status);
-        texture_framebuffer->restore();
         delete texture_framebuffer;
         return nullptr;
     }
-    
     return texture_framebuffer;
 }
 
@@ -97,7 +97,7 @@ bool GeneralTextureFrameBuffer::use() {
     return glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE;
 }
 bool GeneralTextureFrameBuffer::restore() {
-    glBindFramebuffer(GL_FRAMEBUFFER, prev_fbo_);
+    CHECK_GL_ERROR(glBindFramebuffer(GL_FRAMEBUFFER, prev_fbo_));
     return true;
 }
 

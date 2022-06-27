@@ -23,10 +23,6 @@ MediaSessionImpl::MediaSessionImpl(): MediaSessionImpl(nullptr, nullptr) {
 
 MediaSessionImpl::MediaSessionImpl(std::shared_ptr<VideoRender> video_render, std::shared_ptr<AudioRender> audio_render):
 thread_task_("[threadtask].mediasession_main"),
-_hasAudio(false),
-_bVideoCompleted(false),
-_bAudioCompleted(false),
-_callback(nullptr),
 video_render_(video_render),
 audio_render_(audio_render),
 _state(SessionState::Idle) {
@@ -237,7 +233,7 @@ void MediaSessionImpl::__removeAudioRenderNode(std::shared_ptr<AudioRenderNode> 
     }, audio_render_node);
 }
 
-bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs)
+bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs, bool no_display)
 {
     //FIXME: must use TimeMapper to calculate real time stamp after.
     runRenderCmd();
@@ -254,7 +250,7 @@ bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs)
     }else
         _bVideoCompleted = false;
     
-    display_layer_->render(position);
+    display_layer_->render(position, no_display);
     
     return true;
 }

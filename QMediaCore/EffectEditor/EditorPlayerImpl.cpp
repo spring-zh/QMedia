@@ -50,7 +50,7 @@ void EditorPlayerImpl::setDisplayMode(int mode, bool filp_v) {
 void EditorPlayerImpl::OnViewSizeChange(int32_t width, int32_t height) {
     session_->OnViewSizeChange(width, height);
 }
-bool EditorPlayerImpl::onDraw(int64_t pirv) {
+bool EditorPlayerImpl::onDraw(int64_t pirv, bool no_display) {
     t_lock_guard<ticket_lock> clk(_render_mutex);
     int64_t current_video_time = _playerClock.GetClock();
     if (! _bSeeking.load() ) {
@@ -62,7 +62,7 @@ bool EditorPlayerImpl::onDraw(int64_t pirv) {
         }
     }
 
-    return session_->onVideoRender(current_video_time);
+    return session_->onVideoRender(current_video_time, no_display);
 }
 void EditorPlayerImpl::onViewDestroy() {
     session_->onRenderDestroy();

@@ -10,11 +10,13 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public interface VideoRender {
     public void setDisplayMode(int mode, boolean flipV);
 
-    public void OnViewSizeChange(int width, int height);
-
-    public boolean onDraw(long pirv);
+    public void onViewSizeChange(int width, int height);
 
     public void onViewDestroy();
+
+    public boolean onDraw(long pirv, boolean noDisplay);
+
+    public void readRGBA(@NonNull Object buffer, int width, int height, int format);
 
     static final class CppProxy implements VideoRender
     {
@@ -48,20 +50,12 @@ public interface VideoRender {
         private native void native_setDisplayMode(long _nativeRef, int mode, boolean flipV);
 
         @Override
-        public void OnViewSizeChange(int width, int height)
+        public void onViewSizeChange(int width, int height)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_OnViewSizeChange(this.nativeRef, width, height);
+            native_onViewSizeChange(this.nativeRef, width, height);
         }
-        private native void native_OnViewSizeChange(long _nativeRef, int width, int height);
-
-        @Override
-        public boolean onDraw(long pirv)
-        {
-            assert !this.destroyed.get() : "trying to use a destroyed object";
-            return native_onDraw(this.nativeRef, pirv);
-        }
-        private native boolean native_onDraw(long _nativeRef, long pirv);
+        private native void native_onViewSizeChange(long _nativeRef, int width, int height);
 
         @Override
         public void onViewDestroy()
@@ -70,5 +64,21 @@ public interface VideoRender {
             native_onViewDestroy(this.nativeRef);
         }
         private native void native_onViewDestroy(long _nativeRef);
+
+        @Override
+        public boolean onDraw(long pirv, boolean noDisplay)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            return native_onDraw(this.nativeRef, pirv, noDisplay);
+        }
+        private native boolean native_onDraw(long _nativeRef, long pirv, boolean noDisplay);
+
+        @Override
+        public void readRGBA(Object buffer, int width, int height, int format)
+        {
+            assert !this.destroyed.get() : "trying to use a destroyed object";
+            native_readRGBA(this.nativeRef, buffer, width, height, format);
+        }
+        private native void native_readRGBA(long _nativeRef, Object buffer, int width, int height, int format);
     }
 }

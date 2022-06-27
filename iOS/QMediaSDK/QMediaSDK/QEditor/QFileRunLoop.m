@@ -293,7 +293,7 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, _movieRenderbuffer);
         }
         
-        [_video_render OnViewSizeChange:_venc_opt.width height:_venc_opt.height];
+        [_video_render onViewSizeChange:_venc_opt.width height:_venc_opt.height];
         
         [EAGLContext setCurrentContext:nil];
     });
@@ -487,17 +487,12 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
             NSAssert(NO,@"glCheckFramebufferStatus: %d", status);
         }
 
-        bRet = [_video_render onDraw:_video_pts];
+        bRet = [_video_render onDraw:_video_pts noDisplay:true];
+        glFinish();
 
-        [[_glContext context] presentRenderbuffer:GL_RENDERBUFFER];
         if(![QGLContext supportsFastTextureUpload]) {
-        
             CVPixelBufferPoolCreatePixelBuffer (kCFAllocatorDefault, [_writerPixelBufferInput pixelBufferPool], &renderTarget);
-            CVPixelBufferLockBaseAddress(renderTarget, 0);
-            GLubyte *pixelBufferData = (GLubyte *)CVPixelBufferGetBaseAddress(renderTarget);
-            //FIXME: check if support GL_BGRA
-            glReadPixels(0, 0, _venc_opt.width, _venc_opt.height, GL_BGRA, GL_UNSIGNED_BYTE, pixelBufferData);
-            CVPixelBufferUnlockBaseAddress(renderTarget, 0);
+            [_video_render readRGBA:(__bridge id)renderTarget width:_venc_opt.width height:_venc_opt.height format:GL_BGRA];
         }
         [EAGLContext setCurrentContext:nil];
     });

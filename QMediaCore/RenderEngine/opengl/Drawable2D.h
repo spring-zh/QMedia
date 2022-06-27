@@ -6,8 +6,8 @@
 //  Copyright © 2017 QMedia. All rights reserved.
 //
 
-#ifndef GRAPHICCORE_DRAWABLETEXTURE_H
-#define GRAPHICCORE_DRAWABLETEXTURE_H
+#ifndef RENDERENGINE_DRAWABLETEXTURE_H
+#define RENDERENGINE_DRAWABLETEXTURE_H
 
 #include "gl_platform.h"
 
@@ -33,12 +33,12 @@ public:
 
     static float MtxFlipH[16];
     static float MtxFlipV[16];
-//protected:
-//    Mode _mode;
+
+    static const float* GetTexVertex(int rotation);
 
 };
 
 }//End RenderEngine
 }//End QMedia
 
-#endif //GRAPHICCORE_DRAWABLETEXTURE_H
+#endif //RENDERENGINE_DRAWABLETEXTURE_H

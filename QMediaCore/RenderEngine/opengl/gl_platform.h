@@ -26,6 +26,7 @@
 
 #include <OpenGLES/ES2/gl.h>
 #include <OpenGLES/ES2/glext.h>
+#include <OpenGLES/ES3/gl.h>
 
 #endif // CC_PLATFORM_IOS
 
