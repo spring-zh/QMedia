@@ -81,7 +81,6 @@
 		6FD33BEE2868A8BE00548102 /* render_device_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BE92868A8BE00548102 /* render_device_gl.cpp */; };
 		6FD33BEF2868A8BE00548102 /* shader_program_gl.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BEA2868A8BE00548102 /* shader_program_gl.cpp */; };
 		6FD33BF02868A8BE00548102 /* shader_code.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FD33BED2868A8BE00548102 /* shader_code.cpp */; };
-		6FF0292C221D28A50011E6CB /* MediaAudioChannel.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6FF0292A221D28A50011E6CB /* MediaAudioChannel.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -296,8 +295,6 @@
 		6FF0291C221BFEE40011E6CB /* AudioTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioTarget.h; sourceTree = "<group>"; };
 		6FF0291D221BFEE40011E6CB /* OutputTarget.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutputTarget.h; sourceTree = "<group>"; };
 		6FF02923221BFEE40011E6CB /* Comm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Comm.h; sourceTree = "<group>"; };
-		6FF0292A221D28A50011E6CB /* MediaAudioChannel.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = MediaAudioChannel.cpp; sourceTree = "<group>"; };
-		6FF0292B221D28A50011E6CB /* MediaAudioChannel.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MediaAudioChannel.h; sourceTree = "<group>"; };
 		6FF029392221657F0011E6CB /* BlockingQueue.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BlockingQueue.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -681,8 +678,6 @@
 				132435E72858D61400AD6BA8 /* MediaSegmentManager.cpp */,
 				132435E62858D61400AD6BA8 /* MediaSegmentManager.h */,
 				6F5117BF240B65600013BC9E /* VideoFrameDrawer.h */,
-				6FF0292A221D28A50011E6CB /* MediaAudioChannel.cpp */,
-				6FF0292B221D28A50011E6CB /* MediaAudioChannel.h */,
 				6F049347244B1BDC00F8B73B /* EditorExporter.cpp */,
 				6F049346244B1BDC00F8B73B /* EditorExporter.h */,
 			);
@@ -792,7 +787,6 @@
 				6F224A4E249C67BA000244FF /* ColorInvertConfig.cpp in Sources */,
 				6F637EC623D0477A0004E053 /* MathUtil.cpp in Sources */,
 				6F224A39249B0FC3000244FF /* FilterDrawer.cpp in Sources */,
-				6FF0292C221D28A50011E6CB /* MediaAudioChannel.cpp in Sources */,
 				6F11A3402864A7D000786CE5 /* AnimateNode.cpp in Sources */,
 				13243674285B23FB00AD6BA8 /* AudioRenderNodeImpl.cpp in Sources */,
 				6FBD028F24607B0B00372404 /* Image.cpp in Sources */,

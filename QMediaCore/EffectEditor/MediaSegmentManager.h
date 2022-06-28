@@ -13,7 +13,6 @@
 #include <vector>
 #include "MediaSegmentImpl.h"
 #include "medianode/VideoGraphicNode.h"
-#include "MediaAudioChannel.h"
 
 #include "SegmentDecoder.h"
 
