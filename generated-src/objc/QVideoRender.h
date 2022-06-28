@@ -14,10 +14,10 @@
 
 - (void)onViewDestroy;
 
-- (BOOL)onDraw:(int64_t)pirv
+- (BOOL)onDraw:(int64_t)timeMs
      noDisplay:(BOOL)noDisplay;
 
-- (void)readRGBA:(nonnull id)buffer
+- (BOOL)readRGBA:(nonnull id)buffer
            width:(int32_t)width
           height:(int32_t)height
           format:(int32_t)format;

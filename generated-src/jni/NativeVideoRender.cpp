@@ -48,27 +48,28 @@ CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppPro
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
 }
 
-CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppProxy_native_1onDraw(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jlong j_pirv, jboolean j_noDisplay)
+CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppProxy_native_1onDraw(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jlong j_timeMs, jboolean j_noDisplay)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRender>(nativeRef);
-        auto r = ref->onDraw(::djinni::I64::toCpp(jniEnv, j_pirv),
+        auto r = ref->onDraw(::djinni::I64::toCpp(jniEnv, j_timeMs),
                              ::djinni::Bool::toCpp(jniEnv, j_noDisplay));
         return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
     } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
-CJNIEXPORT void JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppProxy_native_1readRGBA(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_buffer, jint j_width, jint j_height, jint j_format)
+CJNIEXPORT jboolean JNICALL Java_com_qmedia_editor_generated_VideoRender_00024CppProxy_native_1readRGBA(JNIEnv* jniEnv, jobject /*this*/, jlong nativeRef, jobject j_buffer, jint j_width, jint j_height, jint j_format)
 {
     try {
         DJINNI_FUNCTION_PROLOGUE1(jniEnv, nativeRef);
         const auto& ref = ::djinni::objectFromHandleAddress<::QMedia::Api::VideoRender>(nativeRef);
-        ref->readRGBA(::djinni::Object::toCpp(jniEnv, j_buffer),
-                      ::djinni::I32::toCpp(jniEnv, j_width),
-                      ::djinni::I32::toCpp(jniEnv, j_height),
-                      ::djinni::I32::toCpp(jniEnv, j_format));
-    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, )
+        auto r = ref->readRGBA(::djinni::Object::toCpp(jniEnv, j_buffer),
+                               ::djinni::I32::toCpp(jniEnv, j_width),
+                               ::djinni::I32::toCpp(jniEnv, j_height),
+                               ::djinni::I32::toCpp(jniEnv, j_format));
+        return ::djinni::release(::djinni::Bool::fromCpp(jniEnv, r));
+    } JNI_TRANSLATE_EXCEPTIONS_RETURN(jniEnv, 0 /* value doesn't matter */)
 }
 
 }  // namespace djinni_generated

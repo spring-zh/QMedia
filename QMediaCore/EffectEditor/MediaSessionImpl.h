@@ -84,17 +84,17 @@ public:
     public:
         virtual void onPrepared(RetCode code) = 0;
 //        virtual void onStarted(RetCode code) = 0;
+        virtual void onProgressUpdated(int64_t position) = 0;
         virtual void onStoped(RetCode code) = 0;
         virtual void onStreamEnd(MediaType mediaType) = 0;
         virtual void onCompleted(RetCode code) = 0;
     };
     
     MediaSessionImpl();
-    explicit MediaSessionImpl(std::shared_ptr<VideoRender> video_render, std::shared_ptr<AudioRender> audio_render);
     
     virtual ~MediaSessionImpl();
                              
-    void setCallback(Callback* callback) { _callback = callback; }
+    void setCallback(Callback* callback) { callback_ = callback; }
     
     std::shared_ptr<MediaSegment> cresteMediaSegment(const std::string & filename, int32_t flag) override;
 
@@ -128,14 +128,16 @@ public:
 //    virtual void start() override;
 //                             
     virtual void stop() override;
-    
                              
-    void setPositionTo(int64_t time_ms, int flag);
+    void seek(int64_t time_ms, int32_t flag);
                              
-    bool onVideoRender(int64_t wantTimeMs, bool no_display);
     bool onRenderDestroy();
     void OnViewSizeChange(int32_t width, int32_t height);
     void setDisplayMode(DisplayMode mode, bool filp_v);
+                             
+    bool onVideoRender(int64_t wantTimeMs, bool no_display);
+    bool onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs);
+    
                              
     DisplayLayer *GetDisplayLayer() { return display_layer_.get(); }
 protected:
@@ -143,9 +145,8 @@ protected:
     friend class EditorPlayerImpl;
     friend class EditorExporterImpl;
     
-    bool onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs);
-    
     bool onAudioRender(uint8_t * const buffer, unsigned needBytes);
+
     RetCode onStreamCompleted(MediaType mediaType);
     
     int getCacheAudioSample(uint64_t timeMs, int wantLen, bool& hasData);
@@ -158,6 +159,9 @@ protected:
         
     RetCode __start();
     RetCode __stop();
+    RetCode __seek(int64_t mSec, int cnt, int flag);
+    RetCode __pause(bool bPause);
+    RetCode __play();
     
     //output target pointer
     VideoDescribe _videoConfig;
@@ -174,13 +178,22 @@ protected:
     bool _bVideoCompleted = false;
     bool _bAudioCompleted = false;
     int media_complete_flag_{0};
-//    int64_t _playerPosition;
-    Callback *_callback = nullptr;
-    
-    SessionState _state;
 
+    Callback *callback_ = nullptr;
+    SessionState _state{SessionState::Idle};
+
+    //other
+    std::atomic_int _seekIdx{1};
+    std::atomic_bool _bSeeking{false};
+    ticket_lock _render_mutex;
+    SteadyClock<int64_t, scale_milliseconds> _playerClock;
     AudioClock _audioClock;
+                             
     bool _hasAudio = true;
+    int64_t render_position_ = 0;
+    int64_t last_renderTime_ = 0;
+    //control state
+    bool user_paused_ = true;
     
     //push task to render thread
     template <typename Fn, class... Args, typename RetT = typename std::result_of<Fn(Args...)>::type>

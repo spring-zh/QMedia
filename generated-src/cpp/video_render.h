@@ -17,9 +17,9 @@ public:
 
     virtual void onViewDestroy() = 0;
 
-    virtual bool onDraw(int64_t pirv, bool no_display) = 0;
+    virtual bool onDraw(int64_t time_ms, bool no_display) = 0;
 
-    virtual void readRGBA(void* buffer, int32_t width, int32_t height, int32_t format) = 0;
+    virtual bool readRGBA(void* buffer, int32_t width, int32_t height, int32_t format) = 0;
 };
 
 } }  // namespace QMedia::Api

@@ -3,8 +3,8 @@ video_render = interface + c {
     setDisplayMode(mode:i32, flip_v: bool);
     onViewSizeChange(width: i32, height: i32);
     onViewDestroy();
-    onDraw(pirv: i64, no_display: bool): bool;
-    readRGBA(buffer: object, width: i32, height: i32, format: i32);
+    onDraw(time_ms: i64, no_display: bool): bool;
+    readRGBA(buffer: object, width: i32, height: i32, format: i32): bool;
 }
 
 video_runloop = interface +j +o {

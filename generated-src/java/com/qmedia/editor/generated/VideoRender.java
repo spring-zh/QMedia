@@ -14,9 +14,9 @@ public interface VideoRender {
 
     public void onViewDestroy();
 
-    public boolean onDraw(long pirv, boolean noDisplay);
+    public boolean onDraw(long timeMs, boolean noDisplay);
 
-    public void readRGBA(@NonNull Object buffer, int width, int height, int format);
+    public boolean readRGBA(@NonNull Object buffer, int width, int height, int format);
 
     static final class CppProxy implements VideoRender
     {
@@ -66,19 +66,19 @@ public interface VideoRender {
         private native void native_onViewDestroy(long _nativeRef);
 
         @Override
-        public boolean onDraw(long pirv, boolean noDisplay)
+        public boolean onDraw(long timeMs, boolean noDisplay)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            return native_onDraw(this.nativeRef, pirv, noDisplay);
+            return native_onDraw(this.nativeRef, timeMs, noDisplay);
         }
-        private native boolean native_onDraw(long _nativeRef, long pirv, boolean noDisplay);
+        private native boolean native_onDraw(long _nativeRef, long timeMs, boolean noDisplay);
 
         @Override
-        public void readRGBA(Object buffer, int width, int height, int format)
+        public boolean readRGBA(Object buffer, int width, int height, int format)
         {
             assert !this.destroyed.get() : "trying to use a destroyed object";
-            native_readRGBA(this.nativeRef, buffer, width, height, format);
+            return native_readRGBA(this.nativeRef, buffer, width, height, format);
         }
-        private native void native_readRGBA(long _nativeRef, Object buffer, int width, int height, int format);
+        private native boolean native_readRGBA(long _nativeRef, Object buffer, int width, int height, int format);
     }
 }

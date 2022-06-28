@@ -16,16 +16,15 @@
 
 namespace QMedia { namespace Api {
 
+extern std::shared_ptr<AudioRender> CreatePlayerAudioRender(MediaSessionImpl* session);
+
+extern std::shared_ptr<VideoRender> CreatePlayerVideoRender(MediaSessionImpl* session);
+
 #define STATE_ISRUNING(state) (state == CombinerState::Prepared || state == CombinerState::Started || state == CombinerState::Paused )
 
-MediaSessionImpl::MediaSessionImpl(): MediaSessionImpl(nullptr, nullptr) {
-}
-
-MediaSessionImpl::MediaSessionImpl(std::shared_ptr<VideoRender> video_render, std::shared_ptr<AudioRender> audio_render):
-thread_task_("[threadtask].mediasession_main"),
-video_render_(video_render),
-audio_render_(audio_render),
-_state(SessionState::Idle) {
+MediaSessionImpl::MediaSessionImpl(): thread_task_("[threadtask].mediasession_main") {
+    video_render_ = CreatePlayerVideoRender(this);
+    audio_render_ = CreatePlayerAudioRender(this);
     display_layer_ = std::unique_ptr<DisplayLayer>(new DisplayLayer(this));
 }
 
@@ -140,7 +139,7 @@ void MediaSessionImpl::prepare() {
         MediaSegmentManager::start();
 
         _state = SessionState::Prepared;
-        _callback->onPrepared(RetCode::ok);
+        callback_->onPrepared(RetCode::ok);
         return RetCode::ok;
     });
 }
@@ -161,6 +160,94 @@ RetCode MediaSessionImpl::__start() {
     if (video_loop_) video_loop_->start();
     if (audio_loop_) audio_loop_->audioStart();
     _state = SessionState::Started;
+    return RetCode::ok;
+}
+
+RetCode MediaSessionImpl::__play()
+{
+    RetCode ret = RetCode::e_state;
+    if (_state == SessionState::Started || _state == SessionState::Paused) {
+        ret = __pause(false);
+    }else {
+        
+        if(RetCode::ok == ( ret = __start())) {
+            _playerClock.SetPaused(false);
+            user_paused_ = false;
+        }
+    }
+    return ret;
+}
+
+RetCode MediaSessionImpl::__seek(int64_t time_ms, int cnt, int flag)
+{
+    t_lock_guard<ticket_lock> clk(_render_mutex);
+    MPST_RET_IF_EQ(_state, SessionState::Idle);
+    MPST_RET_IF_EQ(_state, SessionState::Initialized);
+    MPST_RET_IF_EQ(_state, SessionState::AsyncPreparing);
+    // MPST_RET_IF_EQ(_state, PlayerState_Prepared);
+    // MPST_RET_IF_EQ(_state, PlayerState_Started);
+    // MPST_RET_IF_EQ(_state, PlayerState_Paused);
+    // MPST_RET_IF_EQ(_state, PlayerState_Completed);
+    MPST_RET_IF_EQ(_state, SessionState::Stopped);
+    MPST_RET_IF_EQ(_state, SessionState::Error);
+    MPST_RET_IF_EQ(_state, SessionState::Ended);
+    
+    _playerClock.SetPaused(true);
+//    _videoTarget->pause(true);
+    audio_loop_->audioPause(true);
+    audio_loop_->audioFlush();
+    video_loop_->forceUpdate();
+    
+    _playerClock.SetClock(time_ms);
+    _audioClock.setClock(time_ms);
+    //---------
+//    setPositionTo(time_ms, flag);
+    _bAudioCompleted = false;
+    _bVideoCompleted = false;
+    media_complete_flag_ = 0;
+    
+    MediaSegmentManager::setPositionTo(time_ms, flag == 1);
+    for (auto& ac : audio_nodes_) {
+        ((AudioRenderNodeImpl*)ac.get())->ClearAudioFrame();
+    }
+    //---------
+    if(_state == SessionState::Completed) {
+        _state = SessionState::Paused;
+        user_paused_ = true;
+    }
+    if (!user_paused_) {
+        video_loop_->pause(false);
+        audio_loop_->audioPause(false);
+        _playerClock.SetPaused(false);
+    }
+    if (_seekIdx.load() == cnt) { //clear seeking state
+        _bSeeking.store(false);
+    }
+//    _callback->onSeekTo(mSec);
+    return RetCode::ok;
+}
+
+RetCode MediaSessionImpl::__pause(bool bPause)
+{
+    MPST_RET_IF_EQ(_state, SessionState::Idle);
+    MPST_RET_IF_EQ(_state, SessionState::Initialized);
+    MPST_RET_IF_EQ(_state, SessionState::AsyncPreparing);
+//    MPST_RET_IF_EQ(_state, PlayerState::Prepared);
+    // MPST_RET_IF_EQ(_state, PlayerState_Started);
+//    MPST_RET_IF_EQ(_state, PlayerState::Paused);
+    MPST_RET_IF_EQ(_state, SessionState::Completed);
+    MPST_RET_IF_EQ(_state, SessionState::Stopped);
+    MPST_RET_IF_EQ(_state, SessionState::Error);
+    MPST_RET_IF_EQ(_state, SessionState::Ended);
+    
+    if ((_state == SessionState::Paused && bPause) || (_state == SessionState::Started && !bPause)) {
+        return RetCode::ok;
+    }
+    user_paused_ = bPause;
+    _playerClock.SetPaused(bPause);
+    video_loop_->pause(bPause);
+    audio_loop_->audioPause(bPause);
+    _state = bPause? SessionState::Paused : SessionState::Started;
     return RetCode::ok;
 }
 
@@ -191,22 +278,18 @@ RetCode MediaSessionImpl::__stop() {
 //}
 //
 void MediaSessionImpl::stop() {
-    thread_task_.PostTask([this](){
-        _callback->onStoped(__stop());
+    thread_task_.PostTask(CMD_STOP, [this](){
+        callback_->onStoped(__stop());
     });
 }
 
-void MediaSessionImpl::setPositionTo(int64_t time_ms, int flag) {
-    media_complete_flag_ = 0;
-    _bAudioCompleted = false;
-    _bVideoCompleted = false;
-    
-    MediaSegmentManager::setPositionTo(time_ms, flag == 1);
-    for (auto& ac : audio_nodes_) {
-        ((AudioRenderNodeImpl*)ac.get())->ClearAudioFrame();
-    }
+void MediaSessionImpl::seek(int64_t time_ms, int32_t flag) {
+    thread_task_.RemoveTask(CMD_SEEK);
+    _bSeeking.store(true);
+    _seekIdx ++;
+    render_position_ = time_ms;
+    thread_task_.PostTask(CMD_SEEK, &MediaSessionImpl::__seek, this, time_ms, _seekIdx.load(), flag);
 }
-
 
 void MediaSessionImpl::__addVideoRenderNode(std::shared_ptr<VideoRenderNode> video_render_node) {
     postRenderTask([this](std::shared_ptr<VideoRenderNode> video_render_node){
@@ -233,28 +316,6 @@ void MediaSessionImpl::__removeAudioRenderNode(std::shared_ptr<AudioRenderNode> 
     }, audio_render_node);
 }
 
-bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs, bool no_display)
-{
-    //FIXME: must use TimeMapper to calculate real time stamp after.
-    runRenderCmd();
-    
-    int64_t position = wantTimeMs;
-    
-    if (position >= getTotalTimeRange().end)
-    {
-        if( !_bVideoCompleted) {
-            thread_task_.PostTask(&MediaSessionImpl::onStreamCompleted, this, MediaType::Video);
-            _bVideoCompleted = true;
-        }
-        position = getTotalTimeRange().end;
-    }else
-        _bVideoCompleted = false;
-    
-    display_layer_->render(position, no_display);
-    
-    return true;
-}
-
 // run on render thread
 bool MediaSessionImpl::onRenderDestroy()
 {
@@ -276,8 +337,36 @@ void MediaSessionImpl::setDisplayMode(DisplayMode mode, bool filp_v) {
     display_layer_->setDisplayMode(mode, filp_v);
 }
 
-bool MediaSessionImpl::onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs)
-{
+bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs, bool no_display) {
+    runRenderCmd();
+    
+    if (_bVideoCompleted) {
+        return false;
+    }
+    
+    t_lock_guard<ticket_lock> clk(_render_mutex);
+    int64_t position = wantTimeMs == -1? _playerClock.GetClock() : wantTimeMs;
+    if (! _bSeeking.load() ) {
+        render_position_ = position;
+        int64_t currentRenderTime = SystemClock::getCurrentTime<int64_t,scale_milliseconds>();
+        if (abs(last_renderTime_ - currentRenderTime) > 100 && render_position_ > 0) {
+            callback_->onProgressUpdated(render_position_);
+            last_renderTime_ = currentRenderTime;
+        }
+    }
+     
+     if (position >= getTotalTimeRange().end) {
+         thread_task_.PostTask(&MediaSessionImpl::onStreamCompleted, this, MediaType::Video);
+         _bVideoCompleted = true;
+         position = getTotalTimeRange().end;
+     }
+     
+     display_layer_->render(position, no_display);
+     
+     return true;
+}
+
+bool MediaSessionImpl::onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs) {
     //FIXME: must use TimeMapper to calculate real time stamp after.
     if (wantTimeMs > 0) {
         _audioClock.setClock(wantTimeMs);
@@ -333,10 +422,10 @@ bool MediaSessionImpl::onAudioRender(uint8_t * const buffer, unsigned needBytes)
 
 MediaSessionImpl::RetCode MediaSessionImpl::onStreamCompleted(MediaType mediaType) {
     assert(thread_task_.IsCurrent());
-    _callback->onStreamEnd(mediaType);
+    callback_->onStreamEnd(mediaType);
     media_complete_flag_ |= (int)mediaType;
     if ((media_complete_flag_ & (int)MediaType::Video) && ((media_complete_flag_ & (int)MediaType::Audio) || !_hasAudio )) {
-        _callback->onCompleted(RetCode::ok);
+        callback_->onCompleted(RetCode::ok);
     }
     
     return MediaSessionImpl::ok;

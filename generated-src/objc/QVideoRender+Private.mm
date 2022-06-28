@@ -52,24 +52,25 @@ static_assert(__has_feature(objc_arc), "Djinni requires ARC to be enabled for th
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (BOOL)onDraw:(int64_t)pirv
+- (BOOL)onDraw:(int64_t)timeMs
      noDisplay:(BOOL)noDisplay {
     try {
-        auto objcpp_result_ = _cppRefHandle.get()->onDraw(::djinni::I64::toCpp(pirv),
+        auto objcpp_result_ = _cppRefHandle.get()->onDraw(::djinni::I64::toCpp(timeMs),
                                                           ::djinni::Bool::toCpp(noDisplay));
         return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 
-- (void)readRGBA:(nonnull id)buffer
+- (BOOL)readRGBA:(nonnull id)buffer
            width:(int32_t)width
           height:(int32_t)height
           format:(int32_t)format {
     try {
-        _cppRefHandle.get()->readRGBA(::djinni::Object::toCpp(buffer),
-                                      ::djinni::I32::toCpp(width),
-                                      ::djinni::I32::toCpp(height),
-                                      ::djinni::I32::toCpp(format));
+        auto objcpp_result_ = _cppRefHandle.get()->readRGBA(::djinni::Object::toCpp(buffer),
+                                                            ::djinni::I32::toCpp(width),
+                                                            ::djinni::I32::toCpp(height),
+                                                            ::djinni::I32::toCpp(format));
+        return ::djinni::Bool::fromCpp(objcpp_result_);
     } DJINNI_TRANSLATE_EXCEPTIONS()
 }
 

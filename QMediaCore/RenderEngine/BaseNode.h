@@ -81,7 +81,7 @@ public:
     
     virtual void setAlpha(float alpha) override { color_.a = alpha; }
 
-    virtual float getAlpha() { return color_.a; }
+    virtual float getAlpha() override { return color_.a; }
 
     virtual void setBlendFunc(const Blendfunc & bf) override ;
 
