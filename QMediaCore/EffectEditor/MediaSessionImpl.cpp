@@ -367,15 +367,18 @@ bool MediaSessionImpl::onVideoRender(int64_t wantTimeMs, bool no_display) {
 }
 
 bool MediaSessionImpl::onAudioRender(uint8_t * const buffer, unsigned needBytes, int64_t wantTimeMs) {
+    runAudioCmd();
     //FIXME: must use TimeMapper to calculate real time stamp after.
     if (wantTimeMs > 0) {
         _audioClock.setClock(wantTimeMs);
+    }
+    if (_bAudioCompleted) {
+        return false;
     }
     return onAudioRender( buffer, needBytes);
 }
 
 bool MediaSessionImpl::onAudioRender(uint8_t * const buffer, unsigned needBytes) {
-    runAudioCmd();
         
     memset(buffer, 0, needBytes);
     

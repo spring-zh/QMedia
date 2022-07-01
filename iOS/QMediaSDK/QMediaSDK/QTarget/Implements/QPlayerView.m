@@ -173,6 +173,7 @@
 
 - (void)setVideoRender:(nullable QVideoRender *)render {
     _render = render;
+    [_render setDisplayMode:0 flipV:true];
 }
 
 - (BOOL)start {

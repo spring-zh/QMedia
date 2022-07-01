@@ -139,8 +139,7 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
     NSError *error = nil;
     NSURL *url = [NSURL fileURLWithPath:_filePath];
     _writer = [[AVAssetWriter alloc] initWithURL:url fileType:AVFileTypeMPEG4 error:&error];
-    if (error == nil)
-    {
+    if (error == nil) {
         // Set this to make sure that a functional movie is produced, even if the recording is cut off mid-stream. Only the last second should be lost in that case.
         _writer.movieFragmentInterval = kCMTimeInvalid;//CMTimeMakeWithSeconds(1.0, 1000);
         if (!_isAllKeyFrame) {
@@ -487,10 +486,10 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
             NSAssert(NO,@"glCheckFramebufferStatus: %d", status);
         }
 
-        bRet = [_video_render onDraw:_video_pts noDisplay:true];
+        bRet = [_video_render onDraw:_video_pts noDisplay:![QGLContext supportsFastTextureUpload]];
         glFinish();
 
-        if(![QGLContext supportsFastTextureUpload]) {
+        if(!_encodeTexture) {
             CVPixelBufferPoolCreatePixelBuffer (kCFAllocatorDefault, [_writerPixelBufferInput pixelBufferPool], &renderTarget);
             [_video_render readRGBA:(__bridge id)renderTarget width:_venc_opt.width height:_venc_opt.height format:GL_BGRA];
         }
@@ -503,7 +502,7 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
         _video_pts += _video_duration;
         
         bool bWrite = false;
-        if([QGLContext supportsFastTextureUpload]) {
+        if(_encodeTexture != nil) {
             bWrite = [_writerPixelBufferInput appendPixelBuffer:_encodeTexture.pixelBuffer withPresentationTime:frameTime];
             _encodeTexture = nil;
         }else if(renderTarget != NULL){
@@ -512,7 +511,6 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
         }
         if (!bWrite){
             NSLog(@"Problem appending pixel buffer at time: %@", CMTimeCopyDescription(kCFAllocatorDefault, frameTime));
-            NSLog(@"zsperror _writerPixelBufferInput appendPixelBuffer");
         }
         bRet = bWrite;
     }else {
@@ -565,7 +563,6 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
         usleep(10 * 1000);
         if (!bRet) {
             NSLog(@"Problem appending audio buffer at time: %@", CFBridgingRelease(CMTimeCopyDescription(kCFAllocatorDefault, currentSampleTime)));
-            NSLog(@"zsperror _writerAudioInput appendSampleBuffer");
         }
 
         CFRelease(blockBuffer);
@@ -579,8 +576,6 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
 
 - (BOOL)videoInit:(nonnull QVideoEncodeOption *)venc_opt {
     _venc_opt = venc_opt;
-    [_video_render setDisplayMode:0 flipV:0];
-//    [_videoRender setDisplayMode:DisplayStretch viewW:_videoDesc.width viewH:_videoDesc.height];
     if(_venc_opt.framerate < 0)
         _venc_opt.framerate = 25;
     _video_duration = (float)1000 / _venc_opt.framerate;
@@ -589,6 +584,7 @@ static void runSynchronously(dispatch_queue_t processingQueue, const void *key, 
 
 - (void)setVideoRender:(nullable QVideoRender *)render {
     _video_render = render;
+    [_video_render setDisplayMode:0 flipV:0];
 }
 
 - (BOOL)start {
