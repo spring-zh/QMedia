@@ -65,11 +65,11 @@ bool MediaSessionImpl::removeMediaSegment(const std::shared_ptr<MediaSegment> & 
             for (auto& stream : segment->getMediaStreamInfo()) {
                 if (stream.media_type == MediaStreamInfo::MEDIA_VIDEO) {
                     MediaSegmentManager::removeVideoSegment(segment);
-                    __addVideoRenderNode(segment->getVideo());
+                    __removeVideoRenderNode(segment->getVideo());
                 }
-                if (stream.media_type == MediaStreamInfo::MEDIA_VIDEO) {
+                if (stream.media_type == MediaStreamInfo::MEDIA_AUDIO) {
                     MediaSegmentManager::removeAudioSegment(segment);
-                    __addAudioRenderNode(segment->getAudio());
+                    __removeAudioRenderNode(segment->getAudio());
                 }
             }
             return true;

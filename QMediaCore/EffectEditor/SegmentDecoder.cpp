@@ -349,7 +349,7 @@ bool SegmentDecoder::__OpenSlice(int index, int64_t time_ms) {
     auto& new_stream_desc = demuxer_->getMediaStreamDescribes()[in_stream_id];
     if (! IsSameMediaStreamDescribe(stream_dec_, new_stream_desc)) {
         //TODO: reset decoder
-        LOGI("is not same codec info, reset decoder !!");
+        LOGI("[%s] is not same codec info, reset decoder !!", media_type_ == MediaType::Audio ? "audio" : "video");
         stream_dec_ = new_stream_desc;
         if (decoder_) {
             decoder_->Release();

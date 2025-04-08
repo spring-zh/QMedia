@@ -18,7 +18,7 @@ static void AudioQueueOuptutCallback(void * inUserData, AudioQueueRef inAQ, Audi
     QAudioPlayer *audioPlayer = (__bridge QAudioPlayer *)(inUserData);
     QAudioRender* audioRender = [audioPlayer getRender];
     if (audioRender != nil) {
-        NSData *data_tmp = [NSData dataWithBytesNoCopy:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize];
+        NSData *data_tmp = [NSData dataWithBytesNoCopy:inBuffer->mAudioData length:inBuffer->mAudioDataByteSize freeWhenDone:NO];
         [audioRender OnPlayBuffer:data_tmp sizeNeed:inBuffer->mAudioDataByteSize wantTime:-1];
     }
     

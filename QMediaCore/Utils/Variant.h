@@ -11,6 +11,7 @@
 
 #include <string>
 #include <vector>
+#include <assert.h>
 
 class Variant final {
 public:

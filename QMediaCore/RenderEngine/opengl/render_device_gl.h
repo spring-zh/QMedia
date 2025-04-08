@@ -13,6 +13,7 @@
 #include <string>
 #include <list>
 #include <stack>
+#include <assert.h>
 
 #include "vec4f.h"
 #include "Utils/Logger.h"
